@@ -1,0 +1,17 @@
+{
+    "contact":  "Lucas Sinclair",
+    "email":    "lucas.sinclair@ebc.uu.se",
+
+    "uppmax_id":    "b2011035",
+    "run_num":       1,
+    "run_id":        "130419_SN344_0246_AD1W9VACXX",
+    "pool_num":      1,
+    "pool_id":       "Sample_AE013",
+    "forward_reads": "AE013_ATCACG_L007_R1_001.fastq.gz",
+    "reverse_reads": "AE013_ATCACG_L007_R2_001.fastq.gz",
+
+    "project":       "humic",
+    "project_name":  "Finish humic lakes",
+    "pool":          "unknown_three",
+    "pool_name":     "Unknown number three"
+}

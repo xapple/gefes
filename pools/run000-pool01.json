@@ -1,0 +1,17 @@
+{
+    "contact":  "Lucas Sinclair",
+    "email":    "lucas.sinclair@ebc.uu.se",
+
+    "uppmax_id":    "b2011035",
+    "run_num":       0,
+    "run_id":        "test_data",
+    "pool_num":      1,
+    "pool_id":       "Sample_pool1",
+    "forward_reads": "pool1_fwd.fastq.gz",
+    "reverse_reads": "pool1_rev.fastq.gz",
+
+    "project":       "test",
+    "project_name":  "Test data",
+    "pool":          "test1",
+    "pool_name":     "First pool of test data"
+}
