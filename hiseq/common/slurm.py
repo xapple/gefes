@@ -3,9 +3,9 @@ import os, time, shutil, re, getpass
 from collections import OrderedDict
 
 # Internal modules #
-import humic
-from humic.common import get_git_tag, Color
-from humic.common.tmpstuff import TmpFile
+import hiseq
+from hiseq.common import get_git_tag, Color
+from hiseq.common.tmpstuff import TmpFile
 
 # Third party modules #
 import sh
@@ -45,6 +45,7 @@ class SLURMCommand(object):
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',          'default': '0:15:00'}),
         ('machines'  , {'needed': True,  'tag': '#SBATCH -N %s',          'default': '1'}),
         ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',          'default': '8'}),
+        ('partition' , {'needed': True,  'tag': '#SBATCH -p %s',          'default': 'node'}),
         ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s', 'default': 'lucas.sinclair@ebc.uu.se'}),
         ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s', 'default': 'END'}),
         ('qos'       , {'needed': False, 'tag': '#SBATCH --qos=%s',       'default': 'short'}),
@@ -97,7 +98,7 @@ class SLURMJob(object):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
 
-    def __init__(self, command, log_base_dir, module=humic, **kwargs):
+    def __init__(self, command, log_base_dir, module=hiseq, **kwargs):
         # Log directory #
         dir_name = "%4d-%02d-%02d_%02d-%02d-%02d"
         dir_name = dir_name % time.localtime()[0:6]
