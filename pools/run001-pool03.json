@@ -12,6 +12,14 @@
 
     "project":       "humic",
     "project_name":  "Finish humic lakes",
-    "pool":          "unknown_three",
-    "pool_name":     "Unknown number three"
+    "pool":          "alinen",
+    "pool_name":     "Alinen Mustajärvi (Pori)",
+
+    "metadata": {
+        "url": "http://www.jarviwiki.fi/wiki/Alinen_Mustajärvi"
+        "gps": [61.563712, 22.044029],
+        "date": "0000-00-00"
+        "ph": [0, "pH"],
+        "alkalinity": [0, "mmol/l"]
+    }
 }
