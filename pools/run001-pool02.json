@@ -13,13 +13,21 @@
     "project":       "humic",
     "project_name":  "Finish humic lakes",
     "pool":          "mekkojarvi",
-    "pool_name":     "Mekkojärvi (Padasjoki)",
+    "pool_name":     "Mekkojärvi (???)",
 
     "metadata": {
-        "url": "http://www.jarviwiki.fi/wiki/Mekkojärvi_(14.252.1.040)",
-        "gps": [61.368569, 25.147727],
+        "gps": ["???", "???"],
         "date": "2012-09-03",
+        "layer": "hypolimnion",
+
         "ph": [5.88, "pH"],
+        "temperature": [6, "Celsius"]
         "alkalinity": [0.455, "mmol/l"]
+        "doc": [27.4, "mgC/l"],
+        "poc": [1.2, "mgC/l"],
+        "color": [497, "420nm, platinum mg/l"]
+        "oxygen": [0.47, null]
+        "methane": [195879.2, "nM"]
+        "chlorophyl": [63.1, "µg/l"]
     }
 }

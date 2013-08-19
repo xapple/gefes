@@ -22,7 +22,7 @@ class ContigDist(Graph):
         values = pandas.Series(lengths)
         # Plot #
         fig = pyplot.figure()
-        axes = values.hist(color='gray', bins=max(values))
+        axes = values.hist(color='gray', bins=2000)
         fig = pyplot.gcf()
         title = 'Distribution of contigs lengths after scafoloding for sample "%s"' % self.parent.pool.long_name
         axes.set_title(title)

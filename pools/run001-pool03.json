@@ -13,13 +13,23 @@
     "project":       "humic",
     "project_name":  "Finish humic lakes",
     "pool":          "alinen",
-    "pool_name":     "Alinen Mustajärvi (Pori)",
+    "pool_name":     "Alinen Mustajärvi (Hämeenlinna)",
 
     "metadata": {
-        "url": "http://www.jarviwiki.fi/wiki/Alinen_Mustajärvi",
-        "gps": [61.563712, 22.044029],
-        "date": "0000-00-00",
-        "ph": [0, "pH"],
-        "alkalinity": [0, "mmol/l"]
+        "gps": [61.208142, 25.113609],
+        "date": "2010-05-03",
+        "layer": "hypolimnion",
+        "extraction": "PowerSoil Kit",
+        "codename": "HAM",
+
+        "ph": [5.5, "pH"],
+        "temperature": [3.8, "Celsius"],
+        "alkalinity": [0.1, null]
+        "doc": [16.2, null],
+        "poc": [0.8, null],
+        "color": [189, null],
+        "oxygen": [0.4, null],
+        "methane": [146088.8, null]
+        "chlorophyl": [8.9, null]
     }
 }

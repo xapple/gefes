@@ -16,10 +16,19 @@
     "pool_name":     "Halsjärvi (Hämeenlinna)",
 
     "metadata": {
-        "url": "http://www.jarviwiki.fi/wiki/Halsjärvi",
+        "url": "http://www.jarviwiki.fi/wiki/Halsjärvi_(35.787.1.052)",
         "gps": [61.22586, 25.139937],
         "date": "2012-09-03",
+        "layer": "hypolimnion",
+
         "ph": [6.4, "pH"],
+        "temperature": [5, "Celsius"]
         "alkalinity": [0.768, "mmol/l"]
+        "doc": [14.7, "mgC/l"],
+        "poc": [1.0, "mgC/l"],
+        "color": [657, "420nm, platinum mg/l"]
+        "oxygen": [0.48, null]
+        "methane": [367105.9, "nM"]
+        "chlorophyl": [34.4, "µg/l"]
     }
 }
