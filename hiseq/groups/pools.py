@@ -9,7 +9,7 @@ from hiseq.common import AutoPaths
 from hiseq.fasta.paired import PairedFASTQ
 from hiseq.fasta.single import FASTQ
 from hiseq.running.pool_runner import PoolRunner
-from hiseq.helper.assemble import assemble, scaffold
+from hiseq.helper.assemble import Assembly
 
 # Third party modules #
 
@@ -20,8 +20,6 @@ class Pool(object):
     all_paths = """
     /logs/
     /info.json
-    /velvet/contigs.fasta
-    /amos/contigs.afg
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.id_name)
@@ -62,6 +60,8 @@ class Pool(object):
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)
         self.fastq = PairedFASTQ(self.fwd.path, self.rev.path, self)
+        # Assembly #
+        self.assembly = Assembly(self)
         # Runner #
         self.runner = PoolRunner(self)
 
@@ -75,5 +75,5 @@ class Pool(object):
     def run_slurm(self, *args, **kwargs):
         return self.runner.run_slurm(*args, **kwargs)
 
-    def assemble(self): assemble(self)
-    def scaffold(self): scaffold(self)
+    def assemble(self): self.assembly.assemble(self)
+    def scaffold(self): self.assembly.scaffold(self)

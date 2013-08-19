@@ -13,12 +13,12 @@
     "project":       "humic",
     "project_name":  "Finish humic lakes",
     "pool":          "halsjarvi",
-    "pool_name":     "Halsjärvi (Hämeenlinna)"
+    "pool_name":     "Halsjärvi (Hämeenlinna)",
 
     "metadata": {
         "url": "http://www.jarviwiki.fi/wiki/Halsjärvi",
-        "gps": [61.22586, 25.139937]
-        "date": "2012-09-03"
+        "gps": [61.22586, 25.139937],
+        "date": "2012-09-03",
         "ph": [6.4, "pH"],
         "alkalinity": [0.768, "mmol/l"]
     }
