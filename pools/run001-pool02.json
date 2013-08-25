@@ -1,6 +1,22 @@
 {
-    "contact":  "Lucas Sinclair",
-    "email":    "lucas.sinclair@ebc.uu.se",
+    "contacts": {
+        "main": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "sampling": {
+            "name": "Sari Peura",
+            "email": "sari.peura@ebc.uu.se"
+        },
+        "lab": {
+            "name": "Sainur Samad",
+            "email": "sainur24@gmail.com"
+        }
+    },
 
     "uppmax_id":    "b2011035",
     "run_num":       1,
@@ -13,21 +29,29 @@
     "project":       "humic",
     "project_name":  "Finish humic lakes",
     "pool":          "mekkojarvi",
-    "pool_name":     "Mekkojärvi (???)",
+    "pool_name":     "Mekkojärvi (Hämeenlinna)",
 
     "metadata": {
-        "gps": ["???", "???"],
+        "gps": [61.230963, 25.141890],
         "date": "2012-09-03",
         "layer": "hypolimnion",
+        "depth": [2, "to", 3.8, "m"],
 
-        "ph": [5.88, "pH"],
-        "temperature": [6, "Celsius"]
-        "alkalinity": [0.455, "mmol/l"]
+        "ph": [5.88, "-log10([H+])"],
+        "temperature": [6, "Celsius"],
+        "alkalinity": [0.455, "mmol/l"],
         "doc": [27.4, "mgC/l"],
         "poc": [1.2, "mgC/l"],
-        "color": [497, "420nm, platinum mg/l"]
-        "oxygen": [0.47, null]
-        "methane": [195879.2, "nM"]
-        "chlorophyl": [63.1, "µg/l"]
+        "color": [497, "mg/l", "420nm, platinum"],
+        "oxygen": [0.47, null],
+        "methane": [195879.2, "nM"],
+        "chlorophyll": [63.1, "µg/l"],
+
+        "extraction": null,
+        "dna_after_extraction": [5.80, "ng/µl", "PicoGreen"],
+        "amplification": "MDA",
+        "dna_after_amplification": [67, "ng/µl", "NanoDrop"],
+
+        "seq_technology": "Illumina HiSeq, Paired end 100bp"
     }
 }

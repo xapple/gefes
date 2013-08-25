@@ -1,6 +1,22 @@
 {
-    "contact":  "Lucas Sinclair",
-    "email":    "lucas.sinclair@ebc.uu.se",
+    "contacts": {
+        "main": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "sampling": {
+            "name": "Sari Peura",
+            "email": "sari.peura@ebc.uu.se"
+        },
+        "lab": {
+            "name": "Sainur Samad",
+            "email": "sainur24@gmail.com"
+        }
+    },
 
     "uppmax_id":    "b2011035",
     "run_num":       1,
@@ -17,19 +33,26 @@
 
     "metadata": {
         "gps": [61.208142, 25.113609],
-        "date": "2010-05-03",
+        "date": "2009-09-15",
         "layer": "hypolimnion",
-        "extraction": "PowerSoil Kit",
-        "codename": "HAM",
+        "depth": [4, "to", 6, "m"],
+        "codename": "H15",
 
-        "ph": [5.5, "pH"],
-        "temperature": [3.8, "Celsius"],
-        "alkalinity": [0.1, null]
-        "doc": [16.2, null],
-        "poc": [0.8, null],
-        "color": [189, null],
-        "oxygen": [0.4, null],
-        "methane": [146088.8, null]
-        "chlorophyl": [8.9, null]
+        "ph": [5.5, "-log10([H+])"],
+        "temperature": [5.1, "Celsius"],
+        "alkalinity": [0.1, null],
+        "doc": [15.4, null],
+        "poc": [1.5, null],
+        "color": [192, null],
+        "oxygen": [0.3, null],
+        "methane": [565161.5, null],
+        "chlorophyll": [63.8, null],
+
+        "extraction": null,
+        "dna_after_extraction": [26.32, "ng/µl", "PicoGreen"],
+        "amplification": "MDA",
+        "dna_after_amplification": [55, "ng/µl", "NanoDrop"],
+
+        "seq_technology": "Illumina HiSeq, Paired end 100bp"
     }
 }

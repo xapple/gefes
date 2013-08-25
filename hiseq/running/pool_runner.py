@@ -11,7 +11,7 @@ from hiseq.common.slurm import SLURMJob
 ###############################################################################
 class PoolRunner(Runner):
     """Will run stuff on a pool"""
-    default_time = '5-00:00:00'
+    default_time = '1-00:00:00'
 
     default_steps = [
         ## Steps ###
