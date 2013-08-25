@@ -45,6 +45,8 @@ class Assembly(object):
             if not os.path.exists(out_dir): os.mkdir(out_dir)
             # Input #
             fwd_in, rev_in = self.pool.fwd.path, self.pool.rev.path
+            # Special case #
+            if 'Double' in self.pool.info.get('remarks', ''): fwd_in, rev_in = self.pool.smaller.fwd_path, self.pool.smaller.rev_path
             # Velevet Hashing #
             sh.velveth(out_dir, kmer, '-shortPaired', '-fastq.gz', fwd_in, rev_in,
                        _out=out_dir + 'velveth.out')

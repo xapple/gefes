@@ -1,3 +1,6 @@
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 import os, sys, gzip, tempfile, shutil
 from itertools import izip
@@ -18,7 +21,7 @@ class PairedFASTQ(object):
     def __iter__(self): return self.parse()
     def __repr__(self): return '<%s object on "%s">' % (self.__class__.__name__, self.fwd_path)
 
-    def __init__(self, fwd_path, rev_path, parent):
+    def __init__(self, fwd_path, rev_path, parent=None):
         # Basic #
         self.fwd_path = fwd_path
         self.rev_path = rev_path
@@ -71,8 +74,8 @@ class PairedFASTQ(object):
 
     def flush(self):
         for pair in self.buffer:
-            SeqIO.write(pair.fwd, self.fwd_handle, 'fastq')
-            SeqIO.write(pair.rev, self.rev_handle, 'fastq')
+            SeqIO.write(pair[0], self.fwd_handle, 'fastq')
+            SeqIO.write(pair[1], self.rev_handle, 'fastq')
         self.buffer = []
 
     def fastqc(self, directory):
@@ -104,3 +107,9 @@ class PairedFASTQ(object):
         rev_mean = imean(rev_scores)
         self.close()
         return (fwd_mean, rev_mean)
+
+    def cut_in_half(self, new_pair):
+        new_pair.create()
+        pairs = iter(self)
+        for i in xrange(int(len(self)/2)): new_pair.add_pair(pairs.next())
+        new_pair.close()

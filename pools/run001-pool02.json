@@ -35,14 +35,14 @@
         "gps": [61.230963, 25.141890],
         "date": "2012-09-03",
         "layer": "hypolimnion",
-        "depth": [2, "to", 3.8, "m"],
+        "depth": [2.0, "to", 3.8, "m"],
 
         "ph": [5.88, "-log10([H+])"],
         "temperature": [6, "Celsius"],
         "alkalinity": [0.455, "mmol/l"],
         "doc": [27.4, "mgC/l"],
         "poc": [1.2, "mgC/l"],
-        "color": [497, "mg/l", "420nm, platinum"],
+        "color": [497.0, "mg/l", "420nm, platinum"],
         "oxygen": [0.47, null],
         "methane": [195879.2, "nM"],
         "chlorophyll": [63.1, "µg/l"],
@@ -50,7 +50,7 @@
         "extraction": null,
         "dna_after_extraction": [5.80, "ng/µl", "PicoGreen"],
         "amplification": "MDA",
-        "dna_after_amplification": [67, "ng/µl", "NanoDrop"],
+        "dna_after_amplification": [67.0, "ng/µl", "NanoDrop"],
 
         "seq_technology": "Illumina HiSeq, Paired end 100bp"
     }

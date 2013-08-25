@@ -18,6 +18,8 @@ class Pool(object):
     """An illumina HiSeq MID is called here a 'pool'."""
 
     all_paths = """
+    /smaller/fwd.fastq
+    /smaller/rev.fastq
     /logs/
     /info.json
     """
@@ -59,7 +61,9 @@ class Pool(object):
         self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)
-        self.fastq = PairedFASTQ(self.fwd.path, self.rev.path, self)
+        self.fastq = PairedFASTQ(self.fwd.path, self.rev.path)
+        # Reduce the size #
+        if 'Double' in self.info.get('remarks', ''): self.smaller = PairedFASTQ(self.p.smaller_fwd, self.p.smaller_rev)
         # Assembly #
         self.assembly = Assembly(self)
         # Runner #

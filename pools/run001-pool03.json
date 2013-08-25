@@ -35,7 +35,7 @@
         "gps": [61.208142, 25.113609],
         "date": "2009-09-15",
         "layer": "hypolimnion",
-        "depth": [4, "to", 6, "m"],
+        "depth": [4.0, "to", 6.0, "m"],
         "codename": "H15",
 
         "ph": [5.5, "-log10([H+])"],
@@ -43,7 +43,7 @@
         "alkalinity": [0.1, null],
         "doc": [15.4, null],
         "poc": [1.5, null],
-        "color": [192, null],
+        "color": [192.0, null],
         "oxygen": [0.3, null],
         "methane": [565161.5, null],
         "chlorophyll": [63.8, null],
@@ -51,7 +51,7 @@
         "extraction": null,
         "dna_after_extraction": [26.32, "ng/µl", "PicoGreen"],
         "amplification": "MDA",
-        "dna_after_amplification": [55, "ng/µl", "NanoDrop"],
+        "dna_after_amplification": [55.0, "ng/µl", "NanoDrop"],
 
         "seq_technology": "Illumina HiSeq, Paired end 100bp"
     }
