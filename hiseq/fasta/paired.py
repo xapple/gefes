@@ -113,3 +113,5 @@ class PairedFASTQ(object):
         pairs = iter(self)
         for i in xrange(int(len(self)/2)): new_pair.add_pair(pairs.next())
         new_pair.close()
+        #shell_output('zcat %s |head -n %i > %s' % (self.fwd_path, len(self)*2, new_pair.fwd_path))
+        #shell_output('zcat %s |head -n %i > %s' % (self.rev_path, len(self)*2, new_pair.rev_path))

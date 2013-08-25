@@ -79,5 +79,5 @@ class Pool(object):
     def run_slurm(self, *args, **kwargs):
         return self.runner.run_slurm(*args, **kwargs)
 
-    def assemble(self): self.assembly.assemble(self)
-    def scaffold(self): self.assembly.scaffold(self)
+    def assemble(self): self.assembly.assemble()
+    def scaffold(self): self.assembly.scaffold()

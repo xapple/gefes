@@ -32,6 +32,8 @@ class Assembly(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def assemble(self):
+        # Clean up #
+        shutil.rmtree(self.p.velvet_dir)
         # Params #
         ins = self.pool.report_stats['fwd']['FragmentSize']
         metavelvetg = sh.Command('meta-velvetg')
@@ -85,19 +87,20 @@ class Assembly(object):
             # Next input #
             in_file = out_dir + "UnusedReads.fa"
         # Merge #
-        shell_output("cat %s > %s" % (' '.join(contig_paths), self.pool.p.contigs_fasta))
+        print "-> Merging outputs"
+        shell_output("cat %s > %s" % (' '.join(contig_paths), self.p.contigs_fasta))
 
     def scaffold(self):
         # Clean #
-        shutil.rmtree(self.pool.p.amos_dir)
+        shutil.rmtree(self.p.amos_dir)
         # AMOS conversion #
         print "-> Calling amos"
         to_amos = sh.Command('/bubo/home/h3/lucass/share/amos/bin/toAmos')
-        to_amos('-s', self.p.contigs_fasta, '-o', self.pool.p.contigs_afg)
+        to_amos('-s', self.p.contigs_fasta, '-o', self.p.contigs_afg)
         # Scaffolding #
         print "-> Calling minimus"
         minimus = sh.Command('/bubo/home/h3/lucass/share/amos/bin/minimus2')
-        minimus(self.p.contigs_afg[0:-4], '-D', 'MINID=98', 'OVERLAP 200', _out=self.pool.p.amos_dir + 'minimus.out')
+        minimus(self.p.contigs_afg[0:-4], '-D', 'MINID=98', 'OVERLAP 200', _out=self.p.amos_dir + 'minimus.out')
 
     def make_plots(self):
         for cls_name in assembly_plots.__all__:
