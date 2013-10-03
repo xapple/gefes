@@ -1,6 +1,10 @@
 {
-    "contact":  "Lucas Sinclair",
-    "email":    "lucas.sinclair@ebc.uu.se",
+    "contacts": {
+        "main": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        }
+    },
 
     "uppmax_id":    "b2011035",
     "run_num":       0,

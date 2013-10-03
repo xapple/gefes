@@ -2,8 +2,8 @@
 import os, gzip
 
 # Internal modules #
-from illumitag.common import property_cached, isubsample, Color
-from illumitag.common.autopaths import FilePath
+from gefes.common import property_cached, isubsample, Color
+from gefes.common.autopaths import FilePath
 
 # Third party modules #
 import sh, shutil

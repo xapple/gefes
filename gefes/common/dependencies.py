@@ -2,7 +2,7 @@
 import subprocess, sys
 
 # Required modules #
-modules = ['Bio', 'sh', 'pandas', 'matplotlib', 'threadpool']
+modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool']
 
 # Required executables #
 executables = ['blastall', 'velveth', 'velvetg', 'meta-velvetg']

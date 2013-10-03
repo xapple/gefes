@@ -5,11 +5,11 @@ from __future__ import division
 import os, json
 
 # Internal modules #
-from hiseq.common import AutoPaths
-from hiseq.fasta.paired import PairedFASTQ
-from hiseq.fasta.single import FASTQ
-from hiseq.running.pool_runner import PoolRunner
-from hiseq.helper.assemble import Assembly
+from gefes.common import AutoPaths
+from gefes.fasta.paired import PairedFASTQ
+from gefes.fasta.single import FASTQ
+from gefes.running.pool_runner import PoolRunner
+from gefes.helper.assemble import Assembly
 
 # Third party modules #
 

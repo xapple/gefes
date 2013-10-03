@@ -2,7 +2,7 @@
 import os, sys, time, datetime
 
 # Internal modules #
-from illumitag.common import Color
+from gefes.common import Color
 
 # Third party modules #
 import threadpool
@@ -13,6 +13,7 @@ class Runner(object):
 
     @property
     def color(self):
+        # Are we in an iterative shell ? #
         import __main__ as main
         if not hasattr(main, '__file__'): return True
         return False
@@ -36,14 +37,12 @@ class Runner(object):
         fns = None
         # Check pool #
         if hasattr(self.parent, name): fns = [getattr(self.parent, name)]
-        # Check outcomes #
+        # Check parent #
         elif hasattr(self.parent.first, name): fns = [getattr(o, name) for o in self.parent.children if hasattr(o, name)]
-        # Check assemble groups #
+        # Check second level #
         elif hasattr(self.parent.first.first, name): fns = [getattr(ag, name) for o in self.parent.children for ag in o.children if hasattr(ag, name)]
-        # Check primer groups #
+        # Check third level #
         elif hasattr(self.pool.first.first.first, name): fns = [getattr(pg, name) for o in self.pool.outcomes for ag in o.children for pg in ag.children if hasattr(pg, name)]
-        # Check samples #
-        elif hasattr(self.pool.samples.first, name): fns = [getattr(s, name) for s in self.pool.samples]
         # None found #
         if not fns: raise Exception("Could not find function '%s'" % name)
         # Return #

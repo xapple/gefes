@@ -7,14 +7,14 @@ Written by Lucas Sinclair.
 Kopimi.
 
 You can use this script from the shell like this:
-$ gen_test.py
+$ ./gen_test.py
 """
 
 # Built-in modules #
 import time, datetime
 
 # Internal modules #
-from hiseq import projects
+from gefes import projects
 
 # Third party modules #
 from shell_command import shell_output

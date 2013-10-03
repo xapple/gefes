@@ -5,8 +5,8 @@ from __future__ import division
 import os, shutil
 
 # Internal modules #
-from hiseq.common import AutoPaths
-from hiseq.graphs import assembly_plots
+from gefes.common import AutoPaths
+from gefes.graphs import assembly_plots
 
 # Third party modules #
 import sh

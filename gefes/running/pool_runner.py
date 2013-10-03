@@ -1,8 +1,8 @@
 # Built-in modules #
 
 # Internal modules #
-from hiseq.running import Runner
-from hiseq.common.slurm import SLURMJob
+from gefes.running import Runner
+from gefes.common.slurm import SLURMJob
 
 # Third party modules #
 

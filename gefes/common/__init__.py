@@ -1,12 +1,37 @@
 # Built-in modules #
-import os, shutil, re, platform, random
+import sys, os, time, shutil, re, random
 
 # Third party modules #
 import sh
 
-# Expositions #
-from color import Color
-from autopaths import AutoPaths
+################################################################################
+def average(iterator):
+    num = 0
+    tot = 0
+    for x in iterator:
+        tot += x
+        num += 1
+    return tot/num
+
+################################################################################
+def wait(predicate, interval=1, message=lambda: "Waiting..."):
+    ball, next_ball = u"|/-\\", "|"
+    sys.stdout.write("    \033[K")
+    sys.stdout.flush()
+    while not predicate():
+        time.sleep(1)
+        next_ball = ball[(ball.index(next_ball) + 1) % len(ball)]
+        sys.stdout.write("\r " + str(message()) + " " + next_ball + " \033[K")
+        sys.stdout.flush()
+    print "\r Done. \033[K"
+    sys.stdout.flush()
+
+################################################################################
+def flatten(L):
+    for sublist in L:
+        if hasattr(sublist, '__iter__'):
+            for item in flatten(sublist): yield item
+        else: yield sublist
 
 ################################################################################
 def isubsample(full_sample, k, full_sample_len=None):
@@ -96,22 +121,42 @@ def which(cmd):
     """https://github.com/jc0n/python-which"""
     def is_executable(path):
         return os.path.exists(path) and os.access(path, os.X_OK)
-    if platform.system() == 'Windows':
-        def possible_file_extensions(path):
-            yield path
-            for ext in os.environ.get('PATHEXT', '').split(os.pathsep):
-                yield path + ext
-    else:
-        def possible_file_extensions(path):
-            yield path
     path, name = os.path.split(cmd)
     if path:
-        if is_executable(cmd):
-            return cmd
+        if is_executable(cmd): return cmd
     else:
         for path in os.environ['PATH'].split(os.pathsep):
-            cmd_file = os.path.join(path, cmd)
-            for candidate in possible_file_extensions(cmd_file):
-                if is_executable(candidate):
-                    return candidate
+            candidate = os.path.join(path, cmd)
+            if is_executable(candidate): return candidate
     raise Exception('which failed to locate a proper command path "%s"' % cmd)
+
+################################################################################
+def tail(path, window=20):
+    with open(path, 'r') as f:
+        BUFSIZ = 1024
+        f.seek(0, 2)
+        num_bytes = f.tell()
+        size = window + 1
+        block = -1
+        data = []
+        while size > 0 and num_bytes > 0:
+            if num_bytes - BUFSIZ > 0:
+                # Seek back one whole BUFSIZ
+                f.seek(block * BUFSIZ, 2)
+                # Read BUFFER
+                data.insert(0, f.read(BUFSIZ))
+            else:
+                # File too small, start from beginning
+                f.seek(0,0)
+                # Only read what was not read
+                data.insert(0, f.read(num_bytes))
+            linesFound = data[0].count('\n')
+            size -= linesFound
+            num_bytes -= BUFSIZ
+            block -= 1
+        return '\n'.join(''.join(data).splitlines()[-window:])
+
+################################################################################
+def head(path, window=20):
+    with open(path, 'r') as handle:
+        return ''.join(handle.next() for line in xrange(window))

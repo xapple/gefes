@@ -1,17 +1,17 @@
 b'This module needs Python 2.6 or later.'
 
 # Special variables #
-__version__ = '0.1.0'
+__version__ = '0.0.1'
 
 # Built-in modules #
 import os, sys, glob
 
 # Internal modules #
-from hiseq.common import dependencies
-from hiseq.groups.pools import Pool
-from hiseq.groups.runs import Run, Runs
-from hiseq.groups.projects import Project, Projects
-from hiseq.groups.aggregate import Aggregate
+from gefes.common import dependencies
+from gefes.groups.pools import Pool
+from gefes.groups.runs import Run, Runs
+from gefes.groups.projects import Project, Projects
+from gefes.groups.aggregate import Aggregate
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -22,7 +22,7 @@ dependencies.check_modules()
 dependencies.check_executables()
 
 # Output directory #
-view_dir = out_dir = home + 'HISEQ/views/'
+view_dir = home + 'gefes/views/'
 
 # Get pool files #
 self = sys.modules[__name__]

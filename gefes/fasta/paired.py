@@ -6,7 +6,7 @@ import os, sys, gzip, tempfile, shutil
 from itertools import izip
 
 # Internal modules #
-from illumitag.common import property_cached, imean
+from gefes.common import property_cached, imean
 
 # Third party modules #
 import sh

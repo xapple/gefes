@@ -1,7 +1,7 @@
 # Built-in modules #
 
 # Internal modules #
-from hiseq.graphs import Graph
+from gefes.graphs import Graph
 
 # Third party modules #
 import pandas
@@ -24,7 +24,7 @@ class ContigDist(Graph):
         fig = pyplot.figure()
         axes = values.hist(color='gray', bins=2000)
         fig = pyplot.gcf()
-        title = 'Distribution of contigs lengths after scafoloding for sample "%s"' % self.parent.pool.long_name
+        title = 'Distribution of contigs lengths after scaffolding for sample "%s"' % self.parent.pool.long_name
         axes.set_title(title)
         axes.set_xlabel('Number of nucleotides in sequence')
         axes.set_ylabel('Number of sequences with this length')

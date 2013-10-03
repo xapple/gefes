@@ -4,7 +4,7 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from hiseq.common import AutoPaths
+from gefes.common import AutoPaths
 
 ###############################################################################
 class Collection(object):

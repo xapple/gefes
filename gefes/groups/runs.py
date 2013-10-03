@@ -3,7 +3,7 @@ import xml.etree.ElementTree as etree
 
 # Internal modules #
 from aggregate import Collection, Aggregate
-from hiseq.common import AutoPaths
+from gefes.common import AutoPaths
 
 # Third party modules #
 
