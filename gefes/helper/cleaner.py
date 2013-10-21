@@ -16,8 +16,10 @@ class Cleaner(object):
     """Takes care of cleaning the raw reads."""
 
     all_paths = """
-    /cleaned_fwd.fasta
-    /cleaned_rev.fasta
+    /cleaned_fwd.fastq
+    /cleaned_rev.fastq
+    /cleaned_single.fastq
+    /report.txt
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -31,7 +33,11 @@ class Cleaner(object):
         # Convenience objects #
         self.fwd = FASTQ(self.p.fwd)
         self.rev = FASTQ(self.p.rev)
+        self.single = FASTQ(self.p.single)
         self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
     def clean(self):
-        print sh.sickle("--help")
+        stats = sh.sickle("pe", "-f", self.pool.fwd, "-r", self.pool.rev, "-t", "sanger", "-o",
+                          self.fwd, "-p", self.rev, "-s", self.single)
+        with open(self.p.report, 'w') as handle:
+            handle.write(str(stats))
