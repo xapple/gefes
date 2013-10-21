@@ -34,4 +34,4 @@ class Cleaner(object):
         self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
     def clean(self):
-        sh.sickle("--help")
+        print sh.sickle("--help")
