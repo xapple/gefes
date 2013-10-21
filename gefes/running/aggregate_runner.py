@@ -9,11 +9,11 @@ from gefes.common.slurm import SLURMJob
 # Constants #
 
 ###############################################################################
-class ProjectRunner(Runner):
+class AggregateRunner(Runner):
     default_time = '6:00:00'
 
     default_steps = [
-        {'lorem':     {}},
+        {'assemble':     {}},
     ]
 
     def __init__(self, parent):

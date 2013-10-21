@@ -73,10 +73,7 @@ class Pool(object):
 
     @property
     def count(self):
-        return self.fastq.count
-
-    def __call__(self, *args, **kwargs):
-        self.runner.run(*args, **kwargs)
+        return self.pair.count
 
     def run_slurm(self, *args, **kwargs):
         return self.runner.run_slurm(*args, **kwargs)

@@ -5,8 +5,6 @@ from aggregate import Collection, Aggregate
 from gefes.common.autopaths import AutoPaths
 
 # Third party modules #
-from gefes.running.project_runner import ProjectRunner
-from gefes.helper.assemble import Assembly
 
 ###############################################################################
 class Projects(Collection):
@@ -30,7 +28,5 @@ class Project(Aggregate):
         # Dir #
         self.base_dir = projs_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Assembly #
-        self.assembly = Assembly(self)
-        # Assembly #
-        self.runner = ProjectRunner(self)
+        # Common init stuff #
+        self.load()
