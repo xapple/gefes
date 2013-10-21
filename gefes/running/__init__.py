@@ -2,7 +2,7 @@
 import os, sys, time, datetime
 
 # Internal modules #
-from gefes.common import Color
+from gefes.common.color import Color
 
 # Third party modules #
 import threadpool

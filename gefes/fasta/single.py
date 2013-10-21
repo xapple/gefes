@@ -2,7 +2,9 @@
 import os, gzip
 
 # Internal modules #
-from gefes.common import property_cached, isubsample, Color
+from gefes.common.color import Color
+from gefes.common.cache import property_cached
+from gefes.common import isubsample
 from gefes.common.autopaths import FilePath
 
 # Third party modules #

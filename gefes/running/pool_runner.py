@@ -14,9 +14,7 @@ class PoolRunner(Runner):
     default_time = '1-00:00:00'
 
     default_steps = [
-        ## Steps ###
-        {'assemble':           {}},
-        {'scaffold':           {}},
+        {'clean_reads':           {}},
     ]
 
     def __init__(self, parent):

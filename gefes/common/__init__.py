@@ -6,12 +6,13 @@ import sh
 
 ################################################################################
 def average(iterator):
-    num = 0
-    tot = 0
-    for x in iterator:
-        tot += x
-        num += 1
-    return tot/num
+    """Iterative mean"""
+    count = 0
+    total = 0
+    for num in numbers:
+        count += 1
+        total += num
+    return float(total)/count
 
 ################################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):

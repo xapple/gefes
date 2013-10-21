@@ -6,7 +6,8 @@ import os, sys, gzip, tempfile, shutil
 from itertools import izip
 
 # Internal modules #
-from gefes.common import property_cached, imean
+from gefes.common import average
+from gefes.common.cache import property_cached
 
 # Third party modules #
 import sh
@@ -101,10 +102,10 @@ class PairedFASTQ(object):
         self.open()
         fwd_reads = (r for r in SeqIO.parse(self.fwd_handle, "fastq"))
         fwd_scores = (s for r in fwd_reads for s in r.letter_annotations["phred_quality"])
-        fwd_mean = imean(fwd_scores)
+        fwd_mean = average(fwd_scores)
         rev_reads = (r for r in SeqIO.parse(self.rev_handle, "fastq"))
         rev_scores = (s for r in rev_reads for s in r.letter_annotations["phred_quality"])
-        rev_mean = imean(rev_scores)
+        rev_mean = average(rev_scores)
         self.close()
         return (fwd_mean, rev_mean)
 

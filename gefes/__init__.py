@@ -22,7 +22,7 @@ dependencies.check_modules()
 dependencies.check_executables()
 
 # Output directory #
-view_dir = home + 'gefes/views/'
+view_dir = home + 'GEFES/views/'
 
 # Get pool files #
 self = sys.modules[__name__]

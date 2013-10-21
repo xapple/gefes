@@ -5,7 +5,7 @@ import subprocess, sys
 modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool']
 
 # Required executables #
-executables = ['blastall', 'velveth', 'velvetg', 'meta-velvetg']
+executables = ['sickle']
 
 ################################################################################
 # We might be missing some executables #

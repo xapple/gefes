@@ -4,19 +4,17 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.graphs import assembly_plots
+from gefes.common import AutoPaths
 
 # Third party modules #
 
 ###############################################################################
-class Assembly(object):
-    """An assembly analysis."""
+class Clusterer(object):
+    """Recieves the matrix detailing all information for every contig,
+    and is responsible for deciding which contigs go together."""
 
     all_paths = """
-    /graphs/
-    /velvet/contigs.fasta
-    /amos/contigs.afg
+    /lorem.txt
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -27,11 +25,3 @@ class Assembly(object):
         # Auto paths #
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
-
-    def assemble(self):
-        pass
-
-    def make_plots(self):
-        for cls_name in assembly_plots.__all__:
-            cls = getattr(assembly_plots, cls_name)
-            cls(self).plot()

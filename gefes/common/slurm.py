@@ -14,6 +14,7 @@ import sh
 
 ################################################################################
 class ExistingJobs(object):
+    """Parses the output of '$ jobinfo -u lucass'"""
 
     queued_params = ['jobid','pos','partition','name','user','account','state',
                      'start_time','time_left','priority','cpus','nodelist',

@@ -5,18 +5,19 @@ from __future__ import division
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
-from gefes.graphs import assembly_plots
+from gefes.fasta.paired import PairedFASTQ
+from gefes.fasta.single import FASTQ
 
 # Third party modules #
+import sh
 
 ###############################################################################
-class Assembly(object):
-    """An assembly analysis."""
+class Cleaner(object):
+    """Takes care of cleaning the raw reads."""
 
     all_paths = """
-    /graphs/
-    /velvet/contigs.fasta
-    /amos/contigs.afg
+    /cleaned_fwd.fasta
+    /cleaned_rev.fasta
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -25,13 +26,12 @@ class Assembly(object):
         # Save parent #
         self.parent, self.pool = pool, pool
         # Auto paths #
-        self.base_dir = self.parent.base_dir
+        self.base_dir = self.parent.p.clean_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Convenience objects #
+        self.fwd = FASTQ(self.p.fwd)
+        self.rev = FASTQ(self.p.rev)
+        self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
-    def assemble(self):
-        pass
-
-    def make_plots(self):
-        for cls_name in assembly_plots.__all__:
-            cls = getattr(assembly_plots, cls_name)
-            cls(self).plot()
+    def clean(self):
+        sh.sickle("--help")

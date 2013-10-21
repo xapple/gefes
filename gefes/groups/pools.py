@@ -5,22 +5,21 @@ from __future__ import division
 import os, json
 
 # Internal modules #
-from gefes.common import AutoPaths
+from gefes.common.autopaths import AutoPaths
 from gefes.fasta.paired import PairedFASTQ
 from gefes.fasta.single import FASTQ
 from gefes.running.pool_runner import PoolRunner
-from gefes.helper.assemble import Assembly
+from gefes.helper.cleaner import Cleaner
 
 # Third party modules #
 
 ###############################################################################
 class Pool(object):
-    """An illumina HiSeq MID is called here a 'pool'."""
+    """An illumina HiSeq MID is called here a 'pool'.
+    It's a bunch of paired sequences."""
 
     all_paths = """
-    /smaller/fwd.fastq
-    /smaller/rev.fastq
-    /logs/
+    /clean/
     /info.json
     """
 
@@ -61,11 +60,9 @@ class Pool(object):
         self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)
-        self.fastq = PairedFASTQ(self.fwd.path, self.rev.path)
-        # Reduce the size #
-        if 'Double' in self.info.get('remarks', ''): self.smaller = PairedFASTQ(self.p.smaller_fwd, self.p.smaller_rev)
-        # Assembly #
-        self.assembly = Assembly(self)
+        self.pair = PairedFASTQ(self.fwd.path, self.rev.path)
+        # Cleaning #
+        self.cleaner = Cleaner(self)
         # Runner #
         self.runner = PoolRunner(self)
 
@@ -79,5 +76,5 @@ class Pool(object):
     def run_slurm(self, *args, **kwargs):
         return self.runner.run_slurm(*args, **kwargs)
 
-    def assemble(self): self.assembly.assemble()
-    def scaffold(self): self.assembly.scaffold()
+    def clean_reads(self):
+        self.cleaner.clean()
