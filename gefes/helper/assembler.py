@@ -37,8 +37,11 @@ class Assembly(object):
         self.contigs = []
 
     def assemble(self):
-        pairs = [(p.cleaner.fwd, p.cleaner.rev) for p in self.parent]
-        sh.mpiexec('-n', 1, 'Ray', '-k', 81, '-o', self.p.output_dir, *flatten([('-p', f, r) for f, r in pairs]))
+        pairs = [(p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]
+        # Ray needs non-existing path, get the path name and remove it #
+        output_path = self.p.output_dir.path
+        self.p.output_dir.remove()
+        sh.mpiexec('-n', 1, 'Ray', '-k', 81, '-o', output_path, *flatten([('-p', f, r) for f, r in pairs]))
         # Parse fasta #
         self.contigs = [Contig(self, s) for s in self.contigs_fasta]
 

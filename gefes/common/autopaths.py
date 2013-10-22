@@ -169,6 +169,16 @@ class DirectoryPath(str):
         """The files and directories as a list"""
         return os.listdir(self.path)
 
+    @property
+    def exists(self):
+        """Does it exist in the file system"""
+        return os.path.exists(self.path)
+
+    def remove(self):
+        if not self.exists: return False
+        shutil.rmtree(self.path, ignore_errors=True)
+        return True
+
 ################################################################################
 class FilePath(str):
 
@@ -183,7 +193,7 @@ class FilePath(str):
     @property
     def exists(self):
         """Does it exist in the file system"""
-        return os.path.lexists(self.path)
+        return os.path.exists(self.path)
 
     @property
     def prefix_path(self):
