@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json, getpass
+import os, json
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
@@ -56,12 +56,8 @@ class Pool(object):
         if os.path.exists(self.p.info_json): os.remove(self.p.info_json)
         os.symlink(self.json_path, self.p.info_json)
         # Raw file pairs #
-        if getpass.getuser() == 'inod':
-            self.fwd_path = "/proj/b2010008/INBOX/%s/%s/%s" % (self.run_label, self.label, self.info['forward_reads'])
-            self.rev_path = "/proj/b2010008/INBOX/%s/%s/%s" % (self.run_label, self.label, self.info['reverse_reads'])
-        else:
-            self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
-            self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
+        self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
+        self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         # Conveniance objects #
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)

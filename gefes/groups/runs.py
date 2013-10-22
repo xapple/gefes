@@ -32,10 +32,7 @@ class Run(Aggregate):
         self.base_dir = out_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Extra #
-        if getpass.getuser() == 'inod':
-            self.xml_report_path = "/proj/b2010008/INBOX/%s/report.xml" % (self.label)
-        else:
-            self.xml_report_path = "/proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
+        self.xml_report_path = "/proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
         # Auto exec #
         self.parse_report_xml()
 
