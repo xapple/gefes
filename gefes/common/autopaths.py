@@ -172,7 +172,7 @@ class DirectoryPath(str):
     @property
     def exists(self):
         """Does it exist in the file system"""
-        return os.path.exists(self.path)
+        return os.path.lexists(self.path)
 
     def remove(self):
         if not self.exists: return False
@@ -193,7 +193,7 @@ class FilePath(str):
     @property
     def exists(self):
         """Does it exist in the file system"""
-        return os.path.exists(self.path)
+        return os.path.lexists(self.path)
 
     @property
     def prefix_path(self):
