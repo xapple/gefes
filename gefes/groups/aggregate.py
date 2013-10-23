@@ -6,6 +6,7 @@ from __future__ import division
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.assembler import Assembly
+from gefes.helper.binner import Binner
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.graphs import aggregate_plots
 
@@ -72,6 +73,7 @@ class Aggregate(object):
     def load(self):
         # Children #
         self.assembly = Assembly(self)
+        self.binner = Binner(self)
         # All the plots #
         self.graphs = [getattr(aggregate_plots, cls_name)(self) for cls_name in aggregate_plots.__all__]
         # Running #
