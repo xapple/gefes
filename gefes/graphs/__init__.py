@@ -8,6 +8,7 @@ import matplotlib
 class Graph(object):
 
     def __init__(self, parent, base_dir=None, short_name=None):
+        # Save parent #
         self.parent = parent
         # Base dir #
         if not base_dir: self.base_dir = self.parent.p.graphs_dir
@@ -18,17 +19,20 @@ class Graph(object):
         self.path = self.base_dir + self.short_name + '.pdf'
         self.csv_path = self.base_dir + self.short_name + '.csv'
         self.json_path = self.base_dir + self.short_name + '.json'
+        # Extra #
+        self.dev_mode = True
 
-    def save_plot(self, fig, axes, width=18.0, height=10.0, bottom=0.1, top=0.93, left=0.06, right=0.98, sep=()):
+    def save_plot(self, fig, axes, width=12.0, height=7.0, bottom=0.14, top=0.93, left=0.06, right=0.98, sep=()):
         # Adjust #
         fig.set_figwidth(width)
         fig.set_figheight(height)
         fig.subplots_adjust(hspace=0.0, bottom=bottom, top=top, left=left, right=right)
         # Data and source #
-        fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')
-        job_name = os.environ.get('SLURM_JOB_NAME', 'Unnamed')
-        user_msg = 'user: %s, job: %s' % (getpass.getuser(), job_name)
-        fig.text(0.01, 0.98, user_msg, horizontalalignment='left')
+        if self.dev_mode:
+            fig.text(0.99, 0.98, time.asctime(), horizontalalignment='right')
+            job_name = os.environ.get('SLURM_JOB_NAME', 'Unnamed')
+            user_msg = 'user: %s, job: %s' % (getpass.getuser(), job_name)
+            fig.text(0.01, 0.98, user_msg, horizontalalignment='left')
         # Nice digit grouping #
         if 'x' in sep:
             locale.setlocale(locale.LC_ALL, '')

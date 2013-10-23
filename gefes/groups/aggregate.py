@@ -7,6 +7,7 @@ from __future__ import division
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.assembler import Assembly
 from gefes.running.aggregate_runner import AggregateRunner
+from gefes.graphs import aggregate_plots
 
 ###############################################################################
 class Collection(object):
@@ -71,8 +72,13 @@ class Aggregate(object):
     def load(self):
         # Children #
         self.assembly = Assembly(self)
+        # All the plots #
+        self.graphs = [getattr(aggregate_plots, cls_name)(self) for cls_name in aggregate_plots.__all__]
         # Running #
         self.runner = AggregateRunner(self)
 
     def assemble(self):
         self.assembly.assemble()
+
+    def make_plots(self):
+        for graph in self.graphs: graph.plot()

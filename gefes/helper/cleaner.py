@@ -23,6 +23,7 @@ class Cleaner(object):
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
+    def __len__(self): return len(self.pair)
 
     def __init__(self, pool):
         # Save parent #
@@ -37,7 +38,23 @@ class Cleaner(object):
         self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
     def clean(self):
+        # Call sickle #
         stats = sh.sickle("pe", "-f", self.pool.fwd, "-r", self.pool.rev, "-t", "sanger", "-o",
                           self.fwd, "-p", self.rev, "-s", self.single)
-        with open(self.p.report, 'w') as handle:
-            handle.write(str(stats))
+        # Write the report #
+        with open(self.p.report, 'w') as handle: handle.write(str(stats))
+        # Make a sanity check #
+        assert self.kept + self.discarded == len(self.parent)
+
+    @property
+    def stats(self):
+        # Parse the report file #
+        return self.p.report.contents
+
+    @property
+    def kept(self):
+        return len(self)
+
+    @property
+    def discarded(self):
+        return len(self.parent) - len(self)

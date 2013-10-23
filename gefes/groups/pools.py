@@ -10,6 +10,7 @@ from gefes.fasta.paired import PairedFASTQ
 from gefes.fasta.single import FASTQ
 from gefes.running.pool_runner import PoolRunner
 from gefes.helper.cleaner import Cleaner
+from gefes.graphs import pool_plots
 
 # Third party modules #
 
@@ -19,6 +20,7 @@ class Pool(object):
     It's a bunch of paired sequences."""
 
     all_paths = """
+    /graphs/
     /clean/
     /info.json
     """
@@ -58,12 +60,14 @@ class Pool(object):
         # Raw file pairs #
         self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
         self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
-        # Conveniance objects #
+        # Convenience objects #
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)
         self.pair = PairedFASTQ(self.fwd.path, self.rev.path)
         # Cleaning #
         self.cleaner = Cleaner(self)
+        # All the plots #
+        self.graphs = [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
         # Runner #
         self.runner = PoolRunner(self)
 
@@ -76,3 +80,6 @@ class Pool(object):
 
     def clean_reads(self):
         self.cleaner.clean()
+
+    def make_plots(self):
+        for graph in self.graphs: graph.plot()

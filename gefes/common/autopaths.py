@@ -229,6 +229,11 @@ class FilePath(str):
         """Human readable size"""
         return Filesize(self.count_bytes)
 
+    @property
+    def contents(self):
+        """The contents as a string"""
+        return open(self.path).read()
+
     def remove(self):
         if not self.exists: return False
         os.remove(self.path)
