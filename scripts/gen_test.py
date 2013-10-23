@@ -28,7 +28,7 @@ print "Making test files"
 pairs = []
 pairs += [(projects['humic'][i].fwd_path, projects['test'][i].fwd_path) for i in range(3)]
 pairs += [(projects['humic'][i].rev_path, projects['test'][i].rev_path) for i in range(3)]
-process = lambda x : shell_output('zcat %s |head -n 2000000| gzip > %s' % (x[0],x[1]))
+process = lambda x : shell_output('zcat %s |head -n 10000| gzip > %s' % (x[0],x[1]))
 playdoh.map(process, pairs, cpu=len(pairs))
 run_time = datetime.timedelta(seconds=round(time.time()-now))
 print "\033[0;32mRun time: '%s'\033[0m" % (run_time)

@@ -15,6 +15,9 @@ import gefes
 # Just one function for one pool #
 pj = gefes.projects['test']; p = pj[0]; p(steps=[{'assemble':{}}], threads=False)
 
+# Clean the pools #
+for p in gefes.projects['test']: p.cleaner.clean()
+
 # Just one pool via slurm #
 gefes.projects['test']['run000-pool01'].run_slurm()
 gefes.projects['humic']['run001-pool01'].run_slurm()
