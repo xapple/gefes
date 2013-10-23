@@ -4,8 +4,7 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common import AutoPaths
-from gefes.helper.mapper import Mapper
+from gefes.common.autopaths import AutoPaths
 from gefes.helper.linkage import Linkage
 from gefes.helper.clusterer import Clusterer
 
@@ -18,19 +17,18 @@ class Binner(object):
     responsible for delivering N bins, each with one or more contigs."""
 
     all_paths = """
-    /lorem.txt
+    /mapping/
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, pool):
+    def __init__(self, aggregate):
         # Save parent #
-        self.parent, self.pool = pool, pool
+        self.parent, self.aggregate = aggregate, aggregate
         # Auto paths #
-        self.base_dir = self.parent.base_dir
+        self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Children #
-        self.mapper = Mapper(self)
+        # Children #
         self.linkage = Linkage(self)
         self.clusterer = Clusterer(self)
         # Output #

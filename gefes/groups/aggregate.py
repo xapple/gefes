@@ -40,6 +40,7 @@ class Aggregate(object):
     /graphs/
     /logs/
     /assembly/
+    /binning/
     """
 
     def __repr__(self): return '<%s object "%s" with %i pools>' % \

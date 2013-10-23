@@ -10,6 +10,7 @@ from gefes.fasta.paired import PairedFASTQ
 from gefes.fasta.single import FASTQ
 from gefes.running.pool_runner import PoolRunner
 from gefes.helper.cleaner import Cleaner
+from gefes.helper.mapper import Mapper
 from gefes.graphs import pool_plots
 
 # Third party modules #
@@ -22,6 +23,7 @@ class Pool(object):
     all_paths = """
     /graphs/
     /clean/
+    /mapping/
     /info.json
     """
 
@@ -64,8 +66,11 @@ class Pool(object):
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)
         self.pair = PairedFASTQ(self.fwd.path, self.rev.path)
-        # Cleaning #
+
+    def load(self):
+        # Children #
         self.cleaner = Cleaner(self)
+        self.mapper = Mapper(self, self.project.assembly)
         # All the plots #
         self.graphs = [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
         # Runner #

@@ -22,6 +22,12 @@ for p in gefes.projects['test']: p.cleaner.clean()
 gefes.projects['test'].graphs[0].plot()
 for p in gefes.projects['test']: p.graphs[0].plot()
 
+# Assemble #
+gefes.projects['test'].assemble()
+
+# Map #
+for p in gefes.projects['test']: p.mapper.map()
+
 # Just one pool via slurm #
 gefes.projects['test']['run000-pool01'].run_slurm()
 gefes.projects['humic']['run001-pool01'].run_slurm()

@@ -17,6 +17,7 @@ import sh
 ###############################################################################
 class Assembly(object):
     """The co-assembly of all pools."""
+    short_name = 'ray'
 
     all_paths = """
     /ray_output/
@@ -40,16 +41,14 @@ class Assembly(object):
         return [Contig(self, s) for s in self.contigs_fasta]
 
     def assemble(self):
+        # Make file pairs #
         pairs = [(p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]
-
         # Ray needs non-existing path, get the path name and remove it #
         output_path = self.p.output_dir.path
         self.p.output_dir.remove()
         stats = sh.mpiexec('-n', 1, 'Ray', '-k', 21, '-o', output_path, *flatten([('-p', f, r) for f, r in pairs]))
-
         # Print the report #
-        with open(self.p.report, 'w') as handle:
-            handle.write(str(stats))
+        with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
     def make_plots(self):
         for cls_name in assembly_plots.__all__:
