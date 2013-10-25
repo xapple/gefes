@@ -21,6 +21,7 @@ class Pool(object):
     It's a bunch of paired sequences."""
 
     all_paths = """
+    /logs/
     /graphs/
     /clean/
     /mapping/
@@ -57,7 +58,8 @@ class Pool(object):
         self.base_dir = self.out_dir + self.id_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Make an alias to the json #
-        if os.path.exists(self.p.info_json): os.remove(self.p.info_json)
+        try: os.remove(self.p.info_json)
+        except OSError: pass
         os.symlink(self.json_path, self.p.info_json)
         # Raw file pairs #
         self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])

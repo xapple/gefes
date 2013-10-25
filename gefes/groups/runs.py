@@ -2,9 +2,9 @@
 import xml.etree.ElementTree as etree
 
 # Internal modules #
-from aggregate import Collection, Aggregate
+from gefes.groups.aggregate import Aggregate
+from gefes.groups.collection import Collection
 from gefes.common.autopaths import AutoPaths
-import getpass
 
 # Third party modules #
 

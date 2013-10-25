@@ -7,38 +7,15 @@ from __future__ import division
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.assembler import Assembly
 from gefes.helper.binner import Binner
-from gefes.running.aggregate_runner import AggregateRunner
 from gefes.graphs import aggregate_plots
-
-###############################################################################
-class Collection(object):
-    """A collection of aggregates."""
-
-    def __repr__(self): return 'Collection: %s' % (self.children)
-    def __iter__(self): return iter(self.children)
-    def __len__(self): return len(self.children)
-
-    def __init__(self, children):
-        self.children = children
-
-    @property
-    def first(self): return self.children[0]
-
-    def __getitem__(self, key):
-        if isinstance(key, basestring):
-            return [c for c in self.children if c.name == key.lower()][0]
-        elif isinstance(key, int):
-            if hasattr(self.first, 'num'): return [c for c in self.children if c.num == key][0]
-            else: return self.children[key]
-        else: raise TypeError('key')
 
 ###############################################################################
 class Aggregate(object):
     """A arbitrary aggregate of several pools."""
 
     all_paths = """
-    /graphs/
     /logs/
+    /graphs/
     /assembly/
     /binning/
     """
@@ -65,8 +42,9 @@ class Aggregate(object):
         # Attributes #
         self.name = name
         self.pools = pools
+        self.out_dir = out_dir
         # Dir #
-        self.base_dir = out_dir + self.name + '/'
+        self.base_dir = self.out_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Common init stuff #
         self.load()
@@ -77,8 +55,6 @@ class Aggregate(object):
         self.binner = Binner(self)
         # All the plots #
         self.graphs = [getattr(aggregate_plots, cls_name)(self) for cls_name in aggregate_plots.__all__]
-        # Running #
-        self.runner = AggregateRunner(self)
 
     def assemble(self):
         self.assembly.assemble()

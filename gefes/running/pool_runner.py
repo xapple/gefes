@@ -28,8 +28,8 @@ class PoolRunner(Runner):
     def run_slurm(self, steps=None, **kwargs):
         # Script #
         command = """steps = %s
-                     pool = [p for p in hiseq.pools if str(p)=='%s'][0]
-                     pool(steps)""" % (steps, self.pool)
+                     pool = [p for p in gefes.pools if str(p)=='%s'][0]
+                     pool.runner(steps)""" % (steps, self.pool)
         # Params #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
@@ -42,5 +42,6 @@ class PoolRunner(Runner):
             kwargs['email'] = '/dev/null'
             kwargs.pop('constraint')
         # Send it #
-        self.pool.slurm_job = SLURMJob(command, self.pool.p.logs_dir, job_name=str(self.pool), **kwargs)
+        job_name = "gefes_%s" %  self.pool
+        self.pool.slurm_job = SLURMJob(command, self.pool.p.logs_dir, job_name=job_name, **kwargs)
         return self.pool.slurm_job.launch()

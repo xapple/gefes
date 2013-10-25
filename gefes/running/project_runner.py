@@ -9,8 +9,9 @@ from gefes.common.slurm import SLURMJob
 # Constants #
 
 ###############################################################################
-class AggregateRunner(Runner):
-    default_time = '6:00:00'
+class ProjectRunner(Runner):
+    """Will run stuff on a project"""
+    default_time = '7-00:00:00'
 
     default_steps = [
         {'assemble':     {}},
@@ -24,15 +25,16 @@ class AggregateRunner(Runner):
     def run_slurm(self, steps=None, **kwargs):
         # Make script #
         command = """steps = %s
-                     exp = [exp for exp in XXXXXXXXX if exp.name=='%s'][0]
-                     exp.run(steps)""" % (steps, self.experiment.name)
+                     proj = [proj for proj in gefes.projects if proj.name=='%s'][0]
+                     proj.runner(steps)""" % (steps, self.project.name)
         # Test case #
-        if 'test' in self.experiment.name:
+        if 'test' in self.project.name:
             kwargs['time'] = '00:15:00'
             kwargs['qos'] = False
             kwargs['email'] = '/dev/null'
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
-        self.slurm_job = SLURMJob(command, self.experiment.p.logs_dir, job_name="humic_" + self.experiment.name, **kwargs)
+        job_name = "gefes_%s" % self.project
+        self.slurm_job = SLURMJob(command, self.project.p.logs_dir, job_name=job_name, **kwargs)
         self.slurm_job.launch()

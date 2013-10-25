@@ -18,6 +18,8 @@ class Runner(object):
         if not hasattr(main, '__file__'): return True
         return False
 
+    def __call__(self, *args, **kwargs): return self.run(*args, **kwargs)
+
     def run(self, steps=None, **kwargs):
         # Message #
         if self.color: print Color.f_cyn + "Running %s" % (self.parent) + Color.end

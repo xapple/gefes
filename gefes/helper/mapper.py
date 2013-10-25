@@ -34,11 +34,10 @@ class Mapper(object):
 
     def map(self):
         # Create bowtie2 assembly index #
-        ref = self.assembly.contigs_fasta.path
-        sh.bowtie2_build(ref, ref)
+        contigs = self.assembly.contigs_fasta
+        sh.bowtie2_build(contigs, contigs)
         # Create the mapping #
-        sh.bowtie2('-p', nr_threads, '-x', ref, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
+        sh.bowtie2('-p', nr_threads, '-x', contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
         # Create samtools assembly index #
-        if not os.path.exists(self.assembly.contigs_fasta.path + ".fai"):
-            sh.samtools('faidx', self.assembly.contigs_fasta.path)
+        sh.samtools('faidx', self.assembly.contigs_fasta.path)
         sh.samtools('view', '-bt', self.assembly.contigs_fasta.path + '.fai', self.p.sam, _out=self.p.bam)

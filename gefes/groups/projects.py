@@ -1,8 +1,10 @@
 # Built-in modules #
 
 # Internal modules #
-from aggregate import Collection, Aggregate
+from gefes.groups.aggregate import Aggregate
+from gefes.groups.collection import Collection
 from gefes.common.autopaths import AutoPaths
+from gefes.running.project_runner import ProjectRunner
 
 # Third party modules #
 
@@ -28,5 +30,7 @@ class Project(Aggregate):
         # Dir #
         self.base_dir = projs_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Runner #
+        self.runner = ProjectRunner(self)
         # Common init stuff #
         self.load()
