@@ -32,5 +32,5 @@ gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
 # The assembly graphs #
 
 # Map #
+gefes.projects['test'][0].mapper.index_assembly()
 for p in gefes.projects['test']: p.mapper.map()
-
