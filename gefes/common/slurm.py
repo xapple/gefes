@@ -78,6 +78,7 @@ class SLURMCommand(object):
         ('qos'       , {'needed': False, 'tag': '#SBATCH --qos=%s',       'default': 'short'}),
         ('dependency', {'needed': False, 'tag': '#SBATCH -d %s',          'default': 'afterok:1'}),
         ('constraint', {'needed': False, 'tag': '#SBATCH -C %s',          'default': 'mem72GB'}),
+        ('cluster'   , {'needed': False, 'tag': '#SBATCH -M %s',          'default': 'kalkyl'}),
     ))
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -102,6 +103,8 @@ class SLURMCommand(object):
             if not info['needed'] and not param in kwargs: continue
             if kwargs.get(param): self.slurm_params[param] = kwargs.get(param)
             else:                 self.slurm_params[param] = info['default']
+        # Special cases #
+        if self.slurm_params.get('cluster') == 'halvan': self.slurm_params['partition'] = 'halvan'
         # Slurm header #
         self.slurm_header = [self.slurm_headers[k]['tag'] % v for k,v in self.slurm_params.items()]
         # Extra command #

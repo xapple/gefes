@@ -12,25 +12,30 @@ sys.exit("Copy paste the commands you want in ipython, don't run this script.")
 # Modules #
 import gefes
 
+###############################################################################
 # Just one pool via slurm #
 gefes.projects['test']['run000-pool01'].run_slurm()
 gefes.projects['humic']['run001-pool01'].run_slurm()
 
 # Just one function for one pool #
-pj = gefes.projects['test']; p = pj[0]; p(steps=[{'clean_reads':{}}], threads=False)
+gefes.projects['test'][0].runner(steps=[{'clean_reads':{}}], threads=False)
 
 # Clean the pools #
-for p in gefes.projects['test']: p.cleaner.clean()
-[p.runner.run_slurm(steps=[{'clean_reads':{}}]) for p in gefes.projects['test']]
+for p in gefes.projects['test']: p.clean_reads()
+for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'clean_reads':{}}])
+
 # The clean graphs #
-gefes.projects['test'].graphs[0].plot()
-for p in gefes.projects['test']: p.graphs[0].plot()
+for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'make_plots':{}}])
+for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'make_plots':{}}])
 
 # Assemble #
 gefes.projects['test'].assemble()
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
+gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64)
+
 # The assembly graphs #
+gefes.projects['test'].graphs[0].plot()
+gefes.projects['humic'].graphs[0].plot()
 
 # Map #
 for p in gefes.projects['test']: p.mapper.map()
-

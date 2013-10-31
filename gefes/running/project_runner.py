@@ -15,6 +15,7 @@ class ProjectRunner(Runner):
 
     default_steps = [
         {'assemble':     {}},
+        {'make_plots':   {}},
     ]
 
     def __init__(self, parent):
@@ -32,6 +33,9 @@ class ProjectRunner(Runner):
             kwargs['time'] = '00:15:00'
             kwargs['qos'] = False
             kwargs['email'] = '/dev/null'
+            if kwargs.get('cluster') == 'halvan':
+                kwargs['time'] = '1-00:00:00'
+                kwargs.pop('qos')
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None

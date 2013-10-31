@@ -2,6 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
+import os
 
 # Internal modules #
 from gefes.common import flatten
@@ -13,6 +14,9 @@ from gefes.fasta.single import FASTA
 
 # Third party modules #
 import sh
+
+# Constant #
+nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
 
 ###############################################################################
 class Assembly(object):
@@ -41,12 +45,11 @@ class Assembly(object):
         return [Contig(self, s) for s in self.contigs_fasta]
 
     def assemble(self):
-        # Make file pairs #
-        pairs = [(p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]
-        # Ray needs non-existing path, get the path name and remove it #
-        output_path = self.p.output_dir.path
+        # Ray needs a non-existing directory #
         self.p.output_dir.remove()
-        stats = sh.mpiexec('-n', 1, 'Ray', '-k', 21, '-o', output_path, *flatten([('-p', f, r) for f, r in pairs]))
+        # Call Ray #
+        stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', self.p.output_dir,
+            *flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]))
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 

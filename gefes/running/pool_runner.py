@@ -15,6 +15,7 @@ class PoolRunner(Runner):
 
     default_steps = [
         {'clean_reads':           {}},
+        {'make_plots':            {}},
     ]
 
     def __init__(self, parent):
@@ -34,14 +35,12 @@ class PoolRunner(Runner):
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
         if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
-        if 'constraint' not in kwargs: kwargs['constraint'] = None
         # Test case #
         if self.pool.project.name == 'test':
             kwargs['time'] = '00:15:00'
             kwargs['qos'] = False
             kwargs['email'] = '/dev/null'
-            kwargs.pop('constraint')
         # Send it #
-        job_name = "gefes_%s" %  self.pool
+        job_name = "gefes_%s" % self.pool
         self.pool.slurm_job = SLURMJob(command, self.pool.p.logs_dir, job_name=job_name, **kwargs)
         return self.pool.slurm_job.launch()

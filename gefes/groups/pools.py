@@ -60,7 +60,8 @@ class Pool(object):
         # Make an alias to the json #
         try: os.remove(self.p.info_json)
         except OSError: pass
-        os.symlink(self.json_path, self.p.info_json)
+        try: os.symlink(self.json_path, self.p.info_json)
+        except OSError: pass
         # Raw file pairs #
         self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
         self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
