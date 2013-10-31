@@ -53,6 +53,11 @@ class Assembly(object):
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
+    def index(self):
+        """Create two indexes. For both bowtie2 and samtools on assembly fasta file."""
+        sh.bowtie2_build(self.contigs_fasta, self.contigs_fasta)
+        sh.samtools('faidx', self.contigs_fasta)
+
     def make_plots(self):
         for cls_name in assembly_plots.__all__:
             cls = getattr(assembly_plots, cls_name)

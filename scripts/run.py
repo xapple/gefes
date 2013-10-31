@@ -38,5 +38,5 @@ gefes.projects['test'].graphs[0].plot()
 gefes.projects['humic'].graphs[0].plot()
 
 # Map #
-for p in gefes.projects['test']: p.mapper.map()
-gefes.projects['test'][0].mapper.index_assembly()
+gefes.projects['test'].assembly.index()
+for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])

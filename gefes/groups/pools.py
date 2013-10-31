@@ -89,5 +89,8 @@ class Pool(object):
     def clean_reads(self):
         self.cleaner.clean()
 
+    def map(self):
+        self.mapper.map()
+
     def make_plots(self):
         for graph in self.graphs: graph.plot()

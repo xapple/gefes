@@ -12,15 +12,13 @@ import gefes
 import sh
 
 # Constant #
-try:
-    nr_threads = int(os.environ['SLURM_JOB_CPUS_PER_NODE'])
-except KeyError:
-    nr_threads = 1
-mem_size = nr_threads * 2
+nr_threads = int(os.environ.get('SLURM_JOB_CPUS_PER_NODE',1))
 
 ###############################################################################
 class Mapper(object):
-    """Maps reads from a Pool to an Assembly."""
+    """Maps reads from a Pool to an Assembly.
+    map_s is sorted.
+    map_smd is sorted and mark duplicated."""
 
     all_paths = """
     /map.sam
@@ -38,47 +36,24 @@ class Mapper(object):
         # Save attributes #
         self.parent, self.pool = pool, pool
         self.assembly = assembly
+        self.contigs = self.assembly.contigs_fasta
         # Auto paths #
         self.base_dir = self.pool.p.mapping_dir + self.assembly.short_name
         self.p = AutoPaths(self.base_dir, self.all_paths)
-
-    def index_assembly(self):
-        """Create index for both bowtie2 and samtools on assembly fasta file."""
-        contigs = self.assembly.contigs_fasta
-        sh.bowtie2_build(contigs, contigs)
-        sh.samtools('faidx', contigs)
-
-    def remove_duplicates(self):
-        """Remove PCR duplicates with MarkDuplicates."""
-        sh.java('-Xms' + str(max(int(mem_size * 0.3), 1)) + 'g', '-Xmx' +
-                str(mem_size) + 'g', '-XX:ParallelGCThreads=' +
-                str(nr_threads), '-XX:MaxPermSize=' + str(max(int(mem_size * 0.3), 1)) + 'g',
-                '-XX:+CMSClassUnloadingEnabled', '-jar', gefes.repos_dir +
-                'bin/picard-tools-1.101/MarkDuplicates.jar', 'INPUT=' +
-                self.p.map_s_bam, 'OUTPUT=' + self.p.map_smd_bam,
-                'METRICS_FILE=' + self.p.map_smd_metrics, 'AS=TRUE',
-                'VALIDATION_STRINGENCY=LENIENT',
-                'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
-                'REMOVE_DUPLICATES=TRUE')
-
-    def calc_coverage(self):
-        # Determine Coverage with BEDTools #
-        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
 
     def map(self):
         """Maps reads from self.pool to self.assembly using bowtie2. PCR
         Duplicates are afterwards removed using MarkDuplicates. BEDTools is
         used to determine coverage."""
-        # Create bowtie2 assembly index #
-        contigs = self.assembly.contigs_fasta
-        if not os.path.exists(contigs + '.1.bt2'):
+        # Check indexes #
+        if not os.path.exists(self.contigs + '.1.bt2'):
             raise(Exception('Bowtie2 index file not created, run index_assembly()'))
-        # Do the mapping #
-        sh.bowtie2('-p', nr_threads, '-x', contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
-        # Create bam, Sort and index bamfile #
-        if not os.path.exists(contigs + '.fai'):
+        if not os.path.exists(self.contigs + '.fai'):
             raise(Exception('Samtools index file not created, run index_assembly()'))
-        sh.samtools('view', '-bt', contigs + '.fai', self.p.sam, _out=self.p.map_bam)
+        # Do the mapping #
+        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
+        # Create bam, Sort and index bamfile #
+        sh.samtools('view', '-bt', self.contigs + '.fai', self.p.sam, _out=self.p.map_bam)
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam[:-4])
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
@@ -87,3 +62,30 @@ class Mapper(object):
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam[:-4])
         sh.samtools('index', self.p.map_smds_bam)
         self.calc_coverage()
+        # Clean up #
+        os.remove(self.p.sam)
+        os.remove(self.p.map_bam)
+        os.remove(self.p.map_smd_bam)
+
+    def remove_duplicates(self):
+        """Remove PCR duplicates with MarkDuplicates."""
+        # Estimate size #
+        mem_size = nr_threads * 2
+        perm_size = str(max(int(mem_size * 0.3), 1))
+        sh.java('-Xms%sg' % perm_size,
+                '-Xmx%sg' % mem_size,
+                '-XX:ParallelGCThreads=%s' % nr_threads,
+                '-XX:MaxPermSize=%sg' % perm_size,
+                '-XX:+CMSClassUnloadingEnabled',
+                '-jar', gefes.repos_dir + 'bin/picard-tools-1.101/MarkDuplicates.jar',
+                'INPUT=%s' % self.p.map_s_bam,
+                'OUTPUT=%s' % self.p.map_smd_bam,
+                'METRICS_FILE=%s' % self.p.map_smd_metrics,
+                'AS=TRUE',
+                'VALIDATION_STRINGENCY=LENIENT',
+                'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
+                'REMOVE_DUPLICATES=TRUE')
+
+    def calc_coverage(self):
+        # Determine Coverage with BEDTools #
+        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
