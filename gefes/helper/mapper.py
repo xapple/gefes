@@ -6,13 +6,14 @@ import os
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
+from gefes.common.cache import property_cached
 import gefes
 
 # Third party modules #
 import sh
 
 # Constant #
-nr_threads = int(os.environ.get('SLURM_JOB_CPUS_PER_NODE',1))
+nr_threads = int(os.environ.get('SLURM_JOB_CPUS_PER_NODE', 1))
 
 ###############################################################################
 class Mapper(object):
@@ -89,3 +90,23 @@ class Mapper(object):
     def calc_coverage(self):
         # Determine Coverage with BEDTools #
         sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
+
+    @property_cached
+    def coverage(self):
+        """Uses the BEDTools genomeCoverageBed histogram output to determine mean
+        coverage and percentage covered for each contig.  Returns dict with fasta id as
+        key and percentage covered and cov_mean as keys for the inner dictionary."""
+        out_dict = {}
+
+        with open(self.p.map_smds_coverage) as handler:
+            for line in handler:
+                name, depth, count, length, fraction = line.split()
+
+                d = out_dict.setdefault(name, {"cov_mean": 0, "percentage_covered": 100})
+
+                if int(depth) == 0:
+                    d["percentage_covered"] = 100 - float(fraction) * 100.0
+                else:
+                    d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
+
+        return out_dict
