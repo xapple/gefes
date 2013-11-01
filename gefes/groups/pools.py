@@ -15,6 +15,9 @@ from gefes.graphs import pool_plots
 
 # Third party modules #
 
+# Constants #
+home = os.environ['HOME'] + '/'
+
 ###############################################################################
 class Pool(object):
     """An illumina HiSeq MID is called here a 'pool'.
@@ -63,8 +66,8 @@ class Pool(object):
         try: os.symlink(self.json_path, self.p.info_json)
         except OSError: pass
         # Raw file pairs #
-        self.fwd_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
-        self.rev_path = "/proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
+        self.fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
+        self.rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         # Convenience objects #
         self.fwd = FASTQ(self.fwd_path)
         self.rev = FASTQ(self.rev_path)

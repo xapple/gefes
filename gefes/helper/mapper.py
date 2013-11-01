@@ -19,8 +19,8 @@ nr_threads = int(os.environ.get('SLURM_JOB_CPUS_PER_NODE', 1))
 ###############################################################################
 class Mapper(object):
     """Maps reads from a Pool to an Assembly.
-    map_s is sorted.
-    map_smd is sorted and mark duplicated."""
+    The 'map_s' file is sorted.
+    The 'map_smd' is sorted and mark duplicated."""
 
     all_paths = """
     /map.sam
@@ -54,7 +54,7 @@ class Mapper(object):
             raise(Exception('Samtools index file not created, run index_assembly()'))
         # Do the mapping #
         sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
-        # Create bam, Sort and index bamfile #
+        # Create bam, sort and index bamfile #
         sh.samtools('view', '-bt', self.contigs + '.fai', self.p.sam, _out=self.p.map_bam)
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam[:-4])
         sh.samtools('index', self.p.map_s_bam)

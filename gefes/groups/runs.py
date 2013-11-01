@@ -1,5 +1,5 @@
 # Built-in modules #
-import xml.etree.ElementTree as etree
+import os, xml.etree.ElementTree as etree
 
 # Internal modules #
 from gefes.groups.aggregate import Aggregate
@@ -7,6 +7,9 @@ from gefes.groups.collection import Collection
 from gefes.common.autopaths import AutoPaths
 
 # Third party modules #
+
+# Constants #
+home = os.environ['HOME'] + '/'
 
 ###############################################################################
 class Runs(Collection):
@@ -32,7 +35,7 @@ class Run(Aggregate):
         self.base_dir = out_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Extra #
-        self.xml_report_path = "/proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
+        self.xml_report_path = home + "proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
         # Auto exec #
         self.parse_report_xml()
 
