@@ -1,0 +1,32 @@
+Typing these commands on your bash prompt should be sufficient for installing this package:
+
+cd ~
+mkdir repos
+cd repos
+git clone git@github.com:limno/gefes.git
+export PYTHONPATH="$HOME/repos/gefes/":$PYTHONPATH
+
+cd ~
+git clone git://github.com/yyuu/pyenv.git .pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+exec $SHELL
+pyenv install 2.7.5
+pyenv rehash
+pyenv global 2.7.5
+easy_install pip==1.2.1
+pip install sh
+pip install decorator
+pip install biopython
+pip install threadpool
+pip install scipy
+pip install matplotlib
+pip install statsmodels
+pip install pandas
+pip install ipython
+
+export SLURM_JOB_CPUS_PER_NODE=8
+
+cd ~/GEFES
+ipython -i -c "import gefes"
