@@ -5,7 +5,6 @@ from __future__ import division
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
-from gefes.helper.linkage import Linkage
 from gefes.helper.clusterer import Clusterer
 
 # Third party modules #
@@ -29,7 +28,6 @@ class Binner(object):
         self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Children #
-        self.linkage = Linkage(self)
         self.clusterer = Clusterer(self)
         # Output #
         self.bins = []
