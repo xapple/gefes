@@ -7,6 +7,7 @@ import os
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
+from gefes.helper.linkage import parse_linkage_info_bam
 import gefes
 
 # Third party modules #
@@ -110,3 +111,17 @@ class Mapper(object):
                     d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
 
         return out_dict
+
+    @property_cached
+    def linkage_and_readcount(self):
+        return parse_linkage_info_bam(bamfile=self.p.map_smds_bam.path,
+                readlength=100, min_contig_length=100, regionlength=500,
+                fullsearch=True)
+
+    @property
+    def linkage(self):
+        return self.linkage_and_readcount[0]
+
+    @property
+    def readcount(self):
+        return self.linkage_and_readcount[1]
