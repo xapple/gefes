@@ -20,11 +20,13 @@ gefes.projects['humic']['run001-pool01'].run_slurm()
 # Just one function for one pool #
 gefes.projects['test'][0].runner(steps=[{'clean_reads':{}}], threads=False)
 
+###############################################################################
 # Clean the pools #
 for p in gefes.projects['test']: p.clean_reads()
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'clean_reads':{}}])
 
 # The clean graphs #
+for p in gefes.projects['test']: p.make_graphs()
 for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'make_plots':{}}])
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'make_plots':{}}])
 

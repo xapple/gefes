@@ -4,6 +4,9 @@ import os, time, getpass, locale
 # Third party modules #
 import matplotlib
 
+# No need for an X display #
+matplotlib.use('Agg')
+
 ################################################################################
 class Graph(object):
 
