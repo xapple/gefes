@@ -2,7 +2,7 @@
 import subprocess, sys
 
 # Required modules #
-modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool']
+modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool', 'pysam']
 
 # Required executables #
 executables = ['sickle']

@@ -46,9 +46,10 @@ class Assembly(object):
 
     def assemble(self):
         # Ray needs a non-existing directory #
-        self.p.output_dir.remove()
+        out_dir = self.p.output_dir
+        out_dir.remove()
         # Call Ray #
-        stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', self.p.output_dir,
+        stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir,
             *flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]))
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
