@@ -23,6 +23,7 @@ gefes.projects['test'][0].runner(steps=[{'clean_reads':{}}], threads=False)
 ###############################################################################
 # Clean the pools #
 for p in gefes.projects['test']: p.clean_reads()
+gefes.projects['humic'].runner(steps=[{'clean_reads':{}}])
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'clean_reads':{}}])
 
 # The clean graphs #

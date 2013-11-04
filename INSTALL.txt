@@ -29,9 +29,20 @@ pip install ipython
 
 export SLURM_JOB_CPUS_PER_NODE=8
 
-cd ~/GEFES
+cd ~
+mkdir proj
+cd proj
+ln -s lorem_ipsum b2011035
+
+cd
+mkdir GEFES
+cd GEFES
 ipython -i -c "import gefes"
 
-
+-------------------------------------------------------------------------------
 For scipy you might need these two dependencies:
 http://stackoverflow.com/questions/7496547/python-scipy-needs-blas
+
+-------------------------------------------------------------------------------
+If your git version is too old you can follow these steps:
+http://blog.justin.kelly.org.au/install-git-in-your-home-directory-how-to/
