@@ -5,7 +5,7 @@ import os, time, getpass, locale
 import matplotlib
 
 # No need for an X display #
-matplotlib.use('Agg')
+matplotlib.use('Agg', warn=False)
 
 ################################################################################
 class Graph(object):

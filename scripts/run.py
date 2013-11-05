@@ -25,21 +25,24 @@ gefes.projects['test'][0].runner(steps=[{'clean_reads':{}}], threads=False)
 for p in gefes.projects['test']: p.clean_reads()
 gefes.projects['humic'].runner(steps=[{'clean_reads':{}}])
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'clean_reads':{}}])
-
 # The clean graphs #
-for p in gefes.projects['test']: p.make_graphs()
-for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'make_plots':{}}])
+for p in gefes.projects['test']: p.make_plots()
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'make_plots':{}}])
 
-# Assemble #
+# Assemble locally #
 gefes.projects['test'].assemble()
+# Assemble on kalykl #
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
 gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64)
-
+# Assemble on sisu #
+gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', cores=256)
+# Assemble on halvan #
+gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64)
 # The assembly graphs #
 gefes.projects['test'].graphs[0].plot()
 gefes.projects['humic'].graphs[0].plot()
 
 # Map #
 gefes.projects['test'].assembly.index()
+for p in gefes.projects['test']: p.map()
 for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])

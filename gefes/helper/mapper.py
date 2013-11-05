@@ -5,10 +5,10 @@ from __future__ import division
 import os
 
 # Internal modules #
+import gefes
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 from gefes.helper.linkage import parse_linkage_info_bam
-import gefes
 
 # Third party modules #
 import sh
@@ -49,9 +49,9 @@ class Mapper(object):
         used to determine coverage."""
         # Check indexes #
         if not os.path.exists(self.contigs + '.1.bt2'):
-            raise(Exception('Bowtie2 index file not created, run index_assembly()'))
+            raise(Exception('Bowtie2 index file not created, run index()'))
         if not os.path.exists(self.contigs + '.fai'):
-            raise(Exception('Samtools index file not created, run index_assembly()'))
+            raise(Exception('Samtools index file not created, run index()'))
         # Do the mapping #
         sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
         # Create bam, sort and index bamfile #
@@ -60,9 +60,7 @@ class Mapper(object):
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
         self.remove_duplicates()
-        # Sort and index bam without duplicates #
-        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam[:-4])
-        sh.samtools('index', self.p.map_smds_bam)
+        # Compute coverage #
         self.calc_coverage()
         # Clean up #
         os.remove(self.p.sam)
@@ -87,6 +85,9 @@ class Mapper(object):
                 'VALIDATION_STRINGENCY=LENIENT',
                 'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
                 'REMOVE_DUPLICATES=TRUE')
+        # Sort and index bam without duplicates #
+        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam[:-4])
+        sh.samtools('index', self.p.map_smds_bam)
 
     def calc_coverage(self):
         # Determine Coverage with BEDTools #
@@ -95,21 +96,17 @@ class Mapper(object):
     @property_cached
     def coverage(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
-        coverage and percentage covered for each contig.  Returns dict with fasta id as
+        coverage and percentage covered for each contig.  Returns a dict with fasta id as
         key and percentage covered and cov_mean as keys for the inner dictionary."""
         out_dict = {}
-
         with open(self.p.map_smds_coverage) as handler:
             for line in handler:
                 name, depth, count, length, fraction = line.split()
-
                 d = out_dict.setdefault(name, {"cov_mean": 0, "percentage_covered": 100})
-
                 if int(depth) == 0:
                     d["percentage_covered"] = 100 - float(fraction) * 100.0
                 else:
                     d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
-
         return out_dict
 
     @property_cached

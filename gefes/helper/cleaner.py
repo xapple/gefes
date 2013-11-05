@@ -38,6 +38,11 @@ class Cleaner(object):
         self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
     def clean(self):
+        # Cleanup #
+        self.fwd.remove()
+        self.rev.remove()
+        self.single.remove()
+        self.p.report.remove()
         # Call sickle #
         stats = sh.sickle("pe", "-f", self.pool.fwd, "-r", self.pool.rev, "-t", "sanger", "-o",
                           self.fwd, "-p", self.rev, "-s", self.single)

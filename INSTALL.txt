@@ -34,7 +34,7 @@ mkdir proj
 cd proj
 ln -s lorem_ipsum b2011035
 
-cd
+cd ~
 mkdir GEFES
 cd GEFES
 ipython -i -c "import gefes"

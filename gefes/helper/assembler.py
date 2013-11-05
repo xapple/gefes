@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os
+import os, socket
 
 # Internal modules #
 from gefes.common import flatten
@@ -16,7 +16,7 @@ from gefes.fasta.single import FASTA
 import sh
 
 # Constant #
-nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
+hostname = socket.gethostname()
 
 ###############################################################################
 class Assembly(object):
@@ -48,9 +48,19 @@ class Assembly(object):
         # Ray needs a non-existing directory #
         out_dir = self.p.output_dir
         out_dir.remove()
-        # Call Ray #
-        stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir,
-            *flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent]))
+        # Make the pairs of fastq #
+        pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
+        # Call Ray on the cray #
+        if 'sisu' in hostname:
+            nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
+            stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
+        # Call Ray on the Kalkyl #
+        if hostname.startswith('q'):
+            nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
+            stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
+        # Call Ray on locally #
+        else:
+            stats = sh.Ray('-k', 81, '-o', out_dir, *pairs)
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
