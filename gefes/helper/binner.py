@@ -28,8 +28,8 @@ class Binner(object):
         self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Data frame #
-        columns = ['length'] + [s.name for s in aggregate] + ['freq', 'pairs']
-        self.frame = pandas.DataFrame()
+        #columns = ['length'] + [s.name for s in aggregate] + ['freq', 'pairs']
+        #self.frame = pandas.DataFrame()
         # Children #
         self.clusterer = Clusterer(self)
         # Output #

@@ -45,14 +45,15 @@ mkdir GEFES
 cd GEFES
 ipython -i -c "import gefes"
 
+# Extra dependencies include #
+* Ray (http://samtools.sourceforge.net)
+* sickle (https://github.com/najoshi/sickle)
+* bowtie2 (http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
+* samtools (http://samtools.sourceforge.net)
+
 -------------------------------------------------------------------------------
 For pip install scipy you might need these two dependencies:
 http://stackoverflow.com/questions/7496547/python-scipy-needs-blas
 
 If your git version is too old you can follow these steps:
 http://blog.justin.kelly.org.au/install-git-in-your-home-directory-how-to/
-
-Extra dependencies include:
-* sickle (https://github.com/najoshi/sickle)
-* bowtie2 (http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
-* samtools (http://samtools.sourceforge.net)
