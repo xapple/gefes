@@ -5,12 +5,13 @@ from __future__ import division
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
+from gefes.common.cache import property_cached
 
 # Third party modules #
 
 ###############################################################################
 class Contig(object):
-    """Has a nucleotide frequency, a coverage, etc.."""
+    """Has a nucleotide frequency."""
 
     all_paths = """
     /lorem.txt
@@ -26,10 +27,36 @@ class Contig(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         self.record = record
 
-    def get_nuc_freq(sequence):
-        """Returns character frequency of given string sequence."""
+    def get_nuc_freq(self, windowsize):
+        """Returns frequency of nucelotide sequence with length windowsize in
+        given sequence."""
         freqs = {}
 
-        upper = sequence.upper()
-        for c in upper:
-            freqs[c] = freqs.get(c, default=0) + 1
+        # only A, C, G and T are allowed nucleotide characters
+        allowed_nucs = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
+        is_nuc = lambda x: x in allowed_nucs
+
+        upper = str(self.record.seq).upper()
+        i = 0
+
+        while i < len(upper) - windowsize + 1:
+            nuc_win = upper[i:i + windowsize]
+
+            # check if all nucleotides in the window are A,C,G or T
+            for j, n in enumerate(nuc_win):
+                if not is_nuc(n):
+                    i += j + 1
+                    break
+            else:
+                # if no break add nuc_win count
+                freqs[nuc_win] = freqs.get(nuc_win, 0) + 1
+                i += 1
+        return freqs
+
+    @property_cached
+    def nuc_freq(self):
+        return self.get_nuc_freq(1)
+
+    @property_cached
+    def tetra_nuc_freq(self):
+        return self.get_nuc_freq(4)
