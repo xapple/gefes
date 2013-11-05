@@ -1,16 +1,20 @@
 # Built-in modules #
-import os, stat, time, shutil, re, getpass, base64, hashlib
+import os, stat, time, shutil, re, getpass
+import base64, hashlib, socket
 from collections import OrderedDict
 
 # Internal modules #
 import gefes
-from gefes.common import get_git_tag, flatten, tail
+from gefes.common import get_git_tag, flatten, tail, is_integer
 from gefes.common.color import Color
 from gefes.common.tmpstuff import TmpFile
 from gefes.common.cache import expiry_every
 
 # Third party modules #
 import sh
+
+# Constant #
+hostname = socket.gethostname()
 
 ################################################################################
 class ExistingJobs(object):
@@ -33,6 +37,8 @@ class ExistingJobs(object):
     @property
     @expiry_every(seconds=30)
     def status(self):
+        # Special case #
+        if 'sisu' in hostname: return []
         # Call command #
         text = sh.jobinfo('-u', getpass.getuser()).stdout
         # Parse #
@@ -235,6 +241,15 @@ class SLURMJob(object):
     def launch(self):
         self.id = self.slurm_command.launch()
         return self.id
+
+################################################################################
+if 'SLURM_JOB_CPUS_PER_NODE' not in os.environ: nr_threads = 1
+else:
+     text = os.environ['SLURM_JOB_CPUS_PER_NODE']
+     if is_integer(text): nr_threads = int(text)
+     else:
+        n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
+        nr_threads = n * N
 
 ################################################################################
 jobs = ExistingJobs()

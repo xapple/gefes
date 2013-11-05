@@ -9,7 +9,7 @@ def average(iterator):
     """Iterative mean"""
     count = 0
     total = 0
-    for num in numbers:
+    for num in iterator:
         count += 1
         total += num
     return float(total)/count
@@ -161,3 +161,9 @@ def tail(path, window=20):
 def head(path, window=20):
     with open(path, 'r') as handle:
         return ''.join(handle.next() for line in xrange(window))
+
+################################################################################
+def is_integer(string):
+    try: int(string)
+    except ValueError: return False
+    return True

@@ -11,6 +11,7 @@ from gefes.common.cache import property_cached
 from gefes.graphs import assembly_plots
 from gefes.helper.contig import Contig
 from gefes.fasta.single import FASTA
+from gefes.common.slurm import nr_threads
 
 # Third party modules #
 import sh
@@ -53,11 +54,9 @@ class Assembly(object):
         print os.environ
         # Call Ray on the cray #
         if 'sisu' in hostname:
-            nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
             stats = sh.aprun('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on the Kalkyl #
         if hostname.startswith('q'):
-            nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
             stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray just locally #
         else:

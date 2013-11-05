@@ -9,12 +9,10 @@ import gefes
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 from gefes.helper.linkage import parse_linkage_info_bam
+from gefes.common.slurm import nr_threads
 
 # Third party modules #
 import sh
-
-# Constant #
-nr_threads = int(os.environ.get('SLURM_JOB_CPUS_PER_NODE', 1))
 
 ###############################################################################
 class Mapper(object):
