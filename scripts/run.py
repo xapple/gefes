@@ -33,11 +33,10 @@ for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'make_plots':{}}])
 gefes.projects['test'].assemble()
 # Assemble on kalykl #
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
-gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64)
-# Assemble on sisu #
-gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', cores=256)
 # Assemble on halvan #
-gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64)
+gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64, time='6-12:00:00')
+# Assemble on sisu #
+gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', machines=16, cores=256)
 # The assembly graphs #
 gefes.projects['test'].graphs[0].plot()
 gefes.projects['humic'].graphs[0].plot()

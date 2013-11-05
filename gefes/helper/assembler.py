@@ -50,15 +50,16 @@ class Assembly(object):
         out_dir.remove()
         # Make the pairs of fastq #
         pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
+        print os.environ
         # Call Ray on the cray #
         if 'sisu' in hostname:
             nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
-            stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
+            stats = sh.aprun('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on the Kalkyl #
         if hostname.startswith('q'):
             nr_threads = os.environ['SLURM_JOB_CPUS_PER_NODE']
             stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
-        # Call Ray on locally #
+        # Call Ray just locally #
         else:
             stats = sh.Ray('-k', 81, '-o', out_dir, *pairs)
         # Print the report #
