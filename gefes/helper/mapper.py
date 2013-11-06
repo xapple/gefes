@@ -105,6 +105,12 @@ class Mapper(object):
                     d["percentage_covered"] = 100 - float(fraction) * 100.0
                 else:
                     d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
+
+        # Add 0 coverage for contigs not in the genomeCoverageBed output
+        for c in self.assembly.contigs:
+            if c.name not in out_dict:
+                out_dict[c.name] = {"cov_mean": 0, "percentage_covered": 0}
+
         return out_dict
 
     @property_cached

@@ -26,6 +26,7 @@ class Contig(object):
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         self.record = record
+        self.name = self.record.id
 
     def get_nuc_freq(self, windowsize):
         """Returns frequency of nucelotide sequence with length windowsize in
@@ -51,7 +52,16 @@ class Contig(object):
                 # if no break add nuc_win count
                 freqs[nuc_win] = freqs.get(nuc_win, 0) + 1
                 i += 1
+
+        # normalize counts by number of windows to get frequency
+        for nuc_win in freqs:
+            freqs[nuc_win] = freqs[nuc_win] / float(self.length - windowsize + 1)
+
         return freqs
+
+    @property
+    def length(self):
+        return len(self.record.seq)
 
     @property_cached
     def nuc_freq(self):
