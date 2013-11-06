@@ -216,6 +216,7 @@ class FilePath(str):
 
     @property
     def extension(self):
+        """The extension with the leading period"""
         return os.path.splitext(self.path)[1]
 
     @property
@@ -251,6 +252,10 @@ class FilePath(str):
 
     def execute(self):
         return subprocess.call([self.path])
+
+    def new_name_insert(self, string):
+        """Make a new name by appending a string before the extension"""
+        return self.prefix_path + "." + string + self.extension
 
 ################################################################################
 class Filesize(object):

@@ -51,12 +51,11 @@ class Assembly(object):
         out_dir.remove()
         # Make the pairs of fastq #
         pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
-        print os.environ
         # Call Ray on the cray #
-        if 'sisu' in hostname:
+        if os.environ.get('CSCSERVICE') == 'sisu':
             stats = sh.aprun('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
-        # Call Ray on the Kalkyl #
-        if hostname.startswith('q'):
+        # Call Ray on Kalkyl #
+        elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
             stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray just locally #
         else:

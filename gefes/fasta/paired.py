@@ -6,8 +6,9 @@ import os, sys, gzip, tempfile, shutil
 from itertools import izip
 
 # Internal modules #
-from gefes.common import average
+from gefes.common import average, isubsample
 from gefes.common.cache import property_cached
+from gefes.common.autopaths import FilePath
 
 # Third party modules #
 import sh
@@ -24,8 +25,8 @@ class PairedFASTQ(object):
 
     def __init__(self, fwd_path, rev_path, parent=None):
         # Basic #
-        self.fwd_path = fwd_path
-        self.rev_path = rev_path
+        self.fwd_path = FilePath(fwd_path)
+        self.rev_path = FilePath(rev_path)
         # Extra #
         self.pool, self.parent = parent, parent
         self.gziped = True if self.fwd_path.endswith('gz') else False
@@ -116,3 +117,18 @@ class PairedFASTQ(object):
         new_pair.close()
         #shell_output('zcat %s |head -n %i > %s' % (self.fwd_path, len(self)*2, new_pair.fwd_path))
         #shell_output('zcat %s |head -n %i > %s' % (self.rev_path, len(self)*2, new_pair.rev_path))
+
+    def subsample(self, down_to, dest_pair=None):
+        # Check size #
+        assert down_to < len(self)
+        # Make new pair of files #
+        if dest_pair is None:
+            dest_fwd_path = self.fwd_path.new_name_insert("subsampled")
+            dest_rev_path = self.rev_path.new_name_insert("subsampled")
+            dest_pair = self.__class__(dest_fwd_path, dest_rev_path)
+        # Do it #
+        dest_pair.create()
+        for pair in isubsample(self, down_to): dest_pair.add_pair(pair)
+        self.subsampled.close()
+        # Did it work #
+        assert len(dest_pair) == down_to

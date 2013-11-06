@@ -37,6 +37,7 @@ gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
 gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64, time='6-12:00:00')
 # Assemble on sisu #
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', machines=16, cores=256)
+gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', machines=64, cores=1024, time='1-00:00:00')
 # The assembly graphs #
 gefes.projects['test'].graphs[0].plot()
 gefes.projects['humic'].graphs[0].plot()

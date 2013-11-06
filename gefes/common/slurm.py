@@ -243,13 +243,16 @@ class SLURMJob(object):
         return self.id
 
 ################################################################################
-if 'SLURM_JOB_CPUS_PER_NODE' not in os.environ: nr_threads = 1
-else:
+if 'SLURM_NTASKS' in os.environ:
+    nr_threads = int(os.environ['SLURM_NTASKS'])
+elif 'SLURM_JOB_CPUS_PER_NODE' in os.environ:
      text = os.environ['SLURM_JOB_CPUS_PER_NODE']
      if is_integer(text): nr_threads = int(text)
      else:
         n, N = re.findall("([1-9]+)\(x([1-9]+)\)", text)[0]
-        nr_threads = n * N
+        nr_threads = int(n) * int(N)
+else:
+    nr_threads = 1
 
 ################################################################################
 jobs = ExistingJobs()
