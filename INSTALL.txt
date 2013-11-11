@@ -61,6 +61,11 @@ If your git version is too old you can follow these steps:
 http://blog.justin.kelly.org.au/install-git-in-your-home-directory-how-to/
 
 -------------------------------------------------------------------------------
-To compile Ray on a large cluster you might have to do something this:
+To compile Ray on a large cluster you might have to do something this
 module swap PrgEnv-intel PrgEnv-gnu
 make -j8 MPI_IO=y MPICXX=cc MAXKMERLENGTH=91
+
+Or something like this:
+module load openmpi/1.4.5
+module load pgi
+make -j8 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91

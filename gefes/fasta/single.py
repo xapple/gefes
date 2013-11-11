@@ -1,5 +1,6 @@
 # Built-in modules #
 import os, gzip
+from collections import Counter
 
 # Internal modules #
 from gefes.common.color import Color
@@ -73,6 +74,14 @@ class FASTA(FilePath):
 
     def copy(self, path):
         shutil.copy2(self.path, path)
+
+    @property
+    def lengths(self):
+        return map(len, self.parse())
+
+    @property_cached
+    def lengths_counter(self):
+        return Counter((len(s) for s in self.parse()))
 
     def subsample(self, down_to, new_path=None):
         # Auto path #

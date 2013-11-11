@@ -6,7 +6,6 @@ from gefes.graphs import Graph
 # Third party modules #
 import pandas
 from matplotlib import pyplot
-from Bio import SeqIO
 
 # Constants #
 __all__ = ['ContigDist']
@@ -18,8 +17,7 @@ class ContigDist(Graph):
 
     def plot(self):
         # Data #
-        lengths = map(len, SeqIO.parse(self.parent.p.amos_dir + 'contigs.fasta' , 'fasta'))
-        values = pandas.Series(lengths)
+        values = pandas.Series(self.parent.contigs_fasta.lengths)
         # Plot #
         fig = pyplot.figure()
         axes = values.hist(color='gray', bins=2000)

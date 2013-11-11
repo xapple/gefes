@@ -25,6 +25,7 @@ class Assembly(object):
     short_name = 'ray'
 
     all_paths = """
+    /graphs/
     /ray_output/
     /ray_output/Contigs.fasta
     /ray_output/report.txt
@@ -40,6 +41,8 @@ class Assembly(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Convenience objects #
         self.contigs_fasta = FASTA(self.p.Contigs)
+        # Graphs #
+        self.graphs = [getattr(assembly_plots, cls_name)(self) for cls_name in assembly_plots.__all__]
 
     @property_cached
     def contigs(self):
@@ -53,7 +56,7 @@ class Assembly(object):
         pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
         # Call Ray on the cray #
         if os.environ.get('CSCSERVICE') == 'sisu':
-            stats = sh.aprun('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
+            stats = sh.aprun('-n', nr_threads, 'Ray23', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on Kalkyl #
         elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
             stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
@@ -69,6 +72,4 @@ class Assembly(object):
         sh.samtools('faidx', self.contigs_fasta)
 
     def make_plots(self):
-        for cls_name in assembly_plots.__all__:
-            cls = getattr(assembly_plots, cls_name)
-            cls(self).plot()
+        for graph in self.graphs: graph.plot()
