@@ -7,7 +7,7 @@ from collections import OrderedDict
 import gefes
 from gefes.common import get_git_tag, flatten, tail, is_integer
 from gefes.common.color import Color
-from gefes.common.tmpstuff import TmpFile
+from gefes.common.tmpstuff import TmpFile, new_temp_path
 from gefes.common.cache import expiry_every
 
 # Third party modules #
@@ -18,7 +18,7 @@ hostname = socket.gethostname()
 
 ################################################################################
 class ExistingJobs(object):
-    """Parses the output of '$ jobinfo -u lucass'"""
+    """Parses the output of '$ jobinfo -u $USER'"""
 
     queued_params = ['jobid','pos','partition','name','user','account','state',
                      'start_time','time_left','priority','cpus','nodelist',
@@ -63,7 +63,24 @@ class ExistingJobs(object):
 
 ################################################################################
 class SLURMCommand(object):
-    """Makes launching SLURM commands easy to write and easy to use"""
+    """Makes launching SLURM commands easy to write and easy to use. Here is an example way to use this class:
+
+        for i, command in enumerate(['print "hi"', 'print "hello"']):
+            job = SLURMCommand(command, time='00:01:00', qos='short', job_name='job%i'%i)
+            job.run()
+            print "Job %i is running !" % job.id
+
+        for path in ['~/data/scafolds1.txt', '~/data/scafolds2.txt', '~/data/scafolds3.txt']:
+            command = 'import sh\n'
+            command += 'script = sh.Command("analyze.py")\n'
+            command += 'script(%s)' % path
+            job = SLURMCommand(command,
+                               time='00:01:00',
+                               qos='short',
+                               job_name=path[-25:])
+            job.run()
+            print "Job %i is running !" % job.id
+    """
 
     script_headers = {
         'bash':   "#!/bin/bash -l",
@@ -73,13 +90,13 @@ class SLURMCommand(object):
     slurm_headers = OrderedDict((
         ('change_dir', {'needed': True,  'tag': '#SBATCH -D %s',          'default': os.path.abspath(os.getcwd())}),
         ('job_name'  , {'needed': False, 'tag': '#SBATCH -J %s',          'default': 'test_slurm'}),
-        ('out_file'  , {'needed': True,  'tag': '#SBATCH -o %s',          'default': '/tmp/slurm.out'}),
+        ('out_file'  , {'needed': True,  'tag': '#SBATCH -o %s',          'default': '/dev/null'}),
         ('project'   , {'needed': False, 'tag': '#SBATCH -A %s',          'default': os.environ.get('SLURM_ACCOUNT')}),
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',          'default': '0:15:00'}),
         ('machines'  , {'needed': True,  'tag': '#SBATCH -N %s',          'default': '1'}),
         ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',          'default': '8'}),
         ('partition' , {'needed': True,  'tag': '#SBATCH -p %s',          'default': 'node'}),
-        ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s', 'default': 'lucas.sinclair@ebc.uu.se'}),
+        ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s', 'default': os.environ.get('EMAIL')}),
         ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s', 'default': 'END'}),
         ('qos'       , {'needed': False, 'tag': '#SBATCH --qos=%s',       'default': 'short'}),
         ('dependency', {'needed': False, 'tag': '#SBATCH -d %s',          'default': 'afterok:1'}),
@@ -97,7 +114,8 @@ class SLURMCommand(object):
         # Check command #
         if isinstance(self.command, list): self.command = ' '.join(map(str, self.command))
         # Check name #
-        self.name = kwargs.get('job_name')
+        self.name = kwargs.get('job_name', self.slurm_headers['job_name']['default'])
+        # Hash the name if it doesn't fit in the limit #
         if len(self.name) <= 25: self.short_name = self.name
         else: self.short_name = base64.urlsafe_b64encode(hashlib.md5(self.name).digest())
         kwargs['job_name'] = self.short_name
@@ -183,6 +201,8 @@ class SLURMCommand(object):
         return self.id
 
     def write_script(self):
+        if self.save_script is True:
+            self.script_path = new_temp_path()
         if self.save_script:
             self.script_path = self.save_script
             with open(self.script_path, 'w') as handle: handle.write(self.script)
@@ -238,9 +258,8 @@ class SLURMJob(object):
         # Make SLURM object #
         self.slurm_command = SLURMCommand(script, save_script=script_path, out_file=output_path, **kwargs)
 
-    def launch(self):
-        self.id = self.slurm_command.launch()
-        return self.id
+    def run(self):
+        return self.slurm_command.run()
 
 ################################################################################
 if 'SLURM_NTASKS' in os.environ:
