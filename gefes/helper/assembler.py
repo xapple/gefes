@@ -59,10 +59,10 @@ class Assembly(object):
             stats = sh.aprun('-n', nr_threads, 'Ray23', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on Kalkyl #
         elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
-            stats = sh.mpiexec('-n', nr_threads, 'Ray', '-k', 81, '-o', out_dir, *pairs)
+            stats = sh.mpiexec('-n', nr_threads, 'Ray23', '-k', 81, '-o', out_dir, *pairs)
         # Call Ray just locally #
         else:
-            stats = sh.Ray('-k', 81, '-o', out_dir, *pairs)
+            stats = sh.Ray23('-k', 81, '-o', out_dir, *pairs)
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
