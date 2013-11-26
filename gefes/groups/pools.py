@@ -90,9 +90,9 @@ class Pool(object):
         return self.runner.run_slurm(*args, **kwargs)
 
     def clean_reads(self):
-        self.cleaner.clean()
+        self.cleaner.run()
 
-    def map(self):
+    def map_reads(self):
         self.mapper.map()
 
     def make_plots(self):
