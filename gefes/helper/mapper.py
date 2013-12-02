@@ -53,17 +53,20 @@ class Mapper(object):
         if not os.path.exists(self.contigs + '.fai'):
             raise(Exception('Samtools index file not created, run index() first'))
         # Do the mapping #
-        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
+        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.map_sam)
         # Create bam, sort and index bamfile #
-        sh.samtools('view', '-bt', self.contigs + '.fai', self.p.sam, _out=self.p.map_bam)
-        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam[:-4])
+        sh.samtools('view', '-bt', self.contigs + '.fai', self.p.map_sam, '-o', self.p.map_bam)
+        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
         self.remove_duplicates()
+        # Sort and index bam without duplicates #
+        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
+        sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
-        self.calc_coverage()
+        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
         # Clean up #
-        os.remove(self.p.sam)
+        os.remove(self.p.map_sam)
         os.remove(self.p.map_bam)
         os.remove(self.p.map_smd_bam)
 
@@ -85,19 +88,13 @@ class Mapper(object):
                 'VALIDATION_STRINGENCY=LENIENT',
                 'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
                 'REMOVE_DUPLICATES=TRUE')
-        # Sort and index bam without duplicates #
-        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam[:-4])
-        sh.samtools('index', self.p.map_smds_bam)
-
-    def calc_coverage(self):
-        # Determine Coverage with BEDTools #
-        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
 
     @property_cached
     def coverage(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
         coverage and percentage covered for each contig.  Returns a dict with fasta id as
         key and percentage covered and cov_mean as keys for the inner dictionary."""
+        # Main loop #
         out_dict = {}
         with open(self.p.map_smds_coverage) as handler:
             for line in handler:

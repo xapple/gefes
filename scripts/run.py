@@ -47,7 +47,7 @@ gefes.projects['test'].assembly.graphs[0].plot()
 gefes.projects['test'].assembly.index()
 gefes.projects['humic'].assembly.index()
 # Map the reads #
-for p in gefes.projects['test']: p.map()
+for p in gefes.projects['test']: p.mapper.map()
 for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])
 for p in gefes.projects['humic']: p.map()
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map':{}}])
