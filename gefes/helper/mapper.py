@@ -47,9 +47,9 @@ class Mapper(object):
         used to determine coverage."""
         # Check indexes #
         if not os.path.exists(self.contigs + '.1.bt2'):
-            raise(Exception('Bowtie2 index file not created, run index()'))
+            raise(Exception('Bowtie2 index file not created, run index() first'))
         if not os.path.exists(self.contigs + '.fai'):
-            raise(Exception('Samtools index file not created, run index()'))
+            raise(Exception('Samtools index file not created, run index() first'))
         # Do the mapping #
         sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
         # Create bam, sort and index bamfile #
@@ -105,12 +105,10 @@ class Mapper(object):
                     d["percentage_covered"] = 100 - float(fraction) * 100.0
                 else:
                     d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
-
         # Add 0 coverage for contigs not in the genomeCoverageBed output
         for c in self.assembly.contigs:
             if c.name not in out_dict:
                 out_dict[c.name] = {"cov_mean": 0, "percentage_covered": 0}
-
         return out_dict
 
     @property_cached
