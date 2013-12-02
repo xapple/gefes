@@ -16,9 +16,11 @@ import sh
 
 ###############################################################################
 class Mapper(object):
-    """Maps reads from a Pool to an Assembly.
-    The 'map_s' file is sorted.
-    The 'map_smd' is sorted and mark duplicated."""
+    """Maps reads from a Pool object to an Assembly object.
+    Names follow this standard:
+      * The 'map_s' file is sorted.
+      * The 'map_smd' file is sorted and mark duplicated.
+      * The 'map_smd' file is sorted, duplicated, and sorted again."""
 
     all_paths = """
     /map.sam
