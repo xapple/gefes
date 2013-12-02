@@ -51,3 +51,9 @@ for p in gefes.projects['test']: p.mapper.map()
 for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])
 for p in gefes.projects['humic']: p.map()
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map':{}}])
+
+# Bining frame #
+gefes.projects['test'].binner.export_frame()
+gefes.projects['humic'].binner.export_frame()
+# Clustering #
+gefes.projects['test'].binner.clusterer.run()

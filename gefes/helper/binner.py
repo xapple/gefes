@@ -14,12 +14,12 @@ import pandas
 
 ###############################################################################
 class Binner(object):
-    """Get a bunch of contigs, computes the coverage of the contigs,
-    computes the tetranucleotide frequency, clusters them, and is
-    responsible for delivering N bins, each with one or more contigs."""
+    """Makes the matrix detailing all information for every contig,
+    The output is N bins, each with one or more contigs inside."""
 
     all_paths = """
-    /mapping/
+    /clustering/
+    /frame.csv
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -38,13 +38,12 @@ class Binner(object):
     @property_cached
     def frame(self):
         tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
-        columns = ['length'] + [s.id_name for s in self.aggregate] + ['freq_' +
-        t for t in tetramers]
+        columns = ['length'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in tetramers]
+        rows = [c.name for c in self.aggregate.assembly.contigs]
+        data = [[c.length] +
+                [s.mapper.coverage[c.name]["cov_mean"] for s in self.aggregate] +
+                [c.tetra_nuc_freq.get(t, 0) for t in tetramers] for c in self.aggregate.assembly.contigs]
+        return pandas.DataFrame(data, columns=columns, index=rows)
 
-        frame = pandas.DataFrame([[c.length] +
-            [s.mapper.coverage[c.name]["cov_mean"] for s in self.aggregate] +
-            [c.tetra_nuc_freq.get(t, 0) for t in tetramers] for c
-            in self.aggregate.assembly.contigs], columns=columns, index=[c.name
-            for c in self.aggregate.assembly.contigs])
-
-        return frame
+    def export_frame(self):
+        self.frame.to_csv(self.p.frame)

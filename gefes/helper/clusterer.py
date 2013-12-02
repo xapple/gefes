@@ -23,5 +23,8 @@ class Clusterer(object):
         # Save parent #
         self.parent, self.pool = pool, pool
         # Auto paths #
-        self.base_dir = self.parent.base_dir
+        self.base_dir = self.parent.p.clustering
         self.p = AutoPaths(self.base_dir, self.all_paths)
+
+    def run(self):
+        pass
