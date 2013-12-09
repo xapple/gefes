@@ -12,13 +12,15 @@ from gefes.helper.linkage import parse_linkage_info_bam
 from gefes.common.slurm import nr_threads
 
 # Third party modules #
-import sh
+import sh, pandas
 
 ###############################################################################
 class Mapper(object):
-    """Maps reads from a Pool to an Assembly.
-    The 'map_s' file is sorted.
-    The 'map_smd' is sorted and mark duplicated."""
+    """Maps reads from a Pool object to an Assembly object.
+    Names follow this standard:
+      * The 'map_s' file is sorted.
+      * The 'map_smd' file is sorted and mark duplicated.
+      * The 'map_smd' file is sorted, duplicated, and sorted again."""
 
     all_paths = """
     /map.sam
@@ -47,21 +49,24 @@ class Mapper(object):
         used to determine coverage."""
         # Check indexes #
         if not os.path.exists(self.contigs + '.1.bt2'):
-            raise(Exception('Bowtie2 index file not created, run index()'))
+            raise(Exception('Bowtie2 index file not created, run index() first'))
         if not os.path.exists(self.contigs + '.fai'):
-            raise(Exception('Samtools index file not created, run index()'))
+            raise(Exception('Samtools index file not created, run index() first'))
         # Do the mapping #
-        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.sam)
+        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.map_sam)
         # Create bam, sort and index bamfile #
-        sh.samtools('view', '-bt', self.contigs + '.fai', self.p.sam, _out=self.p.map_bam)
-        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam[:-4])
+        sh.samtools('view', '-bt', self.contigs + '.fai', self.p.map_sam, '-o', self.p.map_bam)
+        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
         self.remove_duplicates()
+        # Sort and index bam without duplicates #
+        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
+        sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
-        self.calc_coverage()
+        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
         # Clean up #
-        os.remove(self.p.sam)
+        os.remove(self.p.map_sam)
         os.remove(self.p.map_bam)
         os.remove(self.p.map_smd_bam)
 
@@ -83,36 +88,44 @@ class Mapper(object):
                 'VALIDATION_STRINGENCY=LENIENT',
                 'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
                 'REMOVE_DUPLICATES=TRUE')
-        # Sort and index bam without duplicates #
-        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam[:-4])
-        sh.samtools('index', self.p.map_smds_bam)
 
-    def calc_coverage(self):
-        # Determine Coverage with BEDTools #
-        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
-
+    #-------------------------------------------------------------------------#
     @property_cached
     def coverage(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
-        coverage and percentage covered for each contig.  Returns a dict with fasta id as
-        key and percentage covered and cov_mean as keys for the inner dictionary."""
+        coverage and percentage covered for each contig. Returns a dict with fasta id as
+        key and containing 'percent_covered' with 'cov_mean' information inside.
+        The output file has the following headers:
+          * headers = ['name', 'depth', 'count', 'length', 'fraction']"""
+        # Main loop #
         out_dict = {}
         with open(self.p.map_smds_coverage) as handler:
             for line in handler:
                 name, depth, count, length, fraction = line.split()
-                d = out_dict.setdefault(name, {"cov_mean": 0, "percentage_covered": 100})
+                d = out_dict.setdefault(name, {"cov_mean": 0, "percent_covered": 100})
                 if int(depth) == 0:
-                    d["percentage_covered"] = 100 - float(fraction) * 100.0
+                    d["percent_covered"] = 100 - float(fraction) * 100.0
                 else:
                     d["cov_mean"] = d.get("cov_mean", 0) + int(depth) * float(fraction)
-
-        # Add 0 coverage for contigs not in the genomeCoverageBed output
+        # Add 0 coverage for contigs not in the output #
         for c in self.assembly.contigs:
             if c.name not in out_dict:
-                out_dict[c.name] = {"cov_mean": 0, "percentage_covered": 0}
-
+                out_dict[c.name] = {"cov_mean": 0, "percent_covered": 0}
+        # Return result #
         return out_dict
 
+    @property_cached
+    def coverage_alternative(self):
+        """Another way of computing the same thing. Not functional yet."""
+        frame = pandas.io.parsers.read_csv(self.p.map_smds_coverage, sep='\t')
+        out_dict = {}
+        for name in self.assembly.contigs.names:
+            cov_mean = frame[name][3] * frame[name][4] if name in frame else 0
+            percent_covered = 100 if 0 not in frame[name][3] else 100 - frame[name][3][0] * 100.0
+            out_dict[name] = {"cov_mean": cov_mean, "percent_covered": percent_covered}
+        return out_dict
+
+    #-------------------------------------------------------------------------#
     @property_cached
     def linkage_and_readcount(self):
         return parse_linkage_info_bam(bamfile=self.p.map_smds_bam.path,

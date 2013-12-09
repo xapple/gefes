@@ -24,7 +24,7 @@ dependencies.check_executables()
 # Output directory #
 view_dir = home + 'GEFES/views/'
 
-# Get pool files #
+# Get paths to module #
 self = sys.modules[__name__]
 module_dir = os.path.dirname(self.__file__)
 repos_dir = os.path.abspath(module_dir + '/../') + '/'

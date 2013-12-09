@@ -21,8 +21,11 @@ hostname = socket.gethostname()
 
 ###############################################################################
 class Assembly(object):
-    """The co-assembly of all pools."""
+    """The co-assembly of all pools. Will call the Ray assembler.
+    https://github.com/sebhtml/ray"""
+
     short_name = 'ray'
+    executable = 'Ray23'
 
     all_paths = """
     /graphs/
@@ -46,6 +49,7 @@ class Assembly(object):
 
     @property_cached
     def contigs(self):
+        """A list of all the contigs produced as custom objects"""
         return [Contig(self, s) for s in self.contigs_fasta]
 
     def assemble(self):
@@ -56,18 +60,19 @@ class Assembly(object):
         pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
         # Call Ray on the cray #
         if os.environ.get('CSCSERVICE') == 'sisu':
-            stats = sh.aprun('-n', nr_threads, 'Ray23', '-k', 81, '-o', out_dir, *pairs)
+            stats = sh.aprun('-n', nr_threads, self.executable, '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on Kalkyl #
         elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
-            stats = sh.mpiexec('-n', nr_threads, 'Ray23', '-k', 81, '-o', out_dir, *pairs)
+            stats = sh.mpiexec('-n', nr_threads, self.executable, '-k', 81, '-o', out_dir, *pairs)
         # Call Ray just locally #
         else:
-            stats = sh.Ray23('-k', 81, '-o', out_dir, *pairs)
+            command = sh.Command(self.executable)
+            stats = command('-k', 81, '-o', out_dir, *pairs)
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
     def index(self):
-        """Create two indexes. For both bowtie2 and samtools on assembly fasta file."""
+        """Create two indexes. For both bowtie2 and samtools on the contigs fasta file."""
         sh.bowtie2_build(self.contigs_fasta, self.contigs_fasta)
         sh.samtools('faidx', self.contigs_fasta)
 

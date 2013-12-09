@@ -23,7 +23,6 @@ gefes.projects['test'][0].runner(steps=[{'clean_reads':{}}], threads=False)
 ###############################################################################
 # Clean the pools #
 for p in gefes.projects['test']: p.clean_reads()
-gefes.projects['humic'].runner(steps=[{'clean_reads':{}}])
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'clean_reads':{}}])
 # The clean graphs #
 for p in gefes.projects['test']: p.make_plots()
@@ -36,6 +35,7 @@ gefes.projects['test'].assemble()
 # Assemble on kalykl #
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}])
 # Assemble on halvan #
+gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=16, time='15:00')
 gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], cluster='halvan', cores=64, time='6-12:00:00')
 # Assemble on sisu #
 gefes.projects['test'].runner.run_slurm(steps=[{'assemble':{}}], partition='test', machines=16, cores=256)
@@ -43,8 +43,17 @@ gefes.projects['humic'].runner.run_slurm(steps=[{'assemble':{}}], partition='lar
 # The assembly graphs #
 gefes.projects['test'].assembly.graphs[0].plot()
 
-
-# Map #
+# Index the result #
 gefes.projects['test'].assembly.index()
-for p in gefes.projects['test']: p.map()
+gefes.projects['humic'].assembly.index()
+# Map the reads #
+for p in gefes.projects['test']: p.mapper.map()
 for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])
+for p in gefes.projects['humic']: p.map()
+for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map':{}}])
+
+# Bining frame #
+gefes.projects['test'].binner.export_frame()
+gefes.projects['humic'].binner.export_frame()
+# Clustering #
+gefes.projects['test'].binner.clusterer.run()

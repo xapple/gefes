@@ -258,6 +258,9 @@ class SLURMJob(object):
         # Make SLURM object #
         self.slurm_command = SLURMCommand(script, save_script=script_path, out_file=output_path, **kwargs)
 
+    def launch(self):
+        return self.slurm_command.launch()
+
     def run(self):
         return self.slurm_command.run()
 
