@@ -48,9 +48,9 @@ gefes.projects['test'].assembly.index()
 gefes.projects['humic'].assembly.index()
 # Map the reads #
 for p in gefes.projects['test']: p.mapper.map()
-for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map':{}}])
+for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map_reads':{}}])
 for p in gefes.projects['humic']: p.map()
-for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map':{}}])
+for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map_reads':{}}], time='12:00:00')
 
 # Bining frame #
 gefes.projects['test'].binner.export_frame()

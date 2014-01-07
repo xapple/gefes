@@ -16,6 +16,7 @@ class PoolRunner(Runner):
     default_steps = [
         {'clean_reads':           {}},
         {'make_plots':            {}},
+        {'map_reads':             {}},
     ]
 
     def __init__(self, parent):
