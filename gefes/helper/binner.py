@@ -11,6 +11,8 @@ from gefes.common.cache import property_cached
 
 # Third party modules #
 import pandas
+from sklearn import cluster
+from Bio.Seq import Seq
 
 ###############################################################################
 class Binner(object):
@@ -38,6 +40,9 @@ class Binner(object):
     @property_cached
     def frame(self):
         tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
+        for t in tetramers:
+            tetramers.remove(Seq(t).reverse_complement().tostring())
+
         columns = ['length'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in tetramers]
         rows = [c.name for c in self.aggregate.assembly.contigs]
         data = [[c.length] +
@@ -45,5 +50,3 @@ class Binner(object):
                 [c.tetra_nuc_freq.get(t, 0) for t in tetramers] for c in self.aggregate.assembly.contigs]
         return pandas.DataFrame(data, columns=columns, index=rows)
 
-    def export_frame(self):
-        self.frame.to_csv(self.p.frame)

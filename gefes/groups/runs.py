@@ -37,7 +37,8 @@ class Run(Aggregate):
         # Extra #
         self.xml_report_path = home + "proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
         # Auto exec #
-        self.parse_report_xml()
+        if os.path.isfile(self.xml_report_path):
+            self.parse_report_xml()
 
     def parse_report_xml(self):
         tree = etree.parse(self.xml_report_path)
