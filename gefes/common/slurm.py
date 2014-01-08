@@ -94,7 +94,7 @@ class SLURMCommand(object):
         ('project'   , {'needed': False, 'tag': '#SBATCH -A %s',          'default': os.environ.get('SLURM_ACCOUNT')}),
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',          'default': '0:15:00'}),
         ('machines'  , {'needed': True,  'tag': '#SBATCH -N %s',          'default': '1'}),
-        ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',          'default': '8'}),
+        ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',          'default': '16'}),
         ('partition' , {'needed': True,  'tag': '#SBATCH -p %s',          'default': 'node'}),
         ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s', 'default': os.environ.get('EMAIL')}),
         ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s', 'default': 'END'}),

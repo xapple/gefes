@@ -96,7 +96,8 @@ class Mapper(object):
         coverage and percentage covered for each contig. Returns a dict with fasta id as
         key and containing 'percent_covered' with 'cov_mean' information inside.
         The output file has the following headers:
-          * headers = ['name', 'depth', 'count', 'length', 'fraction']"""
+          * headers = ['name', 'depth', 'count', 'length', 'fraction']
+        http://bedtools.readthedocs.org/en/latest/content/tools/genomecov.html"""
         # Main loop #
         out_dict = {}
         with open(self.p.map_smds_coverage) as handler:
