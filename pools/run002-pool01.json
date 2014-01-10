@@ -1,58 +1,29 @@
 {
     "contacts": {
         "main": {
-            "name": "Moritz Buck",
-            "email": "mrtz.buck@gmail.com"
+            "name": "Sarahi Garcia",
+            "email": "sarilog@gmail.com"
         },
         "pi": {
             "name": "Alexander Eiler",
             "email": "alexander.eiler@ebc.uu.se"
         },
-        "sampling": {
-            "name": null,
-            "email": null
-        },
-        "lab": {
-            "name": null,
-            "email": null
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "mrtz.buck@gmail.com"
         }
     },
 
     "uppmax_id":    "b2011138",
     "run_num":       2,
-    "run_id":        "acI_envrichments",
+    "run_id":        "acI_enrichments",
     "pool_num":      1,
-    "pool_id":       "ACI_B2_encrichement_FB6",
-    "forward_reads": "ACI_B2_encrichement_FB6_R1.fastq.gz",
-    "reverse_reads": "ACI_B2_encrichement_FB6_R2.fastq.gz",
+    "pool_id":       "ACI_B2_enrichement_FB6",
+    "forward_reads": "ACI_B2_enrichement_FB6_R1.fastq.gz",
+    "reverse_reads": "ACI_B2_enrichement_FB6_R2.fastq.gz",
 
     "project":       "acI",
     "project_name":  "acI enrichments",
     "pool":          "FB6",
-    "pool_name":     "FB6",
-
-    "remarks":       "",
-
-    "metadata": {
-        "date": null,
-        "layer": null,
-        "depth": [null, "to", null, "m"],
-
-        "ph": [null, "-log10([H+])"],
-        "temperature": [null, "Celsius"],
-        "alkalinity": [null, "mmol/l"],
-        "doc": [null, "mgC/l"],
-        "poc": [null, "mgC/l"],
-        "color": [null, "mg/l", "420nm, platinum"],
-        "oxygen": [null, null],
-        "methane": [null, "nM"],
-        "chlorophyll": [null, "µg/l"],
-
-        "extraction": null,
-        "dna_after_extraction": [null, "ng/µl", "PicoGreen"],
-        "amplification": null,
-        "dna_after_amplification": [null, "ng/µl", "NanoDrop"],
-
-        "seq_technology": "Illumina HiSeq, Paired end 100bp"
-    }
+    "pool_name":     "FB6"
 }

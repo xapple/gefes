@@ -52,7 +52,7 @@ for p in gefes.projects['test']: p.runner.run_slurm(steps=[{'map_reads':{}}])
 for p in gefes.projects['humic']: p.map()
 for p in gefes.projects['humic']: p.runner.run_slurm(steps=[{'map_reads':{}}], time='12:00:00')
 
-# Bining frame #
+# Binning frame #
 gefes.projects['test'].binner.export_frame()
 gefes.projects['humic'].binner.export_frame()
 # Clustering #

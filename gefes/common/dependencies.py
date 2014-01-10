@@ -5,7 +5,7 @@ import subprocess, sys
 modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool', 'pysam']
 
 # Required executables #
-executables = ['sickle','Ray']
+executables = ['sickle','Ray23']
 
 ################################################################################
 # We might be missing some executables #

@@ -11,10 +11,10 @@ from gefes.common.cache import property_cached
 
 # Third party modules #
 import pandas
-from sklearn import cluster
 from Bio.Seq import Seq
-from scipy.spatial import distance
-from scipy.cluster import hierarchy
+#from sklearn import cluster
+#from scipy.spatial import distance
+#from scipy.cluster import hierarchy
 
 ###############################################################################
 class Binner(object):
@@ -49,9 +49,7 @@ class Binner(object):
             if t[::-1] in tetramers:
                 if t!=t[::-1]:
                     tetramers.remove(t[::-1])
-
         tetra_cats={t:list(set((t,t[::-1],Seq(t).reverse_complement().tostring(),Seq(t[::-1]).reverse_complement().tostring()))) for t in tetramers}
-        
         columns = ['length'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in tetramers]
         rows = [c.name for c in self.aggregate.assembly.contigs]
         data = [[c.length] +

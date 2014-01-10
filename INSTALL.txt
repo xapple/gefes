@@ -29,6 +29,7 @@ pip install statsmodels
 pip install pandas
 pip install pysam
 pip install ipython
+pip install scikit-learn
 pyenv rehash
 
 # Some environment variables #
