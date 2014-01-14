@@ -12,9 +12,9 @@ from gefes.common.cache import property_cached
 # Third party modules #
 import pandas
 from Bio.Seq import Seq
-#from sklearn import cluster
-#from scipy.spatial import distance
-#from scipy.cluster import hierarchy
+from sklearn import cluster
+from scipy.spatial import distance
+from scipy.cluster import hierarchy
 
 ###############################################################################
 class Binner(object):

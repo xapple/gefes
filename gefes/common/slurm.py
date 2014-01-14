@@ -74,10 +74,7 @@ class SLURMCommand(object):
             command = 'import sh\n'
             command += 'script = sh.Command("analyze.py")\n'
             command += 'script(%s)' % path
-            job = SLURMCommand(command,
-                               time='00:01:00',
-                               qos='short',
-                               job_name=path[-25:])
+            job = SLURMCommand(command, time='00:01:00', qos='short', job_name=path[-25:])
             job.run()
             print "Job %i is running !" % job.id
     """

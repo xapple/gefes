@@ -14,7 +14,8 @@ import sh
 
 ###############################################################################
 class Cleaner(object):
-    """Takes care of cleaning the raw reads."""
+    """Takes care of cleaning the raw reads by first running cutadapt followed
+    by sickle."""
 
     all_paths = """
     /sickle
