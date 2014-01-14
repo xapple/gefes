@@ -1,4 +1,4 @@
- Futures #
+# Futures #
 from __future__ import division
 
 # Built-in modules #
@@ -22,7 +22,7 @@ class Cleaner(object):
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
-    def __len__(self): return len(self.sickle.pair)
+    def __len__(self): return len(self.pair)
 
     def __init__(self, pool):
         # Save parent #
@@ -36,6 +36,7 @@ class Cleaner(object):
         # Final files #
         self.fwd = self.sickle.fwd
         self.rev = self.sickle.rev
+        self.pair = self.sickle.pair
 
     def run(self):
         #self.cutadapt.run()
