@@ -37,6 +37,7 @@ class Cleaner(object):
         # Final files #
         self.fwd = self.sickle.fwd
         self.rev = self.sickle.rev
+        self.pair = self.sickle.pair
 
     def run(self):
         #self.cutadapt.run()
