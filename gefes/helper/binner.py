@@ -8,13 +8,11 @@ from itertools import product
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
 from gefes.common.cache import property_cached
+from Bio.Seq import Seq
+
 
 # Third party modules #
 import pandas
-from Bio.Seq import Seq
-from sklearn import cluster
-from scipy.spatial import distance
-from scipy.cluster import hierarchy
 
 ###############################################################################
 class Binner(object):
@@ -35,7 +33,7 @@ class Binner(object):
         self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Children #
-        self.clusterer = Clusterer(self)
+
         # Output #
         self.bins = []
 
@@ -60,3 +58,6 @@ class Binner(object):
     def export_frame(self):
         self.frame.to_csv(self.p.frame)
 
+    @property_cached
+    def clusterer(self):
+        return Clusterer(self)
