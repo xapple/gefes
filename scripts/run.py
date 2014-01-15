@@ -57,3 +57,18 @@ gefes.projects['test'].binner.export_frame()
 gefes.projects['humic'].binner.export_frame()
 # Clustering #
 gefes.projects['test'].binner.clusterer.run()
+
+
+###############################################################################
+
+# Clean the pools #
+for p in gefes.projects['acI']: p.clean_reads()
+gefes.projects['acI'].graphs[0].plot()
+
+#assemble
+gefes.projects['acI'].runner.run_slurm(steps=[{'assemble':{}}], partition='large', machines=64, cores=1024, time='1-00:00:00')
+
+#index
+gefes.projects['acI'].assembly.index()
+#on a dedicated machine
+for p in gefes.projects['acI']: p.runner.run_slurm(steps=[{'map_reads':{}}], time='12:00:00',project='default')

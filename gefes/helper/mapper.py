@@ -43,7 +43,7 @@ class Mapper(object):
         self.base_dir = self.pool.p.mapping_dir + self.assembly.short_name
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def map(self):
+    def map(self,threads=nr_threads):
         """Maps reads from self.pool to self.assembly using bowtie2. PCR
         Duplicates are afterwards removed using MarkDuplicates. BEDTools is
         used to determine coverage."""
@@ -53,7 +53,7 @@ class Mapper(object):
         if not os.path.exists(self.contigs + '.fai'):
             raise(Exception('Samtools index file not created, run index() first'))
         # Do the mapping #
-        sh.bowtie2('-p', nr_threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.map_sam)
+        sh.bowtie2('-p', threads, '-x', self.contigs, '-1', self.pool.fwd, '-2', self.pool.rev, '-S', self.p.map_sam)
         # Create bam, sort and index bamfile #
         sh.samtools('view', '-bt', self.contigs + '.fai', self.p.map_sam, '-o', self.p.map_bam)
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)

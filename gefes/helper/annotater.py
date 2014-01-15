@@ -12,6 +12,8 @@ from gefes.helper.contig import Contig
 from gefes.fasta.single import FASTA
 from gefes.common.slurm import nr_threads
 
+import sh
+
 class Annotation(object):
     """The genomic annotation from one annotation tool"""
     
@@ -20,10 +22,24 @@ class Annotation(object):
 /short_form.txt
 /additional_output/
 """
-    tools=['blastx']
+    tools=['prodigal:blastn']
 
     def __init__(self,contig,tool,parameters):
         # Save parent #
         self.parent, self.contig = contig, contig
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        if tool in tools: self.tool=tool
+        else: self.tool=tools[0]
+        sel.parameters=parameters
+
+
+    def annotate_prodigal_blastn(self):
+        # folder where to output intermediate files #
+        out_dir = self.p.output_dir
+        command = sh.Command('prodigal')
+        stats = command('-k', 81, '-o', out_dir, *pairs)
+        # Print the report #
+        with open(self.p.report, 'w') as handle: handle.write(str(stats))
+
+        
