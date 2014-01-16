@@ -9,6 +9,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
 from gefes.common.cache import property_cached
 from Bio.Seq import Seq
+from gefes.fasta.single import FASTA
 
 
 # Third party modules #
@@ -21,6 +22,7 @@ class Binner(object):
 
     all_paths = """
     /clustering/
+    /bins/
     /frame.csv
     """
 
@@ -33,7 +35,7 @@ class Binner(object):
         self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Children #
-
+        self.clusterer=Clusterer(self)
         # Output #
         self.bins = []
 
@@ -55,9 +57,16 @@ class Binner(object):
                 [sum([c.tetra_nuc_freq.get(tt,0) for tt in tetra_cats[t]]) for t in tetra_cats] for c in self.aggregate.assembly.contigs]
         return pandas.DataFrame(data, columns=columns, index=rows)
 
+    def filtered_frame(self,max_freq,min_len):
+        temp_frame = self.frame
+        if(min_len is not None):
+            temp_frame = temp_frame[temp_frame.length > min_len]
+        if(max_freq is not None):
+            good_ones = temp_frame[[c for c in temp_frame if "freq" in c]].apply(lambda x: sum(x>max_freq)==0,1)
+            temp_frame = temp_frame[good_ones]
+        return temp_frame
+
+    
     def export_frame(self):
         self.frame.to_csv(self.p.frame)
 
-    @property_cached
-    def clusterer(self):
-        return Clusterer(self)

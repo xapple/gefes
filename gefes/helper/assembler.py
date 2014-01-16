@@ -78,3 +78,9 @@ class Assembly(object):
 
     def make_plots(self):
         for graph in self.graphs: graph.plot()
+
+
+    def write_contiglist(self,contig_list,path,file_name):
+        contig_list=[o for o in self.contigs if o.name in contig_list]
+        with FASTA(os.path.join(path,file_name)) as ffile:
+            for c in contig_list: ffile.add_seq(c.record)

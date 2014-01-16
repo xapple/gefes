@@ -20,9 +20,10 @@ class Annotation(object):
     all_paths = """
 /annotation.gff
 /short_form.txt
-/additional_output/
+/Phyl_AMPHORA/
+/prodigal_blastn/
 """
-    tools=['prodigal:blastn']
+    tools=['prodigal:blastn','Phyl_AMPHORA']
 
     def __init__(self,contig,tool,parameters):
         # Save parent #

@@ -11,7 +11,7 @@ fpath= [pat+n+".fasta" for n in names]
 
     
 def write_contig_list(contig_list,path,file):
-    contig_list=[o for o in gefes.projects["humic"].assembly.contigs if o.name in contig_list]
+    contig_list=[o for o in gefes.projects["acI"].assembly.contigs if o.name in contig_list]
     ffile=FASTA(path+file)
     print "saving to "+path+file
     ffile.create()

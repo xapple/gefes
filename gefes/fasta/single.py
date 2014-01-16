@@ -22,7 +22,10 @@ class FASTA(FilePath):
     def __iter__(self): return self.parse()
     def __repr__(self): return '<%s object on "%s">' % (self.__class__.__name__, self.path)
     def __nonzero__(self): return os.path.getsize(self.path) != 0
-
+    def __enter__(self):
+        self.create()
+        return self
+    def __exit__(self, exc_type, exc_value, traceback): self.close()
     def __init__(self, path):
         self.path = path
 

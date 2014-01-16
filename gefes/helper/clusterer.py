@@ -8,6 +8,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 
 # Third party modules #
+import os
 import pandas
 from sklearn import cluster
 from scipy.spatial import distance
@@ -21,6 +22,7 @@ class Clusterer(object):
 
     all_paths = """
     /lorem.txt
+    /kmeans/
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -31,86 +33,68 @@ class Clusterer(object):
         # Auto paths #
         self.base_dir = self.parent.p.clustering
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Methods
         self.kmeans = GefesKMeans(self)
-        self.__min_length = 0
-        self.__max_freq = 0
-        
+ 
     def run(self):
-        pass
-
-    def frame_filter(self):
-        temp_frame = self.parent.frame
-        if(self.min_length):
-            temp_frame = temp_frame[temp_frame.length > self.__min_length]
-        if(self.max_freq):
-            good_ones = temp_frame[[c for c in temp_frame if "freq" in c]].apply(lambda x: sum(x>self.max_freq)!=0,1)
-            temp_frame = temp_frame[good_ones]
-        tetras = temp_frame[[c for c in temp_frame if "freq" in c]]
-        covers = temp_frame[[c for c in temp_frame if "freq" not in c and c!="length"]]
-        names = [f[0] for f in temp_frame.itertuples()]
-        return (names,tetras,covers)
-
+        self.kmeans.run()
         
-    @property
-    def min_length(self):
-        return self.__min_length
-        
-    @property
-    def max_freq(self):
-        return self.__max_freq
-
-    @min_length.setter
-    def min_length(self,len):
-        __min_length=len
-        self.kmeans.reset()
-
-    @max_freq.setter
-    def max_freq(self,freq):
-        __max_freq=freq
-        self.kmeans.reset()
-
-    
-        
-        
+ 
 ###############################################################################
 class GefesKMeans(object):
     """Receives the matrix and uses kmeans to cluster it in N different (linearly separated) clusters"""
 
-    def __init__(self,parent,nb=8):
-        self.__number_clusts=nb
-        self.parent = parent
-        self.algorithm = KMeans(self.__number_clusts)
-        self.__tetras_clusters = None
-        self.__coverage_clusters = None
-        
-
-    def run(self):
-        (names,tetras,covers) = self.parent.frame_filter()
-        self.__tetras_clusters = self.algorithm.fit_predict(tetras)        
-        self.__coverage_clusters = self.algorithm.fit_predict(covers)
-
-    def reset(self):
-        self.__tetras_clusters = None
-        self.__coverage_clusters = None
-        
-    @property
-    def number_clusts(self):
-        return __number_clusts
-
-    @number_clusts.setter
-    def number_clusts(self,nb):
-        self.__number_clusts = nb
-        self.algorithm = KMeans(self.__number_clusts)
-        self.reset()
-        
-    @property
-    def tetras_clusters(self):
-        if(self.__tetras_clusters is None): self.run()       
-        return self.__tetras_clusters
-
-    @property
-    def coverage_clusters(self):
-        if(self.__coverage_clusters is None): self.run()       
-        return  self.__coverage_clusters
+    all_paths = """
+    /tetramer_clusters/
+    /coverage_clusters/
+    """
 
     
+    def __init__(self,parent,nb = 8,max_freq = None,min_length = None):
+        # Save parent
+        self.parent = parent
+        # Kmeans and params
+        self.number_clusts=nb
+        self.algorithm = KMeans(self.number_clusts)
+        # Autopath
+        self.base_dir = self.parent.p.kmeans
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Clusters
+        self.tetras_clusters = None
+        self.coverage_clusters = None
+        # Filters
+        self.max_freq = max_freq
+        self.min_length = min_length
+        
+
+    def run(self, nb = None, max_freq = None, min_length = None):
+        if nb:
+            self.number_clusts=nb
+            self.algorithm = KMeans(self.number_clusts)
+        if max_freq: self.max_freq = max_freq
+        if min_length: self.min_length = max_freq
+        self.frame = self.parent.parent.filtered_frame(self.max_freq,self.min_length)
+        tetras = self.frame[[c for c in self.frame if "freq" in c]]
+        covers = self.frame[[c for c in self.frame if "freq" not in c and c!="length"]]
+        self.tetras_clusters = self.algorithm.fit_predict(tetras)        
+        self.coverage_clusters = self.algorithm.fit_predict(covers)
+        self.export()
+
+    def export(self):
+        parameters = "-".join(["nb_clusts",str(self.number_clusts),"min_len",str(self.min_length),"max_freq",str(self.max_freq)])
+        assembly = self.parent.parent.parent.assembly
+        contigs = [f[0] for f in self.frame.itertuples()]
+        path=os.path.join(self.p.tetramer,parameters)
+        for i in set(self.tetras_clusters):
+            contig_list=[]
+            for j in range(0,len(contigs)):
+                if(self.tetras_clusters[j] == i): contig_list.append(contigs[j])
+            assembly.write_contiglist(contig_list,path,"bin_"+str(i)+".fasta")
+        path=os.path.join(self.p.coverage,parameters)
+        for i in set(self.coverage_clusters):
+            contig_list=[]
+            for j in range(0,len(contigs)):
+                if(self.coverage_clusters[j] == i): contig_list.append(contigs[j])
+            assembly.write_contiglist(contig_list,path,"bin_"+str(i)+".fasta")
+
+            
