@@ -2,14 +2,13 @@
 from __future__ import division
 
 # Built-in modules #
-from itertools import product
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
 from gefes.common.cache import property_cached
-from Bio.Seq import Seq
 from gefes.fasta.single import FASTA
+from gefes.helper.contig import Contig
 
 
 # Third party modules #
@@ -41,20 +40,9 @@ class Binner(object):
 
     @property_cached
     def frame(self):
-        tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
-        for t in tetramers:
-            if Seq(t).reverse_complement().tostring() != t:
-                tetramers.remove(Seq(t).reverse_complement().tostring())
-        for t in tetramers:
-            if t[::-1] in tetramers:
-                if t!=t[::-1]:
-                    tetramers.remove(t[::-1])
-        tetra_cats={t:list(set((t,t[::-1],Seq(t).reverse_complement().tostring(),Seq(t[::-1]).reverse_complement().tostring()))) for t in tetramers}
-        columns = ['length'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in tetramers]
+        columns = ['length'] + ['gc_content'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in Contig.tetra_cats]
         rows = [c.name for c in self.aggregate.assembly.contigs]
-        data = [[c.length] +
-                [s.mapper.coverage[c.name]["cov_mean"] for s in self.aggregate] +
-                [sum([c.tetra_nuc_freq.get(tt,0) for tt in tetra_cats[t]]) for t in tetra_cats] for c in self.aggregate.assembly.contigs]
+        data = [[c.length] + [c.gc_content] + [s.mapper.coverage[c.name]["cov_mean"] for s in self.aggregate] + c.get_all_tetra_nuc_freqs() for c in self.aggregate.assembly.contigs]
         return pandas.DataFrame(data, columns=columns, index=rows)
 
     def filtered_frame(self,max_freq,min_len):

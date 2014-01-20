@@ -2,10 +2,13 @@
 from __future__ import division
 
 # Built-in modules #
+from itertools import product
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
+from gefes.helper.annotater import Annotation
+from Bio.Seq import Seq
 
 # Third party modules #
 
@@ -15,8 +18,22 @@ class Contig(object):
 
     all_paths = """
     /lorem.txt
+    /Annotation/
     """
 
+    tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
+    for t in tetramers:
+        if Seq(t).reverse_complement().tostring() != t:
+            tetramers.remove(Seq(t).reverse_complement().tostring())
+        for t in tetramers:
+            if t[::-1] in tetramers:
+                if t!=t[::-1]:
+                    tetramers.remove(t[::-1])
+    tetra_cats = {t:list(set((t,t[::-1],Seq(t).reverse_complement().tostring(),Seq(t[::-1]).reverse_complement().tostring()))) for t in tetramers}
+
+
+
+    
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
 
     def __init__(self, assembly, record):
@@ -27,7 +44,9 @@ class Contig(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         self.record = record
         self.name = self.record.id
-
+        self.annotation = Annotation(self,None,None)
+        
+        
     def get_nuc_freq(self, windowsize):
         """Returns frequency of nucelotide sequence with length windowsize in
         given sequence."""
@@ -56,9 +75,25 @@ class Contig(object):
         # normalize counts by number of windows to get frequency
         for nuc_win in freqs:
             freqs[nuc_win] = freqs[nuc_win] / float(self.length - windowsize + 1)
-
         return freqs
 
+    def get_all_tetra_nuc_freqs(self):
+        freqs=[]
+        for t in Contig.tetra_cats:
+            freqs = freqs + [sum([self.tetra_nuc_freq.get(tt,0) for tt in Contig.tetra_cats[t]])]
+        return freqs
+
+    @property
+    def gc_content(self):
+        outp = 0
+        gs = self.nuc_freq.get("G")
+        cs = self.nuc_freq.get("C")
+        if gs:
+            outp = outp + gs
+        if cs:
+            outp = outp + cs
+        return outp
+    
     @property
     def length(self):
         return len(self.record.seq)
@@ -70,3 +105,4 @@ class Contig(object):
     @property_cached
     def tetra_nuc_freq(self):
         return self.get_nuc_freq(4)
+
