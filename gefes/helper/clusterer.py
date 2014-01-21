@@ -14,6 +14,7 @@ from sklearn import cluster
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
 from sklearn.cluster  import KMeans
+import math
 
 ###############################################################################
 class Clusterer(object):
@@ -27,9 +28,10 @@ class Clusterer(object):
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, pool):
+    def __init__(self, binner):
         # Save parent #
-        self.parent, self.pool = pool, pool
+        self.parent = binner
+        self.assembly = self.parent.aggregate.assembly
         # Auto paths #
         self.base_dir = self.parent.p.clustering
         self.p = AutoPaths(self.base_dir, self.all_paths)
@@ -65,17 +67,21 @@ class GefesKMeans(object):
         # Filters
         self.max_freq = max_freq
         self.min_length = min_length
+        self.log10covs=False
         
 
-    def run(self, nb = None, max_freq = None, min_length = None):
+    def run(self, nb = None, max_freq = None, min_len = None,log10covs=None):
         if nb:
             self.number_clusts=nb
             self.algorithm = KMeans(self.number_clusts)
         if max_freq: self.max_freq = max_freq
-        if min_length: self.min_length = max_freq
-        self.frame = self.parent.parent.filtered_frame(self.max_freq,self.min_length)
+        if min_len: self.min_length = min_len
+        if log10covs: self.log10covs = log10covs
+        self.frame = self.parent.assembly.filtered_frame(self.max_freq,self.min_length)
         tetras = self.frame[[c for c in self.frame if "freq" in c]]
-        covers = self.frame[[c for c in self.frame if "freq" not in c and c!="length"]]
+        covers = self.frame[[c for c in self.frame if "pool" in c]]
+        log10p1 = lambda x: math.log10(x+1)
+        if self.log10covs: covers = covers.applymap(log10p1)
         self.tetras_clusters = self.algorithm.fit_predict(tetras)        
         self.coverage_clusters = self.algorithm.fit_predict(covers)
         self.export()
