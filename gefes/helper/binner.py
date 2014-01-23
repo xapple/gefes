@@ -36,3 +36,6 @@ class Binner(object):
         # Output #
         self.bins = []
 
+
+    def run():
+        if self.clusterer.clusters is None: self.clusterer.run()

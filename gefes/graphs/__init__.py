@@ -3,6 +3,8 @@ import os, time, getpass, locale
 
 # Third party modules #
 import matplotlib
+from matplotlib import animation
+
 
 # No need for an X display #
 matplotlib.use('Agg', warn=False)
@@ -20,6 +22,7 @@ class Graph(object):
         if short_name: self.short_name = short_name
         # Paths #
         self.path = self.base_dir + self.short_name + '.pdf'
+        self.avi_path = self.base_dir + self.short_name + '.avi'
         self.csv_path = self.base_dir + self.short_name + '.csv'
         self.json_path = self.base_dir + self.short_name + '.json'
         # Extra #
@@ -46,4 +49,18 @@ class Graph(object):
             seperate = lambda x,pos: locale.format("%d", x, grouping=True)
             axes.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(seperate))
         # Save it #
+        print(self.path)
         fig.savefig(self.path)
+
+    def save_anim(self, fig, animate, init, width=15, height=15, bitrate=10000,fps=10):
+
+        fig.set_figwidth(height)
+        fig.set_figheight(width)
+
+        anim = animation.FuncAnimation(fig, animate, init_func=init, frames=360, interval=20)
+
+        FFMpegWriter = animation.writers['ffmpeg']
+        writer = FFMpegWriter( bitrate= bitrate, fps=fps)
+
+        # Save
+        anim.save(self.avi_path, writer=writer, codec='x264')#,  extra_args=['--verbose-debug','-vcodec', 'libx264'])

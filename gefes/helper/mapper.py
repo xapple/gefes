@@ -131,7 +131,7 @@ class Mapper(object):
     def linkage_and_readcount(self):
         return parse_linkage_info_bam(bamfile=self.p.map_smds_bam.path,
                 readlength=100, min_contig_length=100, regionlength=500,
-                fullsearch=True)
+                fullsearch=False)
 
     @property
     def linkage(self):
