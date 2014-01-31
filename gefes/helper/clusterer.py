@@ -44,7 +44,7 @@ class Clusterer(object):
         
     def run(self):
         self.kmeans.run()
-        self.clusters=kmeans.clusters
+        self.clusters=self.kmeans.clusters
         
     def log10(x):
         return covers.applymap(math.log10)
@@ -107,9 +107,11 @@ class GefesKMeans(object):
         self.tetras_clusters = self.algorithm.fit_predict(tetras)        
         self.coverage_clusters = self.algorithm.fit_predict(covers)
         self.combo_clusters = self.algorithm.fit_predict(combo)
-        self.clusters =  zip(self.frame.index,self.combo_clusters)
-        if self.parent.clusters is None: self.parent.clusters = self.clusters
-        #self.export()
+        self.clusters =  zip(self.frame.index,self.tetras_clusters)
+        self.parent.clusters = self.clusters
+        self.parent.default =  self
+
+                #self.export()
 
     def export(self):
         parameters = "-".join(["nb_clusts",str(self.number_clusts),"min_len",str(self.min_length),"max_freq",str(self.max_freq),"transform",self.transform])

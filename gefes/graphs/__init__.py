@@ -52,7 +52,7 @@ class Graph(object):
         print(self.path)
         fig.savefig(self.path)
 
-    def save_anim(self, fig, animate, init, width=15, height=15, bitrate=10000,fps=10):
+    def save_anim(self, fig, animate, init, width=15, height=15, bitrate = 10000, fps = 10):
 
         fig.set_figwidth(height)
         fig.set_figheight(width)

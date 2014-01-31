@@ -26,8 +26,8 @@
     "forward_reads": "AE013_ATCACG_L007_R1_001.fastq.gz",
     "reverse_reads": "AE013_ATCACG_L007_R2_001.fastq.gz",
 
-    "project":       "humic",
-    "project_name":  "Finish humic lakes",
+    "project":       "alinen",
+    "project_name":  "Finnish humic lakes",
     "pool":          "alinen",
     "pool_name":     "Alinen Mustajärvi (Hämeenlinna)",
 

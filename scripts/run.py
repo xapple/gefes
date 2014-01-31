@@ -72,5 +72,6 @@ gefes.projects['acI'].runner.run_slurm(steps=[{'assemble':{}}], partition='large
 gefes.projects['acI'].assembly.index()
 #on a dedicated machine
 for p in gefes.projects['acI']: p.runner.run_slurm(steps=[{'map_reads':{}}], time='12:00:00',project='default')
-single_acIs=[gefes.Project('acI'+p.id_name,p,'/homeappl/home/buck/GEFES/views/projects/') for p in gefes.projects['acI']]
+
+single_acIs=[gefes.Project('acI'+p.id_name,[p],'/homeappl/home/buck/GEFES/views/projects/') for p in gefes.projects['acI']]
 for p in gefes.projects['acI']: p.runner.run_slurm(steps=[{'assemble':{}}], partition='large', machines=64, cores=1024, time='1-00:00:00')

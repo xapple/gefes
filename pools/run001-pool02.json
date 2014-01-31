@@ -26,7 +26,7 @@
     "forward_reads": "AE012_CGATGT_L007_R1_001.fastq.gz",
     "reverse_reads": "AE012_CGATGT_L007_R2_001.fastq.gz",
 
-    "project":       "humic",
+    "project":       "mekkojarvi",
     "project_name":  "Finish humic lakes",
     "pool":          "mekkojarvi",
     "pool_name":     "Mekkojärvi (Hämeenlinna)",

@@ -133,8 +133,8 @@ def parse_linkage_info_bam(bamfile, readlength, min_contig_length, regionlength,
                     else:
                         linkdict[refm][ref][ori] += 1
     # Remove default generators
-    linkdict.default_factory = None
-    for v in linkdict.itervalues():
-        v.default_factory = None
+    #linkdict.default_factory = None
+    #for v in linkdict.itervalues():
+    #    v.default_factory = None
     read_count_dict.default_factory = None
     return linkdict, read_count_dict
