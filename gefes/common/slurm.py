@@ -88,7 +88,7 @@ class SLURMCommand(object):
         ('change_dir', {'needed': True,  'tag': '#SBATCH -D %s',          'default': os.path.abspath(os.getcwd())}),
         ('job_name'  , {'needed': False, 'tag': '#SBATCH -J %s',          'default': 'test_slurm'}),
         ('out_file'  , {'needed': True,  'tag': '#SBATCH -o %s',          'default': '/dev/null'}),
-        ('project'   , {'needed': False, 'tag': '#SBATCH -A %s',          'default': os.environ.get('SLURM_ACCOUNT')}),
+        ('project'   , {'needed': True, 'tag': '#SBATCH -A %s',          'default': os.environ.get('SLURM_ACCOUNT')}),
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',          'default': '0:15:00'}),
         ('machines'  , {'needed': True,  'tag': '#SBATCH -N %s',          'default': '1'}),
         ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',          'default': '16'}),

@@ -47,11 +47,11 @@ class Clusterer(object):
         self.clusters=self.kmeans.clusters
         
     def log10(x):
-        return covers.applymap(math.log10)
+        return x.applymap(math.log10)
 
     def log10p1(x):
-        lambda x: math.log10(x+1)
-        return covers.applymap(log10p1)
+        log10p = lambda z: math.log10(z+1)
+        return x.applymap(log10p)
 
     def rank(x):
         return x.apply(scipy.stats.rankdata,0)

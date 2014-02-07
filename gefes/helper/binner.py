@@ -75,7 +75,23 @@ class Binner(object):
                         qualities[k][1] = qualities[k][1] + 1
                     
         return qualities
-                
+
+    def linkage_matrix(self):
+        linkage=[p.mapper.linkage for p in self.aggregate]
+        
+        matrix = DataFrame(0,index=self.bins.keys(),columns=self.bins.keys())
+        for k1,b1 in self.bins.iteritems():
+            for k2,b2 in self.bins.iteritems():
+                    for contig1 in b1:
+                        for contig2 in b2:
+                            temp = 0
+                            for p in linkage:
+                                matrix[k1][k2] = matrix[k1][k2] + sum(p[contig1][contig2])
+#                                if k2 != k1: matrix[k2][k1] = matrix[k2][k1] + sum(p[contig1][contig2])
+        return matrix
+    
+
+    
                     
     def bins_stats(self):
         out={}
