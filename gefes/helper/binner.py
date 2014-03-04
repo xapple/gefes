@@ -86,8 +86,9 @@ class Binner(object):
                         for contig2 in b2:
                             temp = 0
                             for p in linkage:
-                                matrix[k1][k2] = matrix[k1][k2] + sum(p[contig1][contig2])
-#                                if k2 != k1: matrix[k2][k1] = matrix[k2][k1] + sum(p[contig1][contig2])
+                                if contig1 != contig2:
+                                    matrix[k1][k2] = matrix[k1][k2] + sum(p[contig1][contig2])/2.0
+                                    matrix[k2][k1] = matrix[k2][k1] + sum(p[contig1][contig2])/2.0
         return matrix
     
 
