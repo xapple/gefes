@@ -5,7 +5,7 @@ import subprocess, sys
 modules = ['Bio', 'matplotlib', 'sh', 'pandas', 'statsmodels', 'threadpool', 'pysam']
 
 # Required executables #
-executables = ['sickle','Ray23','samtools','genomeCoverageBed','bowtie2']
+executables = ['sickle','Ray23','samtools','genomeCoverageBed','bowtie2','get-motif-counts.awk','long-orfs','extract','build-icm','glimmer3','multi-extract','prodigal']
 
 ################################################################################
 # We might be missing some executables #

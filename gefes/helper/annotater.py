@@ -4,7 +4,6 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common import flatten
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 
@@ -13,15 +12,15 @@ from gefes.common.slurm import nr_threads
 
 import sh
 
-class Annotation(object):
-    """The genomic annotation from one annotation tool"""
+class BinAnnotater(object):
+    """Annotatet a bin using a tool"""
     
     all_paths = """
-/annotation.gff
+/
 /short_form.txt
 /Phyl_AMPHORA/
 """
-    tools=['Phyl_AMPHORA']
+    tools=['']
 
     def __init__(self,contig,tool,parameters):
         # Save parent #

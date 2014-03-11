@@ -4,13 +4,16 @@ from __future__ import division
 # Built-in modules #
 from math import log10
 import os
+import json
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
+import gefes.helper.clusterer
 from gefes.common.cache import property_cached
 from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
+from gefes.helper.bin import Bin
 from gefes.common.autopaths import AutoPaths
 
 # Third party modules #
@@ -26,7 +29,7 @@ class Binner(object):
 
     def __repr__(self): return '<%s object of %s with %i Binnings>' % \
                                (self.__class__.__name__, self.parent, len(self))
-    def __iter__(self): return iter(self.binnings)
+    def __iter__(self): return iter(self.binnings.values())
     def __len__(self): return len(self.binnings)
     def __getitem__(self, key):
         return self.binnings[key]
@@ -39,19 +42,23 @@ class Binner(object):
         self.base_dir = self.parent.p.binning_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Children #
-        self.binnings=self.load()
+        self.binnings={}
+        binnings_paths = os.listdir(self.base_dir)
+        for b in binnings_paths:
+            self.binnings[b]=Binning(self, b)
+        
 
 
     def load(self):
-        binnings={}
-        binnings_paths = os.listdir(self.base_dir)
-        for b in binnings_paths:
-            print b
-            binnings[b]=Binning(self, b)
-        return binnings
-
-    def new(self,name,clusterer):
-        self.binnings[name] = Binning(self, name, clusterer)
+        for b in self: b.load()
+            
+    def new(self,name,clusterer = {'type' : 'GefesKMeans', 'args' : {'nb' : 6 ,
+                                                                    'method' : 'tetramer',
+                                                                    'max_freq' : 0.1 ,
+                                                                    'min_length' : 1000 ,
+                                                                    'transform' : 'rank'
+                                                                    }}):
+        self.binnings[name] = Binning(self, name, clusterer = clusterer)
              
 
 ###############################################################################        
@@ -60,13 +67,25 @@ class Binning(object):
     all_paths = """
     /bins/
     /settings.json
-    /linkage_quality.csv
     /linkage_matrix.csv
     /coverage_stats.csv
     /frame.csv
+    /logs/
     """
-
-    def __init__(self, parent,name ,clusterer = None):
+    def __repr__(self): return '<'+self.__class__.__name__+ ' object with ' + str(len(self)) + ' bins>' 
+    def __iter__(self): return iter(self.bins.values())
+    def __len__(self):
+        if hasattr(self, 'bins'):
+             return len(self.bins)
+        else:
+            return 0
+    def __getitem__(self, key):
+        if isinstance(key,int):
+            return self.bins.values()[key]
+        else:
+            return self.bins[key]
+    
+    def __init__(self, parent,name,clusterer = None):
         # Save parent #
         self.parent =  parent
         self.name = name
@@ -74,76 +93,69 @@ class Binning(object):
         self.base_dir = self.parent.p._base_dir+name
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Output #
-        self.clusterer = clusterer
-        if clusterer is None: self.load()
+        if clusterer is not None:
+            self.clusterer_rep=clusterer
+            with open(self.p.settings, 'w') as outfile:
+                    json.dump(self.clusterer_rep, outfile)
 
     def load(self):
-        pass
-    
-            
-    def run(self):
-        if self.clusterer is None: raise Exception('Clustering has already been run, or is broken, or not existing')
-        self.clusterer.run(self.parent.assembly)
-        c_ids=list(set([c[1] for c in self.clusterer.clusters]))
-        self.bins = dict.fromkeys(c_ids)
-        for k in self.bins: self.bins[k] = []
-        for co,cl in self.clusterer.clusters:
-            self.bins[cl].append(co)
-        self.frame=self.clusterer.frame
-        self.export()
-            
-    def linkage_quality(self):
-        linkage=[p.mapper.linkage for p in self.aggregate]
-        
-        qualities = {}
-        all_contigs = list(self.frame.index)
-        
-        for k,b in self.bins.iteritems():
-            qualities[k] = [0,0,0,0]
-            for contig1 in b:
-                for contig2 in b:
-                    temp = 0
-                    for p in linkage:
-                        temp = temp + (sum(p[contig1][contig2]) > 0)
-                        qualities[k][2] = qualities[k][2] + sum(p[contig1][contig2])
-                    if temp > 0:
-                        qualities[k][0] = qualities[k][0] + 1
-                not_contigs = [c for c in all_contigs if c not in b]
-                for contig2 in  not_contigs:
-                    temp = 0
-                    for p in linkage:
-                        temp = temp + (sum(p[contig1][contig2]) > 0)
-                        qualities[k][3] = qualities[k][3] + sum(p[contig1][contig2])
-                    if temp > 0:
-                        qualities[k][1] = qualities[k][1] + 1
-                    
-        return qualities
+        self.frame = DataFrame.from_csv(self.p.frame)
+        files = os.listdir(self.p.bins)
+        self.bins={}
+        for f in files:
+            bini=Bin.fromfolder(self,f)
+            self.bins[bini.name]=bini
 
+                            
+    def run(self):
+        self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(self.clusterer_rep['args'])
+        self.clusterer.run(self.parent.assembly)
+        self.bins = {}
+        for contig_name,cluster in self.clusterer.clusters:
+            cluster=str(cluster)
+            contig=[o for o in self.parent.assembly.contigs if o.name is contig_name]
+            if self.bins.has_key(cluster):
+                    self.bins[cluster].extend(contig)
+            else:
+                self.bins[cluster]=Bin(self,contig,cluster)
+        self.frame = self.clusterer.frame
+        self.export()
+
+ 
+    @property_cached
     def linkage_matrix(self):
-        linkage=[p.mapper.linkage for p in self.aggregate]
+        if os.path.exists(self.p.linkage_matrix):
+            return DataFrame.from_csv(self.p.linkage_matrix)
+        else :
+            linkage=[p.mapper.linkage for p in self.parent.parent]
         
-        matrix = DataFrame(0,index=self.bins.keys(),columns=self.bins.keys())
-        for k1,b1 in self.bins.iteritems():
-            for k2,b2 in self.bins.iteritems():
+            matrix = DataFrame(0,index=[b.name for b in self],columns=[b.name for b in self])
+            for b1 in self:
+                for b2 in self:
                     for contig1 in b1:
                         for contig2 in b2:
                             temp = 0
                             for p in linkage:
-                                if contig1 != contig2:
-                                    matrix[k1][k2] = matrix[k1][k2] + sum(p[contig1][contig2])/2.0
-                                    matrix[k2][k1] = matrix[k2][k1] + sum(p[contig1][contig2])/2.0
-        return matrix
-                    
-    def bins_stats(self):
-        out={}
-        for k,b in self.bins.iteritems():
-            out[k]=self.frame[[c for c in self.frame if "pool" in c]].loc[b].applymap(lambda x: log10(1+x))
-            out[k]=out[k].median()
+                                if contig1.name != contig2.name:
+                                    matrix[b1.name][b2.name] = matrix[b1.name][b2.name] + sum(p[contig1.name][contig2.name])/2.0
+                                    matrix[b2.name][b1.name] = matrix[b2.name][b1.name] + sum(p[contig1.name][contig2.name])/2.0
+            return matrix
+
+    @property_cached
+    def coverage_stats(self):
+        if os.path.exists(self.p.coverage):
+            return DataFrame.from_csv(self.p.coverage)
+        else :
+            out={}
+            for b in self:
+                out[b.name]=self.frame[[col for col in self.frame if "pool" in col]].loc[[c.name for c in b]]
+                out[b.name]=out[b.name].median()
         return DataFrame.from_dict(out)
 
 
     def export(self):
-        path=self.p.bins
-        for name,contig_list in self.bins.iteritems():
-            self.parent.assembly.write_contiglist(contig_list,path,"bin_"+str(name)+".fasta")
-
+        for b in self:
+            b.export()
+        self.coverage_stats.to_csv(self.p.coverage)
+        self.linkage_matrix.to_csv(self.p.linkage_matrix)
+        self.frame.to_csv(self.p.frame)

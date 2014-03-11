@@ -7,7 +7,6 @@ from itertools import product
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
-from gefes.helper.annotater import Annotation
 from Bio.Seq import Seq
 
 # Third party modules #
@@ -18,7 +17,7 @@ class Contig(object):
 
     all_paths = """
     /lorem.txt
-    /Annotation/
+    /genes/ 
     """
 
     tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
@@ -44,8 +43,6 @@ class Contig(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         self.record = record
         self.name = self.record.id
-        self.annotation = Annotation(self,None,None)
-        
         
     def get_nuc_freq(self, windowsize):
         """Returns frequency of nucelotide sequence with length windowsize in

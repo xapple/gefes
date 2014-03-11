@@ -42,18 +42,19 @@ class Clusterer(object):
 ###############################################################################
 class GefesKMeans(Clusterer):
     """Receives the matrix and uses kmeans to cluster it in N different (linearly separated) clusters"""
-    
-    def __init__(self,nb = 8,method = 'tetramer', max_freq = None,min_length = None, transform = None):
+
+     
+    def __init__(self, args = {'nb' : 8, 'method' : 'tetramer', 'max_freq' : None,'min_length' : None, 'transform' : None} ):
         # Save parent
         super(Clusterer,self).__init__()
         # Kmeans and params
-        self.number_clusts=nb
+        self.number_clusts=args['nb']
         self.algorithm = KMeans(self.number_clusts)
         # Filters
-        self.method = method
-        self.max_freq = max_freq
-        self.min_length = min_length
-        self.transform = transform
+        self.method = args['method']
+        self.max_freq = args['max_freq']
+        self.min_length = args['min_length']
+        self.transform = args['transform']
 
     def run(self,assembly):
         self.frame = assembly.filtered_frame(self.max_freq,self.min_length)
