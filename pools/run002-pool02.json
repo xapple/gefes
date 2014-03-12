@@ -22,7 +22,7 @@
     "forward_reads": "ACI_B2_enrichement_FB7_R1.fastq.gz",
     "reverse_reads": "ACI_B2_enrichement_FB7_R2.fastq.gz",
 
-    "project":       "acI_FB7",
+    "project":       "acI",
     "project_name":  "acI enrichments",
     "pool":          "FB7",
     "pool_name":     "FB7"

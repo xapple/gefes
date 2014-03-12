@@ -5,6 +5,7 @@ from gefes.common.cache import property_cached
 from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
 from gefes.helper.genecaller import GeneCaller
+from gefes.helper.bin_annotater import BinAnnotater
 
 class Bin(object):
     """A bin is a object containing a multifasta of contigs that are ready to be annotated"""

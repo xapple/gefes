@@ -14,19 +14,42 @@ class GeneCaller(object):
     """
 
     all_paths = """
-    /glimmer3/genes_glimmer.fasta
-    /prodigal/genes_prodigal.fasta
+    /glimmer/
+    /prodigal/
     """
     
+    def __repr__(self): return '<%s object of bin "%s" with %i predictions >' % (self.__class__.__name__,self.parent.name, len(self))
+    def __iter__(self): return iter(self.callers)
+    def __len__(self): return len(self.callers)
+    def __getitem__(self, index): return self.callers[index]
+    
+    def __init__(self,parent):
+        self.parent = parent
+        # Auto paths #
+        self.base_dir = self.parent.p.genes
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        self.callers = [ Glimmer(self), Prodigal(self) ]
+        
+    def run(self):
+        for cal in self: cal.run()
+###################################################################
+
+class Glimmer(object):
+
     glimmer_params={'updist' : 24}
 
-    def __init__(self,bini):
-        self.bini = bini
-        # Auto paths #
-        self.base_dir = self.bini.p.genes
-        self.p = AutoPaths(self.base_dir, self.all_paths)
+    all_paths= """
+    /genes.fasta
+    """
 
-    def run_glimmer(self):
+    def __init__(self,parent):
+        self.parent = parent
+        self.bini = self.parent.parent
+        # Auto paths #
+        self.base_dir = self.parent.p.glimmer
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+    
+    def run(self):
         seqs=FASTA(self.bini.p.contigs)
         motif_count = sh.Command('get-motif-counts.awk')
         sh.touch('temp.genes.fasta')
@@ -128,5 +151,20 @@ class GeneCaller(object):
         sh.rm("temp.detail")
 
 
-    def run_prodigal(self):
+###################################################################
+
+class Prodigal(object):
+
+    all_paths= """
+    /genes.fasta
+    """
+
+    def __init__(self,parent):
+        self.parent = parent
+        self.bini = self.parent.parent
+        # Auto paths #
+        self.base_dir = self.parent.p.glimmer
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        
+    def run(self):
         sh.prodigal('-q', '-c', '-i', self.bini.p.contigs, '-d', self.p.genes_prodigal, _out = "/dev/null") 

@@ -15,6 +15,8 @@ from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
 from gefes.helper.bin import Bin
 from gefes.common.autopaths import AutoPaths
+from gefes.running import Runner
+from gefes.common.slurm import SLURMJob
 
 # Third party modules #
 from pandas import DataFrame
@@ -52,7 +54,7 @@ class Binner(object):
     def load(self):
         for b in self: b.load()
             
-    def new(self,name,clusterer = {'type' : 'GefesKMeans', 'args' : {'nb' : 6 ,
+    def new(self,name,clusterer = {'type' : 'GefesKMeans', 'args' : {'nb' : 8 ,
                                                                     'method' : 'tetramer',
                                                                     'max_freq' : 0.1 ,
                                                                     'min_length' : 1000 ,
@@ -85,14 +87,16 @@ class Binning(object):
         else:
             return self.bins[key]
     
-    def __init__(self, parent,name,clusterer = None):
+    def __init__(self, parent,name,clusterer=None):
         # Save parent #
         self.parent =  parent
         self.name = name
         # Auto paths #
         self.base_dir = self.parent.p._base_dir+name
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Output #
+        # Runner #
+        self.runner=BinningRunner(self)
+        # Clusterer representation #
         if clusterer is not None:
             self.clusterer_rep=clusterer
             with open(self.p.settings, 'w') as outfile:
@@ -107,7 +111,7 @@ class Binning(object):
             self.bins[bini.name]=bini
 
                             
-    def run(self):
+    def cluster(self):
         self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(self.clusterer_rep['args'])
         self.clusterer.run(self.parent.assembly)
         self.bins = {}
@@ -120,6 +124,10 @@ class Binning(object):
                 self.bins[cluster]=Bin(self,contig,cluster)
         self.frame = self.clusterer.frame
         self.export()
+
+    def annotate(self):
+        for bini in self:
+            bini.caller.run()
 
  
     @property_cached
@@ -159,3 +167,39 @@ class Binning(object):
         self.coverage_stats.to_csv(self.p.coverage)
         self.linkage_matrix.to_csv(self.p.linkage_matrix)
         self.frame.to_csv(self.p.frame)
+
+###############################################################################
+
+class BinningRunner(Runner):
+    """Will run stuff on a project"""
+    default_time = '7-00:00:00'
+
+    default_steps = [
+        {'load':       {}},
+        {'cluster':    {}},
+        {'annotate':   {}},
+    ]
+
+    def __init__(self, parent):
+        # Save parent #
+        self.parent, self.binning = parent, parent
+        self.project = self.binning.parent.parent
+
+    def run_slurm(self, steps=None, **kwargs):
+        # Make script #
+        command = """steps = %s
+                     binning = [binning for binning in gefes.projects['%s'].binner if binning.name=='%s'][0]
+
+                     binning.runner(steps)""" % (steps,self.project.name, self.binning.name)
+        # Test case #
+        if 'test' in self.project.name:
+            kwargs['time'] = '00:15:00'
+            kwargs['qos'] = False
+            kwargs['email'] = '/dev/null'
+
+        # Send it #
+        if 'time' not in kwargs: kwargs['time'] = self.default_time
+        if 'email' not in kwargs: kwargs['email'] = None
+        job_name = "gefes_%s_%s" % (self.project.name,self.binning.name)
+        self.slurm_job = SLURMJob(command, self.binning.p.logs_dir, job_name=job_name, **kwargs)
+        self.slurm_job.launch()

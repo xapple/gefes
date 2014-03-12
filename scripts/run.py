@@ -74,5 +74,5 @@ gefes.projects['acI'].assembly.index()
 for p in gefes.projects['acI']: p.runner.run_slurm(steps=[{'map_reads':{}}], time='12:00:00',project='default')
 
 clusty = { 'type' : 'GefesKMeans', kwargs : {'nb' : 6 , 'max_freq' : 0.1 , 'min_length' : 1000 , 'transform' = 'rank'}}
-gefes.projects['alinen'].binner.new('test',clusty)
+gefes.projects['alinen'].binner.new('test', clusty)
 gefes.projects['alinen'].binner['test'].run(GefesKMeans(nb=6,max_freq=0.1,min_length=1000,transform='rank'))
