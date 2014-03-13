@@ -9,7 +9,7 @@ import json
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
-import gefes.helper.clusterer
+from  gefes.helper.clusterer import *
 from gefes.common.cache import property_cached
 from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
@@ -98,9 +98,9 @@ class Binning(object):
         self.runner=BinningRunner(self)
         # Clusterer representation #
         if clusterer is not None:
-            self.clusterer_rep=clusterer
             with open(self.p.settings, 'w') as outfile:
-                    json.dump(self.clusterer_rep, outfile)
+                    json.dump(clusterer, outfile)
+        self.loaded = False 
 
     def load(self):
         self.frame = DataFrame.from_csv(self.p.frame)
@@ -109,10 +109,11 @@ class Binning(object):
         for f in files:
             bini=Bin.fromfolder(self,f)
             self.bins[bini.name]=bini
+        self.loaded =True
 
                             
     def cluster(self):
-        self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(self.clusterer_rep['args'])
+        self.clusterer = globals()[self.clusterer_rep['type']](self.clusterer_rep['args'])
         self.clusterer.run(self.parent.assembly)
         self.bins = {}
         for contig_name,cluster in self.clusterer.clusters:
@@ -124,12 +125,20 @@ class Binning(object):
                 self.bins[cluster]=Bin(self,contig,cluster)
         self.frame = self.clusterer.frame
         self.export()
+        self.loaded = True
 
     def annotate(self):
+        if not self.loaded: self.load()
         for bini in self:
             bini.caller.run()
 
- 
+    @property_cached            
+    def clusterer_rep(self):
+        with open(self.p.settings) as j:
+            clusterer_rep = json.load(j)
+        return clusterer_rep
+
+            
     @property_cached
     def linkage_matrix(self):
         if os.path.exists(self.p.linkage_matrix):
@@ -175,7 +184,6 @@ class BinningRunner(Runner):
     default_time = '7-00:00:00'
 
     default_steps = [
-        {'load':       {}},
         {'cluster':    {}},
         {'annotate':   {}},
     ]
