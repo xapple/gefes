@@ -9,7 +9,7 @@ import json
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.helper.clusterer import Clusterer
-from  gefes.helper.clusterer import *
+import gefes.helper.clusterer
 from gefes.common.cache import property_cached
 from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
@@ -17,7 +17,8 @@ from gefes.helper.bin import Bin
 from gefes.common.autopaths import AutoPaths
 from gefes.running import Runner
 from gefes.common.slurm import SLURMJob
-
+from gefes.helper.clusterer import *
+ 
 # Third party modules #
 from pandas import DataFrame
 
@@ -113,7 +114,7 @@ class Binning(object):
 
                             
     def cluster(self):
-        self.clusterer = globals()[self.clusterer_rep['type']](self.clusterer_rep['args'])
+        self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(self.clusterer_rep['args'])
         self.clusterer.run(self.parent.assembly)
         self.bins = {}
         for contig_name,cluster in self.clusterer.clusters:
@@ -130,8 +131,8 @@ class Binning(object):
     def annotate(self):
         if not self.loaded: self.load()
         for bini in self:
-            bini.caller.run()
-
+            bini.annotate()
+            
     @property_cached            
     def clusterer_rep(self):
         with open(self.p.settings) as j:

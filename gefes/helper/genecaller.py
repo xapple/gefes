@@ -129,7 +129,7 @@ class Glimmer(object):
 
         #rewrite it properly so that each gene seq as a unique name of type orf_name;contig
         in_file=FASTA('./temp.genes')
-        with FASTA(self.p.genes_glimmer) as out_file:
+        with FASTA(self.p.genes) as out_file:
             for seq in in_file:
                     seq.description=seq.description.replace("  ",";",1)
                     seq.name=seq.description.split("  ")[0]
@@ -163,8 +163,8 @@ class Prodigal(object):
         self.parent = parent
         self.bini = self.parent.parent
         # Auto paths #
-        self.base_dir = self.parent.p.glimmer
+        self.base_dir = self.parent.p.prodigal
         self.p = AutoPaths(self.base_dir, self.all_paths)
         
     def run(self):
-        sh.prodigal('-q', '-c', '-i', self.bini.p.contigs, '-d', self.p.genes_prodigal, _out = "/dev/null") 
+        sh.prodigal('-q', '-c', '-i', self.bini.p.contigs, '-d', self.p.genes, _out = "/dev/null") 

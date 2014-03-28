@@ -6,6 +6,9 @@ from gefes.fasta.single import FASTA
 from gefes.helper.contig import Contig
 from gefes.helper.genecaller import GeneCaller
 from gefes.helper.bin_annotater import BinAnnotater
+from gefes.running import Runner
+from gefes.common.slurm import SLURMJob
+from gefes.helper.phylotyper import Phylotyper
 
 class Bin(object):
     """A bin is a object containing a multifasta of contigs that are ready to be annotated"""
@@ -13,6 +16,8 @@ class Bin(object):
     all_paths = """
     /contigs.fasta
     /genes/
+    /logs/
+    /phylotyping/
     """
 
     
@@ -23,12 +28,17 @@ class Bin(object):
     
     def __init__(self,parent,c_list=[], name=None):
         self.parent = parent
+        self.binner = parent
         self.name = name
         self.contigs=c_list
         # Auto paths #
         self.base_dir = self.parent.p.bins + "/bin_" + name
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        self.caller=GeneCaller(self)
+        self.caller = GeneCaller(self)
+        self.annotater = BinAnnotater(self)
+        self.typer = Phylotyper(self)
+        self.runner = BinRunner(self)
+
         
     def export(self):
         with FASTA(self.p.contigs) as ffile:
@@ -46,3 +56,49 @@ class Bin(object):
         fasta = FASTA(bini.p.contigs)
         bini.extend([Contig(bini,f) for f in fasta])
         return bini
+
+    def calling(self):
+        self.caller.run()
+
+    def phylotyping(self):
+        self.typer.run()
+    
+    def annotate(self):
+        self.annotater.single_copy_cog_blast()
+
+        
+class BinRunner(Runner):
+    """Will run stuff on a bin"""
+    default_time = '12:00:00'
+
+    default_steps = [
+        {'phylotyping':{}},
+        {'calling':    {}},
+        {'annotate':   {}},
+    ]
+
+    def __init__(self, parent):
+        # Save parent #
+        self.parent, self.bini = parent, parent
+        self.binning = self.bini.parent
+        self.project = self.binning.parent.parent
+
+    def run_slurm(self, steps=None, **kwargs):
+        # Make script #
+        command = """steps = %s
+                     binner = gefes.projects['%s'].binner
+                     binner.load()
+                     bini = [b for b in binner['%s'] if b.name=='%s'][0]
+                     bini.runner(steps)""" % (steps,self.project.name, self.binning.name,self.bini.name)
+        # Test case #
+        if 'test' in self.project.name:
+            kwargs['time'] = '00:15:00'
+            kwargs['qos'] = False
+            kwargs['email'] = '/dev/null'
+
+        # Send it #
+        if 'time' not in kwargs: kwargs['time'] = self.default_time
+        if 'email' not in kwargs: kwargs['email'] = None
+        job_name = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
+        self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, job_name=job_name, **kwargs)
+        self.slurm_job.launch()

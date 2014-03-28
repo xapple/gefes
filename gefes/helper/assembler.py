@@ -10,6 +10,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 from gefes.graphs import assembly_plots
 from gefes.helper.contig import Contig
+from gefes.helper.metapathways import Metapathways
 from gefes.fasta.single import FASTA
 from gefes.common.slurm import nr_threads
 
@@ -34,6 +35,7 @@ class Assembly(object):
     /ray_output/
     /ray_output/Contigs.fasta
     /ray_output/report.txt
+    /metapathways/
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -48,6 +50,8 @@ class Assembly(object):
         self.contigs_fasta = FASTA(self.p.Contigs)
         # Graphs #
         self.graphs = [getattr(assembly_plots, cls_name)(self) for cls_name in assembly_plots.__all__]
+        # Metapath #
+        self.metapat = Metapathways(self)
 
     @property_cached
     def contigs(self):
