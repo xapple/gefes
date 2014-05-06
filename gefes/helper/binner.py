@@ -114,12 +114,12 @@ class Binning(object):
 
                             
     def cluster(self):
-        self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(self.clusterer_rep['args'])
+        self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(parent = self, args = self.clusterer_rep['args'])
         self.clusterer.run(self.parent.assembly)
         self.bins = {}
         for contig_name,cluster in self.clusterer.clusters:
             cluster=str(cluster)
-            contig=[o for o in self.parent.assembly.contigs if o.name is contig_name]
+            contig=[o for o in self.parent.assembly.contigs if o.name == contig_name]
             if self.bins.has_key(cluster):
                     self.bins[cluster].extend(contig)
             else:

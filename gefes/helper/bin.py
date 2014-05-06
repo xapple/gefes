@@ -85,6 +85,8 @@ class BinRunner(Runner):
 
     def run_slurm(self, steps=None, **kwargs):
         # Make script #
+        if not steps:
+            steps = self.default_steps
         command = """steps = %s
                      binner = gefes.projects['%s'].binner
                      binner.load()

@@ -32,6 +32,7 @@ class Assembly(object):
 
     all_paths = """
     /graphs/
+    /ray_output/frame.csv
     /ray_output/
     /ray_output/Contigs.fasta
     /ray_output/report.txt

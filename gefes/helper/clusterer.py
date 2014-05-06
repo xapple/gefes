@@ -5,15 +5,17 @@ from __future__ import division
 
 # Internal modules #
 from gefes.common.cache import property_cached
+from gefes.fasta.single import FASTA
+from gefes.common.autopaths import AutoPaths
+
 
 # Third party modules #
 import os
-import pandas
+from pandas import DataFrame
 from sklearn import cluster
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
 import scipy.stats
-
 from sklearn.cluster  import KMeans
 import math
 
@@ -25,6 +27,7 @@ class Clusterer(object):
 
     def __init__(self):
         self.clusters = None
+        self.parent = parent
                 
     def log10(x):
         return x.applymap(math.log10)
@@ -43,8 +46,8 @@ class Clusterer(object):
 class GefesKMeans(Clusterer):
     """Receives the matrix and uses kmeans to cluster it in N different (linearly separated) clusters"""
 
-     
-    def __init__(self, args = {'nb' : 8, 'method' : 'tetramer', 'max_freq' : None,'min_length' : None, 'transform' : None} ):
+
+    def __init__(self,parent, args = {'nb' : 8, 'method' : 'tetramer', 'max_freq' : None,'min_length' : None, 'transform' : None} ):
         # Save parent
         super(Clusterer,self).__init__()
         # Kmeans and params
@@ -70,3 +73,45 @@ class GefesKMeans(Clusterer):
 
         self.clusters = zip(self.frame.index,self.algorithm.fit_predict(data))
 
+class GefesCONCOCT(Clusterer):
+
+    all_paths = """
+    /clustering_gt1000.csv
+    /coverages.csv
+    /contigs.fasta
+    """
+
+    def __init__(self,parent, args = {'max_clusters' : 100, 'max_freq' : None, 'min_length' : None, 'transform' : None} ):
+        # Save parent
+        super(Clusterer,self).__init__()
+
+        self.parent = parent
+
+        # Auto paths #
+        self.base_dir = self.parent.p._base_dir + "/concoct/"
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        
+        # Filters
+        self.min_length = args['min_length']
+        if args.has_key('transform') : self.transform = args['transform']
+        else : self.transform = None
+        if args.has_key('max_clusters') : self.max_clusters = args['max_clusters']
+        else :  self.max_clusters = 100
+        if args.has_key('max_freq') : self.max_freq = args['max_freq']
+        else : self.max_freq=1
+            
+    def run(self,assembly):
+        self.frame = assembly.filtered_frame(self.max_freq,self.min_length)
+        data = self.frame[[c for c in self.frame if "pool" in c]]
+        if self.transform: data = Clusterer.transforms[self.transform](data)
+        data.to_csv(self.p.coverages,sep="\t")
+        self.contigs = data.index
+        with FASTA(self.p.contigs) as ffile:
+            ffile.write([seq.record for seq in assembly.contigs if seq.name in self.contigs])
+        cwd = os.getcwd()
+        os.chdir(self.p._base_dir)
+        os.system("concoct " + " --coverage_file " + self.p.coverages + " --composition_file " +  self.p.contigs + " -c " + str(self.max_clusters))
+        os.chdir(cwd)
+        tmp_data = DataFrame.from_csv(self.p.clustering,header=None)
+        self.clusters = zip(tmp_data.index,[int(v) for v in tmp_data[[1]].values])
+    
