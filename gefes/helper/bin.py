@@ -9,6 +9,7 @@ from gefes.helper.bin_annotater import BinAnnotater
 from gefes.running import Runner
 from gefes.common.slurm import SLURMJob
 from gefes.helper.phylotyper import Phylotyper
+from gefes.helper.genome_builder import GenomeBuilder
 
 class Bin(object):
     """A bin is a object containing a multifasta of contigs that are ready to be annotated"""
@@ -18,6 +19,7 @@ class Bin(object):
     /genes/
     /logs/
     /phylotyping/
+    /rebuilt/
     """
 
     
@@ -38,6 +40,7 @@ class Bin(object):
         self.annotater = BinAnnotater(self)
         self.typer = Phylotyper(self)
         self.runner = BinRunner(self)
+        self.genome_builder = GenomeBuilder(self)
 
         
     def export(self):

@@ -18,6 +18,7 @@ class Phylotyper(object):
     /kraken/
     /kraken/output_kraken.txt
     /kraken/report_kraken.txt
+    /kraken/krona_kraken.html
     """
 
     kraken_db = "/glob/moritz/data/kraken_data/"
@@ -41,4 +42,4 @@ class Phylotyper(object):
     def kraken(self):
         sh.kraken("--db", self.kraken_db, "--threads", nr_threads, "--fasta-input", "--output", self.p.output, self.parent.p.contigs)
         if os.stat(self.p.output)[6]!=0 : self.kraken_report("--db", self.kraken_db, self.p.output, _out = self.p.report)
-        
+        sh.ktImportTaxonomy("-t", 5, "-m", 3, "-o", self.p.krona, self.p.report)

@@ -114,4 +114,33 @@ class GefesCONCOCT(Clusterer):
         os.chdir(cwd)
         tmp_data = DataFrame.from_csv(self.p.clustering,header=None)
         self.clusters = zip(tmp_data.index,[int(v) for v in tmp_data[[1]].values])
+
+class GefesImport(Clusterer):
+
+    """importing an externally clustering with a simple tab separated file with the first culmn the contig names, the second the clusters (numbers from 0 to N) """
     
+    all_paths = """
+    /inport.csv
+    """
+    
+    def __init__(self,parent, args = {'file' : "import.csv"} ):
+        # Save parent
+        super(Clusterer,self).__init__()
+
+        self.parent = parent
+
+        # Auto paths #
+        self.base_dir = self.parent.p._base_dir + "/import/"
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        
+        # Filters
+        self.file = args['file']
+                            
+    def run(self,assembly):
+        self.frame = assembly.filtered_frame(1,0)
+        os.system("cp " + self.file + " " + self.p.inport)
+        tmp_data = DataFrame.from_csv(self.p.inport,header=None,sep="\t")
+        self.contigs = tmp_data.index
+        self.frame=self.frame.loc[list(tmp_data.index)]        
+        self.clusters = zip(tmp_data.index,[int(v) for v in tmp_data[[1]].values])
+
