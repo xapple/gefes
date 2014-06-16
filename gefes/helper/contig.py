@@ -79,8 +79,9 @@ class Contig(object):
         outp = 0
         gs = self.nuc_freq.get("G")
         cs = self.nuc_freq.get("C")
-        if gs: return outp + gs
-        if cs: return outp + cs
+        if gs: outp += gs
+        if cs: outp += cs
+        return outp
 
     @property
     def length(self):
