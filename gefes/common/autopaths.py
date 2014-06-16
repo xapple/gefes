@@ -179,10 +179,15 @@ class DirectoryPath(str):
         shutil.rmtree(self.path, ignore_errors=True)
         return True
 
+    def create(self):
+        os.makedirs(self.path)
+
 ################################################################################
 class FilePath(str):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.path)
+
+    def __iter__(self): return open(self.path)
 
     def __new__(cls, path, *args, **kwargs):
         return str.__new__(cls, path)
@@ -240,9 +245,26 @@ class FilePath(str):
         os.remove(self.path)
         return True
 
-    def link_from(self, path):
-        self.remove()
-        return os.symlink(path, self.path)
+    def create(self):
+        with open(self.path, 'w'): pass
+
+    def write(self, content):
+        with open(self.path, 'w') as handle: handle.write(content)
+
+    def writelines(self, content):
+        with open(self.path, 'w') as handle: handle.writelines(content)
+
+    def link_from(self, path, safe=False):
+        # Standard #
+        if not safe:
+            self.remove()
+            return os.symlink(path, self.path)
+        # No errors #
+        else:
+            try: os.remove(self.path)
+            except OSError: pass
+            try: os.symlink(path, self.path)
+            except OSError: pass
 
     def copy(self, path):
         shutil.copy2(self.path, path)
@@ -253,8 +275,12 @@ class FilePath(str):
     def execute(self):
         return subprocess.call([self.path])
 
+    def replace_extension(self, new_extension='txt'):
+        """Return a new path with the extension swapped out"""
+        return FilePath(os.path.splitext(self.path)[0] + '.' + new_extension)
+
     def new_name_insert(self, string):
-        """Make a new name by appending a string before the extension"""
+        """Return a new name by appending a string before the extension"""
         return self.prefix_path + "." + string + self.extension
 
 ################################################################################
@@ -268,8 +294,8 @@ class Filesize(object):
         '117.4 MB'
     """
 
-    chunk = 1024
-    units = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
+    chunk = 1000
+    units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB']
     precisions = [0, 0, 1, 2, 2, 2]
 
     def __init__(self, size):

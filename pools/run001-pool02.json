@@ -32,19 +32,19 @@
     "pool_name":     "Mekkojärvi (Hämeenlinna)",
 
     "metadata": {
-        "gps": [61.230963, 25.141890],
-        "date": "2012-09-03",
+        "gps":   [61.230963, 25.141890],
+        "date":  "2012-09-03",
         "layer": "hypolimnion",
         "depth": [2.0, "to", 3.8, "m"],
 
-        "ph": [5.88, "-log10([H+])"],
+        "ph":          [5.88, "-log10([H+])"],
         "temperature": [6, "Celsius"],
-        "alkalinity": [0.455, "mmol/l"],
-        "doc": [27.4, "mgC/l"],
-        "poc": [1.2, "mgC/l"],
-        "color": [497.0, "mg/l", "420nm, platinum"],
-        "oxygen": [0.47, null],
-        "methane": [195879.2, "nM"],
+        "alkalinity":  [0.455, "mmol/l"],
+        "doc":         [27.4, "mgC/l"],
+        "poc":         [1.2, "mgC/l"],
+        "color":       [497.0, "mg/l", "420nm, platinum"],
+        "oxygen":      [0.47, null],
+        "methane":     [195879.2, "nM"],
         "chlorophyll": [63.1, "µg/l"],
 
         "extraction": null,

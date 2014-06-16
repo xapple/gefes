@@ -18,13 +18,12 @@ from gefes.common.slurm import nr_threads
 import sh
 import pandas
 
-
 # Constant #
 hostname = socket.gethostname()
 
 ###############################################################################
 class Assembly(object):
-    """The co-assembly of all pools. Will call the Ray assembler.
+    """Will run the co-assembly of several pools by calling the Ray assembler.
     https://github.com/sebhtml/ray"""
 
     short_name = 'ray'
@@ -86,9 +85,8 @@ class Assembly(object):
     def make_plots(self):
         for graph in self.graphs: graph.plot()
 
-
     def write_contiglist(self,contig_list,path,file_name):
-        contig_list=[o for o in self.contigs if o.name in contig_list]
+        contig_list = [o for o in self.contigs if o.name in contig_list]
         with FASTA(os.path.join(path,file_name)) as ffile:
             for c in contig_list: ffile.add_seq(c.record)
 
@@ -108,7 +106,5 @@ class Assembly(object):
             temp_frame = temp_frame[good_ones]
         return temp_frame
 
-    
     def export_frame(self):
         self.frame.to_csv(self.p.frame)
-

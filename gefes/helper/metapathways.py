@@ -21,15 +21,16 @@ from gefes.fasta.single import FASTA
 from shell_command import shell_output
 
 # Constants #
+home = os.environ['HOME'] + '/'
 metapath_dir = os.environ['METAPATHDIR'] + '/'
 pathwaytools_dir = os.environ['PATHWAYTOOLSDIR'] + '/'
 
 # Config #
 default_config = """
-PYTHON_EXECUTABLE       /home/moritz/.pyenv/shims/python
+PYTHON_EXECUTABLE       %s.pyenv/shims/python
 PERL_EXECUTABLE         /usr/bin/perl
-METAPATHWAYS_PATH       /home/moritz/proj38/nobackup/metapathways
-PATHOLOGIC_EXECUTABLE   /home/moritz/proj38/nobackup/pathwaytools/aic-export/pathway-tools/ptools/17.0/pathway-tools
+METAPATHWAYS_PATH       /proj/b2011138/nobackup/LUCAS/metapathways
+PATHOLOGIC_EXECUTABLE   /proj/b2011138/nobackup/LUCAS/pathwaytools/aic-export/pathway-tools/ptools/17.0/pathway-tools
 REFDBS                  blastDB/
 FORMATDB_EXECUTABLE     executables/linux/bit64/makeblastdb
 BLASTP_EXECUTABLE       executables/linux/bit64/blastp
@@ -51,7 +52,7 @@ CREATE_REPORT_FILES     libs/python_scripts/MetaPathways_create_reports_fast.py
 STATS_rRNA              libs/python_scripts/MetaPathways_rRNA_stats_calculator.py
 MLTREEMAP_IMAGEMAKER    mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl
 MLTREEMAP_CALCULATION   mltreemap/mltreemap_calculation/mltreemap.pl
-"""
+""" % home
 
 default_param = """##V.1   do not remove this line
 INPUT:format fasta
@@ -148,7 +149,7 @@ class Metapathways(object):
         shell_output(self.bash_str)
         # Clean up #
         if os.path.exists("blastDB"): os.remove("blastDB")
-#        if os.path.exists(self.fasta_path): os.remove(self.fasta_path)
+        #if os.path.exists(self.fasta_path): os.remove(self.fasta_path)
         # Check for errors #
         with open(self.p.out, 'r') as handle: log = handle.read()
         if 'Error!' in log:

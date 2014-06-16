@@ -2,23 +2,16 @@
 from __future__ import division
 
 # Built-in modules #
-from math import log10
-import os
-import json
+import os, json
 
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
-from gefes.helper.clusterer import Clusterer
 import gefes.helper.clusterer
 from gefes.common.cache import property_cached
-from gefes.fasta.single import FASTA
-from gefes.helper.contig import Contig
 from gefes.helper.bin import Bin
-from gefes.common.autopaths import AutoPaths
 from gefes.running import Runner
 from gefes.common.slurm import SLURMJob
-from gefes.helper.clusterer import *
- 
+
 # Third party modules #
 from pandas import DataFrame
 
@@ -36,7 +29,7 @@ class Binner(object):
     def __len__(self): return len(self.binnings)
     def __getitem__(self, key):
         return self.binnings[key]
-            
+
     def __init__(self, parent):
         # Save parent #
         self.parent = parent
@@ -49,12 +42,10 @@ class Binner(object):
         binnings_paths = os.listdir(self.base_dir)
         for b in binnings_paths:
             self.binnings[b]=Binning(self, b)
-        
-
 
     def load(self):
         for b in self: b.load()
-            
+
     def new(self,name,clusterer = {'type' : 'GefesKMeans', 'args' : {'nb' : 8 ,
                                                                     'method' : 'tetramer',
                                                                     'max_freq' : 0.1 ,
@@ -62,9 +53,9 @@ class Binner(object):
                                                                     'transform' : 'rank'
                                                                     }}):
         self.binnings[name] = Binning(self, name, clusterer = clusterer)
-             
 
-###############################################################################        
+
+###############################################################################
 class Binning(object):
 
     all_paths = """
@@ -75,7 +66,7 @@ class Binning(object):
     /frame.csv
     /logs/
     """
-    def __repr__(self): return '<'+self.__class__.__name__+ ' object with ' + str(len(self)) + ' bins>' 
+    def __repr__(self): return '<'+self.__class__.__name__+ ' object with ' + str(len(self)) + ' bins>'
     def __iter__(self): return iter(self.bins.values())
     def __len__(self):
         if hasattr(self, 'bins'):
@@ -87,7 +78,7 @@ class Binning(object):
             return self.bins.values()[key]
         else:
             return self.bins[key]
-    
+
     def __init__(self, parent,name,clusterer=None):
         # Save parent #
         self.parent =  parent
@@ -101,7 +92,7 @@ class Binning(object):
         if clusterer is not None:
             with open(self.p.settings, 'w') as outfile:
                     json.dump(clusterer, outfile)
-        self.loaded = False 
+        self.loaded = False
 
     def load(self):
         self.frame = DataFrame.from_csv(self.p.frame)
@@ -112,7 +103,6 @@ class Binning(object):
             self.bins[bini.name]=bini
         self.loaded =True
 
-                            
     def cluster(self):
         self.clusterer = getattr(gefes.helper.clusterer, self.clusterer_rep['type'])(parent = self, args = self.clusterer_rep['args'])
         self.clusterer.run(self.parent.assembly)
@@ -132,27 +122,25 @@ class Binning(object):
         if not self.loaded: self.load()
         for bini in self:
             bini.annotate()
-            
-    @property_cached            
+
+    @property_cached
     def clusterer_rep(self):
         with open(self.p.settings) as j:
             clusterer_rep = json.load(j)
         return clusterer_rep
 
-            
     @property_cached
     def linkage_matrix(self):
         if os.path.exists(self.p.linkage_matrix):
             return DataFrame.from_csv(self.p.linkage_matrix)
         else :
             linkage=[p.mapper.linkage for p in self.parent.parent]
-        
+
             matrix = DataFrame(0,index=[b.name for b in self],columns=[b.name for b in self])
             for b1 in self:
                 for b2 in self:
                     for contig1 in b1:
                         for contig2 in b2:
-                            temp = 0
                             for p in linkage:
                                 if contig1.name != contig2.name:
                                     matrix[b1.name][b2.name] = matrix[b1.name][b2.name] + sum(p[contig1.name][contig2.name])/2.0
@@ -170,7 +158,6 @@ class Binning(object):
                 out[b.name]=out[b.name].median()
         return DataFrame.from_dict(out)
 
-
     def export(self):
         for b in self:
             b.export()
@@ -179,9 +166,8 @@ class Binning(object):
         self.frame.to_csv(self.p.frame)
 
 ###############################################################################
-
 class BinningRunner(Runner):
-    """Will run stuff on a project"""
+    """Will run stuff on a TODO"""
     default_time = '7-00:00:00'
 
     default_steps = [
@@ -205,7 +191,6 @@ class BinningRunner(Runner):
             kwargs['time'] = '00:15:00'
             kwargs['qos'] = False
             kwargs['email'] = '/dev/null'
-
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None

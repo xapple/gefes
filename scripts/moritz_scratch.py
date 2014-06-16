@@ -1,3 +1,9 @@
+#!/usr/bin/env python2
+
+"""
+A script that was not described.
+"""
+
 import gefes
 from gefes.fasta.single import FASTA
 import csv
@@ -9,7 +15,7 @@ pat="/home/moritz/people/sari/assemblies/"
 names=[p.label for p in gefes.projects["humic"]]
 fpath= [pat+n+".fasta" for n in names]
 
-    
+
 def write_contig_list(contig_list,path,file):
     contig_list=[o for o in gefes.projects["acI"].assembly.contigs if o.name in contig_list]
     ffile=FASTA(path+file)
@@ -58,12 +64,12 @@ def write_marker_list(list_of_markers,path,name):
         data.append(line)
     buff.writerows(data)
     ffile.close()
-    
-    
+
+
 for bin_id in binned_markers:
     write_marker_list(binned_markers[bin_id],'/home/moritz/people/sari/assemblies/','markers_of_bin_'+bin_id+'.csv')
 
 for bin_id in bins:
     write_contig_list(bins[bin_id],'/home/moritz/people/sari/assemblies/','contigs_of_bin_'+bin_id+'.csv')
 
-    
+
