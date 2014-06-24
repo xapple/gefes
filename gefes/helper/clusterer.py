@@ -115,10 +115,10 @@ class GefesCONCOCT(Clusterer):
         tmp_data = DataFrame.from_csv(self.p.clustering,header=None)
         self.clusters = zip(tmp_data.index,[int(v) for v in tmp_data[[1]].values])
 
+   
+        
 class GefesImport(Clusterer):
 
-    """importing an externally clustering with a simple tab separated file with the first culmn the contig names, the second the clusters (numbers from 0 to N) """
-    
     all_paths = """
     /inport.csv
     """

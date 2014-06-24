@@ -69,6 +69,12 @@ class Bin(object):
     def annotate(self):
         self.annotater.single_copy_cog_blast()
 
+    def rebuild(self):
+        self.genome_builder.pull_reads()
+        self.genome_builder.assemble_genome()
+        self.genome_builder.filter_assembly()
+        
+
         
 class BinRunner(Runner):
     """Will run stuff on a bin"""
@@ -78,6 +84,7 @@ class BinRunner(Runner):
         {'phylotyping':{}},
         {'calling':    {}},
         {'annotate':   {}},
+        {'rebuild':    {}}
     ]
 
     def __init__(self, parent):
@@ -92,9 +99,9 @@ class BinRunner(Runner):
             steps = self.default_steps
         command = """steps = %s
                      binner = gefes.projects['%s'].binner
-                     binner.load()
+                     binner['%s'].load()
                      bini = [b for b in binner['%s'] if b.name=='%s'][0]
-                     bini.runner(steps)""" % (steps,self.project.name, self.binning.name,self.bini.name)
+                     bini.runner(steps)""" % (steps,self.project.name, self.binning.name, self.binning.name,self.bini.name)
         # Test case #
         if 'test' in self.project.name:
             kwargs['time'] = '00:15:00'
@@ -104,6 +111,6 @@ class BinRunner(Runner):
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
-        job_name = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
-        self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, job_name=job_name, **kwargs)
+        if 'job_name' not in kwargs: kwargs['job_name']  = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
+        self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, **kwargs)
         self.slurm_job.launch()
