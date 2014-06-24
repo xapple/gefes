@@ -9,7 +9,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.fasta.paired import PairedFASTQ
 from gefes.fasta.single import FASTQ
 from gefes.running.pool_runner import PoolRunner
-from gefes.helper.cleaner import Cleaner
+from gefes.cleaning import Cleaner
 from gefes.helper.mapper import Mapper
 from gefes.graphs import pool_plots
 
@@ -28,6 +28,7 @@ class Pool(object):
     /graphs/
     /clean/
     /mapping/
+    /fastqc/
     /info.json
     """
 

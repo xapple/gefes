@@ -217,7 +217,7 @@ class FilePath(str):
 
     @property
     def directory(self):
-        return str(os.path.dirname(self.path) + '/')
+        return DirectoryPath(str(os.path.dirname(self.path) + '/'))
 
     @property
     def extension(self):
@@ -282,6 +282,10 @@ class FilePath(str):
     def new_name_insert(self, string):
         """Return a new name by appending a string before the extension"""
         return self.prefix_path + "." + string + self.extension
+
+    def make_directory(self):
+        """Create the directory the file is supposed to be in if it does not exist"""
+        if not self.directory.exists: self.directory.create()
 
 ################################################################################
 class Filesize(object):

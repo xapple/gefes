@@ -22,8 +22,8 @@
     "forward_reads": "ACI_B2_enrichement_FF8_R1.fastq.gz",
     "reverse_reads": "ACI_B2_enrichement_FF8_R2.fastq.gz",
 
-    "project":       "acI_FF8",
-    "project_name":  "acI enrichment FF8",
+    "project":       "acI",
+    "project_name":  "acI enrichments",
     "pool":          "FF8",
     "pool_name":     "FF8"
 }

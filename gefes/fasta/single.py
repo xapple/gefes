@@ -28,6 +28,7 @@ class FASTA(FilePath):
     def __exit__(self, exc_type, exc_value, traceback): self.close()
     def __init__(self, path):
         self.path = path
+        self.gziped = True if self.path.endswith('gz') else False
 
     @property
     def first(self):
@@ -38,7 +39,8 @@ class FASTA(FilePath):
 
     @property_cached
     def count(self):
-        return int(sh.grep('-c', "^>", self.path, _ok_code=[0,1]))
+        if self.gziped: return int(sh.zgrep('-c', "^+$", self.path, _ok_code=[0,1]))
+        else: return int(sh.grep('-c', "^+$", self.path, _ok_code=[0,1]))
 
     def open(self):
         if self.path.endswith('gz'): self.handle = gzip.open(self.path, 'r')

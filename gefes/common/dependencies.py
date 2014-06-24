@@ -24,6 +24,11 @@ def check_executables():
 # We might be missing some modules #
 def check_module(mod_name):
     """Raises an exception if the module *mod_name* is not found."""
+    # Special cases #
+    if mod_name == "biopython": mod_name = "Bio"
+    if mod_name == "ipython": mod_name = "IPython"
+    if mod_name == "scikit-learn": mod_name = "sklearn"
+    # Use a try except block
     try:
         __import__(mod_name)
     except ImportError as e:
