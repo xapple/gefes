@@ -57,7 +57,7 @@ class GenomeBuilder(object):
         with FASTA(self.p.filtered) as filtered:
             filtered.add_seq([s for s in original if s.id in keepers])
 
-    def clust(self.data):
+    def clust(self,data):
         gmm = sklearn.mixture.GMM(n_components=2)
         gmm.fit(data[0])
         clust_x = gmm.predict(data[0])

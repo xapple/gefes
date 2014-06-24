@@ -9,7 +9,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.fasta.paired import PairedFASTQ
 from gefes.fasta.single import FASTQ
 from gefes.running.pool_runner import PoolRunner
-from gefes.cleaning import Cleaner
+#from gefes.cleaning import Cleaner
 from gefes.helper.mapper import Mapper
 from gefes.graphs import pool_plots
 
@@ -76,7 +76,7 @@ class Pool(object):
 
     def load(self):
         # Children #
-        self.cleaner = Cleaner(self)
+#        self.cleaner = Cleaner(self)
         self.mapper = Mapper(self, self.project.assembly)
         # All the plots #
         self.graphs = [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
@@ -91,7 +91,8 @@ class Pool(object):
         return self.runner.run_slurm(*args, **kwargs)
 
     def clean_reads(self):
-        self.cleaner.run()
+#        self.cleaner.run()
+	return
 
     def map_reads(self):
         self.mapper.map()
