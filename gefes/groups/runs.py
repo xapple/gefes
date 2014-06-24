@@ -28,17 +28,24 @@ class Run(Aggregate):
         self.num = num
         self.name = "run%i" % num
         self.pools = pools
-        # Parameters #
-        self.label = self.first.run_label
-        self.account = self.first.account
         # Dir #
         self.base_dir = out_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Extra #
-        self.xml_report_path = home + "proj/%s/INBOX/%s/report.xml" % (self.account, self.label)
+        # Illumina report #
+        self.xml_report_path = self.directory + "report.xml"
         # Auto exec #
-        if os.path.isfile(self.xml_report_path):
-            self.parse_report_xml()
+        if os.path.isfile(self.xml_report_path): self.parse_report_xml()
+
+    @property
+    def label(self): return self.first.run_label
+
+    @property
+    def account(self): return self.first.account
+
+    @property
+    def directory(self):
+        """The directory of the run"""
+        return home + "proj/%s/INBOX/%s/" % (self.account, self.label)
 
     def parse_report_xml(self):
         tree = etree.parse(self.xml_report_path)

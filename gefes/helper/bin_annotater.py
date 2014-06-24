@@ -6,7 +6,7 @@ from gefes.helper.blast_dbs import blast_dbs
 from gefes.helper.blast_dbs import blast_header
 from gefes.common.slurm import nr_threads
 
-# Third party mods #
+# Third party modules #
 import pandas, numpy
 from parallelblast import BLASTquery
 

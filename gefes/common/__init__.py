@@ -2,7 +2,7 @@
 import sys, os, time, shutil, re, random
 
 # Third party modules #
-import sh
+import sh, numpy
 
 ################################################################################
 def average(iterator):
@@ -13,6 +13,11 @@ def average(iterator):
         count += 1
         total += num
     return float(total)/count
+
+###############################################################################
+def moving_average(interval, windowsize):
+   window = numpy.ones(int(windowsize))/float(windowsize)
+   return numpy.convolve(interval, window, 'valid')
 
 ################################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):
@@ -161,6 +166,41 @@ def tail(path, window=20):
 def head(path, window=20):
     with open(path, 'r') as handle:
         return ''.join(handle.next() for line in xrange(window))
+
+###############################################################################
+def split_thousands(s, tSep='\'', dSep='.'):
+    """
+    Splits a number on thousands.
+    http://code.activestate.com/recipes/498181-add-thousands-separator-commas-to-formatted-number/
+
+    >>> split_thousands(1000012)
+    "1'000'012"
+    """
+    # Check input #
+    if s is None: return 0
+    # Check for int #
+    if round(s, 13) == s: s = int(s)
+    # Make string #
+    if not isinstance(s, str): s = str(s)
+    # Unreadable code #
+    cnt = 0
+    numChars = dSep + '0123456789'
+    ls = len(s)
+    while cnt < ls and s[cnt] not in numChars: cnt += 1
+    lhs = s[0:cnt]
+    s = s[cnt:]
+    if dSep == '': cnt = -1
+    else: cnt = s.rfind(dSep)
+    if cnt > 0:
+        rhs = dSep + s[cnt+1:]
+        s = s[:cnt]
+    else:
+        rhs = ''
+    splt=''
+    while s != '':
+        splt= s[-3:] + tSep + splt
+        s = s[:-3]
+    return lhs + splt[:-1] + rhs
 
 ################################################################################
 def is_integer(string):
