@@ -1,4 +1,3 @@
-
 # Built-in modules #
 import os
 
@@ -27,7 +26,7 @@ class GenomeBuilder(object):
     /bin_vs_reassembled.png
     """
 
-    def __init__(self,parent):
+    def __init__(self, parent):
         self.parent = parent
         self.bini = parent
         self.fwds=[str(p.fwd.path) for p in self.bini.parent.parent.parent]
@@ -44,7 +43,7 @@ class GenomeBuilder(object):
         spades_script = sh.Command("spades.py")
         spades_script("-o", self.base_dir,  "-1", self.p.reads_1, "-2", self.p.reads_2,  "-t", nr_threads, "--careful")
 
-    def filter_assembly(self,cutoff=0.3):
+    def filter_assembly(self, cutoff=0.3):
         original = FASTA(self.p.scaffold)
         data = pandas.DataFrame.from_dict({s.id : numpy.array(s.id.split("_"))[[3,5]] for s in original}, orient='index')
         data = data.astype(numpy.float)
@@ -57,7 +56,7 @@ class GenomeBuilder(object):
         with FASTA(self.p.filtered) as filtered:
             filtered.add_seq([s for s in original if s.id in keepers])
 
-    def clust(self.data):
+    def clust(self, data):
         gmm = sklearn.mixture.GMM(n_components=2)
         gmm.fit(data[0])
         clust_x = gmm.predict(data[0])
@@ -65,7 +64,7 @@ class GenomeBuilder(object):
         clust_y = gmm.predict(data[1])
         return clust_x + 2*clust_y
 
-    def contig_plot(self,data,classes):
+    def contig_plot(self, data, classes):
         fig = pyplot.figure()
         axes = fig.add_subplot(111)
         axes.set_xscale('log')
