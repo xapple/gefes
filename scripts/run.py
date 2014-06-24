@@ -1,8 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 """
-A script to contain examples commands
-for running the pipeline.
+A script to contain examples commands for running the pipeline.
 """
 
 # Don't run it #
@@ -60,7 +59,6 @@ gefes.projects['test'].binner.clusterer.run()
 
 
 ###############################################################################
-
 # Clean the pools #
 for p in gefes.projects['acI']: p.clean_reads()
 gefes.projects['acI'].graphs[0].plot()

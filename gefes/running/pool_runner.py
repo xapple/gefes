@@ -14,8 +14,10 @@ class PoolRunner(Runner):
     default_time = '1-00:00:00'
 
     default_steps = [
+        # Initial steps #
         {'clean_reads':           {}},
         {'make_plots':            {}},
+        # Run after the assembly is done #
         {'map_reads':             {}},
     ]
 

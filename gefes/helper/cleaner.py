@@ -40,14 +40,15 @@ class Cleaner(object):
         self.pair = self.sickle.pair
 
     def run(self):
-        #self.cutadapt.run()
+        #self.cutadapt.run() # Not working at the moment
         self.sickle.run()
 
 ###############################################################################
 class Cutadapt(object):
-    """Takes care of running the cutadapt program.
+    """Takes care of running the cutadapt program that will search for
+    standard Illumin adapters that might be lingering in the sequences.
     https://github.com/marcelm/cutadapt
-    Strange procedure for using paried-end files..."""
+    There is a strange procedure for using paried-end files..."""
 
     illumina_adapters = {
     'Adapter_1_Illumina'       : "ACACTCTTTCCCTACACGACGCTGTTCCATCT",
@@ -120,7 +121,7 @@ class Cutadapt(object):
 
 ###############################################################################
 class Sickle(object):
-    """Takes care of running the sickle program."""
+    """Takes care of running the sickle program that removes low quality reads."""
 
     all_paths = """
     /cleaned_fwd.fastq
@@ -170,4 +171,5 @@ class Sickle(object):
 
     @property
     def discarded(self):
+        # Should code this in a unit test fashion
         return len(self.parent) - len(self)

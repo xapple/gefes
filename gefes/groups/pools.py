@@ -20,8 +20,8 @@ home = os.environ['HOME'] + '/'
 
 ###############################################################################
 class Pool(object):
-    """An illumina HiSeq MID is called here a 'pool'.
-    It's a bunch of paired sequences."""
+    """An Illumina HiSeq MID is called here a 'pool'.
+    It's a bunch of paired sequences all coming from the same particular sample."""
 
     all_paths = """
     /logs/
