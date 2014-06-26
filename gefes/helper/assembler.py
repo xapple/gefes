@@ -10,6 +10,7 @@ from gefes.common.autopaths import AutoPaths
 from gefes.common.cache import property_cached
 from gefes.graphs import assembly_plots
 from gefes.helper.contig import Contig
+from gefes.helper.contig import tetra_cats
 from gefes.helper.metapathways import Metapathways
 from gefes.fasta.single import FASTA
 from gefes.common.slurm import nr_threads
@@ -92,7 +93,7 @@ class Assembly(object):
 
     @property_cached
     def frame(self):
-        columns = ['length'] + ['gc_content'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in Contig.tetra_cats]
+        columns = ['length'] + ['gc_content'] + [s.id_name for s in self.aggregate] + ['freq_' + t for t in tetra_cats]
         rows = [c.name for c in self.contigs]
         data = [[c.length] + [c.gc_content] + [s.mapper.coverage[c.name]["cov_mean"] for s in self.aggregate] + c.get_all_tetra_nuc_freqs() for c in self.contigs]
         return pandas.DataFrame(data, columns=columns, index=rows)

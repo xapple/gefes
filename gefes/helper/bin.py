@@ -111,4 +111,4 @@ class BinRunner(Runner):
         if 'email' not in kwargs: kwargs['email'] = None
         if 'job_name' not in kwargs: kwargs['job_name']  = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
         self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, **kwargs)
-        self.slurm_job.launch()
+        self.slurm_job.run()

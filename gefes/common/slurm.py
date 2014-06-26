@@ -271,6 +271,8 @@ class SLURMJob(object):
         static_module_dir = self.log_dir + project_name + '/'
         # Archive version #
         self.module_version = module.__version__ + ' ' + get_git_tag(repos_dir)
+        # Check command type #
+        if not isinstance(command, list): command = [command]
         # Make script #
         script =  ["import os, sys"]
         script += ["sys.path.insert(0, '%s')" % static_module_dir]

@@ -112,7 +112,7 @@ class GefesImport(Clusterer):
     """Importing an externally clustering with a simple tab separated file with the first column the contig names, the second the clusters (numbers from 0 to N) """
 
     all_paths = """
-    /import.csv
+    /inport.csv
     """
 
     def __init__(self,parent, args = {'file' : "import.csv"} ):
