@@ -96,11 +96,7 @@ class BinRunner(Runner):
         # Make script #
         if not steps:
             steps = self.default_steps
-        command = """steps = %s
-                     binner = gefes.projects['%s'].binner
-                     binner['%s'].load()
-                     bini = [b for b in binner['%s'] if b.name=='%s'][0]
-                     bini.runner(steps)""" % (steps,self.project.name, self.binning.name, self.binning.name,self.bini.name)
+        command = """steps = %s\nbinner = gefes.projects['%s'].binner\nbinner['%s'].load()\nbini = [b for b in binner['%s'] if b.name=='%s'][0]\nbini.runner(steps)""" % (steps,self.project.name, self.binning.name, self.binning.name,self.bini.name)
         # Test case #
         if 'test' in self.project.name:
             kwargs['time'] = '00:15:00'

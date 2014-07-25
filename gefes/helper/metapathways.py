@@ -29,8 +29,8 @@ pathwaytools_dir = os.environ['PATHWAYTOOLSDIR'] + '/'
 default_config = """
 PYTHON_EXECUTABLE       %s.pyenv/shims/python
 PERL_EXECUTABLE         /usr/bin/perl
-METAPATHWAYS_PATH       /proj/b2011138/nobackup/LUCAS/metapathways
-PATHOLOGIC_EXECUTABLE   /proj/b2011138/nobackup/LUCAS/pathwaytools/aic-export/pathway-tools/ptools/17.0/pathway-tools
+METAPATHWAYS_PATH       %s
+PATHOLOGIC_EXECUTABLE   %s/aic-export/pathway-tools/ptools/18.0/pathway-tools
 REFDBS                  blastDB/
 FORMATDB_EXECUTABLE     executables/linux/bit64/makeblastdb
 BLASTP_EXECUTABLE       executables/linux/bit64/blastp
@@ -38,7 +38,7 @@ BLASTN_EXECUTABLE       executables/linux/bit64/blastn
 EXECUTABLES_DIR         executables/linux/bit64/
 LASTDB_EXECUTABLE       executables/linux/bit64/lastdb
 LAST_EXECUTABLE         executables/linux/bit64/lastal
-ORF_PREDICTION          executables/linux/bit64/prodigal
+ORF_PREDICTION          executables/locals/prodigal
 SCAN_tRNA               executables/linux/bit64/trnascan-1.4
 GBK_TO_FNA_FAA_GFF      libs/python_scripts/MetaPathways_parse_genbank.py
 GFF_TO_FNA_FAA_GFF      libs/python_scripts/MetaPathways_input_gff.py
@@ -52,7 +52,7 @@ CREATE_REPORT_FILES     libs/python_scripts/MetaPathways_create_reports_fast.py
 STATS_rRNA              libs/python_scripts/MetaPathways_rRNA_stats_calculator.py
 MLTREEMAP_IMAGEMAKER    mltreemap/mltreemap_imagemaker/mltreemap_imagemaker.pl
 MLTREEMAP_CALCULATION   mltreemap/mltreemap_calculation/mltreemap.pl
-""" % home
+""" % (home, metapath_dir, pathwaytools_dir)
 
 default_param = """##V.1   do not remove this line
 INPUT:format fasta
@@ -61,15 +61,15 @@ quality_control:delete_replicates  no
 orf_prediction:algorithm    prodigal
 orf_prediction:min_length   60
 annotation:algorithm blast
-annotation:dbs   COG_2013-02-05
-#COG_2013-02-05,refseq_protein,metacyc-v5-2011-10-21
+annotation:dbs   COG_2013-02-05,metacyc-v5-2011-10-21
+#COG_2013-02-05,refseq_protein
 annotation:min_bsr  0.4
-annotation:max_evalue 0.000001
+annotation:max_evalue 0.001
 annotation:min_score 20
 annotation:min_length 60
 annotation:max_hits 5
 rRNA:refdbs LSURef_111_tax_silva
-rRNA:max_evalue 0.000001
+rRNA:max_evalue 0.001
 rRNA:min_identity 20
 rRNA:min_bitscore 50
 ptools_settings:taxonomic_pruning no
@@ -120,7 +120,10 @@ class Metapathways(object):
         self.base_dir = self.sample.p.metapathways_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Other #
-        self.fasta_path = self.sample.p.Contigs
+        try :
+            self.fasta_path = self.sample.p.Contigs
+        except :
+            self.fasta_path = self.sample.p.filtered
         self.script_path = metapath_dir + "MetaPathways.py"
         self.pgdb_path = pathwaytools_dir + 'ptools-local/pgdbs/user/' + 'temp.cyc'
         # Command #
@@ -155,5 +158,5 @@ class Metapathways(object):
         if 'Error!' in log:
             raise Exception('Metapathway tools reported an error in file "%s".') % self.p.out
         # Check that the preprocessing didn't affect the data #
-        assert self.sample.cleaned_fasta.count == self.preprocessed_fasta.count
-        assert len(self.sample.cleaned_fasta.first) == len(self.preprocessed_fasta.first) + 1
+#        assert self.sample.cleaned_fasta.count == self.preprocessed_fasta.count
+#        assert len(self.sample.cleaned_fasta.first) == len(self.preprocessed_fasta.first) + 1

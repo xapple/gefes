@@ -37,9 +37,9 @@ class Phylotyper(object):
         self.kraken()
 
     def phylosift(self):
-        self.sift("all", "-f", "--output=" + self.p.phylosift, self.parent.p.contigs)
+        sift("all", "-f", "--threads", nr_threads, "--output=" + self.p.phylosift, self.parent.p.contigs)
 
     def kraken(self):
-        sh.kraken("--db", self.kraken_db, "--threads", nr_threads, "--fasta-input", "--output", self.p.output, self.parent.p.contigs)
-        if os.stat(self.p.output)[6]!=0 : self.kraken_report("--db", self.kraken_db, self.p.output, _out = self.p.report)
+        sh.kraken("--db", kraken_db, "--threads", nr_threads, "--fasta-input", "--output", self.p.output, self.parent.p.contigs)
+        if os.stat(self.p.output)[6]!=0 : kraken_report("--db", kraken_db, self.p.output, _out = self.p.report)
         sh.ktImportTaxonomy("-t", 5, "-m", 3, "-o", self.p.krona, self.p.report)

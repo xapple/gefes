@@ -47,6 +47,7 @@ class Glimmer(object):
         self.parent = parent
         self.bini = self.parent.parent
         # Auto paths #
+        
         self.base_dir = self.parent.p.glimmer
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
