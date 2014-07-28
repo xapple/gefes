@@ -44,6 +44,7 @@ class GenomeBuilder(object):
         spades_script("-o", self.base_dir,  "-1", self.p.reads_1, "-2", self.p.reads_2,  "-t", nr_threads, "--careful")
 
     def filter_assembly(self, cutoff=0.3):
+        """Does XYZ"""
         original = FASTA(self.p.scaffold)
         data = pandas.DataFrame.from_dict({s.id : numpy.array(s.id.split("_"))[[3,5]] for s in original}, orient='index')
         data = data.astype(numpy.float)
@@ -55,7 +56,6 @@ class GenomeBuilder(object):
         keepers = data[classes == lens.idxmax()].index
         with FASTA(self.p.filtered) as filtered:
             filtered.add_seq([s for s in original if s.id in keepers])
-
 
     def clust(self, data):
         gmm = sklearn.mixture.GMM(n_components=2)

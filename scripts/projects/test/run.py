@@ -1,28 +1,32 @@
 #!/usr/bin/env python2
 
 """
-A script to contain examples commands for running the pipeline.
+A script to contain the procedure for running the test sample.
 """
 
-# Don't run it #
-import sys
-sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+# Built-in modules #
 
-# Modules #
+# Internal modules #
 import gefes
+from gefes.cleaning.quality import QualityChecker
+
+# Third party modules #
 
 # Constants #
 proj = gefes.projects['test']
 pools = proj.pools
 
+# Global settings #
+proj.kmer_size = 81
+
 ################################### Cleaning ##################################
-self.joiner = Joiner(self)
-# Check quality #
-self.quality_checker = QualityChecker(self)
-# Final files #
-self.fwd = self.quality_checker.fwd
-self.rev = self.quality_checker.rev
-self.pair = self.quality_checker.paired
+for pool in pools:
+    # Check quality #
+    pool.quality_checker = QualityChecker(pool)
+    # Final files #
+    pool.fwd  = pool.quality_checker.fwd
+    pool.rev  = pool.quality_checker.rev
+    pool.pair = pool.quality_checker.paired
 
 def clean():
     # Fastqc on the pools #

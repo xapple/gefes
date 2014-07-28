@@ -1,6 +1,6 @@
 ## GEFES
 
-The acronym "GEFES" stands for **G**enome **E**xtraction **F**rom **E**nvironmental **S**equencing.
+The acronym "GEFES" stands for **G**​enome **E**​xtraction **F**​rom **E**​nvironmental **S**​equencing.
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we could like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
@@ -18,7 +18,7 @@ As you know almost all microbes can't be isolated or cultured easily. So instead
 
 It's quite different from when you are able to isolate a bacterium such as E. Coli. In that case your DNA reads are coming from random locations of the chromosome, but they are all from a copy of the same genome. This makes it easy to pieces things together afterwards.
 
-What we have as starting data in our case is more messay. Every DNA read is potentially coming from a different species. Plus, the fragments are really short and only span a fraction of a typical microbial gene.
+What we have as starting data in our case is more messy. Every DNA read is potentially coming from a different species. Plus, the fragments are really short and only span a fraction of a typical microbial gene.
 
 How do we put the reads together to make genomes ? How are we going to figure out which short sequence was coming from which species ? This is what GEFES is supposed to help with.
 
@@ -121,22 +121,24 @@ GEFES will search for the raw reads in a directory called ``INBOX`` somewhere in
 ### Step 6: Obtaining extra dependencies
 GEFES also makes use of many third party programs which need to be installed and accessible from your ``$PATH``. These dependencies each have specific installation procedures and include:
 
- * [sickle](https://github.com/najoshi/sickle) version X.X.X called ``sickle``
- * [Ray](http://sourceforge.net/projects/denovoassembler/) version X.X.X called ``Ray23``
+ * [sickle](https://github.com/najoshi/sickle) version X.X.X providing ``sickle``
+ * [Ray](http://sourceforge.net/projects/denovoassembler/) version X.X.X providing ``Ray23``
  * [htslib](https://github.com/samtools/htslib) (needed by samtools) version X.X.X
- * [samtools](http://samtools.sourceforge.net) version X.X.X called ``samtools``
- * [bedtools]() version X.X.X called ``genomeCoverageBed``
- * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version X.X.X called ``bowtie2``
- * [Glimmer]() version X.X.X called ``XXX``
- * [Prodigal]() version X.X.X called ``XXX``
- * [Spades]() version X.X.X called ``XXX``
+ * [samtools](http://samtools.sourceforge.net) version X.X.X providing ``samtools``
+ * [bedtools]() version X.X.X providing ``genomeCoverageBed``
+ * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version X.X.X providing ``bowtie2``
+ * [Glimmer]() version X.X.X providing ``XXX``
+ * [Prodigal]() version X.X.X providing ``XXX``
+ * [Spades]() version X.X.X providing ``XXX``
  * get-motif-counts.awk
  * long-orfs
  * extract
  * build-icm
 
+These can take some time to install and unfortunately we can't package them with our project !
+
 ### Step 7: Troubleshooting
-You might run into difficulties at some of the steps above, check this section for a solution.
+You might run into difficulties at some of the steps above -- if that is the case check this section for a solution.
 
 #### - "pip install scipy" missing BLAS:
 When you install scipy, you might need these two dependencies before hand if they are not on your system: http://stackoverflow.com/questions/7496547/python-scipy-needs-blas

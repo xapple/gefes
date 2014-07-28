@@ -1,5 +1,5 @@
 # Built-in modules #
-import sys, os, time, shutil, re, random
+import sys, os, time, shutil, re, random, math
 
 # Third party modules #
 import sh, numpy
@@ -15,9 +15,49 @@ def average(iterator):
     return float(total)/count
 
 ###############################################################################
-def moving_average(interval, windowsize):
-   window = numpy.ones(int(windowsize))/float(windowsize)
-   return numpy.convolve(interval, window, 'valid')
+def moving_average(interval, windowsize, borders=None):
+    """This is essentially a convolving operation. Several option exist for dealing with the border cases.
+
+        * None: Here the returned signal will be smaller than the inputted interval.
+
+        * zero_padding: Here the returned signal will be larger than the inputted interval and we will add zeros to the original interval before operating the convolution.
+
+        * zero_padding_and_cut: Same as above only the result is truncated to be the same size as the original input.
+
+        * copy_padding: Here the returned signal will be larger than the inputted interval and we will use the right and leftmost values for padding before operating the convolution.
+
+        * copy_padding_and_cut: Same as above only the result is truncated to be the same size as the original input.
+
+        * zero_stretching: Here we will compute the convolution only in the valid domain, then add zeros to the result so that the output is the same size as the input.
+
+        * copy_stretching: Here we will compute the convolution only in the valid domain, then copy the right and leftmost values so that the output is the same size as the input.
+        """
+    # The window size in half #
+    half = int(math.floor(windowsize/2.0))
+    # The normalized rectangular signal #
+    window = numpy.ones(int(windowsize))/float(windowsize)
+    # How do we deal with borders #
+    if borders == None:
+        return numpy.convolve(interval, window, 'valid')
+    if borders == 'zero_padding':
+        return numpy.convolve(interval, window, 'full')
+    if borders == 'zero_padding_and_cut':
+        return numpy.convolve(interval, window, 'same')
+    if borders == 'copy_padding':
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, 'valid')
+    if borders == 'copy_padding_and_cut':
+        new_interval = [interval[0]]*(windowsize-1) + interval + [interval[-1]]*(windowsize-1)
+        return numpy.convolve(new_interval, window, 'valid')[half:-half]
+    if borders == 'zero_stretching':
+        result = numpy.convolve(interval, window, 'valid')
+        pad = numpy.zeros(half)
+        return numpy.concatenate((pad, result, pad))
+    if borders == 'copy_stretching':
+        result = numpy.convolve(interval, window, 'valid')
+        left = numpy.ones(half)*result[0]
+        right = numpy.ones(half)*result[-1]
+        return numpy.concatenate((left, result, right))
 
 ################################################################################
 def wait(predicate, interval=1, message=lambda: "Waiting..."):

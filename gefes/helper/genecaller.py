@@ -74,7 +74,7 @@ class Glimmer(object):
             sh.build_icm('-r','temp.icm',_in=inpo)
         # use ICM to predict genes
         sh.glimmer3('-l','-o50', '-g110', '-t30', self.bini.p.contigs, 'temp.icm', 'temp')
-        # extract and correct upstream corrdinated to extract from multi-fasta file
+        # extract and correct upstream coordinated to extract from multi-fasta file
         with open('temp.predict') as f_in:
                 content = f_in.readlines()
                 with open('temp.gene.coord','w') as g_out:

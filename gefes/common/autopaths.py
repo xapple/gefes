@@ -165,6 +165,21 @@ class DirectoryPath(str):
         return self.path + other
 
     @property
+    def name(self):
+        """Just the directory name"""
+        return os.path.basename(os.path.dirname(self.path))
+
+    @property
+    def prefix_path(self):
+        """The full path without the extension"""
+        return os.path.splitext(self.path)[0].rstrip('/')
+
+    @property
+    def directory(self):
+        """The full path of directory containing this one"""
+        return DirectoryPath(os.path.dirname(os.path.dirname(self.path)))
+
+    @property
     def contents(self):
         """The files and directories as a list"""
         return os.listdir(self.path)
@@ -181,6 +196,11 @@ class DirectoryPath(str):
 
     def create(self):
         os.makedirs(self.path)
+
+    def zip(self, keep_orig=False):
+        """Make a zip archive of the directory"""
+        shutil.make_archive(self.prefix_path , "zip", self.directory, self.name)
+        if not keep_orig: self.remove()
 
 ################################################################################
 class FilePath(str):

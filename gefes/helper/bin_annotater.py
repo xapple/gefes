@@ -50,7 +50,7 @@ class BinAnnotater(object):
             single.append({})
             weird.append({})
             for db in scc_dbs:
-                    b_query = BLASTquery(ipath,db[1]['path'],scc_blast_params, opath + db[0])
+                    b_query = BLASTquery(ipath, db[1]['path'], scc_blast_params, opath + db[0])
                     b_query.run()
                     if os.stat(b_query.out_path).st_size > 0:
                             raw = pandas.DataFrame.from_csv(b_query.out_path,sep='\t', header=-1)
