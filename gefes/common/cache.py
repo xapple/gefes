@@ -1,5 +1,5 @@
 # Built-in modules #
-import time, pickle
+import time, pickle, inspect
 
 # Internal modules #
 
@@ -9,28 +9,25 @@ from decorator import decorator
 ################################################################################
 def property_cached(f):
     """Decorator for properties evaluated only once.
-    It can be used to created a cached property like this::
+    It can be used to created a cached property like this:
 
         class Employee(object):
             @property_cached
             def salary(self):
-                return 8000
-
+                return time.time()
         bob = Employee()
         print bob.salary
     """
-    def get_method(self):
-        try:
-            return self.__cache__[f.func_name]
-        except AttributeError:
-            self.__cache__ = {}
-            x = self.__cache__[f.func_name] = f(self)
-            return x
-        except KeyError:
-            x = self.__cache__[f.func_name] = f(self)
-            return x
-    get_method.__doc__ = f.__doc__
-    return property(get_method)
+    def add_to_cache(self):
+        if inspect.isgeneratorfunction(f): result = tuple(f(self))
+        else: result = f(self)
+        self.__cache__[f.__name__] = result
+    def retrieve_from_cache(self):
+        if '__cache__' not in self.__dict__: self.__cache__ = {}
+        if f.__name__ not in self.__cache__: add_to_cache(self)
+        return self.__cache__[f.__name__]
+    retrieve_from_cache.__doc__ = f.__doc__
+    return property(retrieve_from_cache)
 
 ################################################################################
 def expiry_every(seconds=0):
