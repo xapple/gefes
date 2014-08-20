@@ -1,0 +1,21 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        }
+    },
+
+    "uppmax_id":    "b2011035",
+    "run_num":       0,
+    "run_id":        "test_data",
+    "pool_num":      3,
+    "pool_id":       "Sample_pool3",
+    "forward_reads": "pool3_fwd.fastq.gz",
+    "reverse_reads": "pool3_rev.fastq.gz",
+
+    "project":       "test",
+    "project_name":  "Test data",
+    "pool":          "test3",
+    "pool_name":     "Third pool of test data"
+}
