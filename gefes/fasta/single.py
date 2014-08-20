@@ -283,5 +283,3 @@ class AlignedFASTA(FASTA):
         sh.raxml811('-m', 'GTRGAMMA', "-T", cpus, '-p', 1, '-s', self.path, '-n', 'tree', '-w', temp_dir)
         # Move into place #
         shutil.move(temp_dir + 'RAxML_parsimonyTree.tree', out_path)
-        # Quote all numbers #
-        sh.sed('-i', 's/\([0-9]\+\)/"\1"/g', out_path)

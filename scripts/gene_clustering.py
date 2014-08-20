@@ -22,9 +22,8 @@ from gefes.common.autopaths import AutoPaths, FilePath
 from gefes.common.cache import property_cached
 from gefes.common import natural_sort
 from gefes.fasta.single import FASTA, AlignedFASTA
-
-# First party modules #
 from parallelblast import BLASTdb, BLASTquery
+from parallelblast.results import tabular_keys
 
 # Third party modules #
 import sh, pandas, numpy
@@ -56,10 +55,8 @@ class Cluster(object):
         """The fasta file containing the sequences of this cluster"""
         fasta = FASTA(self.path)
         if not fasta.exists:
-            if not fasta.directory.exists: fasta.directory.create()
-            fasta.create()
-            for seq in self.sequences: fasta.add_str(str(seq.seq), name=seq.id)
-            fasta.close()
+            with fasta as handle:
+                for seq in self.sequences: handle.add_str(str(seq.seq), name=seq.id)
         return fasta
 
     @property
@@ -163,7 +160,15 @@ class Analysis(object):
     @property
     def filtered(self):
         """We want to check the percent identify and the coverage of the hit to the query"""
-        if not self.p.filtered_blastout.exists: self.blastout.copy(self.p.filtered_blastout)
+        def good_iterator(blastout):
+            for line in blastout:
+                info = dict(zip(tabular_keys, line.split()))
+                if int(info['perc_identity']) < 30: continue
+                coverage = 100 #TODO
+                if coverage < 50: continue
+                yield line
+        if not self.p.filtered_blastout.exists:
+            self.p.filtered_blastout.writelines(good_iterator(self.p.all_blastout))
         return self.p.filtered_blastout
 
     @property_cached
@@ -210,4 +215,4 @@ test_genomes = [FASTA(path) for path in glob.glob(test_files)]
 test_analysis = Analysis(test_genomes, output_directory + "/test/")
 
 # Main program #
-#if __name__ == '__main__': Phylo.draw_ascii(test_cluster.clusters[0].tree)
+#if __name__ == '__main__': Phylo.draw_ascii(analysis.master_cluster.phylogeny)
