@@ -1,5 +1,5 @@
 # Built-in modules #
-import os, gzip
+import os, gzip, multiprocessing
 from collections import Counter, OrderedDict
 
 # Internal modules #
@@ -11,15 +11,17 @@ from gefes.common.tmpstuff import new_temp_dir, new_temp_path
 
 # Third party modules #
 import sh, shutil
-from Bio import SeqIO
+from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
+from Bio.Align import MultipleSeqAlignment
 
 ################################################################################
 class FASTA(FilePath):
     """A single FASTA file somewhere in the filesystem. You can read from it in
     several convenient ways. You can write to it in a automatically buffered way.
     There are several other things you can do with a FASTA file. Look at the class."""
+    format    = 'fasta'
     extension = 'fasta'
     buffer_size = 1000
 
@@ -27,7 +29,7 @@ class FASTA(FilePath):
     def __iter__(self): return self.parse()
     def __repr__(self): return '<%s object on "%s">' % (self.__class__.__name__, self.path)
     def __nonzero__(self): return os.path.getsize(self.path) != 0
-    def __contains__(self, other): return other in self.short_ids
+    def __contains__(self, other): return other in self.ids
 
     def __enter__(self): return self.create()
     def __exit__(self, exc_type, exc_value, traceback): self.close()
@@ -44,18 +46,18 @@ class FASTA(FilePath):
     def first(self):
         """Just the first sequence"""
         self.open()
-        seq = SeqIO.parse(self.handle, self.extension).next()
+        seq = SeqIO.parse(self.handle, self.format).next()
         self.close()
         return seq
 
     @property_cached
     def count(self):
         """Should probably check file size instead of just caching once #TODO"""
-        if self.gziped: return int(sh.zgrep('-c', "^+$", self.path, _ok_code=[0,1]))
-        else: return int(sh.grep('-c', "^+$", self.path, _ok_code=[0,1]))
+        if self.gziped: return int(sh.zgrep('-c', "^>", self.path, _ok_code=[0,1]))
+        else: return int(sh.grep('-c', "^>", self.path, _ok_code=[0,1]))
 
     @property_cached
-    def short_ids(self):
+    def ids(self):
         return frozenset([seq.description.split()[0] for seq in self])
 
     @property
@@ -66,24 +68,25 @@ class FASTA(FilePath):
     def lengths_counter(self):
         return Counter((len(s) for s in self.parse()))
 
-    def open(self):
-        if self.gziped: self.handle = gzip.open(self.path, 'r')
-        else: self.handle = open(self.path, 'r')
+    def open(self, mode='r'):
+        if self.gziped: self.handle = gzip.open(self.path, mode)
+        else: self.handle = open(self.path, mode)
 
     def close(self):
-        if hasattr(self, 'buffer'): self.flush()
+        if hasattr(self, 'buffer'):
+            self.flush()
+            del self.buffer
         self.handle.close()
 
     def parse(self):
         self.open()
-        return SeqIO.parse(self.handle, self.extension)
+        return SeqIO.parse(self.handle, self.format)
 
     def create(self):
         self.buffer = []
         self.buf_count = 0
-        self.dir = os.path.dirname(self.path)
-        if not os.path.exists(self.dir): os.makedirs(self.dir)
-        self.handle = open(self.path, 'w')
+        if not self.directory.exists: self.directory.create()
+        self.open('w')
         return self
 
     def add_seq(self, seq):
@@ -96,14 +99,14 @@ class FASTA(FilePath):
 
     def flush(self):
         for seq in self.buffer:
-            SeqIO.write(seq, self.handle, self.extension)
+            SeqIO.write(seq, self.handle, self.format)
         self.buffer = []
 
     def write(self, reads):
-        self.dir = os.path.dirname(self.path)
-        if not os.path.exists(self.dir): os.makedirs(self.dir)
-        with open(self.path, 'w') as self.handle:
-            SeqIO.write(reads, self.handle, self.extension)
+        if not self.directory.exists: self.directory.create()
+        self.open('w')
+        SeqIO.write(reads, self.handle, self.format)
+        self.close()
 
     def get_id(self, id_num):
         """Extract one sequence from the file based on its ID. This is highly ineffective.
@@ -173,10 +176,17 @@ class FASTA(FilePath):
         fraction.close()
         return fraction
 
+    def align(self, out_path=None):
+        """We align the sequences in the fasta file with muscle"""
+        if out_path is None: out_path = self.prefix_path + '.aln'
+        sh.muscle("-in", self.path, "-out", out_path)
+        return AlignedFASTA(out_path)
+
 #-----------------------------------------------------------------------------#
 class FASTQ(FASTA):
     """A single FASTQ file somewhere in the filesystem"""
     extension = 'fastq'
+    format    = 'fastq'
 
     @property_cached
     def count(self):
@@ -215,3 +225,63 @@ class FASTQ(FASTA):
             shutil.move(created_dir, directory)
             tmp_dir.remove()
             return directory
+
+#-----------------------------------------------------------------------------#
+class AlignedFASTA(FASTA):
+    """Also a FASTA file technically, but contains an alignment"""
+    extension = 'aln'
+
+    def __iter__(self): return iter(self.parse())
+
+    def parse(self):
+        self.open()
+        return AlignIO.read(self.handle, self.format)
+
+    def add_seq(self, seq):
+        self.buffer.append(seq)
+
+    def flush(self):
+        AlignIO.write(MultipleSeqAlignment(self.buffer), self.handle, self.format)
+
+    def write(self, reads):
+        if not self.directory.exists: self.directory.create()
+        self.open('w')
+        AlignIO.write(reads, self.handle, self.format)
+        self.close()
+
+    @property_cached
+    def sequences(self):
+        return OrderedDict(((seq.id, seq) for seq in self))
+
+    def gblocks(self, new_path=None):
+        """Apply the gblocks filtering algorithm to the alignment and overwrite it.
+        See http://molevol.cmima.csic.es/castresana/Gblocks/Gblocks_documentation.html"""
+        # Run it #
+        sh.gblocks91(self, "-t=d", '-p=n', _ok_code=[0,1])
+        created_file = self.path + '-gb'
+        assert os.path.exists(created_file)
+        # Replace it #
+        if new_path is None:
+            os.remove(self.path)
+            new_path = self.path
+        # Reformat FASTA #
+        AlignIO.write(AlignIO.parse(created_file, 'fasta'), new_path, 'fasta')
+        # Clean up #
+        os.remove(created_file)
+
+    def build_tree(self, out_path=None):
+        """Make a tree with raxml. Note that you need at least four
+        taxa to express some evolutionary history on an unrooted tree"""
+        # Check length #
+        assert len(self) > 3
+        # Check output #
+        if out_path is None: out_path = self.prefix_path + '.tree'
+        elif not isinstance(out_path, FilePath): out_path = FilePath(out_path)
+        # Run it #
+        temp_dir = new_temp_dir()
+        cpus = max(multiprocessing.cpu_count(), 4) - 2
+        sh.raxml811('-m', 'GTRGAMMA', "-T", cpus, '-p', 1, '-s', self.path, '-n', 'tree', '-w', temp_dir)
+        # Move into place #
+        shutil.move(temp_dir + 'RAxML_parsimonyTree.tree', out_path)
+        # Quote all numbers #
+        sh.sed('-i', 's/\([0-9]\+\)/"\1"/g', out_path)

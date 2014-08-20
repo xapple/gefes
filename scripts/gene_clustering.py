@@ -18,10 +18,10 @@ import glob
 from collections import defaultdict
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
+from gefes.common.autopaths import AutoPaths, FilePath
 from gefes.common.cache import property_cached
 from gefes.common import natural_sort
-from gefes.fasta.single import FASTA
+from gefes.fasta.single import FASTA, AlignedFASTA
 
 # First party modules #
 from parallelblast import BLASTdb, BLASTquery
@@ -29,24 +29,84 @@ from parallelblast import BLASTdb, BLASTquery
 # Third party modules #
 import sh, pandas, numpy
 from shell_command import shell_output
+from Bio import Phylo
 
 # Constants #
-output_directory = "/glob/lucass/other/alex_gene_clusters"
+output_directory = "/glob/lucass/other/alex_gene_clusters/"
 
 ###############################################################################
-class Genes(FASTA):
+class Cluster(object):
     """A set of genes which are related in some way. For instance, all genes
-    that clustered together when performing the MCL analysis."""
+    that clustered together when performing the MCL analysis.
+    (all variations of a some single copy gene class)."""
 
-    def align(self, out_path=None):
-        """We align"""
-        if out_path is None: out_path = self.prefix_path + '.aln'
-        sh.muscle("-in", self.path, "-out", out_path)
-        #sh.gblocks(out_path, "-t=d")
+    def __init__(self, num, ids, analysis, name=None):
+        self.num = num
+        self.ids = ids
+        self.analysis = analysis
+        self.name = "cluster_%i" % num if name is None else name
+        self.path = self.analysis.p.clusters_dir + self.name + '.fasta'
 
-    def build_tree(self):
-        """We make a tree"""
-        sh.raxml()
+    @property
+    def sequences(self):
+        for id_num in self.ids: yield self.analysis.blast_db[id_num]
+
+    @property
+    def fasta(self):
+        """The fasta file containing the sequences of this cluster"""
+        fasta = FASTA(self.path)
+        if not fasta.exists:
+            if not fasta.directory.exists: fasta.directory.create()
+            fasta.create()
+            for seq in self.sequences: fasta.add_str(str(seq.seq), name=seq.id)
+            fasta.close()
+        return fasta
+
+    @property
+    def alignment(self):
+        """The fasta file aligned with muscle"""
+        alignment = AlignedFASTA(self.fasta.prefix_path + '.aln')
+        if not alignment.exists:
+            self.fasta.align(alignment)
+            alignment.gblocks()
+        return alignment
+
+    @property
+    def tree(self):
+        """The tree built with raxml"""
+        tree = FilePath(self.alignment.prefix_path + '.tree')
+        if not tree.exists: self.alignment.build_tree(tree)
+        return tree
+
+    @property
+    def phylogeny(self):
+        """We can parse it with biopython"""
+        return Phylo.read(self.tree.path, 'newick')
+
+###############################################################################
+class MasterCluster(Cluster):
+    """Every genome will have a 'master alignment' representing
+    a concatenation of all single copy genes alignments pertaining to it
+    in a fixed order. We put all these alignments in the master cluster."""
+
+    def __init__(self, analysis): self.analysis = analysis
+    @property
+    def sequences(self): raise NotImplementedError("MasterCluster")
+    @property
+    def fasta(self): raise NotImplementedError("MasterCluster")
+
+    @property
+    def alignment(self):
+        alignment = AlignedFASTA(self.analysis.p.master_aln)
+        if not alignment.exists:
+            with alignment as handle:
+                for genome in self.analysis.genomes:
+                    seq = ''
+                    for c in self.analysis.single_copy_clusters:
+                        (id_num,) = (c.ids & genome.ids)
+                        seq += str(c.alignment.sequences[id_num].seq)
+                    handle.add_str(seq, name=genome.prefix)
+        return alignment
 
 ###############################################################################
 class Analysis(object):
@@ -65,9 +125,9 @@ class Analysis(object):
     /network.mci
     /dictionary.tab
     /clusters.txt
-    /master_seqs.fasta
-    /master_seqs.aln
-    /master_seqs.tree
+    /master.aln
+    /master.tree
+    /clusters/
     """
 
     def __repr__(self): return '<%s object with %i genomes>' % \
@@ -103,29 +163,27 @@ class Analysis(object):
     @property
     def filtered(self):
         """We want to check the percent identify and the coverage of the hit to the query"""
-        if not self.blastout.exists:
-            self.blastout.copy(self.p.filtered)
-        return self.p.filtered
+        if not self.p.filtered_blastout.exists: self.blastout.copy(self.p.filtered_blastout)
+        return self.p.filtered_blastout
 
     @property_cached
     def clusters(self):
-        """A dictionary of sets. Keys are cluster names, items are sequence short ids.
-        See http://bioops.info/2011/03/mcl-a-cluster-algorithm-for-graphs/"""
+        """A list of Clusters. See http://bioops.info/2011/03/mcl-a-cluster-algorithm-for-graphs/"""
         if not self.p.clusters.exists:
-            shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.filtered_abc))
+            shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
             sh.mcl(self.p.network, "-use-tab", self.p.dictionary, "-o", self.p.clusters)
-        return {"cluster_%i" % i: frozenset(line.split()) for i, line in enumerate(self.p.clusters)}
+        return [Cluster(i, frozenset(line.split()), self) for i, line in enumerate(self.p.clusters)]
 
     @property_cached
     def count_table(self):
         """Genomes as columns and clusters as rows"""
         result = defaultdict(lambda: defaultdict(int))
         for genome in self.genomes:
-            for c_name, c_ids in self.clusters.items():
-                for gene in c_ids:
-                    if gene in genome:
-                        result[genome.prefix][c_name] += 1
+            for cluster in self.clusters:
+                for id_num in cluster.ids:
+                    if id_num in genome:
+                        result[genome.prefix][cluster.name] += 1
         result = pandas.DataFrame(result)
         result = result.reindex_axis(sorted(result.index, key=natural_sort))
         result = result.fillna(0)
@@ -134,50 +192,22 @@ class Analysis(object):
     @property_cached
     def single_copy_clusters(self):
         """Subset of self.clusters. Which clusters appear exactly once in each genome"""
-        return {row.name: self.clusters[row.name] for i, row in self.count_table.iterrows() if numpy.all(row==1)}
+        names = [row.name for i, row in self.count_table.iterrows() if numpy.all(row==1)]
+        return [[c for c in self.clusters if c.name==name][0] for name in names]
 
-    @property
-    def master_seqs(self):
-        """Every genome will have a 'master sequence' representing
-        a concatenation of all single copy genes pertaining to it
-        in a fixed order. We put this in a FASTA file."""
-        if not self.p.master_fasta.exists:
-            with FASTA(self.p.master_fasta) as fasta:
-                for genome in self.genomes:
-                    seq = ''
-                    for c_name, c_ids in self.single_copy_clusters.items():
-                        id_num = [i for i in c_ids if i in genome][0]
-                        seq += str(genome[id_num].seq)
-                    fasta.add_str(seq, name=genome.prefix)
-        return Genes(self.p.master_fasta)
-
-    @property
-    def master_alignment(self):
-        """The master alignment"""
-        if not self.p.aln.exists: self.master_seqs.align(self.p.aln)
-        return self.p.aln
-
-    @property
-    def master_tree(self):
-        """The master tree"""
-        if not self.p.aln.exists: self.master_seqs.align(self.p.aln)
-        return self.p.aln
+    @property_cached
+    def master_cluster(self): return MasterCluster(self)
 
 ###############################################################################
 # Real input #
 files = "/proj/b2013274/mcl/*.fna"
 genomes = [FASTA(path) for path in glob.glob(files)]
-cluster = Analysis(genomes, output_directory)
+analysis = Analysis(genomes, output_directory)
 
 # Test input #
 test_files = output_directory + "/test/*.fna"
 test_genomes = [FASTA(path) for path in glob.glob(test_files)]
-test_cluster = Analysis(test_genomes, output_directory + "/test/")
+test_analysis = Analysis(test_genomes, output_directory + "/test/")
 
 # Main program #
-if __name__ == '__main__':
-    pass
-    #cluster.make_database()
-    #cluster.query.run()
-    #cluster.filter_results()
-    #cluster.mcl_cluster()
+#if __name__ == '__main__': Phylo.draw_ascii(test_cluster.clusters[0].tree)
