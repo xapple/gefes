@@ -1,8 +1,9 @@
 Move the mapping directory into the projects (create a pools subdirectpry fo that)
+
 Finish the sphinxhub project
 Add the dependency checking
 Run a test dataset through illumitag both locally and on Uppmax
-Diff the versions of tools in plumbing aginst those exported from illumitag
-Add fasta to pypi
-Update plumbing in pypi
 Integrate the SQL interface to fasta files in the fasta project for the gene_clustering script
+
+Add fasta to pypi
+Make a pypi submission script (and update plumbing in pypi)
