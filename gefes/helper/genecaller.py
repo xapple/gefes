@@ -1,8 +1,8 @@
 # Built-in modules #
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.fasta.single import FASTA
+from plumbing.autopaths import AutoPaths
+from fasta import FASTA
 
 # Third party modules #
 import sh

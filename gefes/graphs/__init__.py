@@ -2,8 +2,8 @@
 import os, time, getpass
 
 # Internal modules #
-from gefes.common.autopaths import FilePath
-from gefes.common import split_thousands
+from plumbing.autopaths import FilePath
+from plumbing import split_thousands
 
 # Third party modules #
 import matplotlib

@@ -3,7 +3,7 @@
 # Internal modules #
 from gefes.groups.aggregate import Aggregate
 from gefes.groups.collection import Collection
-from gefes.common.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths
 from gefes.running.project_runner import ProjectRunner
 
 # Third party modules #

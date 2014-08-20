@@ -4,7 +4,7 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths
 
 ################################################################################
 class BinAnnotater(object):

@@ -4,8 +4,8 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common import flatten
-from gefes.common.autopaths import AutoPaths
+from plumbing import flatten
+from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 import sh

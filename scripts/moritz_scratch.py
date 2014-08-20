@@ -5,7 +5,7 @@ A script that was not described.
 """
 
 import gefes
-from gefes.fasta.single import FASTA
+from fasta import FASTA
 import csv
 
 maps=[ p.mapper.coverage for p in gefes.projects['humic']]

@@ -37,8 +37,8 @@ Starting from the raw reads there are about eight distinct processing steps in G
 
 Unfortunately, no other detailed documentation has been written yet but the code is clean and commented. In addition these two descriptive files might help you figure out what is going on:
 
-* diagram.pdf
-* flowchart.pdf
+* documentation/diagram.pdf
+* documentation/flowchart.pdf
 
 ## Installing
 
@@ -59,7 +59,7 @@ Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to t
 
     $ vim ~/.bash_profile
     export PYTHONPATH="$HOME/repos/gefes/":$PYTHONPATH
-    export PATH="$HOME/repos/gefes/bin/picard-tools-1.101/:$PATH"
+    export PATH="$HOME/repos/gefes/bin/:$PATH"
 
 ### Step 3: Install your own version of python
 Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available python. We prefer to just install our own in the home directory.
@@ -81,9 +81,9 @@ These lines go into your ``.bash_profile``:
 
 Relaunch your shell and type these commands to get the right version of python now:
 
-    pyenv install 2.7.5
+    pyenv install 2.7.6
     pyenv rehash
-    pyenv global 2.7.5
+    pyenv global 2.7.6
 
 ### Step 4: Install all required python packages
 GEFES uses many third party python libraries. You can get them by running these commands:
@@ -95,8 +95,8 @@ GEFES uses many third party python libraries. You can get them by running these 
     $ pip install patsy
     $ pip install scipy
     $ pip install matplotlib
-    $ pip install statsmodels
     $ pip install pandas
+    $ pip install statsmodels
     $ pip install ipython
     $ pip install scikit-learn
     $ pip install fastqident

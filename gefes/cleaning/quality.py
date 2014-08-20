@@ -3,10 +3,10 @@ import itertools
 
 # Internal modules #
 import gefes
-from gefes.common import moving_average
-from gefes.common.autopaths import AutoPaths
-from gefes.fasta.paired import PairedFASTQ
-from gefes.fasta.single import FASTQ
+from plumbing import moving_average
+from plumbing.autopaths import AutoPaths
+from fasta import PairedFASTQ
+from fasta import FASTQ
 
 # Third party modules #
 

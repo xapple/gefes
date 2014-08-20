@@ -5,15 +5,15 @@ from __future__ import division
 import os, socket
 
 # Internal modules #
-from gefes.common import flatten
-from gefes.common.autopaths import AutoPaths
-from gefes.common.cache import property_cached
+from plumbing import flatten
+from plumbing.autopaths import AutoPaths
+from plumbing.cache import property_cached
 from gefes.graphs import assembly_plots
 from gefes.helper.contig import Contig
 from gefes.helper.contig import tetra_cats
 from gefes.helper.metapathways import Metapathways
-from gefes.fasta.single import FASTA
-from gefes.common.slurm import nr_threads
+from fasta import FASTA
+from plumbing.slurm import nr_threads
 
 # Third party modules #
 import sh

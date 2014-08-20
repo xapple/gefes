@@ -2,9 +2,9 @@
 from commands import getstatusoutput
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.fasta.paired import PairedFASTQ
-from gefes.fasta.single import FASTQ
+from plumbing.autopaths import AutoPaths
+from fasta import PairedFASTQ
+from fasta import FASTQ
 
 # Third party modules #
 

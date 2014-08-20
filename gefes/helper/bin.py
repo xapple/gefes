@@ -1,11 +1,11 @@
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.fasta.single import FASTA
+from plumbing.autopaths import AutoPaths
+from fasta import FASTA
 from gefes.helper.contig import Contig
 from gefes.helper.genecaller import GeneCaller
 from gefes.helper.bin_annotater import BinAnnotater
 from gefes.running import Runner
-from gefes.common.slurm import SLURMJob
+from plumbing.slurm import SLURMJob
 from gefes.helper.phylotyper import Phylotyper
 from gefes.helper.genome_builder import GenomeBuilder
 
@@ -70,9 +70,9 @@ class Bin(object):
         self.genome_builder.pull_reads()
         self.genome_builder.assemble_genome()
         self.genome_builder.filter_assembly()
-        
 
-        
+
+
 ################################################################################
 
 class BinRunner(Runner):

@@ -5,12 +5,12 @@ from __future__ import division
 import os, json
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths
 import gefes.helper.clusterer
-from gefes.common.cache import property_cached
+from plumbing.cache import property_cached
 from gefes.helper.bin import Bin
 from gefes.running import Runner
-from gefes.common.slurm import SLURMJob
+from plumbing.slurm import SLURMJob
 
 # Third party modules #
 from pandas import DataFrame

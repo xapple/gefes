@@ -2,7 +2,7 @@
 
 # Internal modules #
 from gefes.running import Runner
-from gefes.common.slurm import SLURMJob
+from plumbing.slurm import SLURMJob
 
 # Third party modules #
 

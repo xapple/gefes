@@ -4,7 +4,7 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths
 from gefes.helper.assembler import Assembly
 from gefes.helper.binner import Binner
 from gefes.graphs import aggregate_plots

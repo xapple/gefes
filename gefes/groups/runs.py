@@ -4,7 +4,7 @@ import os, xml.etree.ElementTree as etree
 # Internal modules #
 from gefes.groups.aggregate import Aggregate
 from gefes.groups.collection import Collection
-from gefes.common.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 

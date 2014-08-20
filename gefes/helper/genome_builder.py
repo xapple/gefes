@@ -2,10 +2,10 @@
 import os
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.common.slurm import nr_threads
-from gefes.common import flatten
-from gefes.fasta.single import FASTA
+from plumbing.autopaths import AutoPaths
+from plumbing.slurm import nr_threads
+from plumbing import flatten
+from fasta import FASTA
 
 # Third party modules #
 import sh, numpy, matplotlib, pandas, sklearn

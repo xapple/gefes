@@ -1,13 +1,20 @@
 b'This module needs Python 2.7.x'
 
 # Special variables #
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 # Built-in modules #
 import os, sys, glob
 
+# Get paths to module #
+self = sys.modules[__name__]
+module_dir = os.path.dirname(self.__file__)
+
+# Dependencies #
+from plumbing.common import dependencies
+dependencies.check(module_dir + 'setup.py')
+
 # Internal modules #
-from gefes.common import dependencies
 from gefes.groups.pools import Pool
 from gefes.groups.runs import Run, Runs
 from gefes.groups.projects import Project, Projects
@@ -16,16 +23,10 @@ from gefes.groups.projects import Project, Projects
 home = os.environ['HOME'] + '/'
 
 ###############################################################################
-# Check dependencies #
-dependencies.check_modules()
-dependencies.check_executables()
-
 # Output directory #
 view_dir = home + 'GEFES/views/'
 
 # Get paths to module #
-self = sys.modules[__name__]
-module_dir = os.path.dirname(self.__file__)
 repos_dir = os.path.abspath(module_dir + '/../') + '/'
 pools_dir = repos_dir + 'pools/'
 
@@ -45,6 +46,3 @@ proj_names = sorted(list(set([p.project_short_name for p in pools])))
 projects = [Project(name, [p for p in pools if p.project_short_name==name], view_dir + 'projects/') for name in proj_names]
 projects = Projects(projects)
 for p in pools: p.project = projects[p.project_short_name]
-
-# Call the second init on the pools #
-for p in pools: p.load()

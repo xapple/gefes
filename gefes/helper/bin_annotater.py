@@ -4,11 +4,11 @@ import os
 # Internal modules #
 from gefes.helper.blast_dbs import blast_dbs
 from gefes.helper.blast_dbs import blast_header
-from gefes.common.slurm import nr_threads
+from plumbing.slurm import nr_threads
+from parallelblast import BLASTquery
 
 # Third party modules #
 import pandas, numpy
-from parallelblast import BLASTquery
 
 ################################################################################
 class BinAnnotater(object):

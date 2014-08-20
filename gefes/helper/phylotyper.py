@@ -2,16 +2,16 @@
 import os
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.common.slurm import nr_threads
+from plumbing.autopaths import AutoPaths
+from plumbing.slurm import nr_threads
 
 # Third party mods #
 import sh
 
 # Constants #
 kraken_db = "/glob/moritz/data/kraken_data/"
-sift = sh.Command(os.environ['PHYLOSIFT_PATH'])
-kraken_report = sh.Command(os.environ['KRAKEN_REPORT'])
+sift = sh.Command(os.environ.get('PHYLOSIFT_PATH', '/bin/ls'))
+kraken_report = sh.Command(os.environ.get('KRAKEN_REPORT', '/bin/ls'))
 
 ###############################################################################
 class Phylotyper(object):

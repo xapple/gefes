@@ -6,10 +6,10 @@ import os
 
 # Internal modules #
 import gefes
-from gefes.common.autopaths import AutoPaths
-from gefes.common.cache import property_cached
+from plumbing.autopaths import AutoPaths
+from plumbing.cache import property_cached
 from gefes.helper.linkage import parse_linkage_info_bam
-from gefes.common.slurm import nr_threads
+from plumbing.slurm import nr_threads
 
 # Third party modules #
 import sh, pandas

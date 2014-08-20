@@ -14,16 +14,16 @@ METAPATHDIR and PATHWAYTOOLSDIR
 import os, shutil
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.fasta.single import FASTA
+from plumbing.autopaths import AutoPaths
+from fasta import FASTA
 
 # Third party modules #
 from shell_command import shell_output
 
 # Constants #
 home = os.environ['HOME'] + '/'
-metapath_dir = os.environ['METAPATHDIR'] + '/'
-pathwaytools_dir = os.environ['PATHWAYTOOLSDIR'] + '/'
+metapath_dir = os.environ.get('METAPATHDIR', home) + '/'
+pathwaytools_dir = os.environ.get('PATHWAYTOOLSDIR', home) + '/'
 
 # Config #
 default_config = """

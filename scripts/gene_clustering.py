@@ -18,10 +18,10 @@ import glob
 from collections import defaultdict
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths, FilePath
-from gefes.common.cache import property_cached
-from gefes.common import natural_sort
-from gefes.fasta.single import FASTA, AlignedFASTA
+from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.cache import property_cached
+from plumbing import natural_sort
+from fasta import FASTA, AlignedFASTA
 from parallelblast import BLASTdb, BLASTquery
 from parallelblast.results import tabular_keys
 

@@ -5,8 +5,8 @@ from __future__ import division
 from itertools import product
 
 # Internal modules #
-from gefes.common.autopaths import AutoPaths
-from gefes.common.cache import property_cached
+from plumbing.autopaths import AutoPaths
+from plumbing.cache import property_cached
 from Bio.Seq import Seq
 
 # Third party modules #
@@ -14,13 +14,13 @@ from Bio.Seq import Seq
 ###############################################################################
 tetramers = ["".join(tetramer) for tetramer in product('ACGT', repeat=4)]
 for t in tetramers:
-    if Seq(t).reverse_complement().tostring() != t:
-        tetramers.remove(Seq(t).reverse_complement().tostring())
+    if str(Seq(t).reverse_complement()) != t:
+        tetramers.remove(str(Seq(t).reverse_complement()))
     for t in tetramers:
         if t[::-1] in tetramers:
             if t!=t[::-1]:
                 tetramers.remove(t[::-1])
-tetra_cats = {t:list(set((t, t[::-1], Seq(t).reverse_complement().tostring(), Seq(t[::-1]).reverse_complement().tostring()))) for t in tetramers}
+tetra_cats = {t:list(set((t, t[::-1], str(Seq(t).reverse_complement()), str(Seq(t[::-1]).reverse_complement())))) for t in tetramers}
 
 ###############################################################################
 class Contig(object):
