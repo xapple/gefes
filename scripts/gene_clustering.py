@@ -20,7 +20,7 @@ from collections import defaultdict
 # Internal modules #
 from plumbing.autopaths import AutoPaths, FilePath
 from plumbing.cache import property_cached
-from plumbing import natural_sort
+from plumbing.common import natural_sort
 from fasta import FASTA, AlignedFASTA
 from parallelblast import BLASTdb, BLASTquery
 from parallelblast.results import tabular_keys

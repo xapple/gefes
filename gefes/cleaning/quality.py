@@ -3,7 +3,7 @@ import itertools
 
 # Internal modules #
 import gefes
-from plumbing import moving_average
+from plumbing.common import moving_average
 from plumbing.autopaths import AutoPaths
 from fasta import PairedFASTQ
 from fasta import FASTQ

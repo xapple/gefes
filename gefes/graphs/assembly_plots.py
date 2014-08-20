@@ -3,7 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 # Internal modules #
-from gefes.graphs import Graph
+from plumbing.graphs import Graph
 from gefes.groups.pools import Pool
 # Third party modules #
 import pandas, matplotlib
@@ -75,12 +75,12 @@ class ContigDistribution(Graph):
 
     def plot(self, pool_list = None,max_freq=None,min_len=None, col_mode="gc_content"):
         # Data #
-        
+
         if pool_list == None : pools = [p.id_name for p in self.parent.aggregate]
         else :
             pools = [p.id_name for p in self.parent.aggregate][pool_list]
         print(pools)
-            
+
         gframe=self.parent.filtered_frame(max_freq=max_freq,min_len=min_len)
         if isinstance(pools,list):
                 yvalues = gframe[pools].mean(1)
@@ -106,15 +106,15 @@ class ContigDistribution(Graph):
 #            if not self.parent.aggregate.binner.clusterer.kmeans.coverage_clusters: self.parent.aggregate.binner.clusterer.kmeans.run()
             zvalues = self.parent.aggregate.binner.clusterer.kmeans.combo_clusters
 
-        
 
-        
+
+
         # Plot #
         cm = pyplot.cm.get_cmap('gist_rainbow')
         fig = pyplot.figure()
 
         pyplot.scatter(xvalues, yvalues, c = zvalues, cmap = cm)
-        
+
         if col_mode is "gc_content":
             cax = pyplot.cm.ScalarMappable(cmap=cm)
             cax.set_array(zvalues)
@@ -130,7 +130,7 @@ class ContigDistribution(Graph):
         axes.set_yscale('log')
         axes.yaxis.grid(True)
         axes.xaxis.grid(True)
-        
+
         # Save it #
         self.save_plot(fig, axes, left=0.09, height=12.0)
         pyplot.close(fig)
@@ -142,15 +142,15 @@ class ContigCoverages(Graph):
 
     def plot(self, pool_list = None,max_freq=None,min_len=None, col_mode="gc_content",animate=False):
         # Data #
-        
+
         if pool_list == None : pools = [p.id_name for p in self.parent.aggregate]
         else :
             pools = [p.id_name for p in self.parent.aggregate][pool_list]
         print(pools)
-            
+
         gframe=self.parent.filtered_frame(max_freq=max_freq,min_len=min_len)
 
-        log10p1 = lambda x : log10(x+1) 
+        log10p1 = lambda x : log10(x+1)
         pool1values = gframe[pools[0]].apply(log10p1)
         pool2values = gframe[pools[1]].apply(log10p1)
         pool3values = gframe[pools[2]].apply(log10p1)
@@ -175,7 +175,7 @@ class ContigCoverages(Graph):
         cm = pyplot.cm.get_cmap('gist_rainbow')
         fig = pyplot.figure()
         ax = fig.add_subplot(111, projection='3d')
-                
+
         # Plot #
         def init():
             if col_mode is 'gc_content':
@@ -194,7 +194,7 @@ class ContigCoverages(Graph):
             ax.set_zlim(zmin=0,zmax=pool3values.max())
             return ax
 
-    
+
         if col_mode is "gc_content":
             cax = pyplot.cm.ScalarMappable(cmap=cm)
             cax.set_array(zvalues)

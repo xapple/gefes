@@ -1,7 +1,7 @@
 # Built-in modules #
 
 # Internal modules #
-from gefes.graphs import Graph
+from plumbing.graphs import Graph
 
 # Third party modules #
 from matplotlib import pyplot

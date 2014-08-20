@@ -5,7 +5,7 @@ from __future__ import division
 import os, socket
 
 # Internal modules #
-from plumbing import flatten
+from plumbing.common import flatten
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 from gefes.graphs import assembly_plots

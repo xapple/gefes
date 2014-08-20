@@ -4,7 +4,7 @@ import os
 # Internal modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.slurm import nr_threads
-from plumbing import flatten
+from plumbing.common import flatten
 from fasta import FASTA
 
 # Third party modules #

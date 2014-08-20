@@ -11,8 +11,12 @@ self = sys.modules[__name__]
 module_dir = os.path.dirname(self.__file__)
 
 # Dependencies #
-from plumbing.common import dependencies
-dependencies.check(module_dir + 'setup.py')
+from plumbing import dependencies
+dependencies.check_setup(module_dir + 'setup.py')
+
+# No need for an X display #
+import matplotlib
+matplotlib.use('Agg', warn=False)
 
 # Internal modules #
 from gefes.groups.pools import Pool
