@@ -22,6 +22,7 @@ matplotlib.use('Agg', warn=False)
 from gefes.groups.pools import Pool
 from gefes.groups.runs import Run, Runs
 from gefes.groups.projects import Project, Projects
+from plumbing.git import GitRepo
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -32,10 +33,10 @@ view_dir = home + 'GEFES/views/'
 
 # Get paths to module #
 repos_dir = os.path.abspath(module_dir + '/../') + '/'
-pools_dir = repos_dir + 'pools/'
+git_repo = GitRepo(repos_dir)
 
 # Load all pools #
-json_paths = glob.glob(pools_dir + '*.json')
+json_paths = glob.glob(repos_dir + 'json/*/*.json')
 pools = [Pool(j, view_dir + 'pools/') for j in json_paths]
 pools.sort(key=lambda x: str(x))
 

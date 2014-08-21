@@ -54,12 +54,18 @@ Here you will download a copy of the code from github and place it in your home 
     $ cd repos
     $ git clone git@github.com:limno/gefes.git
 
-### Step 2: Modify your search paths
-Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to the code you just downloaded.
+### Step 2A: Modify your python search path
+Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to the module you just downloaded. When you type `import gefes` python will know where to look !
 
     $ vim ~/.bash_profile
     export PYTHONPATH="$HOME/repos/gefes/":$PYTHONPATH
-    export PATH="$HOME/repos/gefes/bin/:$PATH"
+
+### Step 2B: Modify your binary search path
+There are some dependencies that are not too large and can be bundled as binaries with this module. To avoid the hassle of downloading and compiling these requirements, we have added a bunch of them in the repository. Add them to your `$PATH`.
+
+    $ vim ~/.bash_profile
+    export PATH="$HOME/repos/gefes/bin/linux/:$PATH"
+    export PATH="$HOME/repos/gefes/bin/linux/mcl/:$PATH"
 
 ### Step 3: Install your own version of python
 Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available python. We prefer to just install our own in the home directory.
