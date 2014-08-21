@@ -151,6 +151,7 @@ class Analysis(object):
         """A blastable database of all genes"""
         assert self.genomes
         if not self.p.all_nin:
+            print "Building BLASTable database with all genes..."
             shell_output('cat %s > %s' % (' '.join(self.genomes), self.p.all_fasta))
             BLASTdb(self.p.all_fasta).makeblastdb()
         return BLASTdb(self.p.all_fasta)
@@ -164,7 +165,7 @@ class Analysis(object):
     def blastout(self):
         """The blast results"""
         if not self.p.all_blastout:
-            print "BLASTing all genes against all genes..."
+            print "Self-BLASTing database '%s'..." % self.blast_db
             self.query.run()
         return self.p.all_blastout
 
@@ -184,6 +185,8 @@ class Analysis(object):
                 if coverage < self.mimimum_coverage: continue
                 yield line
         if not self.p.filtered_blastout:
+            print "Making SQLite database with reads from '%s'" % self.blastout
+            print "Result in '%s'" % self.blast_db.sql
             self.p.filtered_blastout.writelines(good_iterator(self.blastout))
         return self.p.filtered_blastout
 
