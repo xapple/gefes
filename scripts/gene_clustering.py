@@ -14,7 +14,7 @@ $ ./gene_clustering.py
 """
 
 # Built-in modules #
-import glob
+import os, glob
 from collections import defaultdict
 
 # Internal modules #
@@ -29,15 +29,19 @@ from parallelblast.results import tabular_keys
 import sh, pandas, numpy
 from shell_command import shell_output
 from Bio import Phylo
+from tqdm import tqdm
 
 # Constants #
-output_directory = "/glob/lucass/other/alex_gene_clusters/"
+home = os.environ['HOME'] + '/'
+output_directory = home + "glob/lucass/other/alex_gene_clusters/"
 
 ###############################################################################
 class Cluster(object):
     """A set of genes which are related in some way. For instance, all genes
     that clustered together when performing the MCL analysis.
     (all variations of a some single copy gene class)."""
+
+    def __repr__(self): return '<%s object number %i>' % (self.__class__.__name__, self.num)
 
     def __init__(self, num, ids, analysis, name=None):
         self.num = num
@@ -54,7 +58,7 @@ class Cluster(object):
     def fasta(self):
         """The fasta file containing the sequences of this cluster"""
         fasta = FASTA(self.path)
-        if not fasta.exists:
+        if not fasta:
             with fasta as handle:
                 for seq in self.sequences: handle.add_str(str(seq.seq), name=seq.id)
         return fasta
@@ -95,9 +99,9 @@ class MasterCluster(Cluster):
     @property
     def alignment(self):
         alignment = AlignedFASTA(self.analysis.p.master_aln)
-        if not alignment.exists:
+        if not alignment:
             with alignment as handle:
-                for genome in self.analysis.genomes:
+                for genome in tqdm(self.analysis.genomes):
                     seq = ''
                     for c in self.analysis.single_copy_clusters:
                         (id_num,) = (c.ids & genome.ids)
@@ -132,7 +136,6 @@ class Analysis(object):
 
     def __init__(self, genomes, base_dir='.'):
         # Attributes #
-        assert genomes
         self.genomes = genomes
         # Auto paths #
         self.base_dir = base_dir
@@ -141,6 +144,7 @@ class Analysis(object):
     @property
     def blast_db(self):
         """A blastable database of all genes"""
+        assert self.genomes
         if not self.p.all_nin.exists:
             shell_output('cat %s > %s' % (' '.join(self.genomes), self.p.all_fasta))
             BLASTdb(self.p.all_fasta).makeblastdb()
@@ -163,12 +167,12 @@ class Analysis(object):
         def good_iterator(blastout):
             for line in blastout:
                 info = dict(zip(tabular_keys, line.split()))
-                if int(info['perc_identity']) < 30: continue
+                if float(info['perc_identity']) < 30.0: continue
                 coverage = 100 #TODO
                 if coverage < 50: continue
                 yield line
         if not self.p.filtered_blastout.exists:
-            self.p.filtered_blastout.writelines(good_iterator(self.p.all_blastout))
+            self.p.filtered_blastout.writelines(good_iterator(self.blastout))
         return self.p.filtered_blastout
 
     @property_cached
