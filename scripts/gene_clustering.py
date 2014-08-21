@@ -13,6 +13,9 @@ You can use this script from the shell like this:
 $ ./gene_clustering.py
 """
 
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 import os, glob
 from collections import defaultdict
@@ -33,7 +36,6 @@ from tqdm import tqdm
 
 # Constants #
 home = os.environ['HOME'] + '/'
-output_directory = home + "glob/lucass/other/alex_gene_clusters/"
 
 ###############################################################################
 class Cluster(object):
@@ -116,6 +118,8 @@ class Analysis(object):
     Then we count the genomes with the right number of single copy genes."""
 
     blast_params = {'-e': 0.1, '-W': 9, '-m': 8}
+    minimum_identity = 30.0
+    mimimum_coverage = 50.0
 
     all_paths = """
     /all_sequences.fasta
@@ -145,7 +149,7 @@ class Analysis(object):
     def blast_db(self):
         """A blastable database of all genes"""
         assert self.genomes
-        if not self.p.all_nin.exists:
+        if not self.p.all_nin:
             shell_output('cat %s > %s' % (' '.join(self.genomes), self.p.all_fasta))
             BLASTdb(self.p.all_fasta).makeblastdb()
         return BLASTdb(self.p.all_fasta)
@@ -158,7 +162,7 @@ class Analysis(object):
     @property
     def blastout(self):
         """The blast results"""
-        if not self.p.all_blastout.exists: self.query.run()
+        if not self.p.all_blastout: self.query.run()
         return self.p.all_blastout
 
     @property
@@ -167,13 +171,23 @@ class Analysis(object):
         def good_iterator(blastout):
             for line in blastout:
                 info = dict(zip(tabular_keys, line.split()))
-                if float(info['perc_identity']) < 30.0: continue
-                coverage = 100 #TODO
-                if coverage < 50: continue
+                if float(info['perc_identity']) < self.minimum_identity: continue
+                query_cov = (float(info['query_end']) - float(info['query_start']))
+                query_cov = 100.0 * abs(query_cov / len(self.blast_db.sql[info['query_id']]))
+                subj_cov  = (float(info['subject_end']) - float(info['subject_start']))
+                subj_cov  = 100.0 * abs(subj_cov  / len(self.blast_db.sql[info['subject_id']]))
+                coverage = max(query_cov, subj_cov)
+                if coverage < self.mimimum_coverage: continue
                 yield line
-        if not self.p.filtered_blastout.exists:
+        if not self.p.filtered_blastout:
             self.p.filtered_blastout.writelines(good_iterator(self.blastout))
         return self.p.filtered_blastout
+
+    @property
+    def percent_filtered(self):
+        """How many hits did we filter away ?"""
+        percentage = lambda x,y: (len(x)/len(y))*100 if len(y) != 0 else 0
+        return "%.1f%%" % (100 - percentage(self.filtered, self.blastout))
 
     @property_cached
     def clusters(self):
@@ -208,6 +222,8 @@ class Analysis(object):
     def master_cluster(self): return MasterCluster(self)
 
 ###############################################################################
+output_directory = home + "glob/lucass/other/alex_gene_clusters/"
+
 # Real input #
 files = "/proj/b2013274/mcl/*.fna"
 genomes = [FASTA(path) for path in glob.glob(files)]
