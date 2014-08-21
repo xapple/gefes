@@ -4,8 +4,6 @@
 A script to cluster some genes.
 Adapted from Moritz's undocumented "thorselia" module
 
-The input files are on Uppmax at "/proj/b2013274/mcl".
-
 Written by Lucas Sinclair.
 Kopimi.
 
@@ -78,7 +76,9 @@ class Cluster(object):
     def tree(self):
         """The tree built with raxml"""
         tree = FilePath(self.alignment.prefix_path + '.tree')
-        if not tree.exists: self.alignment.build_tree(tree)
+        if not tree.exists:
+            print "Building tree for cluster '%s'..." % self.name
+            self.alignment.build_tree(tree)
         return tree
 
     @property
@@ -101,11 +101,12 @@ class MasterCluster(Cluster):
     @property
     def alignment(self):
         alignment = AlignedFASTA(self.analysis.p.master_aln)
+        print "Creating master alignment..."
         if not alignment:
             with alignment as handle:
-                for genome in tqdm(self.analysis.genomes):
+                for genome in self.analysis.genomes:
                     seq = ''
-                    for c in self.analysis.single_copy_clusters:
+                    for c in tqdm(self.analysis.single_copy_clusters):
                         (id_num,) = (c.ids & genome.ids)
                         seq += str(c.alignment.sequences[id_num].seq)
                     handle.add_str(seq, name=genome.prefix)
@@ -162,14 +163,17 @@ class Analysis(object):
     @property
     def blastout(self):
         """The blast results"""
-        if not self.p.all_blastout: self.query.run()
+        if not self.p.all_blastout:
+            print "BLASTing all genes against all genes..."
+            self.query.run()
         return self.p.all_blastout
 
     @property
     def filtered(self):
         """We want to check the percent identify and the coverage of the hit to the query"""
         def good_iterator(blastout):
-            for line in blastout:
+            print "Filtering BLAST hits..."
+            for line in tqdm(blastout, total=len(blastout)):
                 info = dict(zip(tabular_keys, line.split()))
                 if float(info['perc_identity']) < self.minimum_identity: continue
                 query_cov = (float(info['query_end']) - float(info['query_start']))
@@ -193,6 +197,7 @@ class Analysis(object):
     def clusters(self):
         """A list of Clusters. See http://bioops.info/2011/03/mcl-a-cluster-algorithm-for-graphs/"""
         if not self.p.clusters.exists:
+            print "Running the MCL clustering..."
             shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
             sh.mcl(self.p.network, "-use-tab", self.p.dictionary, "-o", self.p.clusters)
@@ -222,7 +227,7 @@ class Analysis(object):
     def master_cluster(self): return MasterCluster(self)
 
 ###############################################################################
-output_directory = home + "glob/lucass/other/alex_gene_clusters/"
+output_directory = home + "glob/lucass/other/alex_clusters/"
 
 # Real input #
 files = "/proj/b2013274/mcl/*.fna"
@@ -235,4 +240,4 @@ test_genomes = [FASTA(path) for path in glob.glob(test_files)]
 test_analysis = Analysis(test_genomes, output_directory + "/test/")
 
 # Main program #
-#if __name__ == '__main__': Phylo.draw_ascii(analysis.master_cluster.phylogeny)
+def run(): Phylo.draw_ascii(analysis.master_cluster.phylogeny)

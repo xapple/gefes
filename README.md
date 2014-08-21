@@ -68,7 +68,7 @@ There are some dependencies that are not too large and can be bundled as binarie
     export PATH="$HOME/repos/gefes/bin/linux/mcl/:$PATH"
 
 ### Step 3: Install your own version of python
-Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available python. We prefer to just install our own in the home directory.
+Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available python. We prefer to just install our own in the home directory. Also, we will then be able to install modules without any administrator privileges.
 
 For this we will be using this excellent project: https://github.com/yyuu/pyenv
 
@@ -85,7 +85,7 @@ These lines go into your ``.bash_profile``:
     export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 
-Relaunch your shell and type these commands to get the right version of python now:
+Relaunch your shell and type these commands to get the right version of python:
 
     pyenv install 2.7.6
     pyenv rehash
@@ -105,11 +105,10 @@ GEFES uses many third party python libraries. You can get them by running these 
     $ pip install statsmodels
     $ pip install ipython
     $ pip install scikit-learn
-    $ pip install fastqident
     $ pip install rpy2
     $ pip install pysam
 
-Don't forget to rehash the binary links at the end:
+Don't forget to rehash the executable links at the end:
 
     $ pyenv rehash
 

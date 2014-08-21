@@ -12,7 +12,8 @@ from fasta import FASTQ
 
 ###############################################################################
 class QualityChecker(object):
-    """Takes care of checking the PHRED score of the raw reads and discarding or trimming bad ones."""
+    """Takes care of checking the PHRED score of the raw reads
+    and discarding or trimming bad ones."""
 
     window_size = 10
     threshold = 20
@@ -35,21 +36,18 @@ class QualityChecker(object):
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Files #
-        self.fwd = FASTQ(self.p.fwd)
-        self.rev = FASTQ(self.p.rev)
-        self.paired = PairedFASTQ(self.p.fwd, self.p.rev)
+        self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
 
     def run(self):
         # Cleanup #
-        self.fwd.remove()
-        self.rev.remove()
+        self.pair.remove()
         # Do it #
-        self.paired.create()
+        self.pair.create()
         for read_pair in self.pool.pair:
             one = self.trim_read(read_pair[0])
             two = self.trim_read(read_pair[1])
-            self.paired.add_pair(read_pair)
-        self.paired.close()
+            self.pair.add_pair((one, two))
+        self.pair.close()
         # Make sanity checks #
         assert len(self.fwd) == len(self.rev)
 

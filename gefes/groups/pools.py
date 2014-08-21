@@ -5,13 +5,11 @@ from __future__ import division
 import os, json
 
 # Internal modules #
-from plumbing.autopaths import AutoPaths
-from fasta import PairedFASTQ
-from fasta import FASTQ
 from gefes.running.pool_runner import PoolRunner
-from gefes.cleaning import Cleaner
-from gefes.helper.mapper import Mapper
 from gefes.graphs import pool_plots
+from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.cache import property_cached
+from fasta import PairedFASTQ
 
 # Third party modules #
 
@@ -42,7 +40,7 @@ class Pool(object):
         # Output #
         self.out_dir = out_dir
         # Parse #
-        self.json_path = json_path
+        self.json_path = FilePath(json_path)
         with open(json_path) as handle: self.info = json.load(handle)
         # Basic #
         self.account = self.info['uppmax_id']
@@ -62,26 +60,19 @@ class Pool(object):
         self.base_dir = self.out_dir + self.id_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Make an alias to the json #
-        try: os.remove(self.p.info_json)
-        except OSError: pass
-        try: os.symlink(self.json_path, self.p.info_json)
-        except OSError: pass
+        self.json_path.link_to(self.p.info_json, safe=True)
         # Raw file pairs #
-        self.fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
-        self.rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
-        # Convenience objects #
-        self.fwd = FASTQ(self.fwd_path)
-        self.rev = FASTQ(self.rev_path)
-        self.pair = PairedFASTQ(self.fwd.path, self.rev.path)
+        fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
+        rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
+        self.pair = PairedFASTQ(fwd_path, rev_path)
 
-    def load(self):
-        # Children #
-        self.cleaner = Cleaner(self)
-        self.mapper = Mapper(self, self.project.assembly)
-        # All the plots #
-        self.graphs = [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
-        # Runner #
-        self.runner = PoolRunner(self)
+    @property_cached
+    def runner(self):
+        return PoolRunner(self)
+
+    @property_cached
+    def graphs(self):
+        return [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
 
     @property
     def count(self):
