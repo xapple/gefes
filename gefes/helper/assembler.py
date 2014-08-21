@@ -64,17 +64,21 @@ class Assembly(object):
         out_dir = self.p.output_dir
         out_dir.remove()
         # Make the pairs of fastq #
-        pairs = flatten([('-p', p.cleaner.fwd.path, p.cleaner.rev.path) for p in self.parent])
+        pairs = sum([['-p', str(p.cleaner.fwd.path), str(p.cleaner.rev.path)] for p in self.parent],[])
+
         # Call Ray on the cray #
         if os.environ.get('CSCSERVICE') == 'sisu':
             stats = sh.aprun('-n', nr_threads, self.executable, '-k', 81, '-o', out_dir, *pairs)
         # Call Ray on Kalkyl #
         elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
+            stats = sh.mpiexec('-n', nr_threads, self.executable, '-k', 73, '-o', out_dir, *pairs)
+        elif os.environ.get('SNIC_RESOURCE') == 'halvan':
             stats = sh.mpiexec('-n', nr_threads, self.executable, '-k', 81, '-o', out_dir, *pairs)
         # Call Ray just locally #
         else:
-            command = sh.Command(self.executable)
-            stats = command('-k', 81, '-o', out_dir, *pairs)
+            stats = sh.mpiexec('-n', nr_threads, self.executable, '-k', 73, '-o', out_dir, *pairs)
+            #command = sh.Command(self.executable)
+            #stats = command('-k', 81, '-o', out_dir, *pairs)
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 

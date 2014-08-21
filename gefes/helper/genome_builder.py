@@ -31,20 +31,13 @@ class GenomeBuilder(object):
 
     def __init__(self, parent):
         self.parent = parent
-        self.bini = parent
-        self.fwds=[str(p.fwd.path) for p in self.bini.parent.parent.parent]
-        self.revs=[str(p.rev.path) for p in self.bini.parent.parent.parent]
         # Auto paths #
         self.base_dir = self.parent.p.rebuilt
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def pull_reads(self):
-        sh.bowtie2_build(self.parent.p.contigs,self.p.contigs)
-        sh.bowtie2("-p", nr_threads, "-x",self.p.contigs,"-1", ",".join(self.fwds), "-2", ",".join(self.revs), "--al-conc", self.p.fastq, "-S", "/dev/null")
-
     def assemble_genome(self):
         spades_script = sh.Command("spades.py")
-        spades_script("-o", self.base_dir,  "-1", self.p.reads_1, "-2", self.p.reads_2,  "-t", nr_threads, "--careful")
+        spades_script("-o", self.base_dir,  "-1", parent.p.reads_1, "-2", parent.p.reads_2,  "-t", nr_threads, "--careful")
 
     def filter_assembly(self, prefilter = True, postfilter = False):
         original = FASTA(self.p.scaffolds)

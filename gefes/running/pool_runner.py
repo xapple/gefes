@@ -17,6 +17,7 @@ class PoolRunner(Runner):
         # Initial steps #
         {'clean_reads':           {}},
         {'make_plots':            {}},
+#        {'phylotype':            {}},
         # Run after the assembly is done #
         {'map_reads':             {}},
     ]
@@ -31,9 +32,7 @@ class PoolRunner(Runner):
 
     def run_slurm(self, steps=None, **kwargs):
         # Script #
-        command = """steps = %s
-                     pool = [p for p in gefes.pools if str(p)=='%s'][0]
-                     pool.runner(steps)""" % (steps, self.pool)
+        command = """steps = %s\npool = [p for p in gefes.pools if str(p)=='%s'][0]\npool.runner(steps)""" % (steps, self.pool)
         # Params #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
@@ -46,4 +45,4 @@ class PoolRunner(Runner):
         # Send it #
         job_name = "gefes_%s" % self.pool
         self.pool.slurm_job = SLURMJob(command, self.pool.p.logs_dir, job_name=job_name, **kwargs)
-        return self.pool.slurm_job.launch()
+        return self.pool.slurm_job.run()

@@ -65,10 +65,10 @@ class Cutadapt(object):
 
 
     all_paths = """
-    /report_fwd.txt
-    /report_rev.txt
-    /cut_fwd.fastq
-    /cut_rev.fastq
+    /report_cut_fwd.txt
+    /report_cut_rev.txt
+    /cleaned_fwd.fastq
+    /cleaned_rev.fastq
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
@@ -79,11 +79,11 @@ class Cutadapt(object):
         self.parent, self.cleaner = cleaner, cleaner
         self.pool = self.cleaner.pool
         # Auto paths #
-        self.base_dir = self.parent.p.cutadapt_dir
+        self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Adapters #
         self.adapter_params = flatten([('-b', '%s=%s' % (k,v)) for k,v in illumina_adapters.items()])
 
     def run(self):
-        sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_fwd, self.pool.fwd], _out=self.p.report_fwd)
-        sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_rev, self.pool.rev], _out=self.p.report_rev)
+        sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_fwd, self.pool.fwd], _out=str(self.p.report_fwd))
+        sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_rev, self.pool.rev], _out=str(self.p.report_rev))

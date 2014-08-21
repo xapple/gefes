@@ -109,7 +109,7 @@ class SLURMCommand(object):
 
     slurm_headers = OrderedDict((
         ('change_dir', {'needed': True,  'tag': '#SBATCH -D %s',            'default': os.path.abspath(os.getcwd())}),
-        ('job_name'  , {'needed': False, 'tag': '#SBATCH -J %s',            'default': 'test_slurm'}),
+        ('job_name'  , {'needed': True , 'tag': '#SBATCH -J %s',            'default': 'test_slurm'}),
         ('out_file'  , {'needed': True,  'tag': '#SBATCH -o %s',            'default': '/dev/null'}),
         ('project'   , {'needed': False, 'tag': '#SBATCH -A %s',            'default': "b2011035"}),
         ('time'      , {'needed': True,  'tag': '#SBATCH -t %s',            'default': '7-00:00:00'}),
@@ -117,7 +117,7 @@ class SLURMCommand(object):
         ('cores'     , {'needed': True,  'tag': '#SBATCH -n %s',            'default': '16'}),
         ('partition' , {'needed': True,  'tag': '#SBATCH -p %s',            'default': 'node'}),
         ('email'     , {'needed': False, 'tag': '#SBATCH --mail-user %s',   'default': os.environ.get('EMAIL')}),
-        ('email-when', {'needed': True,  'tag': '#SBATCH --mail-type=%s',   'default': 'END'}),
+        ('email_when', {'needed': True,  'tag': '#SBATCH --mail-type=%s',   'default': 'END'}),
         ('qos'       , {'needed': False, 'tag': '#SBATCH --qos=%s',         'default': 'short'}),
         ('dependency', {'needed': False, 'tag': '#SBATCH -d %s',            'default': 'afterok:1'}),
         ('constraint', {'needed': False, 'tag': '#SBATCH -C %s',            'default': 'mem72GB'}),

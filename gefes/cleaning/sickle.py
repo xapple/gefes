@@ -51,14 +51,14 @@ class Sickle(object):
         assert len(self.fwd) == len(self.rev)
         assert self.paired_records_kept == len(self.fwd)
         assert self.single_records_kept == len(self.single)
-        assert self.kept + self.discarded == len(self.pool.fwd)
+#        assert self.kept + self.discarded == len(self.pool.fwd)
 
     def parse_stats(self):
         # Parse the report file #
-        self.paired_records_kept = int(re.findall('^FastQ paired records kept (.+) .+$', self.p.report.contents, re.M))
-        self.single_records_kept = int(re.findall('^FastQ single records kept (.+) .+$', self.p.report.contents, re.M))
-        self.paired_records_discarded = int(re.findall('^FastQ paired records discarded (.+) .+$', self.p.report.contents, re.M))
-        self.single_records_discarded = int(re.findall('^FastQ single records discarded (.+) .+$', self.p.report.contents, re.M))
+        self.paired_records_kept = int(re.findall('^FastQ paired records kept: (.+) \(.+$', self.p.report.contents, re.M)[0])/2
+        self.single_records_kept = int(re.findall('^FastQ single records kept: (.+) \(.+$', self.p.report.contents, re.M)[0])
+        self.paired_records_discarded = int(re.findall('^FastQ paired records discarded: (.+) \(.+$', self.p.report.contents, re.M)[0])/2
+        self.single_records_discarded = int(re.findall('^FastQ single records discarded: (.+) \(.+$', self.p.report.contents, re.M)[0])
 
     @property
     def kept(self):

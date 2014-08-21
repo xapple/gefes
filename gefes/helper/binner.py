@@ -82,6 +82,7 @@ class Binning(object):
     def __init__(self, parent,name,clusterer=None):
         # Save parent #
         self.parent =  parent
+        self.assembly = self.parent.assembly
         self.name = name
         # Auto paths #
         self.base_dir = self.parent.p._base_dir+name

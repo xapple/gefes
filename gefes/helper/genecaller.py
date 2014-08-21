@@ -3,9 +3,11 @@
 # Internal modules #
 from gefes.common.autopaths import AutoPaths
 from gefes.fasta.single import FASTA
+from gefes.common.slurm import nr_threads
+
 
 # Third party modules #
-import sh
+import sh, shutil
 
 ###############################################################################
 class GeneCaller(object):
@@ -17,6 +19,7 @@ class GeneCaller(object):
     all_paths = """
     /glimmer/
     /prodigal/
+    /prokka/
     """
 
     def __repr__(self): return '<%s object of bin "%s" with %i predictions >' % (self.__class__.__name__,self.parent.name, len(self))
@@ -29,7 +32,7 @@ class GeneCaller(object):
         # Auto paths #
         self.base_dir = self.parent.p.genes
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        self.callers = [ Glimmer(self), Prodigal(self) ]
+        self.callers = [ Glimmer(self), Prodigal(self) , Prokka(self)]
 
     def run(self):
         for cal in self: cal.run()
@@ -155,3 +158,24 @@ class Prodigal(object):
 
     def run(self):
         sh.prodigal('-q', '-c', '-i', self.bini.p.contigs, '-d', self.p.genes, _out = "/dev/null")
+
+
+class Prokka(object):
+
+    all_paths= """
+    /genes.fasta
+    /proteins.fasta
+    /output/
+    """
+
+    def __init__(self,parent):
+        self.parent = parent
+        self.bini = self.parent.parent
+        # Auto paths #
+        self.base_dir = self.parent.p.prokka
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+
+    def run(self):
+        sh.prokka( "--outdir", self.p.output, "--prefix",  self.bini.name, "--compliant", "--locustag", self.bini.name, "--force", "--cpus", nr_threads, self.bini.p.contigs)    
+        shutil.copy(self.p.output + "/" + self.bini.name + ".fna", self.p.genes)
+        shutil.copy(self.p.output + "/" + self.bini.name + ".faa", self.p.proteins)

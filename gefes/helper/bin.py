@@ -8,6 +8,11 @@ from gefes.running import Runner
 from gefes.common.slurm import SLURMJob
 from gefes.helper.phylotyper import Phylotyper
 from gefes.helper.genome_builder import GenomeBuilder
+from gefes.common.slurm import nr_threads
+
+# external
+
+import sh
 
 ################################################################################
 class Bin(object):
@@ -19,6 +24,10 @@ class Bin(object):
     /logs/
     /phylotyping/
     /rebuilt/
+    /idx
+    /reads.fastq
+    /reads.1.fastq
+    /reads.2.fastq
     """
 
     def __repr__(self): return '<%s object "%s" with %i Contigs>' % (self.__class__.__name__,self.name, len(self))
@@ -39,6 +48,9 @@ class Bin(object):
         self.typer = Phylotyper(self)
         self.runner = BinRunner(self)
         self.genome_builder = GenomeBuilder(self)
+        self.fwds=[str(p.fwd.path) for p in self.binner.assembly.aggregate]
+        self.revs=[str(p.rev.path) for p in self.binner.assembly.aggregate]
+ 
 
     @classmethod
     def fromfolder(cls,parent, folder):
@@ -70,7 +82,11 @@ class Bin(object):
         self.genome_builder.pull_reads()
         self.genome_builder.assemble_genome()
         self.genome_builder.filter_assembly()
-        
+
+    def pull_reads(self):
+        sh.bowtie2_build(self.p.contigs,self.p.idx)
+        sh.bowtie2("-p", nr_threads, "-x",self.p.idx,"-1", ",".join(self.fwds), "-2", ",".join(self.revs), "--al-conc", self.p.fastq, "-S", "/dev/null")
+
 
         
 ################################################################################
@@ -78,12 +94,14 @@ class Bin(object):
 class BinRunner(Runner):
     """Will run stuff on a bin"""
     default_time = '12:00:00'
+    default_constraint = 'fat'
 
     default_steps = [
+        {'pull_reads': {}},
         {'phylotyping':{}},
         {'calling':    {}},
         {'annotate':   {}},
-        {'rebuild':    {}}
+ #       {'rebuild':    {}}
     ]
 
     def __init__(self, parent):
@@ -104,7 +122,9 @@ class BinRunner(Runner):
             kwargs['email'] = '/dev/null'
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
+        if 'constraint' not in kwargs: kwargs['constraint'] = self.default_constraint
         if 'email' not in kwargs: kwargs['email'] = None
-        if 'job_name' not in kwargs: kwargs['job_name']  = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
+#        if 'job_name' not in kwargs:
+        kwargs['job_name']  = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
         self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, **kwargs)
         self.slurm_job.run()

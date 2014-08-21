@@ -26,8 +26,8 @@ class ProjectRunner(Runner):
     def run_slurm(self, steps=None, **kwargs):
         # Make script #
         command = """steps = %s
-                     proj = [proj for proj in gefes.projects if proj.name=='%s'][0]
-                     proj.runner(steps)""" % (steps, self.project.name)
+proj = [proj for proj in gefes.projects if proj.name=='%s'][0]
+proj.runner(steps)""" % (steps, self.project.name)
         # Test case #
         if 'test' in self.project.name:
             kwargs['time'] = '00:15:00'
@@ -41,4 +41,4 @@ class ProjectRunner(Runner):
         if 'email' not in kwargs: kwargs['email'] = None
         job_name = "gefes_%s" % self.project
         self.slurm_job = SLURMJob(command, self.project.p.logs_dir, job_name=job_name, **kwargs)
-        self.slurm_job.launch()
+        self.slurm_job.run()

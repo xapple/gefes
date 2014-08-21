@@ -12,7 +12,7 @@ from gefes.helper.linkage import parse_linkage_info_bam
 from gefes.common.slurm import nr_threads
 
 # Third party modules #
-import sh, pandas
+import sh, pandas, os
 
 ###############################################################################
 class Mapper(object):
@@ -64,7 +64,7 @@ class Mapper(object):
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
-        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=self.p.map_smds_coverage)
+        sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=str(self.p.map_smds_coverage)) 
         # Clean up #
         os.remove(self.p.map_sam)
         os.remove(self.p.map_bam)
@@ -73,12 +73,10 @@ class Mapper(object):
     def remove_duplicates(self):
         """Remove PCR duplicates with MarkDuplicates."""
         # Estimate size #
-        mem_size = nr_threads * 2
-        perm_size = str(max(int(mem_size * 0.3), 1))
-        sh.java('-Xms%sg' % perm_size,
-                '-Xmx%sg' % mem_size,
+        mem_size = "4"
+        
+        sh.java('-Xmx%sg' % mem_size,
                 '-XX:ParallelGCThreads=%s' % nr_threads,
-                '-XX:MaxPermSize=%sg' % perm_size,
                 '-XX:+CMSClassUnloadingEnabled',
                 '-jar', gefes.repos_dir + 'bin/picard-tools-1.101/MarkDuplicates.jar',
                 'INPUT=%s' % self.p.map_s_bam,
