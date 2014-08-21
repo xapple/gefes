@@ -176,7 +176,7 @@ class Analysis(object):
                 query_cov = 100.0 * abs(query_cov / len(self.blast_db.sql[info['query_id']]))
                 subj_cov  = (float(info['subject_end']) - float(info['subject_start']))
                 subj_cov  = 100.0 * abs(subj_cov  / len(self.blast_db.sql[info['subject_id']]))
-                coverage = max(query_cov, subj_cov)
+                coverage = min(query_cov, subj_cov)
                 if coverage < self.mimimum_coverage: continue
                 yield line
         if not self.p.filtered_blastout:
