@@ -1,0 +1,29 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Sari Peura",
+            "email": "sari.peura@ebc.uu.se"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@ebc.uu.se"
+        }
+    },
+
+    "uppmax_id":    "b2014083",
+    "run_num":       4,
+    "run_id":        "140612_D00457_0037_AC49JKACXX",
+    "pool_num":      5,
+    "pool_id":       "Sample_S5",
+    "forward_reads": "S5_TTAGGC_L006_R1_001.fastq.gz",
+    "reverse_reads": "S5_TTAGGC_L006_R2_001.fastq.gz",
+
+    "project":       "alinen",
+    "project_name":  "Alinen Mustarjärvi depth profile",
+    "pool":          "s5",
+    "pool_name":     "S5 depth 2.2 meters"
+}
