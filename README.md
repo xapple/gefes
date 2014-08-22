@@ -94,6 +94,9 @@ Relaunch your shell and type these commands to get the right version of python:
 ### Step 4: Install all required python packages
 GEFES uses many third party python libraries. You can get them by running these commands:
 
+    $ pip install plumbing
+    $ pip install fasta
+    $ pip install pymarktex
     $ pip install sh
     $ pip install decorator
     $ pip install biopython

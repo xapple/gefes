@@ -9,22 +9,28 @@ A script to contain the procedure for running the test sample.
 # Internal modules #
 import gefes
 from gefes.cleaning.quality import QualityChecker
+from gefes.report.sample import SampleReport
 
 # Third party modules #
 
 # Constants #
 proj = gefes.projects['test']
-pools = proj.pools
+samples = proj.samples
 
 # Global settings #
 proj.kmer_size = 81
 
-################################### Cleaning ##################################
-for pool in pools:
-    pool.pair.fastqc(out_dir=pool.p.fastqc_dir)
-    pool.quality_checker = QualityChecker(pool.pair, pool.clean)
-    pool.quality_checker.run()
-    pool.clean.fastqc(out_dir=pool.p.fastqc_dir)
+################################ Preprocessing ################################
+for s in samples:
+    s.pair.fastqc(out_dir=s.p.fastqc_dir)
+    s.quality_checker = QualityChecker(s.pair, s.clean)
+    s.quality_checker.run()
+    s.clean.fastqc(out_dir=s.p.fastqc_dir)
+
+#################################### Report ###################################
+for s in samples:
+    s.report = SampleReport(s)
+    s.report.generate()
 
 ################################### Assembly ##################################
 # Assemble locally #
@@ -34,7 +40,7 @@ proj.assembly.graphs[0].plot()
 # Index the result #
 proj.assembly.index()
 # Map the reads #
-for p in pools: p.mapper.map()
+for s in samples: s.mapper.map()
 
 # Binning frame #
 proj.binner.export_frame()

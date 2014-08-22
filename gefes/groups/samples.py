@@ -6,7 +6,7 @@ import os, json
 
 # Internal modules #
 from gefes.running.pool_runner import PoolRunner
-from gefes.graphs import pool_plots
+from gefes.graphs import sample_plots
 from plumbing.autopaths import AutoPaths, FilePath
 from plumbing.cache import property_cached
 from fasta import PairedFASTQ
@@ -17,9 +17,9 @@ from fasta import PairedFASTQ
 home = os.environ['HOME'] + '/'
 
 ###############################################################################
-class Pool(object):
-    """An Illumina HiSeq MID is called here a 'pool'.
-    It's a bunch of paired sequences all coming from the same particular sample."""
+class Sample(object):
+    """Corresponds to an Illumina HiSeq MID. It's a bunch of paired sequences
+    all coming from the same particular sample."""
 
     all_paths = """
     /logs/
@@ -75,7 +75,7 @@ class Pool(object):
 
     @property_cached
     def graphs(self):
-        return [getattr(pool_plots, cls_name)(self) for cls_name in pool_plots.__all__]
+        return [getattr(sample_plots, cls_name)(self) for cls_name in sample_plots.__all__]
 
     @property
     def count(self):
