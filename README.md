@@ -162,3 +162,6 @@ Or something like this:
     $ module load openmpi/1.4.5
     $ module load pgi
     $ make -j8 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
+
+#### - matplotlib missing freetype:
+If you are on OS X you can simply fix this error by typing `$ brew install freetype`

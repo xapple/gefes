@@ -2,9 +2,6 @@
 import re
 
 # Internal modules #
-from plumbing.autopaths import AutoPaths
-from fasta import PairedFASTQ
-from fasta import FASTQ
 
 # Third party modules #
 import sh
@@ -14,28 +11,11 @@ class Sickle(object):
     """Takes care of running the sickle program that removes low quality reads.
     The "singles" file contains reads that passed filter in either the forward or reverse direction, but not the other"""
 
-    all_paths = """
-    /cleaned_fwd.fastq
-    /cleaned_rev.fastq
-    /cleaned_single.fastq
-    /report.txt
-    """
+    def __repr__(self): return "<%s object on '%s'>" % (self.__class__.__name__, self.source)
 
-    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
-    def __len__(self): return len(self.pair)
-
-    def __init__(self, cleaner):
-        # Save parent #
-        self.parent, self.cleaner = cleaner, cleaner
-        self.pool = self.cleaner.pool
-        # Auto paths #
-        self.base_dir = self.parent.base_dir
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Files #
-        self.fwd = FASTQ(self.p.fwd)
-        self.rev = FASTQ(self.p.rev)
-        self.single = FASTQ(self.p.single)
-        self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
+    def __init__(self, source, dest):
+        self.source = source
+        self.dest = dest
 
     def run(self):
         # Cleanup #
@@ -59,6 +39,19 @@ class Sickle(object):
         self.single_records_kept = int(re.findall('^FastQ single records kept (.+) .+$', self.p.report.contents, re.M))
         self.paired_records_discarded = int(re.findall('^FastQ paired records discarded (.+) .+$', self.p.report.contents, re.M))
         self.single_records_discarded = int(re.findall('^FastQ single records discarded (.+) .+$', self.p.report.contents, re.M))
+
+###############################################################################
+class SickleResults(object):
+
+    all_paths = """
+    /cleaned_fwd.fastq
+    /cleaned_rev.fastq
+    /cleaned_single.fastq
+    /report.txt
+    """
+
+    def __init__(self, base_dir):
+        self.base_dir = base_dir
 
     @property
     def kept(self):

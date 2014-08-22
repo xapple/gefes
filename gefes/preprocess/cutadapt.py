@@ -5,12 +5,11 @@ from __future__ import division
 
 # Internal modules #
 from plumbing.common import flatten
-from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 import sh
 
-# Constants #
+###############################################################################
 illumina_adapters = {
     'Adapter_1_Illumina'        : "ACACTCTTTCCCTACACGACGCTGTTCCATCT",
     'Adapter_4_Illumina'        : "CAAGCAGAAGACGGCATACGAGCTCTTCCGATCT",
@@ -61,29 +60,29 @@ class Cutadapt(object):
     """Takes care of running the cutadapt program that will search for
     standard Illumina adapters that might be lingering in the sequences.
     https://github.com/marcelm/cutadapt
-    There is a strange procedure for using paried-end files..."""
-
-
-    all_paths = """
-    /report_fwd.txt
-    /report_rev.txt
-    /cut_fwd.fastq
-    /cut_rev.fastq
-    """
+    There is a strange procedure for using paired-end files..."""
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
     def __len__(self): return len(self.pair)
 
-    def __init__(self, cleaner):
-        # Save parent #
-        self.parent, self.cleaner = cleaner, cleaner
-        self.pool = self.cleaner.pool
-        # Auto paths #
-        self.base_dir = self.parent.p.cutadapt_dir
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Adapters #
-        self.adapter_params = flatten([('-b', '%s=%s' % (k,v)) for k,v in illumina_adapters.items()])
+    def __init__(self, source, dest):
+        self.source = source
+        self.dest = dest
+
+    @property
+    def adapter_params(self):
+        return flatten([('-b', '%s=%s' % (k,v)) for k,v in illumina_adapters.items()])
 
     def run(self):
         sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_fwd, self.pool.fwd], _out=self.p.report_fwd)
         sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_rev, self.pool.rev], _out=self.p.report_rev)
+
+###############################################################################
+class CutadaptResults(object):
+
+    all_paths = """
+    /lorem
+    """
+
+    def __init__(self, base_dir):
+        self.base_dir = base_dir

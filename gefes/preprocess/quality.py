@@ -4,52 +4,36 @@ import itertools
 # Internal modules #
 import gefes
 from plumbing.common import moving_average
-from plumbing.autopaths import AutoPaths
-from fasta import PairedFASTQ
-from fasta import FASTQ
+from plumbing.tmpstuff import new_tmp_dir
 
 # Third party modules #
 
 ###############################################################################
 class QualityChecker(object):
     """Takes care of checking the PHRED score of the raw reads
-    and discarding or trimming bad ones."""
+    and will discard or trim bad ones."""
 
     window_size = 10
     threshold = 20
     min_length = 50
     discard_N = True
 
-    all_paths = """
-    /cleaned_fwd.fastq
-    /cleaned_rev.fastq
-    """
-
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
     def __len__(self): return len(self.pair)
 
-    def __init__(self, cleaner):
-        # Save parent #
-        self.parent, self.cleaner = cleaner, cleaner
-        self.pool = self.cleaner.pool
-        # Auto paths #
-        self.base_dir = self.parent.base_dir
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Files #
-        self.pair = PairedFASTQ(self.p.fwd, self.p.rev)
+    def __init__(self, source, dest):
+        self.source = source
+        self.dest = dest
 
     def run(self):
-        # Cleanup #
-        self.pair.remove()
         # Do it #
-        self.pair.create()
-        for read_pair in self.pool.pair:
-            one = self.trim_read(read_pair[0])
-            two = self.trim_read(read_pair[1])
-            self.pair.add_pair((one, two))
-        self.pair.close()
+        with self.dest as output:
+            for read_pair in self.source:
+                one = self.trim_read(read_pair[0])
+                two = self.trim_read(read_pair[1])
+                output.add_pair((one, two))
         # Make sanity checks #
-        assert len(self.fwd) == len(self.rev)
+        assert len(self.source) == len(self.dest)
 
     def trim_read(self, read):
         # First we remove base pairs strictly below the threshold on both sides #
@@ -66,17 +50,20 @@ class QualityChecker(object):
         stretches = [Stretch(above, scores) for above, scores in stretches]
         # This is a bit clumsy but we need to calculate the starts and ends #
         start = 0
-        for strech in stretches:
-            strech.start = start
-            start = start + len(strech)
-            strech.end = start
-        # hh #
+        for s in stretches:
+            s.start = start
+            start = start + len(s)
+            s.end = start
+            s.seq = read[s.start:s.end]
+        # Discard N letters #
+        if self.discard_N: stretches = [s for s in stretches if 'N' not in s.seq]
+        # Get the longest one #
         longest = max([s for s in stretches if s.above], key = lambda x: len(x))
-        1/0
-        averaged = moving_average(scores, self.windowsize)
-        above_yes_no = [True if x > self.threshold else False for x in averaged]
-        #longest_stretch =
-        if "N" in read_pair[0] or "N" in read_pair[1]: return None
+        return longest
+
+    @property
+    def ratio_discarded(self):
+        return 1 - (len(self.pair) / len(self.pool.pair))
 
 ###############################################################################
 class Stretch(object):
@@ -92,9 +79,19 @@ class Stretch(object):
         self.end = -1
 
 ###############################################################################
+class QualityResults(object):
+
+    all_paths = """
+    /lorem
+    """
+
+    def __init__(self, base_dir):
+        self.base_dir = base_dir
+
+###############################################################################
 def test():
     # Object #
-    checker = QualityChecker(gefes.projects['test'].first.cleaner)
+    checker = QualityChecker(gefes.projects['test'].first.pair, new_tmp_dir())
     checker.window_size = 10
     checker.threshold = 21
     checker.min_length = 5

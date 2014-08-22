@@ -24,7 +24,8 @@ class Pool(object):
     all_paths = """
     /logs/
     /graphs/
-    /clean/
+    /clean/fwd.fastq
+    /clean/rev.fastq
     /mapping/
     /fastqc/
     /info.json
@@ -65,6 +66,8 @@ class Pool(object):
         fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
         rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         self.pair = PairedFASTQ(fwd_path, rev_path)
+        # Cleaned pairs #
+        self.clean = PairedFASTQ(self.p.clean_fwd, self.p.clean_rev)
 
     @property_cached
     def runner(self):
