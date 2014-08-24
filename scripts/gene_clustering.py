@@ -21,7 +21,7 @@ from collections import defaultdict
 # Internal modules #
 from plumbing.autopaths import AutoPaths, FilePath
 from plumbing.cache import property_cached
-from plumbing.common import natural_sort
+from plumbing.common import natural_sort, which
 from fasta import FASTA, AlignedFASTA
 from parallelblast import BLASTdb, BLASTquery
 from parallelblast.results import tabular_keys
@@ -101,8 +101,9 @@ class MasterCluster(Cluster):
     @property
     def alignment(self):
         alignment = AlignedFASTA(self.analysis.p.master_aln)
-        print "Creating master alignment..."
         if not alignment:
+            msg = "Creating master alignment with %i geneomes..."
+            print msg % len(self.analysis.single_copy_clusters)
             with alignment as handle:
                 for genome in self.analysis.genomes:
                     seq = ''
@@ -185,8 +186,8 @@ class Analysis(object):
                 if coverage < self.mimimum_coverage: continue
                 yield line
         if not self.p.filtered_blastout:
-            print "Making SQLite database with reads from '%s'" % self.blastout
-            print "Result in '%s'" % self.blast_db.sql
+            print "Making SQLite database with reads from '%s'..." % self.blastout
+            print "Result in '%s'." % self.blast_db.sql
             self.p.filtered_blastout.writelines(good_iterator(self.blastout))
         return self.p.filtered_blastout
 
@@ -203,7 +204,8 @@ class Analysis(object):
             print "Running the MCL clustering..."
             shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
-            sh.mcl(self.p.network, "-use-tab", self.p.dictionary, "-o", self.p.clusters)
+            mcl = sh.Command(which('mcl'))
+            mcl(self.p.network, "-use-tab", self.p.dictionary, "-o", self.p.clusters)
         return [Cluster(i, frozenset(line.split()), self) for i, line in enumerate(self.p.clusters)]
 
     @property_cached

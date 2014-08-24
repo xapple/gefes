@@ -21,7 +21,7 @@ class ProjectRunner(Runner):
     def __init__(self, parent):
         # Save parent #
         self.parent, self.project = parent, parent
-        self.pools = parent.pools
+        self.samples = parent.samples
 
     def run_slurm(self, steps=None, **kwargs):
         # Make script #

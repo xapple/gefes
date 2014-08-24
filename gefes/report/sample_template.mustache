@@ -3,7 +3,7 @@ Sample "{{sample_short_name}}"
 
 General Information
 -------------------
-This sample has the code "{{sample_short_name}}" and is named "{{sample_long_name}}". It is part of the project code "{{project_short_name}}" ("{{project_long_name}}") along with {{project_other_samples}} other samples.
+This sample has the code "{{sample_short_name}}" and is named "{{sample_long_name}}". It is part of the project code "{{project_short_name}}" called "{{project_long_name}}" along with {{project_other_samples}} other samples.
 
 -------
 
@@ -21,7 +21,7 @@ contains all the metadata associated with this sample. Here are the contents of 
 
 Processing
 ----------
-This report (and all the analysis) was generated using the ILLUMITAG project at:
+This report (and all the analysis) was generated using the GEFES project at:
 
 > <{{project_url}}>
 
@@ -29,11 +29,13 @@ Version `{{project_version}}` of the pipeline was used. The exact git hash of th
 
     {{git_hash}}
 
-also refereed to by its tag `{{git_tag}}`. This document was generated at `{{now}}`.
+also refereed to by its tag `{{git_tag}}`.
+
+This document was generated at `{{now}}`.
 
 A brief overview of what happens to the data can be viewed online here:
 
-> <https://github.com/limno/illumitag/blob/master/documentation/pipeline_outline.pdf?raw=true>
+> <https://github.com/limno/gefes/blob/master/documentation/flowchart.pdf?raw=true>
 
 The results and all the files generated for this sample can be found on UPPMAX at:
 
@@ -50,21 +52,36 @@ More information about the raw output of the sequencer for this sample can be fo
 
     {{illumina_report}}
 
-The average quality per base can be seen in figure \ref{per_base_qual} and the average quality per sequence in figure \ref{per_seq_qual}.
+The average quality per base can be seen in figure \ref{raw_per_base_qual} and the average quality per sequence in figure \ref{raw_per_seq_qual}.
 
-{{per_base_qual}}
+{{raw_per_base_qual}}
 
-{{per_seq_qual}}
+{{raw_per_seq_qual}}
 
 -------
 
-Filtering
----------
-Next, we filter the sequences based on several criteria. These many sequences are lost:
+Preprocessing
+-------------
+Next, we filter the sequences based on the following rules:
 
-* Checking for the presence of both primers at their exact positions with at most {{mismatches_allowed}} mismatches allowed discards {{primer_discard}} sequences ({{primer_left}} left).
-* Checking for the absence of undetermined "N" bases anywhere in the reads (expect in the primers) discards {{n_base_discard}} sequences ({{n_base_left}} left).
-* Running a {{window_size}} base pair window over the sequences and checking that quality doesn't drop below {{window_threshold}} discards {{window_discard}} sequences ({{window_left}} left).
-* Checking that no sequence is shorter than {{length_threshold}} base pairs discards {{length_discard}} sequences ({{length_left}} left).
+* We remove any bases from the extremities of each sequence if they are under the quality threshold of {{phred_threshold}}.
 
-This leaves us with {{percent_remaining}} of the original sequences. The next step in the pipeline is generating outputs that are compatible with "Qiime" and "Mothur" for those who are interested in that. We will also trim the primers on both ends of sequences now
+* We run a {{window_size}} base pair window over the sequences and check that the quality doesn't drop below the same threshold of {{phred_threshold}}. If it does we trim the read and keep the longest stretch.
+
+* If the resulting trimmed read is shorter than {{length_threshold}} base pairs or contains any undetermined "N" bases, we keep discard it.
+
+* In the event that one of the reads in a pair gets discarded while the other one does not, we place the resulting singleton in a separate "singles" FASTQ file.
+
+This leaves us with {{remaining_percent}} of the original sequences organized in {{remaining_pairs}} pairs and {{remaining_singles}} singletons.
+
+Of course, now, not all sequences have the same length and we have created a distribution of read sizes as seen in figure \ref{cleaned_len_dist}.
+
+{{cleaned_len_dist}}
+
+We can look again at the per base quality and the per sequence quality of the pairs in figure \ref{cleaned_per_base_qual} and \ref{cleaned_per_seq_qual}:
+
+{{cleaned_per_base_qual}}
+
+{{cleaned_per_seq_qual}}
+
+The next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate.

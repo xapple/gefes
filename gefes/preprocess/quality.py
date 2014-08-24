@@ -3,6 +3,8 @@ import itertools
 
 # Internal modules #
 from plumbing.common import moving_average
+from plumbing.cache import property_cached
+from fasta import PairedFASTQ
 
 # Third party modules #
 
@@ -19,10 +21,14 @@ class QualityChecker(object):
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
     def __len__(self): return len(self.pair)
 
-    def __init__(self, source, dest):
+    def __init__(self, source, dest=None):
+        # Basic #
         self.source = source
         self.dest = dest
-
+        # Default case #
+        if dest is None:
+            self.dest = PairedFASTQ(self.source.fwd.prefix_path + '_clean.fastq',
+                                    self.source.rev.prefix_path + '_clean.fastq')
     def run(self):
         # Do it #
         with self.dest as output:
@@ -61,6 +67,12 @@ class QualityChecker(object):
         if len(longest.seq) < self.min_length: return None
         else: return longest.seq
 
+    @property_cached
+    def results(self):
+        results = QualityResults(self.dest)
+        if not results: self.run()
+        return results
+
 ###############################################################################
 class Stretch(object):
     """An interval within a DNA sequence. Here, a continuous stretch where
@@ -80,13 +92,14 @@ class QualityResults(object):
     all_paths = """
     /lorem
     """
+    def __nonzero__(self): return self.per_base_qual.exists
 
     def __init__(self, base_dir):
         self.base_dir = base_dir
 
     @property
-    def ratio_discarded(self):
-        return 1 - (len(self.dest) / len(self.source))
+    def ratio_kept(self):
+        return len(self.dest) / len(self.source)
 
 ###############################################################################
 def test():
@@ -96,7 +109,7 @@ def test():
     checker.threshold = 21
     checker.min_length = 5
     checker.discard_N = True
-    # Dummy sequence #
+    # Dummy test sequence #
     scores = "10 11 13 22 23 24 10 10 9 8 7 9 8 9 5 2 5 8 9 8 9 30 33 30 31 32 33 31 33 33 31 33 32 33 32 32 33 32 2 3 2 3 2 1 3 2 1 23 23 23 10 10 9 9"
     seq    = "A  T  C  G  T  T  G  A  C G G A G T G T A A C T C G  A  T  G  A  C  T  T  G  T  C  A  A  C  T  G  G  T A G G G T C A A C  T  G  A  T  C A"
     scores = map(int, scores.split())

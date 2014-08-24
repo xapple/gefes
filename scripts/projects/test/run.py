@@ -8,8 +8,6 @@ A script to contain the procedure for running the test sample.
 
 # Internal modules #
 import gefes
-from gefes.cleaning.quality import QualityChecker
-from gefes.report.sample import SampleReport
 
 # Third party modules #
 
@@ -22,14 +20,13 @@ proj.kmer_size = 81
 
 ################################ Preprocessing ################################
 for s in samples:
-    s.pair.fastqc(out_dir=s.p.fastqc_dir)
-    s.quality_checker = QualityChecker(s.pair, s.clean)
+    s.pair.fwd.fastqc.run()
+    s.pair.rev.fastqc.run()
     s.quality_checker.run()
     s.clean.fastqc(out_dir=s.p.fastqc_dir)
 
 #################################### Report ###################################
 for s in samples:
-    s.report = SampleReport(s)
     s.report.generate()
 
 ################################### Assembly ##################################

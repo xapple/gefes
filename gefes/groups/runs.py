@@ -4,7 +4,6 @@ import os, xml.etree.ElementTree as etree
 # Internal modules #
 from gefes.groups.aggregate import Aggregate
 from gefes.groups.collection import Collection
-from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 
@@ -18,20 +17,17 @@ class Runs(Collection):
 
 ###############################################################################
 class Run(Aggregate):
-    """An illumina run containing several pools."""
+    """An illumina run containing several samples."""
 
-    def __repr__(self): return '<%s object number %i with %i pools>' % \
+    def __repr__(self): return '<%s object number %i with %i samples>' % \
                                (self.__class__.__name__, self.num, len(self))
 
-    def __init__(self, num, pools, out_dir):
-        # Attributes #
-        self.num = num
-        self.name = "run%i" % num
-        self.pools = pools
-        # Dir #
-        self.base_dir = out_dir + self.name + '/'
-        self.p = AutoPaths(self.base_dir, self.all_paths)
+    def __init__(self, num, samples, out_dir):
+        # Super #
+        name = "run%i" % num
+        Aggregate.__init__(self, name, samples, out_dir)
         # Illumina report #
+        self.html_report_path = self.directory + "report.html"
         self.xml_report_path = self.directory + "report.xml"
         # Auto exec #
         if os.path.isfile(self.xml_report_path): self.parse_report_xml()

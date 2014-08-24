@@ -25,5 +25,5 @@
     "project":       "alinen",
     "project_name":  "Alinen Mustarjärvi depth profile",
     "pool":          "s1",
-    "pool_name":     "S1 depth 0"
+    "pool_name":     "S1 depth surface"
 }

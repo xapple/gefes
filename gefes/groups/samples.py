@@ -5,11 +5,14 @@ from __future__ import division
 import os, json
 
 # Internal modules #
+from gefes.preprocess.quality import QualityChecker
 from gefes.running.pool_runner import PoolRunner
 from gefes.graphs import sample_plots
+from gefes.report.sample import SampleReport
 from plumbing.autopaths import AutoPaths, FilePath
 from plumbing.cache import property_cached
 from fasta import PairedFASTQ
+from fasta.fastqc import FastQC
 
 # Third party modules #
 
@@ -22,13 +25,15 @@ class Sample(object):
     all coming from the same particular sample."""
 
     all_paths = """
-    /logs/
-    /graphs/
+    /info.json
     /clean/fwd.fastq
     /clean/rev.fastq
+    /fastqc/fwd/
+    /fastqc/rev/
     /mapping/
-    /fastqc/
-    /info.json
+    /logs/
+    /graphs/
+    /report/report.pdf
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.id_name)
@@ -57,17 +62,26 @@ class Sample(object):
         self.long_name = self.info['pool_name']
         self.id_name = "run%03d-pool%02d" % (self.run_num, self.num)
         self.report_stats = {'fwd': {}, 'rev': {}}
-        # Automatic paths #
-        self.base_dir = self.out_dir + self.id_name + '/'
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Make an alias to the json #
-        self.json_path.link_to(self.p.info_json, safe=True)
         # Raw file pairs #
         fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
         rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
         self.pair = PairedFASTQ(fwd_path, rev_path)
+        # Directory #
+        self.base_dir = self.out_dir + self.id_name + '/'
+
+    def load(self):
+        # Automatic paths #
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Make an alias to the json #
+        self.json_path.link_to(self.p.info_json, safe=True)
+        # FastQC #
+        self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
+        self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
         # Cleaned pairs #
-        self.clean = PairedFASTQ(self.p.clean_fwd, self.p.clean_rev)
+        self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
+        self.quality_checker = QualityChecker(self.pair, self.clean)
+        # Report #
+        self.report = SampleReport(self)
 
     @property_cached
     def runner(self):
