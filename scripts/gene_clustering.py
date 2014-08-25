@@ -36,11 +36,11 @@ from tqdm import tqdm
 home = os.environ['HOME'] + '/'
 
 ###############################################################################
-class Genome(object):
+class Genome(FASTA):
     """A FASTA file somewhere on the file system."""
     @property
     def partial(self):
-        """Appartently some of them are SAGs and thus only partial."""
+        """Apparently some of them are SAGs and thus only partial."""
         return True if self.filename.startswith('2236') else False
 
 ###############################################################################
@@ -66,8 +66,8 @@ class Cluster(object):
     def score(self):
         """Given the genome counts, what is the single-copy likelihood score"""
         score = 0
-        for name, count in self.counts.itertiems():
-            partial = [g for g in self.analysis.genomes if g.name == name][0].partial
+        for name, count in self.counts.iteritems():
+            partial = [g for g in self.analysis.genomes if g.prefix == name][0].partial
             if count == 0:   score +=  -5 if partial else -20
             elif count == 1: score +=  10 if partial else  10
             elif count == 2: score += -35 if partial else -30
@@ -127,7 +127,7 @@ class MasterCluster(Cluster):
     def alignment(self):
         alignment = AlignedFASTA(self.analysis.p.master_aln)
         if not alignment:
-            msg = "Creating master alignment with %i geneomes..."
+            msg = "Creating master alignment with %i genomes..."
             print msg % len(self.analysis.single_copy_clusters)
             with alignment as handle:
                 for genome in self.analysis.genomes:
@@ -144,9 +144,10 @@ class Analysis(object):
     Then we use the MCL algorithm (Markov Cluster Algorithm) to form clusters.
     Then we count the genomes with the right number of single copy genes."""
 
-    blast_params = {'-e': 0.1, '-W': 9, '-m': 8}
+    blast_params = {'-e': 0.1, '-m': 8}
     minimum_identity = 30.0
     mimimum_coverage = 50.0
+    sequence_type = 'nucleotide' or 'aminoacid'
 
     all_paths = """
     /all_sequences.fasta
@@ -177,7 +178,8 @@ class Analysis(object):
     def blast_db(self):
         """A blastable database of all genes"""
         assert self.genomes
-        db = BLASTdb(self.p.all_fasta)
+        dbtype = 'nucl' if self.sequence_type == 'nucleotide' else 'prot'
+        db = BLASTdb(self.p.all_fasta, dbtype=dbtype)
         if not self.p.all_nin:
             print "Building BLASTable database with all genes..."
             shell_output('cat %s > %s' % (' '.join(self.genomes), db))
@@ -188,13 +190,14 @@ class Analysis(object):
     @property
     def query(self):
         """The blast query to be executed"""
-        return BLASTquery(self.blast_db, self.blast_db, self.blast_params, 'blastn', 'legacy')
+        algorithm = 'blastn' if self.sequence_type == 'nucleotide' else 'blastp'
+        return BLASTquery(self.blast_db, self.blast_db, self.blast_params, algorithm, 'legacy')
 
     @property
     def blastout(self):
         """The blast results"""
         if not self.p.all_blastout:
-            print "Self-BLASTing database '%s'..." % self.blast_db
+            print "Self-BLASTing database '%s'..." % self.blast_db.relative_path
             self.query.run()
         return self.p.all_blastout
 
@@ -229,7 +232,7 @@ class Analysis(object):
     def clusters(self):
         """A list of Clusters. See http://bioops.info/2011/03/mcl-a-cluster-algorithm-for-graphs/"""
         if not self.p.clusters.exists:
-            print "Running the MCL clustering..."
+            print "Running the MCL clustering on '%s'..." % self.filtered
             shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
             mcl = sh.Command(which('mcl'))
@@ -250,31 +253,32 @@ class Analysis(object):
         result = result.fillna(0)
         return result
 
-    def save_count_table(self): self.count_table.to_csv(str(self.p.tsv), sep='\t', encoding='utf-8')
+    def save_count_table(self):
+        self.count_table = self.count_table.reindex([c.name for c in self.clusters])
+        self.count_table.to_csv(str(self.p.tsv), sep='\t', encoding='utf-8')
 
     @property_cached
     def single_copy_clusters(self):
         """Subset of self.clusters. Which clusters appear exactly once in each genome.
         Some genomes are partial so we will be more flexible on those ones."""
-        get_score = lambda x: [c for c in self.clusters if c.name == x][0].score
-        self.count_table.reindex(sorted(self.count_table.index, key=get_score))
-        top_names = self.count_table.head(100).index
-        return [[c for c in self.clusters if c.name==name][0] for name in top_names]
+        self.clusters = sorted(self.clusters, key=lambda x: x.score, reverse=True)
+        return self.clusters[0:100]
 
     @property_cached
     def master_cluster(self): return MasterCluster(self)
 
 ###############################################################################
-output_directory = home + "glob/lucass/other/alex_clusters/"
+output_directory = home + "glob/lucass/other/alex_protein/"
+extension = '.faa'
 
 # Real input #
-files = "/proj/b2013274/mcl/*.fna"
-genomes = [FASTA(path) for path in glob.glob(files)]
+files = "/proj/b2013274/mcl/*" + extension
+genomes = [Genome(path) for path in glob.glob(files)]
 analysis = Analysis(genomes, output_directory)
 
 # Test input #
-test_files = output_directory + "/test/*.fna"
-test_genomes = [FASTA(path) for path in glob.glob(test_files)]
+test_files = output_directory + "/test/*" + extension
+test_genomes = [Genome(path) for path in glob.glob(test_files)]
 test_analysis = Analysis(test_genomes, output_directory + "/test/")
 
 # Main program #
