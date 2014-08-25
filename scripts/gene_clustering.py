@@ -62,6 +62,7 @@ class Cluster(object):
     def counts(self):
         return self.analysis.count_table.loc[self.name]
 
+    @property
     def score(self, counts):
         """Given the genome counts, what is the single-copy likelihood score"""
         score = 0
