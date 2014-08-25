@@ -8,7 +8,7 @@ import re, shutil
 import gefes
 from plumbing.common import split_thousands, pretty_now
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
-from pymarktex.figures import DualFigure
+from pymarktex.figures import ScaledFigure, DualFigure
 
 # Third party modules #
 
@@ -71,11 +71,12 @@ class SampleTemplate(Template):
         content = re.sub('\A(.+?)^    },$', '', content, flags=re.M|re.DOTALL)
         return content.strip('\n }')
 
-    # Processing #
+    # Process info #
     def project_url(self): return gefes.url
     def project_version(self): return gefes.__version__
     def git_hash(self): return gefes.git_repo.hash
     def git_tag(self): return gefes.git_repo.tag
+    def git_branch(self): return gefes.git_repo.branch
     def now(self): return pretty_now()
     def results_directory(self): return self.sample.base_dir
 
@@ -102,21 +103,34 @@ class SampleTemplate(Template):
         params += ["Per sequence quality", "raw_per_seq_qual"]
         return str(DualFigure(*params))
 
-    # Filtering #
-    def quality_window(self): return 1
-    def quality_threshold(self): return 1
-    def quality_length(self): return 1
-    def quality_remaining(self):
-        return 1
-        good = self.sample.assembled.good_primers
-        return "%.1f%%" % ((len(good.len_filtered)/len(self.sample))*100)
+    # Preprocessing #
+    def phred_threshold(self): return self.sample.quality_checker.threshold
+    def window_size(self): return self.sample.quality_checker.window_size
+    def length_threshold(self): return self.sample.quality_checker.min_length
+    def remaining_percent(self): return "%.2f%%" % (self.sample.quality_checker.results.ratio_kept*100)
+    def remaining_pairs(self): return len(self.sample.quality_checker.singletons)
+    def remaining_singles(self): return len(self.sample.quality_checker.dest)
 
-    # Cleaned #
+    # Length distribution #
+    def cleaned_len_dist(self):
+        params = [self.sample.clean.fwd.length_dist,
+                  self.sample.clean.rev.length_dist]
+        params += ["Forward", "Reverse"]
+        params += ["fwd_length_dist", "rev_length_dist"]
+        params += ["Length distribution", "cleaned_len_dist"]
+        return str(DualFigure(*params))
+    def singletons_len_dist(self):
+        caption = "Distribution of sequence lengths"
+        path = self.sample.clean.rev.length_dist
+        label = "singletons_len_dist"
+        return str(ScaledFigure(path, caption, label))
+
+    # Fastqc graphs #
     def cleaned_per_base_qual(self):
         params = [self.sample.clean.fwd.fastqc.results.per_base_qual,
                   self.sample.clean.rev.fastqc.results.per_base_qual]
         params += ["Forward", "Reverse"]
-        params += ["fwd_per_base_qual", "rev_fwd_per_base_qual"]
+        params += ["fwd_per_base_qual", "rev_per_base_qual"]
         params += ["Per base quality", "cleaned_per_base_qual"]
         return str(DualFigure(*params))
     def cleaned_per_seq_qual(self):

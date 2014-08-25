@@ -1,10 +1,13 @@
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 import itertools
 
 # Internal modules #
 from plumbing.common import moving_average
 from plumbing.cache import property_cached
-from fasta import PairedFASTQ
+from fasta import PairedFASTQ, FASTQ
 
 # Third party modules #
 
@@ -18,7 +21,7 @@ class QualityChecker(object):
     min_length = 50
     discard_N = True
 
-    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.source)
     def __len__(self): return len(self.pair)
 
     def __init__(self, source, dest=None):
@@ -29,29 +32,42 @@ class QualityChecker(object):
         if dest is None:
             self.dest = PairedFASTQ(self.source.fwd.prefix_path + '_clean.fastq',
                                     self.source.rev.prefix_path + '_clean.fastq')
+        # Single read #
+        self.singletons = FASTQ(self.dest.fwd.directory + 'singletons.fastq')
+
     def run(self):
+        # Count #
+        self.discarded = 0
         # Do it #
-        with self.dest as output:
+        with self.dest as output, self.singletons as singles:
             for read_pair in self.source:
                 one = self.trim_read(read_pair[0])
                 two = self.trim_read(read_pair[1])
-                output.add_pair((one, two))
+                if one and two: output.add_pair((one, two))
+                elif one: singles.add_seq(one)
+                elif two: singles.add_seq(two)
+                else: self.discarded += 1
         # Make sanity checks #
-        assert len(self.source) == len(self.dest)
+        assert len(self.source) == self.discarded + len(self.singletons) + len(self.dest)
+        return self.results
 
     def trim_read(self, read):
         # First we remove base pairs strictly below the threshold on both sides #
         phred = read.letter_annotations["phred_quality"]
         above_yes_no = [True if x > self.threshold else False for x in phred]
+        if not True in above_yes_no: return None
         new_start = above_yes_no.index(True)
         new_end = list(reversed(above_yes_no)).index(True)
-        read = read[new_start:-new_end]
+        if new_end == 0: read = read[new_start:]
+        if new_end != 0: read = read[new_start:-new_end]
+        if not read.seq: return None
         phred = read.letter_annotations["phred_quality"]
         # Now we run our moving average #
         averaged = moving_average(phred, self.window_size, 'copy_padding_and_cut')
         # And then search for the longest stretch above the threshold #
         stretches = itertools.groupby(averaged, lambda x: x>self.threshold)
         stretches = [Stretch(above, scores) for above, scores in stretches]
+        if not stretches: return None
         # This is a bit clumsy but we need to calculate the starts and ends #
         start = 0
         for s in stretches:
@@ -61,6 +77,7 @@ class QualityChecker(object):
             s.seq = read[s.start:s.end]
         # Discard N letters #
         if self.discard_N: stretches = [s for s in stretches if 'N' not in s.seq]
+        if not stretches: return None
         # Get the longest one #
         longest = max([s for s in stretches if s.above], key = lambda x: len(x))
         # Check the length #
@@ -69,7 +86,7 @@ class QualityChecker(object):
 
     @property_cached
     def results(self):
-        results = QualityResults(self.dest)
+        results = QualityResults(self.source, self.dest)
         if not results: self.run()
         return results
 
@@ -92,10 +109,11 @@ class QualityResults(object):
     all_paths = """
     /lorem
     """
-    def __nonzero__(self): return self.per_base_qual.exists
+    def __nonzero__(self): return self.dest.exists
 
-    def __init__(self, base_dir):
-        self.base_dir = base_dir
+    def __init__(self, source, dest):
+        self.source = source
+        self.dest = dest
 
     @property
     def ratio_kept(self):

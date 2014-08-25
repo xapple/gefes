@@ -17,10 +17,9 @@ class CleanLengthDist(Graph):
     def plot(self):
         # Data #
         counts = self.parent.cleaner.fwd.lengths_counter
-        label = "%i%% of reads discarded" % (self.parent.cleaner.ratio_discarded * 100.0)
         # Plot #
         fig = pyplot.figure()
-        pyplot.bar(counts.keys(), counts.values(), 1.0, color='gray', align='center', label=label)
+        pyplot.bar(counts.keys(), counts.values(), 1.0, color='gray', align='center')
         axes = pyplot.gca()
         # Information #
         title = 'Distribution of sequence lengths after cleaning for pool "%s"' % self.parent.long_name
@@ -28,6 +27,5 @@ class CleanLengthDist(Graph):
         axes.set_xlabel('Number of nucleotides in sequence')
         axes.set_ylabel('Number of sequences with this length')
         axes.xaxis.grid(False)
-        axes.legend()
         # Save it #
         self.save_plot(fig, axes, sep=('x'))

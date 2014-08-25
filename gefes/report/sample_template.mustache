@@ -29,13 +29,13 @@ Version `{{project_version}}` of the pipeline was used. The exact git hash of th
 
     {{git_hash}}
 
-also refereed to by its tag `{{git_tag}}`.
+also more simply referred to by its shortened tag `{{git_tag}}`.
 
 This document was generated at `{{now}}`.
 
 A brief overview of what happens to the data can be viewed online here:
 
-> <https://github.com/limno/gefes/blob/master/documentation/flowchart.pdf?raw=true>
+> <https://github.com/limno/gefes/blob/{{git_branch}}/documentation/flowchart.pdf?raw=true>
 
 The results and all the files generated for this sample can be found on UPPMAX at:
 
@@ -66,7 +66,7 @@ Next, we filter the sequences based on the following rules:
 
 * We remove any bases from the extremities of each sequence if they are under the quality threshold of {{phred_threshold}}.
 
-* We run a {{window_size}} base pair window over the sequences and check that the quality doesn't drop below the same threshold of {{phred_threshold}}. If it does we trim the read and keep the longest stretch.
+* We run a {{window_size}} base pair window over the sequences and check that the quality doesn't drop below the same threshold of {{phred_threshold}}. If it does, we trim the read and keep the longest stretch.
 
 * If the resulting trimmed read is shorter than {{length_threshold}} base pairs or contains any undetermined "N" bases, we keep discard it.
 
@@ -77,6 +77,10 @@ This leaves us with {{remaining_percent}} of the original sequences organized in
 Of course, now, not all sequences have the same length and we have created a distribution of read sizes as seen in figure \ref{cleaned_len_dist}.
 
 {{cleaned_len_dist}}
+
+The singletons have their own length distribution of course show in figure \ref{singletons_len_dist}:
+
+{{singletons_len_dist}}
 
 We can look again at the per base quality and the per sequence quality of the pairs in figure \ref{cleaned_per_base_qual} and \ref{cleaned_per_seq_qual}:
 

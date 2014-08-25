@@ -23,7 +23,8 @@ for s in samples:
     s.pair.fwd.fastqc.run()
     s.pair.rev.fastqc.run()
     s.quality_checker.run()
-    s.clean.fastqc(out_dir=s.p.fastqc_dir)
+    s.clean.fwd.graphs['LengthDist'].plot()
+    s.clean.rev.graphs['LengthDist'].plot()
 
 #################################### Report ###################################
 for s in samples:
