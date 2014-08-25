@@ -27,13 +27,25 @@ from parallelblast import BLASTdb, BLASTquery
 from parallelblast.results import tabular_keys
 
 # Third party modules #
-import sh, pandas, numpy
+import sh, pandas
 from shell_command import shell_output
 from Bio import Phylo
 from tqdm import tqdm
 
 # Constants #
 home = os.environ['HOME'] + '/'
+
+###############################################################################
+class Genome(object):
+    """A FASTA file somewhere on the file system."""
+    @property
+    def partial(self):
+        """Appartently some of them are SAGs and thus only partial."""
+        return True if self.filename.startswith('2236') else False
+
+    #@property
+    #def counts(self):
+    #    return self.analysis.count_table[self.prefix]
 
 ###############################################################################
 class Cluster(object):
@@ -49,6 +61,22 @@ class Cluster(object):
         self.analysis = analysis
         self.name = "cluster_%i" % num if name is None else name
         self.path = self.analysis.p.clusters_dir + self.name + '.fasta'
+
+    @property
+    def counts(self):
+        return self.analysis.count_table.loc[self.name]
+
+    def score(self, counts):
+        """Given the genome counts, what is the single-copy likelihood score"""
+        score = 0
+        for name, count in self.counts.itertiems():
+            partial = [g for g in self.analysis.genomes if g.name == name][0].partial
+            if count == 0:   score +=  -5 if partial else -20
+            elif count == 1: score +=  10 if partial else  10
+            elif count == 2: score += -35 if partial else -30
+            elif count == 3: score += -45 if partial else -40
+            else: score += -100
+        return score
 
     @property
     def sequences(self):
@@ -144,6 +172,8 @@ class Analysis(object):
     def __init__(self, genomes, base_dir='.'):
         # Attributes #
         self.genomes = genomes
+        # Double link #
+        for g in self.geomes: g.analysis = self
         # Auto paths #
         self.base_dir = base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
@@ -229,9 +259,12 @@ class Analysis(object):
 
     @property_cached
     def single_copy_clusters(self):
-        """Subset of self.clusters. Which clusters appear exactly once in each genome"""
-        names = [row.name for i, row in self.count_table.iterrows() if numpy.all(row==1)]
-        return [[c for c in self.clusters if c.name==name][0] for name in names]
+        """Subset of self.clusters. Which clusters appear exactly once in each genome.
+        Some genomes are partial so we will be more flexible on those ones."""
+        get_score = lambda x: [c for c in self.clusters if c.name == x][0].score
+        self.count_table.reindex(sorted(self.count_table.index, key=get_score))
+        top_names = self.count_table.head(100).index
+        return [[c for c in self.clusters if c.name==name][0] for name in top_names]
 
     @property_cached
     def master_cluster(self): return MasterCluster(self)
