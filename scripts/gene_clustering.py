@@ -225,7 +225,7 @@ class Analysis(object):
         result = result.fillna(0)
         return result
 
-    def save_count_table(self): self.count_table.to_csv(self.p.tsv, sep='\t', encoding='utf-8')
+    def save_count_table(self): self.count_table.to_csv(str(self.p.tsv), sep='\t', encoding='utf-8')
 
     @property_cached
     def single_copy_clusters(self):
