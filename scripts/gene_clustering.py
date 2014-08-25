@@ -132,6 +132,7 @@ class Analysis(object):
     /network.mci
     /dictionary.tab
     /clusters.txt
+    /count_table.tsv
     /master.aln
     /master.tree
     /clusters/
@@ -151,11 +152,13 @@ class Analysis(object):
     def blast_db(self):
         """A blastable database of all genes"""
         assert self.genomes
+        db = BLASTdb(self.p.all_fasta)
         if not self.p.all_nin:
             print "Building BLASTable database with all genes..."
-            shell_output('cat %s > %s' % (' '.join(self.genomes), self.p.all_fasta))
-            BLASTdb(self.p.all_fasta).makeblastdb()
-        return BLASTdb(self.p.all_fasta)
+            shell_output('cat %s > %s' % (' '.join(self.genomes), db))
+            assert len(db.ids) == len(set(db.ids))
+            db.makeblastdb()
+        return db
 
     @property
     def query(self):
@@ -221,6 +224,8 @@ class Analysis(object):
         result = result.reindex_axis(sorted(result.index, key=natural_sort))
         result = result.fillna(0)
         return result
+
+    def save_count_table(self): self.count_table.to_csv(self.p.tsv, sep='\t', encoding='utf-8')
 
     @property_cached
     def single_copy_clusters(self):
