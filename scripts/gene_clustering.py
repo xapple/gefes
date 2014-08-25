@@ -43,10 +43,6 @@ class Genome(object):
         """Appartently some of them are SAGs and thus only partial."""
         return True if self.filename.startswith('2236') else False
 
-    #@property
-    #def counts(self):
-    #    return self.analysis.count_table[self.prefix]
-
 ###############################################################################
 class Cluster(object):
     """A set of genes which are related in some way. For instance, all genes
@@ -172,8 +168,6 @@ class Analysis(object):
     def __init__(self, genomes, base_dir='.'):
         # Attributes #
         self.genomes = genomes
-        # Double link #
-        for g in self.geomes: g.analysis = self
         # Auto paths #
         self.base_dir = base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
