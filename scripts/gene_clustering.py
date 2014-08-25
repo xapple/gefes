@@ -117,7 +117,10 @@ class MasterCluster(Cluster):
     a concatenation of all single copy genes alignments pertaining to it
     in a fixed order. We put all these alignments in the master cluster."""
 
-    def __init__(self, analysis): self.analysis = analysis
+    def __init__(self, analysis):
+        self.analysis = analysis
+        self.name = 'master_cluster'
+
     @property
     def sequences(self): raise NotImplementedError("MasterCluster")
     @property
