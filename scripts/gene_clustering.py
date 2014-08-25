@@ -2,7 +2,7 @@
 
 """
 A script to cluster some genes.
-Adapted from Moritz's undocumented "thorselia" module
+Adapted from Moritz's undocumented "thorsellia" module
 
 Written by Lucas Sinclair.
 Kopimi.
@@ -147,11 +147,12 @@ class Analysis(object):
     blast_params = {'-e': 0.1, '-m': 8}
     minimum_identity = 30.0
     mimimum_coverage = 50.0
-    sequence_type = 'nucleotide' or 'aminoacid'
+    sequence_type ='aminoacid' or 'nucleotide'
 
     all_paths = """
     /all_sequences.fasta
     /all_sequences.fasta.nin
+    /all_sequences.fasta.pin
     /all_sequences.blastout
     /filtered.blastout
     /filtered.abc
@@ -180,7 +181,7 @@ class Analysis(object):
         assert self.genomes
         dbtype = 'nucl' if self.sequence_type == 'nucleotide' else 'prot'
         db = BLASTdb(self.p.all_fasta, dbtype=dbtype)
-        if not self.p.all_nin:
+        if not self.p.all_nin and not self.p.all_pin:
             print "Building BLASTable database with all genes..."
             shell_output('cat %s > %s' % (' '.join(self.genomes), db))
             assert len(db.ids) == len(set(db.ids))
@@ -217,8 +218,8 @@ class Analysis(object):
                 if coverage < self.mimimum_coverage: continue
                 yield line
         if not self.p.filtered_blastout:
-            print "Making SQLite database with reads from '%s'..." % self.blastout
-            print "Result in '%s'." % self.blast_db.sql
+            print "Making SQLite database with reads from '%s'..." % self.blastout.relative_path
+            print "Result in '%s'." % self.blast_db.sql.relative_path
             self.p.filtered_blastout.writelines(good_iterator(self.blastout))
         return self.p.filtered_blastout
 
@@ -232,7 +233,7 @@ class Analysis(object):
     def clusters(self):
         """A list of Clusters. See http://bioops.info/2011/03/mcl-a-cluster-algorithm-for-graphs/"""
         if not self.p.clusters.exists:
-            print "Running the MCL clustering on '%s'..." % self.filtered
+            print "Running the MCL clustering on '%s'..." % self.filtered.relative_path
             shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
             mcl = sh.Command(which('mcl'))
