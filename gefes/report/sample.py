@@ -24,7 +24,7 @@ class SampleReport(Document):
 
     def generate(self):
         # Dynamic templates #
-        self.markdown = str(SampleTemplate(self))
+        self.markdown = unicode(SampleTemplate(self))
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
         # Render to latex #
@@ -93,14 +93,14 @@ class SampleTemplate(Template):
                   self.sample.pair.rev.fastqc.results.per_base_qual]
         params += ["Forward", "Reverse"]
         params += ["fwd_per_base_qual", "rev_fwd_per_base_qual"]
-        params += ["Per base quality", "raw_per_base_qual"]
+        params += ["Raw per base quality", "raw_per_base_qual"]
         return str(DualFigure(*params))
     def raw_per_seq_qual(self):
         params = [self.sample.pair.fwd.fastqc.results.per_seq_qual,
                   self.sample.pair.rev.fastqc.results.per_seq_qual]
         params += ["Forward", "Reverse"]
         params += ["fwd_per_seq_qual", "rev_per_seq_qual"]
-        params += ["Per sequence quality", "raw_per_seq_qual"]
+        params += ["Raw per sequence quality", "raw_per_seq_qual"]
         return str(DualFigure(*params))
 
     # Preprocessing #
@@ -108,8 +108,8 @@ class SampleTemplate(Template):
     def window_size(self): return self.sample.quality_checker.window_size
     def length_threshold(self): return self.sample.quality_checker.min_length
     def remaining_percent(self): return "%.2f%%" % (self.sample.quality_checker.results.ratio_kept*100)
-    def remaining_pairs(self): return len(self.sample.quality_checker.singletons)
-    def remaining_singles(self): return len(self.sample.quality_checker.dest)
+    def remaining_pairs(self): return split_thousands(len(self.sample.quality_checker.singletons))
+    def remaining_singles(self): return split_thousands(len(self.sample.quality_checker.dest))
 
     # Length distribution #
     def cleaned_len_dist(self):
@@ -117,10 +117,10 @@ class SampleTemplate(Template):
                   self.sample.clean.rev.length_dist]
         params += ["Forward", "Reverse"]
         params += ["fwd_length_dist", "rev_length_dist"]
-        params += ["Length distribution", "cleaned_len_dist"]
+        params += ["Distribution of sequence lengths after quality control", "cleaned_len_dist"]
         return str(DualFigure(*params))
     def singletons_len_dist(self):
-        caption = "Distribution of sequence lengths"
+        caption = "Singletons length distribution"
         path = self.sample.clean.rev.length_dist
         label = "singletons_len_dist"
         return str(ScaledFigure(path, caption, label))
@@ -131,12 +131,12 @@ class SampleTemplate(Template):
                   self.sample.clean.rev.fastqc.results.per_base_qual]
         params += ["Forward", "Reverse"]
         params += ["fwd_per_base_qual", "rev_per_base_qual"]
-        params += ["Per base quality", "cleaned_per_base_qual"]
+        params += ["Per base quality after quality control", "cleaned_per_base_qual"]
         return str(DualFigure(*params))
     def cleaned_per_seq_qual(self):
         params = [self.sample.clean.fwd.fastqc.results.per_seq_qual,
                   self.sample.clean.rev.fastqc.results.per_seq_qual]
         params += ["Forward", "Reverse"]
         params += ["fwd_per_seq_qual", "rev_per_seq_qual"]
-        params += ["Per sequence quality", "cleaned_per_seq_qual"]
+        params += ["Per sequence quality after quality control", "cleaned_per_seq_qual"]
         return str(DualFigure(*params))

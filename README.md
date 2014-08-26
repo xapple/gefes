@@ -98,6 +98,7 @@ GEFES uses many third party python libraries. You can get them by running these 
     $ pip install fasta
     $ pip install pymarktex
     $ pip install sh
+    $ pip install tqdm
     $ pip install decorator
     $ pip install biopython
     $ pip install threadpool

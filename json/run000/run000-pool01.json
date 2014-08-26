@@ -17,5 +17,5 @@
     "project":       "test",
     "project_name":  "Test data",
     "pool":          "test1",
-    "pool_name":     "First pool of test data"
+    "pool_name":     "First pool of test data (ä)"
 }

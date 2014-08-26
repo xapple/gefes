@@ -23,11 +23,12 @@ for s in samples:
     s.pair.fwd.fastqc.run()
     s.pair.rev.fastqc.run()
     s.quality_checker.run()
+    s.clean.fwd.fastqc.run()
+    s.clean.rev.fastqc.run()
     s.clean.fwd.graphs['LengthDist'].plot()
     s.clean.rev.graphs['LengthDist'].plot()
-
-#################################### Report ###################################
-for s in samples:
+    s.pair.fwd.avg_quality
+    s.pair.rev.avg_quality
     s.report.generate()
 
 ################################### Assembly ##################################

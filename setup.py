@@ -11,5 +11,5 @@ setup(
       author_email     = 'lucas.sinclair@me.com',
       classifiers      = ['Topic :: Scientific/Engineering :: Bio-Informatics'],
       packages         = ['gefes'],
-      requires         = ['plumbing', 'fasta', 'pymarktex', 'sh', 'biopython', 'decorator', 'threadpool', 'patsy', 'scipy', 'matplotlib', 'statsmodels', 'pandas', 'ipython', 'scikit-learn', 'rpy2'],
+      requires         = ['plumbing', 'fasta', 'pymarktex', 'sh', 'tqdm', 'biopython', 'decorator', 'threadpool', 'patsy', 'scipy', 'matplotlib', 'statsmodels', 'pandas', 'ipython', 'scikit-learn', 'rpy2'],
 )
