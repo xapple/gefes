@@ -21,6 +21,7 @@ proj.kmer_size = 81
 
 ################################ Preprocessing ################################
 for s in samples:
+    s.load()
     s.pair.fwd.fastqc.run()
     s.pair.rev.fastqc.run()
     s.quality_checker.run()

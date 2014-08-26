@@ -3,7 +3,6 @@
 # Internal modules #
 from gefes.groups.aggregate import Aggregate
 from gefes.groups.collection import Collection
-from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 
@@ -25,9 +24,8 @@ class Project(Aggregate):
     def __init__(self, name, samples, projs_dir):
         # Attributes #
         self.name = name
-        self.samples, self.children = samples, samples
+        self.samples = samples
         # Dir #
         self.base_dir = projs_dir + self.name + '/'
-
-    def load(self):
-        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Load #
+        self.loaded = False

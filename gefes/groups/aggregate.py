@@ -44,9 +44,15 @@ class Aggregate(object):
         # Base directory #
         if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
         else: self.base_dir = base_dir
+        # Load #
+        self.loaded = False
 
     def load(self):
         # Paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self)
+        # Load #
+        self.loaded = True
+        # For convenience #
+        return self

@@ -68,6 +68,8 @@ class Sample(object):
         self.pair = PairedFASTQ(fwd_path, rev_path)
         # Directory #
         self.base_dir = self.out_dir + self.id_name + '/'
+        # Load #
+        self.loaded = False
 
     def load(self):
         # Automatic paths #
@@ -80,8 +82,13 @@ class Sample(object):
         # Cleaned pairs #
         self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
         self.quality_checker = QualityChecker(self.pair, self.clean)
+        self.singletons = self.quality_checker.singletons
         # Report #
         self.report = SampleReport(self)
+        # Load #
+        self.loaded = True
+        # For convenience #
+        return self
 
     @property_cached
     def runner(self):
