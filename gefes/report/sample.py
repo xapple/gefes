@@ -6,6 +6,7 @@ import re, shutil
 
 # Internal modules #
 import gefes
+from plumbing.autopaths import FilePath
 from plumbing.common import split_thousands, pretty_now
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
 from pymarktex.figures import ScaledFigure, DualFigure
@@ -39,8 +40,9 @@ class SampleReport(Document):
 
     def web_export(self):
         """Copy the report to the webexport directory where it can be viewed by anyone"""
-        destination = ("/proj/%s/webexport/" + self.location) % self.sample.account
-        shutil.copy(self.p.pdf, destination)
+        dest = FilePath(("/proj/%s/webexport/" + self.location) % self.sample.account)
+        dest.make_directory()
+        shutil.copy(self.output_path, dest)
 
     @property
     def url(self):

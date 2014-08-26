@@ -52,3 +52,6 @@ proj_names = sorted(list(set([s.project_short_name for s in samples])))
 projects = [Project(name, [s for s in samples if s.project_short_name==name], view_dir + 'projects/') for name in proj_names]
 projects = Projects(projects)
 for s in samples: s.project = projects[s.project_short_name]
+
+# Make our favorite groups #
+__import__("gefes.groups.favorites")

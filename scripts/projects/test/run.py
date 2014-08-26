@@ -8,16 +8,11 @@ A script to contain the procedure for running the test sample.
 
 # Internal modules #
 import gefes
-from gefes.groups.aggregate import Aggregate
-
-# Third party modules #
 
 # Constants #
 proj = gefes.projects['test']
 samples = proj.samples
-
-# Global settings #
-proj.kmer_size = 81
+a = gefes.groups.favorites.test
 
 ################################ Preprocessing ################################
 for s in samples:
@@ -34,22 +29,5 @@ for s in samples:
     s.report.generate()
 
 ################################### Aggregate ##################################
-hypolimnion = Aggretate()
-metalimnion =
-epilimnion =
-
-
-################################### Assembly ##################################
-# Assemble locally #
-proj.assemble()
-# The assembly graphs #
-proj.assembly.graphs[0].plot()
-# Index the result #
-proj.assembly.index()
-# Map the reads #
-for s in samples: s.mapper.map()
-
-# Binning frame #
-proj.binner.export_frame()
-# Clustering #
-proj.binner.clusterer.run()
+a = gefes.groups.favorites.alinen_hypo
+a.run_slurm(steps=[{'assembly.run':{}}], threads=False)

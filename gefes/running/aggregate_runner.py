@@ -31,7 +31,7 @@ class AggregateRunner(Runner):
         # Make script #
         command =  ["steps = %s" % steps]
         command += ["name = '%s'" % self.cluster.name]
-        command += ["cluster = getattr(illumitag.clustering.favorites, name)"]
+        command += ["cluster = getattr(gefes.groups.favorites, name)"]
         command += ["cluster.run(steps)"]
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
