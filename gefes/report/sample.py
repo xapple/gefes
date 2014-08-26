@@ -86,10 +86,8 @@ class SampleTemplate(Template):
     # Raw data #
     def fwd_size(self):  return str(self.sample.pair.fwd.size)
     def fwd_count(self): return split_thousands(self.sample.pair.fwd.count)
-    def fwd_qual(self):  return "%.2f" % self.sample.pair.fwd.avg_quality
     def rev_size(self):  return str(self.sample.pair.rev.size)
     def rev_count(self): return split_thousands(self.sample.pair.rev.count)
-    def rev_qual(self):  return "%.2f" % self.sample.pair.rev.avg_quality
     def illumina_report(self): return self.sample.run.html_report_path
     def raw_per_base_qual(self):
         params = [self.sample.pair.fwd.fastqc.results.per_base_qual,
