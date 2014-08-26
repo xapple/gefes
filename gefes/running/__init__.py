@@ -44,7 +44,7 @@ class Runner(object):
         # Check second level #
         elif hasattr(self.parent.first.first, name): fns = [getattr(ag, name) for o in self.parent.children for ag in o.children if hasattr(ag, name)]
         # Check third level #
-        elif hasattr(self.pool.first.first.first, name): fns = [getattr(pg, name) for o in self.pool.outcomes for ag in o.children for pg in ag.children if hasattr(pg, name)]
+        elif hasattr(self.parent.first.first.first, name): fns = [getattr(pg, name) for o in self.pool.outcomes for ag in o.children for pg in ag.children if hasattr(pg, name)]
         # None found #
         if not fns: raise Exception("Could not find function '%s'" % name)
         # Return #

@@ -9,8 +9,8 @@ from plumbing.slurm import SLURMJob
 # Constants #
 
 ###############################################################################
-class PoolRunner(Runner):
-    """Will run stuff on a pool"""
+class SampleRunner(Runner):
+    """Will run stuff on a sample"""
     default_time = '1-00:00:00'
 
     default_steps = [

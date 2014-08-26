@@ -8,6 +8,7 @@ A script to contain the procedure for running the test sample.
 
 # Internal modules #
 import gefes
+from gefes.groups.aggregate import Aggregate
 
 # Third party modules #
 
@@ -30,6 +31,12 @@ for s in samples:
     s.pair.fwd.avg_quality
     s.pair.rev.avg_quality
     s.report.generate()
+
+################################### Aggregate ##################################
+hypolimnion = Aggretate()
+metalimnion =
+epilimnion =
+
 
 ################################### Assembly ##################################
 # Assemble locally #

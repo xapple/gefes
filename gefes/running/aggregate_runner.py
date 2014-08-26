@@ -9,8 +9,8 @@ from plumbing.slurm import SLURMJob
 # Constants #
 
 ###############################################################################
-class ProjectRunner(Runner):
-    """Will run stuff on a project"""
+class AggregateRunner(Runner):
+    """Will run stuff on an aggregate"""
     default_time = '7-00:00:00'
 
     default_steps = [

@@ -13,18 +13,18 @@ from pymarktex.figures import ScaledFigure, DualFigure
 # Third party modules #
 
 ###############################################################################
-class SampleReport(Document):
-    """A full report generated in PDF for every sample object."""
+class AggregateReport(Document):
+    """A full report generated in PDF for every aggregate object."""
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
     def __init__(self, sample):
-        self.sample, self.parent = sample, sample
+        self.aggregate, self.parent = sample, sample
         self.output_path = self.sample.p.report_pdf
 
     def generate(self):
         # Dynamic templates #
-        self.markdown = unicode(SampleTemplate(self))
+        self.markdown = unicode(AggregateTemplate(self))
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
         # Render to latex #
@@ -34,8 +34,7 @@ class SampleReport(Document):
 
     @property
     def location(self):
-        loc = "GEFES/samples/run%03d_sample%02d.pdf"
-        return loc % (self.sample.run_num, self.sample.num)
+        return "GEFES/aggregates/%s.pdf" % self.parent.short_name
 
     def web_export(self):
         """Copy the report to the webexport directory where it can be viewed by anyone"""
@@ -47,7 +46,7 @@ class SampleReport(Document):
         return ("https://export.uppmax.uu.se/%s/" + self.location) % self.sample.account
 
 ###############################################################################
-class SampleTemplate(Template):
+class AggregateTemplate(Template):
     """All the parameters to be rendered in the markdown template"""
     delimiters = (u'{{', u'}}')
 

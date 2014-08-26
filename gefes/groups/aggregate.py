@@ -2,6 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
+import gefes
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -30,22 +31,24 @@ class Aggregate(object):
     def first(self): return self.samples[0]
 
     def run_samples(self, steps=None, **kwargs):
-        for p in self.samples: p.runner.run()
+        for s in self.samples: s.runner.run()
 
     def run_samples_slurm(self, steps=None, **kwargs):
-        return [p.run_slurm(steps, **kwargs) for p in self.samples]
+        return [s.run_slurm(steps, **kwargs) for s in self.samples]
 
-    def __init__(self, name, samples, out_dir):
+    def __init__(self, name, samples, base_dir=None):
         # Attributes #
         self.name = name
         self.samples = samples
-        self.out_dir = out_dir
+        # Base directory #
+        if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
+        else: self.base_dir = base_dir
         # Dir #
         self.base_dir = self.out_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def assemble(self):
-        self.assembly.assemble()
-
-    def make_plots(self):
-        for graph in self.graphs: graph.plot()
+    def load(self):
+        # Paths #
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Assemble #
+        self.assembly = Assembly(self)
