@@ -75,11 +75,14 @@ class QualityChecker(object):
             start = start + len(s)
             s.end = start
             s.seq = read[s.start:s.end]
+        # Remove the below ones #
+        stretches = [s for s in stretches if s.above]
+        if not stretches: return None
         # Discard N letters #
         if self.discard_N: stretches = [s for s in stretches if 'N' not in s.seq]
         if not stretches: return None
         # Get the longest one #
-        longest = max([s for s in stretches if s.above], key = lambda x: len(x))
+        longest = max(stretches, key = lambda x: len(x))
         # Check the length #
         if len(longest.seq) < self.min_length: return None
         else: return longest.seq
