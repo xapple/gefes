@@ -1,7 +1,7 @@
 # Built-in modules #
 
 # Internal modules #
-from gefes.running import Runner
+from plumbing.runner import Runner
 from plumbing.slurm import SLURMJob
 
 # Third party modules #
@@ -11,7 +11,7 @@ from plumbing.slurm import SLURMJob
 ###############################################################################
 class AggregateRunner(Runner):
     """Will run stuff on an aggregate"""
-    default_time = '7-00:00:00'
+    default_time = '2-00:00:00'
 
     default_steps = [
         {'assemble':     {}},
@@ -19,26 +19,24 @@ class AggregateRunner(Runner):
     ]
 
     def __init__(self, parent):
-        # Save parent #
         self.parent, self.project = parent, parent
         self.samples = parent.samples
 
     def run_slurm(self, steps=None, **kwargs):
-        # Make script #
-        command = """steps = %s
-                     proj = [proj for proj in gefes.projects if proj.name=='%s'][0]
-                     proj.runner(steps)""" % (steps, self.project.name)
         # Test case #
-        if 'test' in self.project.name:
+        if self.cluster.name == 'test':
             kwargs['time'] = '00:15:00'
             kwargs['qos'] = False
             kwargs['email'] = '/dev/null'
-            if kwargs.get('cluster') == 'halvan':
-                kwargs['time'] = '1-00:00:00'
-                kwargs.pop('qos')
+        # Make script #
+        command =  ["steps = %s" % steps]
+        command += ["name = '%s'" % self.cluster.name]
+        command += ["cluster = getattr(illumitag.clustering.favorites, name)"]
+        command += ["cluster.run(steps)"]
         # Send it #
         if 'time' not in kwargs: kwargs['time'] = self.default_time
         if 'email' not in kwargs: kwargs['email'] = None
-        job_name = "gefes_%s" % self.project
-        self.slurm_job = SLURMJob(command, self.project.p.logs_dir, job_name=job_name, **kwargs)
-        self.slurm_job.launch()
+        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
+        job_name = "agg_%s" % self.cluster.name
+        self.slurm_job = SLURMJob(command, self.parent.p.logs_dir, job_name=job_name, **kwargs)
+        return self.slurm_job.run()

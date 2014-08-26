@@ -6,11 +6,8 @@ import os, json
 
 # Internal modules #
 from gefes.preprocess.quality import QualityChecker
-from gefes.running.pool_runner import PoolRunner
-from gefes.graphs import sample_plots
 from gefes.report.sample import SampleReport
 from plumbing.autopaths import AutoPaths, FilePath
-from plumbing.cache import property_cached
 from fasta import PairedFASTQ
 from fasta.fastqc import FastQC
 
@@ -89,14 +86,6 @@ class Sample(object):
         self.loaded = True
         # For convenience #
         return self
-
-    @property_cached
-    def runner(self):
-        return PoolRunner(self)
-
-    @property_cached
-    def graphs(self):
-        return [getattr(sample_plots, cls_name)(self) for cls_name in sample_plots.__all__]
 
     @property
     def count(self):

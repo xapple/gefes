@@ -5,7 +5,7 @@ from __future__ import division
 import os, socket
 
 # Internal modules #
-from gefes.helper.contig import Contig
+from gefes.assemble.contig import Contig
 from plumbing.common import flatter
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
@@ -60,23 +60,28 @@ class Ray(object):
             assert s.clean.exists
             assert s.singletons
         # Ray needs a non-existing directory #
-        out_dir = self.p.output_dir
-        out_dir.remove()
+        self.out_dir = self.p.output_dir
+        self.out_dir.remove()
         # Make the pairs of fastq #
-        paths = lambda s: ('-p', s.clean.fwd, s.clean.rev, '-s', s.singletons)
-        paths = flatter([paths(s) for s in self.samples])
-        # Call Ray on the cray #
-        if os.environ.get('CSCSERVICE') == 'sisu':
-            stats = sh.aprun('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', out_dir, *paths)
-        # Call Ray on Kalkyl #
-        elif os.environ.get('SNIC_RESOURCE') == 'kalkyl':
-            stats = sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', out_dir, *paths)
-        # Call Ray just locally #
-        else:
-            ray = sh.Command(self.executable)
-            stats = ray('-k', self.kmer_size, '-o', out_dir, *paths)
+        self.paths = lambda s: ('-p', s.clean.fwd, s.clean.rev, '-s', s.singletons)
+        self.paths = flatter([self.paths(s) for s in self.samples])
+        # Call Ray on different setting #
+        if os.environ.get('CSCSERVICE') == 'sisu': stats = self.sisu()
+        elif os.environ.get('SLURM_JOB_PARTITION') == 'halvan': stats = self.halvan()
+        elif os.environ.get('SNIC_RESOURCE') == 'milou': stats = self.milou()
+        else: stats = self.local()
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
+
+    def sisu(self): return sh.aprun('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+
+    def halvan(self): return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+
+    def milou(self): return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+
+    def local(self):
+        ray = sh.Command(self.executable)
+        return ray('-k', self.kmer_size, '-o', self.out_dir, *self.paths)
 
 ###############################################################################
 class RayResults(object):
