@@ -214,9 +214,9 @@ class Analysis(object):
                 info = dict(zip(tabular_keys, line.split()))
                 if float(info['perc_identity']) < self.minimum_identity: continue
                 query_cov = (float(info['query_end']) - float(info['query_start']))
-                query_cov = 100.0 * abs(query_cov / self.blast_db.length_by_id[info['query_id']])
+                query_cov = 100.0 * abs(query_cov / len(self.blast_db.sql[info['query_id']]))
                 subj_cov  = (float(info['subject_end']) - float(info['subject_start']))
-                subj_cov  = 100.0 * abs(subj_cov  / self.blast_db.length_by_id[info['subject_id']])
+                subj_cov  = 100.0 * abs(subj_cov  / len(self.blast_db.sql[info['subject_id']]))
                 coverage = min(query_cov, subj_cov)
                 if coverage < self.mimimum_coverage: continue
                 yield line

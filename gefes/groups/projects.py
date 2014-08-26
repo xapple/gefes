@@ -14,9 +14,9 @@ class Projects(Collection):
 
 ###############################################################################
 class Project(Aggregate):
-    """A project containing several pools possibly spanning several runs."""
+    """A project containing several samples possibly spanning several runs."""
 
-    def __repr__(self): return '<%s object "%s" with %i pools>' % \
+    def __repr__(self): return '<%s object "%s" with %i samples>' % \
                                (self.__class__.__name__, self.name, len(self))
 
     @property

@@ -40,7 +40,7 @@ class QualityChecker(object):
         self.discarded = 0
         # Do it #
         with self.dest as output, self.singletons as singles:
-            for read_pair in self.source:
+            for read_pair in self.source.progress:
                 one = self.trim_read(read_pair[0])
                 two = self.trim_read(read_pair[1])
                 if one and two: output.add_pair((one, two))
