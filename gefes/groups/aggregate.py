@@ -3,6 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 import gefes
+from gefes.assemble.ray import Ray
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -43,12 +44,9 @@ class Aggregate(object):
         # Base directory #
         if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
         else: self.base_dir = base_dir
-        # Dir #
-        self.base_dir = self.out_dir + self.name + '/'
-        self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def load(self):
         # Paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
-        self.assembly = Assembly(self)
+        self.assembly = Ray(self)
