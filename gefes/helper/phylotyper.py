@@ -47,7 +47,7 @@ class Phylotyper(object):
     def kraken(self):
         if hasattr(self.parent,"pair"):
             #for a Pool object
-            sh.kraken("--preload", "--db", kraken_db, "--threads", nr_threads , "--gzip-compressed", "--fastq-input", "--paired",  parent.fwd_path, parent.rev_path, _out =  str(self.p.output))
+            sh.kraken("--preload", "--db", kraken_db, "--threads", nr_threads , "--gzip-compressed", "--fastq-input", "--paired",  parent.pair.fwd.path, parent.rev.path, _out =  str(self.p.output))
         else:
             #for a bin object with pulled reads
             sh.kraken("--preload", "--db", kraken_db, "--threads", nr_threads,  "--fastq-input", "--paired",  self.bini.p.reads_1, self.bini.p.reads_2, "--output",  self.p.output)

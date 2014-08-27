@@ -1,0 +1,36 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Valerie Hubalek",
+            "email": "valerie.hubalek@ebc.uu.se"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "moritz.buck@ebc.uu.se"
+        }
+    },
+
+    "uppmax_id":    "b2014083",
+    "run_num":       3,
+    "run_id":        "140627_D00118_0147_AC4A0BACXX",
+    "pool_num":      1,
+    "pool_id":       "Sample_1",
+    "forward_reads": "1_ATCACG_L001_R1_001.fastq.gz",
+    "reverse_reads": "1_ATCACG_L001_R2_001.fastq.gz",
+
+    "project":       "oilsand",
+    "project_name":  "canadian oilsands",
+    "pool":          "full",
+    "pool_name":     "full sample",
+
+    "metadata": {
+        "MDA":      0,
+        "picked":   0,
+        "epi":      1,
+        "amplicon": null
+    }
+}

@@ -12,6 +12,9 @@ sys.exit("Copy paste the commands you want in ipython, don't run this script.")
 import gefes
 
 ###############################################################################
+# Join #
+self.joiner = Joiner(self)
+
 # Clean the pools #
 for p in gefes.projects['acI']: p.clean_reads()
 gefes.projects['acI'].graphs[0].plot()

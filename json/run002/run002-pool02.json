@@ -1,0 +1,29 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Sarahi Garcia",
+            "email": "sarilog@gmail.com"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "mrtz.buck@gmail.com"
+        }
+    },
+
+    "uppmax_id":    "b2011138",
+    "run_num":       2,
+    "run_id":        "acI_enrichments",
+    "pool_num":      2,
+    "pool_id":       "ACI_B2_enrichement_FB7",
+    "forward_reads": "ACI_B2_enrichement_FB7_R1.fastq.gz",
+    "reverse_reads": "ACI_B2_enrichement_FB7_R2.fastq.gz",
+
+    "project":       "acI",
+    "project_name":  "acI enrichments",
+    "pool":          "FB7",
+    "pool_name":     "FB7"
+}

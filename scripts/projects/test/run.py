@@ -1,50 +1,33 @@
 #!/usr/bin/env python2
 
 """
-A script to contain examples commands for running the pipeline.
+A script to contain the procedure for running the test sample.
 """
 
-# Don't run it #
-import sys
-sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+# Built-in modules #
 
-# Modules #
+# Internal modules #
 import gefes
 
 # Constants #
 proj = gefes.projects['test']
-pools = proj.pools
+samples = proj.samples
+a = gefes.groups.favorites.test
 
-################################### Cleaning ##################################
-self.joiner = Joiner(self)
-# Check quality #
-self.quality_checker = QualityChecker(self)
-# Final files #
-self.fwd = self.quality_checker.fwd
-self.rev = self.quality_checker.rev
-self.pair = self.quality_checker.paired
+################################ Preprocessing ################################
+for s in samples:
+    s.load()
+    s.pair.fwd.fastqc.run()
+    s.pair.rev.fastqc.run()
+    s.quality_checker.run()
+    s.clean.fwd.fastqc.run()
+    s.clean.rev.fastqc.run()
+    s.clean.fwd.graphs['LengthDist'].plot()
+    s.clean.rev.graphs['LengthDist'].plot()
+    s.pair.fwd.avg_quality
+    s.pair.rev.avg_quality
+    s.report.generate()
 
-def clean():
-    # Fastqc on the pools #
-    for p in pools: p.pair.fastqc(directory=p.p.fastqc_dir)
-    # Clean the pools #
-    for p in pools: p.clean_reads()
-    # The clean graphs #
-    for p in pools: p.make_plots()
-    # Fastqc on the result #
-    for p in pools: p.cleaner.pair.fastqc(directory=p.cleaner.p.fastqc_dir)
-
-################################### Cleaning ##################################
-# Assemble locally #
-proj.assemble()
-# The assembly graphs #
-proj.assembly.graphs[0].plot()
-# Index the result #
-proj.assembly.index()
-# Map the reads #
-for p in pools: p.mapper.map()
-
-# Binning frame #
-proj.binner.export_frame()
-# Clustering #
-proj.binner.clusterer.run()
+################################### Aggregate ##################################
+a = gefes.groups.favorites.alinen_hypo
+a.run_slurm(steps=[{'assembly.run':{}}], threads=False)

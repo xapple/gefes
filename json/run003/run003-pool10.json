@@ -1,0 +1,36 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Valerie Hubalek",
+            "email": "valerie.hubalek@ebc.uu.se"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "moritz.buck@ebc.uu.se"
+        }
+    },
+
+    "uppmax_id":    "b2014083",
+    "run_num":       3,
+    "run_id":        "140627_D00118_0147_AC4A0BACXX",
+    "pool_num":      10,
+    "pool_id":       "Sample_10",
+    "forward_reads": "10_TAGCTT_L001_R1_001.fastq.gz",
+    "reverse_reads": "10_TAGCTT_L001_R2_001.fastq.gz",
+
+    "project":       "oilsand",
+    "project_name":  "canadian oilsands",
+    "pool":          "w_epi_5",
+    "pool_name":     "picked methanoceata with epibionts",
+
+    "metadata": {
+        "MDA":      1,
+        "picked":   1,
+        "epi":      1,
+        "amplicon": null
+    }
+}
