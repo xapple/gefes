@@ -101,7 +101,7 @@ class BinRunner(Runner):
         {'phylotyping':{}},
         {'calling':    {}},
         {'annotate':   {}},
- #       {'rebuild':    {}}
+#        {'rebuild':    {}}
     ]
 
     def __init__(self, parent):
@@ -128,3 +128,4 @@ class BinRunner(Runner):
         kwargs['job_name']  = "gefes_%s_%s_%s" % (self.project.name,self.binning.name, self.bini.name)
         self.slurm_job = SLURMJob(command, self.bini.p.logs_dir, **kwargs)
         self.slurm_job.run()
+

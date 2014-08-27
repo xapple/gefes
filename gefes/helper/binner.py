@@ -67,13 +67,24 @@ class Binning(object):
     /logs/
     """
     def __repr__(self): return '<'+self.__class__.__name__+ ' object with ' + str(len(self)) + ' bins>'
-    def __iter__(self): return iter(self.bins.values())
+    def __iter__(self): 
+        if not hasattr(self, 'bins'):
+            print "Have you loaded the binning? (e.g. mybinning.load() )"
+            return None
+
+        return iter(self.bins.values())
+
     def __len__(self):
         if hasattr(self, 'bins'):
              return len(self.bins)
         else:
             return 0
+
     def __getitem__(self, key):
+        if not hasattr(self, 'bins'):
+            print "Have you loaded the binning? (e.g. mybinning.load() )"
+            return None
+
         if isinstance(key,int):
             return self.bins.values()[key]
         else:

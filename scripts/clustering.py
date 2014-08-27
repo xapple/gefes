@@ -9,4 +9,11 @@ oil.binner.new("concoct_5000",{'type' : 'GefesCONCOCT', 'args' : {'max_clusters'
 #running it once
 
 oil.binner['concoct_5000'].cluster()
+
+#if binner not loaded, load it
+oil.binner['concoct_5000'].load()
+
+#run  bin pipeline
 for b in oil.binner['concoct_5000']: b.runner.run_slurm()
+
+

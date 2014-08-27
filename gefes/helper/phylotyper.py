@@ -27,7 +27,7 @@ class Phylotyper(object):
     /kraken/output_wo_unassigned_kraken.txt
     /kraken/report_kraken.txt
     /kraken/krona_kraken.html
-    /kraken/otu_kraken.html
+    /kraken/otu_kraken.csv
     """
 
     def __init__(self, parent):
@@ -39,10 +39,10 @@ class Phylotyper(object):
 
     def run(self):
         self.phylosift()
-        self.kraken()
+#        self.kraken()
 
     def phylosift(self):
-        sift("all", "-f", "--threads", nr_threads, "--output=" + self.p.phylosift, self.parent.p.contigs)
+        sift("all", "-f", "--threads", nr_threads/2, "--output=" + self.p.phylosift, self.parent.p.contigs)
 
     def kraken(self):
         if hasattr(self.parent,"pair"):
@@ -60,7 +60,7 @@ class Phylotyper(object):
         self.cumtree2phylacount()
         
     def cumtree2phylacount(self, depth=7):
-        tree = pandas.read_table(self.p.output, sep="\t", names=array(["prop","cum_count","count","type","taxa_id","taxa"]),index_col=False)
+        tree = pandas.read_table(self.p.report, sep="\t", names=array(["prop","cum_count","count","type","taxa_id","taxa"]),index_col=False)
         tree["depth"] = tree["taxa"].apply(lambda s: (len(s) - len(s.lstrip()))/2)
         tree = tree[tree["depth"] < depth]
         counts = {}
@@ -71,6 +71,8 @@ class Phylotyper(object):
                 count = row[1]['cum_count']
             taxa = row[1]['taxa'].lstrip()
             counts[taxa + " (level " + str(row[1]["depth"]) + ")"] = count
-            counts =  { k: v for k,v in counts.iteritems() if v > 0 }
-            DataFrame.from_dict(counts).to_csv(self.p.otu)
+        counts =  { k: v for k,v in counts.iteritems() if v > 0 }
+        temp = DataFrame.from_dict(counts,'index')
+        temp = temp.sort(column = 0, ascending = False)
+        temp.to_csv(self.p.otu, header = [self.bini.name])
         return counts
