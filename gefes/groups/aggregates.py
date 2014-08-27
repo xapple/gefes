@@ -4,6 +4,7 @@ from __future__ import division
 # Built-in modules #
 import gefes
 from gefes.assemble.ray import Ray
+from gefes.running.aggregate_runner import AggregateRunner
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -26,6 +27,7 @@ class Aggregate(object):
     def __getitem__(self, key):
         if isinstance(key, basestring): return [c for c in self.children if str(c) == key][0]
         elif isinstance(key, int): return self.children[key]
+        elif isinstance(key, slice): return self.children[key]
         else: raise TypeError('key')
 
     @property
@@ -40,7 +42,7 @@ class Aggregate(object):
     def __init__(self, name, samples, base_dir=None):
         # Attributes #
         self.name = name
-        self.samples = samples
+        self.samples, self.children = samples, samples
         # Base directory #
         if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
         else: self.base_dir = base_dir
@@ -52,6 +54,8 @@ class Aggregate(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self)
+        # Runner #
+        self.runner = AggregateRunner(self)
         # Load #
         self.loaded = True
         # For convenience #

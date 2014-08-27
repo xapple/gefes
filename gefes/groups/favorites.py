@@ -2,17 +2,17 @@
 
 # Internal modules #
 import gefes
-from gefes.aggretate import Aggretate
+from gefes.groups.aggregates import Aggregate
 
 # Third party modules #
 
 ###############################################################################
 # Test #
 proj = gefes.projects['test']
-test_agg  = Aggretate(proj[0:3],  'test_agg')
+test_agg  = Aggregate( 'test_agg', proj[0:3])
 
 # The depth profile #
 proj = gefes.projects['alinen']
-alinen_epi  = Aggretate(proj[0:4],  'alinen_epi')
-alinen_meta = Aggretate(proj[5:8],  'alinen_meta')
-alinen_hypo = Aggretate(proj[8:12], 'alinen_hypo')
+alinen_epi  = Aggregate('alinen_epi',  proj[0:4])
+alinen_meta = Aggregate('alinen_meta', proj[5:8])
+alinen_hypo = Aggregate('alinen_hypo', proj[8:12])

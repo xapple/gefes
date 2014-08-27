@@ -2,7 +2,7 @@
 import os, xml.etree.ElementTree as etree
 
 # Internal modules #
-from gefes.groups.aggregate import Aggregate
+from gefes.groups.aggregates import Aggregate
 from gefes.groups.collection import Collection
 
 # Third party modules #

@@ -1,7 +1,7 @@
 # Built-in modules #
 
 # Internal modules #
-from gefes.groups.aggregate import Aggregate
+from gefes.groups.aggregates import Aggregate
 from gefes.groups.collection import Collection
 
 # Third party modules #
@@ -22,10 +22,4 @@ class Project(Aggregate):
     def long_name(self): return self.first.project_long_name
 
     def __init__(self, name, samples, projs_dir):
-        # Attributes #
-        self.name = name
-        self.samples = samples
-        # Dir #
-        self.base_dir = projs_dir + self.name + '/'
-        # Load #
-        self.loaded = False
+        Aggregate.__init__(self, name, samples, projs_dir + name + '/')
