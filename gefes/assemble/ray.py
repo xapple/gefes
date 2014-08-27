@@ -25,7 +25,7 @@ class Ray(object):
 
     short_name = 'ray'
     executable = 'ray231'
-    kmer_size = 51
+    kmer_size = 41
 
     all_paths = """
     /graphs/

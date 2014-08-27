@@ -111,8 +111,8 @@ class SampleTemplate(Template):
     def window_size(self): return self.sample.quality_checker.window_size
     def length_threshold(self): return self.sample.quality_checker.min_length
     def remaining_percent(self): return "%.2f%%" % (self.sample.quality_checker.results.ratio_kept*100)
-    def remaining_pairs(self): return split_thousands(len(self.sample.quality_checker.singletons))
-    def remaining_singles(self): return split_thousands(len(self.sample.quality_checker.dest))
+    def remaining_pairs(self): return split_thousands(len(self.sample.quality_checker.dest))
+    def remaining_singles(self): return split_thousands(len(self.sample.quality_checker.singletons))
 
     # Length distribution #
     def cleaned_len_dist(self):
