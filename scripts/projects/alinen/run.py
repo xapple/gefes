@@ -10,7 +10,7 @@ A script to contain the procedure for running the test sample.
 import gefes
 
 ################################ Preprocessing ################################
-proj = gefes.projects['test']
+proj = gefes.projects['alinen']
 samples = proj.samples
 for s in samples:
     s.load()
@@ -26,8 +26,11 @@ for s in samples:
     s.report.generate()
 
 ################################### Assembly ##################################
-proj = gefes.projects['test'].load()
-proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='00:15:00', qos='short', job_name="test_ray_41", partition='devel')
+proj = gefes.projects['alinen'].load()
+proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_41")
+proj.runner.run_slurm(steps=[{'assembly51.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_51")
+proj.runner.run_slurm(steps=[{'assembly61.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_61")
+proj.runner.run_slurm(steps=[{'assembly71.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
 
 ################################### Aggregate ##################################
 a = gefes.groups.favorites.test

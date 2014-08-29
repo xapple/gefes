@@ -27,7 +27,7 @@ from parallelblast import BLASTdb, BLASTquery
 from parallelblast.results import tabular_keys
 
 # Third party modules #
-import sh, pandas
+import sh, pandas, ete2
 from shell_command import shell_output
 from Bio import Phylo
 from tqdm import tqdm
@@ -52,11 +52,15 @@ class Cluster(object):
     def __repr__(self): return '<%s object number %i>' % (self.__class__.__name__, self.num)
 
     def __init__(self, num, ids, analysis, name=None):
+        # Basic params #
         self.num = num
         self.ids = ids
         self.analysis = analysis
         self.name = "cluster_%i" % num if name is None else name
         self.path = self.analysis.p.clusters_dir + self.name + '.fasta'
+        # Pick only one gene per genome #
+        self.genomes = [g for g in self.analysis.genomes if g.ids&self.ids]
+        self.filtered_ids = [set(g.ids&self.ids).pop() for g in self.genomes]
 
     @property
     def counts(self):
@@ -85,16 +89,20 @@ class Cluster(object):
         fasta = FASTA(self.path)
         if not fasta:
             with fasta as handle:
-                for seq in self.sequences: handle.add_str(str(seq.seq), name=seq.id)
+                for genome in self.genomes:
+                    seq_id = set(genome.ids & self.ids).pop()
+                    seq = self.analysis.blast_db[seq_id]
+                    handle.add_str(str(seq.seq), name=genome.prefix)
         return fasta
 
     @property
     def alignment(self):
-        """The fasta file aligned with muscle"""
+        """The fasta file aligned with muscle and filtered with gblocks"""
         alignment = AlignedFASTA(self.fasta.prefix_path + '.aln')
         if not alignment.exists:
-            self.fasta.align(alignment)
-            alignment.gblocks()
+            muscle = AlignedFASTA(self.fasta.prefix_path + '.muscle')
+            self.fasta.align(muscle)
+            print muscle.gblocks(alignment, nucleotide=self.analysis.sequence_type=='nucleotide')
         return alignment
 
     @property
@@ -103,7 +111,7 @@ class Cluster(object):
         tree = FilePath(self.alignment.prefix_path + '.tree')
         if not tree.exists:
             print "Building tree for cluster '%s'..." % self.name
-            self.alignment.build_tree(tree)
+            self.alignment.build_tree(tree, nucleotide=self.analysis.sequence_type=='nucleotide')
         return tree
 
     @property
@@ -111,35 +119,10 @@ class Cluster(object):
         """We can parse it with biopython"""
         return Phylo.read(self.tree.path, 'newick')
 
-###############################################################################
-class MasterCluster(Cluster):
-    """Every genome will have a 'master alignment' representing
-    a concatenation of all single copy genes alignments pertaining to it
-    in a fixed order. We put all these alignments in the master cluster."""
-
-    def __init__(self, analysis):
-        self.analysis = analysis
-        self.name = 'master_cluster'
-
-    @property
-    def sequences(self): raise NotImplementedError("MasterCluster")
-    @property
-    def fasta(self): raise NotImplementedError("MasterCluster")
-
-    @property
-    def alignment(self):
-        alignment = AlignedFASTA(self.analysis.p.master_aln)
-        if not alignment:
-            msg = "Creating master alignment with %i genomes..."
-            print msg % len(self.analysis.single_copy_clusters)
-            with alignment as handle:
-                for genome in self.analysis.genomes:
-                    seq = ''
-                    for c in tqdm(self.analysis.single_copy_clusters):
-                        (id_num,) = (c.ids & genome.ids)
-                        seq += str(c.alignment.sequences[id_num].seq)
-                    handle.add_str(seq, name=genome.prefix)
-        return alignment
+    def draw_tree(self):
+        """120 pixels per branch length unit"""
+        t = ete2.Tree(self.tree.contents)
+        t.render(self.tree.replace_extension('pdf'))
 
 ###############################################################################
 class Analysis(object):
@@ -147,7 +130,7 @@ class Analysis(object):
     Then we use the MCL algorithm (Markov Cluster Algorithm) to form clusters.
     Then we count the genomes with the right number of single copy genes."""
 
-    blast_params = {'-e': 0.1, '-m': 8}
+    blast_params = {'-e': 0.001, '-m': 8}
     minimum_identity = 30.0
     mimimum_coverage = 50.0
     sequence_type ='aminoacid' or 'nucleotide'
@@ -178,7 +161,7 @@ class Analysis(object):
         self.base_dir = base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    @property
+    @property_cached
     def blast_db(self):
         """A blastable database of all genes"""
         assert self.genomes
@@ -191,13 +174,13 @@ class Analysis(object):
             db.makeblastdb()
         return db
 
-    @property
+    @property_cached
     def query(self):
         """The blast query to be executed"""
         algorithm = 'blastn' if self.sequence_type == 'nucleotide' else 'blastp'
         return BLASTquery(self.blast_db, self.blast_db, self.blast_params, algorithm, 'legacy')
 
-    @property
+    @property_cached
     def blastout(self):
         """The blast results"""
         if not self.p.all_blastout:
@@ -205,7 +188,7 @@ class Analysis(object):
             self.query.run()
         return self.p.all_blastout
 
-    @property
+    @property_cached
     def filtered(self):
         """We want to check the percent identify and the coverage of the hit to the query"""
         def good_iterator(blastout):
@@ -214,9 +197,9 @@ class Analysis(object):
                 info = dict(zip(tabular_keys, line.split()))
                 if float(info['perc_identity']) < self.minimum_identity: continue
                 query_cov = (float(info['query_end']) - float(info['query_start']))
-                query_cov = 100.0 * abs(query_cov / len(self.blast_db.sql[info['query_id']]))
+                query_cov = 100.0 * abs(query_cov / self.blast_db.length_by_id[info['query_id']])
                 subj_cov  = (float(info['subject_end']) - float(info['subject_start']))
-                subj_cov  = 100.0 * abs(subj_cov  / len(self.blast_db.sql[info['subject_id']]))
+                subj_cov  = 100.0 * abs(subj_cov  / self.blast_db.length_by_id[info['subject_id']])
                 coverage = min(query_cov, subj_cov)
                 if coverage < self.mimimum_coverage: continue
                 yield line
@@ -240,7 +223,7 @@ class Analysis(object):
             shell_output("cut -f 1,2,11 %s > %s" % (self.filtered, self.p.filtered_abc))
             sh.mcxload("-abc", self.p.filtered_abc, "--stream-mirror", "--stream-neg-log10", "-stream-tf", "ceil(200)", "-o", self.p.network, "-write-tab", self.p.dictionary)
             mcl = sh.Command(which('mcl'))
-            mcl(self.p.network, "-use-tab", self.p.dictionary, "-o", self.p.clusters)
+            mcl(self.p.network, "-I", "1.5", "-use-tab", self.p.dictionary, "-o", self.p.clusters)
         return [Cluster(i, frozenset(line.split()), self) for i, line in enumerate(self.p.clusters)]
 
     @property_cached
@@ -267,9 +250,6 @@ class Analysis(object):
         Some genomes are partial so we will be more flexible on those ones."""
         self.clusters = sorted(self.clusters, key=lambda x: x.score, reverse=True)
         return self.clusters[0:100]
-
-    @property_cached
-    def master_cluster(self): return MasterCluster(self)
 
 ###############################################################################
 output_directory = home + "glob/lucass/other/alex_protein/"

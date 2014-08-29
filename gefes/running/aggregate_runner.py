@@ -15,7 +15,7 @@ class AggregateRunner(Runner):
     default_time = '2-00:00:00'
 
     default_steps = [
-        {'assemble.run':     {}},
+        {'assembly.run':     {}},
     ]
 
     def __init__(self, parent):
@@ -29,9 +29,10 @@ class AggregateRunner(Runner):
         from gefes.groups.projects import Project
         command =  ["steps = %s" % steps]
         command += ["name = '%s'" % self.parent.name]
-        if isinstance(self, Project): command += ["aggregate = gefes.projects[name]"]
+        if isinstance(self.parent, Project): command += ["aggregate = gefes.projects[name]"]
         else: command += ["aggregate = getattr(gefes.groups.favorites, name)"]
-        command += ["aggregate.run(steps)"]
+        command += ["aggregate.load()"]
+        command += ["aggregate.runner.run(steps)"]
         return command
 
     def run_slurm(self, steps=None, **kwargs):
@@ -45,5 +46,6 @@ class AggregateRunner(Runner):
         if 'email' not in kwargs: kwargs['email'] = None
         if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
         # Send it #
-        self.slurm_job = SLURMJob(self.command(steps), self.parent.p.logs_dir, gefes, job_name=self.job_name, **kwargs)
+        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
+        self.slurm_job = SLURMJob(self.command(steps), self.parent.p.logs_dir, gefes, **kwargs)
         return self.slurm_job.run()

@@ -25,28 +25,26 @@ class Ray(object):
 
     short_name = 'ray'
     executable = 'ray231'
-    kmer_size = 41
 
     all_paths = """
-    /graphs/
-    /ray_output/frame.csv
-    /ray_output/
-    /ray_output/Contigs.fasta
-    /ray_output/report.txt
-    /metapathways/
+    /stdout.txt
+    /stderr.txt
+    /output/
+    /output/Contigs.fasta
+    /output/report.txt
     """
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, aggregate):
-        # Save parent #
-        self.parent, self.aggregate = aggregate, aggregate
-        self.samples = aggregate.samples
-        # Auto paths #
-        self.base_dir = self.parent.p.assembly_dir
+    def __init__(self, samples, result_dir, kmer_size=41):
+        self.samples = samples
+        self.result_dir = result_dir
+        self.kmer_size = kmer_size
+        self.base_dir = self.result_dir + 'ray/%i/' % self.kmer_size
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Convenience objects #
-        self.contigs_fasta = FASTA(self.p.Contigs)
+
+    @property_cached
+    def contigs_fasta(self): return FASTA(self.p.Contigs)
 
     @property_cached
     def contigs(self):
@@ -73,15 +71,17 @@ class Ray(object):
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
 
-    def sisu(self): return sh.aprun('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+    def sisu(self): return sh.aprun('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
-    def halvan(self): return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+    def halvan(self): return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
-    def milou(self): return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+    def milou(self):
+        if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
+        return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
     def local(self):
         ray = sh.Command(self.executable)
-        return ray('-k', self.kmer_size, '-o', self.out_dir, *self.paths)
+        return ray('-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
 ###############################################################################
 class RayResults(object):
