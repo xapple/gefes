@@ -30,5 +30,6 @@ proj = gefes.projects['test'].load()
 proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='00:15:00', qos='short', job_name="test_ray_41", partition='devel')
 
 ################################### Aggregate ##################################
-a = gefes.groups.favorites.test
-a.run_slurm(steps=[{'assembly.run':{}}], threads=False)
+a = gefes.groups.favorites.test_agg
+a.load()
+a.runner.run_slurm(steps=[{'assembly.run':{}}], time='00:15:00', partition='devel', threads=False)

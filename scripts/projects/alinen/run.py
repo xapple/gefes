@@ -27,11 +27,19 @@ for s in samples:
 
 ################################### Assembly ##################################
 proj = gefes.projects['alinen'].load()
+
 proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_41")
 proj.runner.run_slurm(steps=[{'assembly51.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_51")
 proj.runner.run_slurm(steps=[{'assembly61.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_61")
 proj.runner.run_slurm(steps=[{'assembly71.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
 
+proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='10-00:00:00', constraint='mem512GB', project="b2011035", job_name="alinen_ray_41", cluster='halvan', partition='halvan', cores=64)
+
 ################################### Aggregate ##################################
-a = gefes.groups.favorites.test
-a.run_slurm(steps=[{'assembly.run':{}}], threads=False)
+hypo = gefes.groups.favorites.alinen_hypo.load()
+meta = gefes.groups.favorites.alinen_meta.load()
+epi = gefes.groups.favorites.alinen_epi.load()
+
+meta.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='7-00:00:00', constraint='mem512GB', project="b2011105", job_name="alinen_epi_41")
+epi.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='7-00:00:00', constraint='mem512GB', project="b2011105", job_name="alinen_hypo_41")
+hypo.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='7-00:00:00', constraint='mem512GB', project="b2011105", job_name="alinen_ray_41", machines=4, cores=4*16)

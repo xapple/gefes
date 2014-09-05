@@ -13,6 +13,6 @@ test_agg  = Aggregate( 'test_agg', proj[0:3])
 
 # The depth profile #
 proj = gefes.projects['alinen']
-alinen_epi  = Aggregate('alinen_epi',  proj[0:4])
-alinen_meta = Aggregate('alinen_meta', proj[5:8])
-alinen_hypo = Aggregate('alinen_hypo', proj[8:12])
+alinen_epi  = Aggregate('alinen_epi',  proj[0:4]) # 4 samples
+alinen_meta = Aggregate('alinen_meta', proj[4:7]) # 3 samples
+alinen_hypo = Aggregate('alinen_hypo', proj[7:])  # 6 samples
