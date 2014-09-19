@@ -37,11 +37,15 @@ class Ray(object):
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
 
     def __init__(self, samples, result_dir, kmer_size=41):
+        # Base params #
         self.samples = samples
         self.result_dir = result_dir
         self.kmer_size = kmer_size
         self.base_dir = self.result_dir + 'ray/%i/' % self.kmer_size
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # To be set when run #
+        self.out_dir = None
+        self.paths = []
 
     @property_cached
     def contigs_fasta(self): return FASTA(self.p.Contigs)
@@ -61,7 +65,7 @@ class Ray(object):
         self.out_dir = self.p.output_dir
         self.out_dir.remove()
         # Make the pairs of fastq #
-        self.paths = lambda s: ('-p', s.clean.fwd, s.clean.rev, '-s', s.singletons)
+        self.paths = lambda s: ('-p', s.clean.fwd.path, s.clean.rev.path, '-s', s.singletons.path)
         self.paths = flatter([self.paths(s) for s in self.samples])
         # Call Ray on different setting #
         if os.environ.get('CSCSERVICE') == 'sisu': stats = self.sisu()
@@ -77,7 +81,8 @@ class Ray(object):
 
     def milou(self):
         if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
-        return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        commands = ['-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir] + self.paths
+        return sh.mpiexec(*commands, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
     def local(self):
         ray = sh.Command(self.executable)
