@@ -25,6 +25,8 @@ for s in samples:
     s.pair.rev.avg_quality
     s.report.generate()
 
+for s in samples: s.runner.run_slurm(partition='test_large', time='04:00:00')
+
 ################################### Assembly ##################################
 proj = gefes.projects['alinen'].load()
 

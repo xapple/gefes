@@ -7,6 +7,7 @@ import os, json
 # Internal modules #
 from gefes.preprocess.quality import QualityChecker
 from gefes.report.sample import SampleReport
+from gefes.running.sample_runner import SampleRunner
 from plumbing.autopaths import AutoPaths, FilePath
 from fasta import PairedFASTQ
 from fasta.fastqc import FastQC
@@ -55,7 +56,7 @@ class Sample(object):
         self.num = self.info['pool_num']
         self.label = self.info['pool_id']
         self.short_label = self.label.split('_')[1]
-        self.short_name = self.info['pool']
+        self.name = self.info['pool']
         self.long_name = self.info['pool_name']
         self.id_name = "run%03d-pool%02d" % (self.run_num, self.num)
         self.report_stats = {'fwd': {}, 'rev': {}}
@@ -71,9 +72,11 @@ class Sample(object):
     def load(self):
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Runner #
+        self.runner = SampleRunner(self)
         # Make an alias to the json #
         self.json_path.link_to(self.p.info_json, safe=True)
-        # FastQC #
+        # Change location of first FastQC #
         self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
         self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
         # Cleaned pairs #

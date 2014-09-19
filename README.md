@@ -159,13 +159,13 @@ If your git version is too old you can follow these steps: http://blog.justin.ke
 To compile Ray on a compute cluster you might have to do something this:
 
     $ module swap PrgEnv-intel PrgEnv-gnu
-    $ make -j8 MPI_IO=y MPICXX=cc MAXKMERLENGTH=91
+    $ make -j24 MPI_IO=y MPICXX=CC MAXKMERLENGTH=91
 
 Or something like this:
 
     $ module load openmpi/1.4.5
     $ module load pgi
-    $ make -j8 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
+    $ make -j16 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
 
 #### - matplotlib missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`

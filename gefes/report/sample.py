@@ -60,7 +60,7 @@ class SampleTemplate(Template):
         self.project = self.sample.project
 
     # General information #
-    def sample_short_name(self): return self.sample.short_name
+    def sample_short_name(self): return self.sample.name
     def sample_long_name(self): return self.sample.long_name
     def project_short_name(self): return self.sample.project_short_name
     def project_long_name(self): return self.sample.project_long_name

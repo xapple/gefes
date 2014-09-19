@@ -21,9 +21,9 @@ for s in samples:
     s.clean.rev.fastqc.run()
     s.clean.fwd.graphs['LengthDist'].plot()
     s.clean.rev.graphs['LengthDist'].plot()
-    s.pair.fwd.avg_quality
-    s.pair.rev.avg_quality
     s.report.generate()
+
+for s in samples: s.runner.run_slurm(partition='test', time='00:15:00')
 
 ################################### Assembly ##################################
 proj = gefes.projects['test'].load()
