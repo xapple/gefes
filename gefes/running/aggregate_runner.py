@@ -3,11 +3,8 @@
 # Internal modules #
 import gefes
 from plumbing.runner import Runner
-from plumbing.slurm import SLURMJob
 
 # Third party modules #
-
-# Constants #
 
 ###############################################################################
 class AggregateRunner(Runner):
@@ -36,16 +33,4 @@ class AggregateRunner(Runner):
         return command
 
     def run_slurm(self, steps=None, **kwargs):
-        # Test case #
-        if self.parent.name == 'test':
-            kwargs['time'] = '00:15:00'
-            kwargs['qos'] = 'short'
-            kwargs['email'] = '/dev/null'
-        # Extra params #
-        if 'time' not in kwargs: kwargs['time'] = self.default_time
-        if 'email' not in kwargs: kwargs['email'] = None
-        if 'dependency' not in kwargs: kwargs['dependency'] = 'singleton'
-        # Send it #
-        if 'job_name' not in kwargs: kwargs['job_name'] = self.job_name
-        self.slurm_job = SLURMJob(self.command(steps), self.parent.p.logs_dir, gefes, **kwargs)
-        return self.slurm_job.run()
+        return Runner.run_slurm(self, steps=steps, module=gefes, **kwargs)

@@ -36,4 +36,4 @@ class SampleRunner(Runner):
         return command
 
     def run_slurm(self, steps=None, **kwargs):
-        return Runner.run_slurm(self, steps, module=gefes)
+        return Runner.run_slurm(self, steps=steps, module=gefes, **kwargs)

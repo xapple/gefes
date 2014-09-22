@@ -34,10 +34,12 @@ class Aggregate(object):
     def first(self): return self.samples[0]
 
     def run_samples(self, steps=None, **kwargs):
-        for s in self.samples: s.runner.run()
+        for s in self.samples:
+            if not s.loaded: s.load()
+            s.runner.run(steps=steps, **kwargs)
 
     def run_samples_slurm(self, steps=None, **kwargs):
-        return [s.run_slurm(steps, **kwargs) for s in self.samples]
+        return [s.run_slurm(steps=steps, **kwargs) for s in self.samples]
 
     def __init__(self, name, samples, base_dir=None):
         # Attributes #

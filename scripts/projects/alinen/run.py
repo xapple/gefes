@@ -10,8 +10,11 @@ A script to contain the procedure for running the test sample.
 import gefes
 
 ################################ Preprocessing ################################
-proj = gefes.projects['alinen']
+# Constants #
+proj = gefes.projects['alinen'].load()
 samples = proj.samples
+
+# Manual #
 for s in samples:
     s.load()
     s.pair.fwd.fastqc.run()
@@ -19,23 +22,27 @@ for s in samples:
     s.quality_checker.run()
     s.clean.fwd.fastqc.run()
     s.clean.rev.fastqc.run()
-    s.clean.fwd.graphs['LengthDist'].plot()
-    s.clean.rev.graphs['LengthDist'].plot()
+    s.clean.fwd.graphs.length_dist.plot()
+    s.clean.rev.graphs.length_dist.plot()
     s.pair.fwd.avg_quality
     s.pair.rev.avg_quality
     s.report.generate()
 
-for s in samples: s.runner.run_slurm(partition='test_large', time='04:00:00')
+# By SLURM #
+for s in samples: s.load().runner.run_slurm(time='04:00:00')
 
 ################################### Assembly ##################################
-proj = gefes.projects['alinen'].load()
+# On Milou #
+proj.runner.run_slurm(steps=['assembly41.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_41")
+proj.runner.run_slurm(steps=['assembly51.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_51")
+proj.runner.run_slurm(steps=['assembly61.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_61")
+proj.runner.run_slurm(steps=['assembly71.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
 
-proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_41")
-proj.runner.run_slurm(steps=[{'assembly51.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_51")
-proj.runner.run_slurm(steps=[{'assembly61.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_61")
-proj.runner.run_slurm(steps=[{'assembly71.run':{'threads':False}}], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
+# On Sisu #
+proj.runner.run_slurm(steps=['assembly71.run'], machines=64, cores=64*24, time='12:00:00', partition='large', job_name="alinen_ray_71", email=False)
 
-proj.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='10-00:00:00', project="b2011035", job_name="alinen_proj_41", cluster='halvan', partition='halvan', cores=64)
+# On Halvan #
+proj.runner.run_slurm(steps=['assembly41.run'], time='10-00:00:00', project="b2011035", job_name="alinen_proj_41", cluster='halvan', partition='halvan', cores=64)
 
 ################################### Aggregate ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()

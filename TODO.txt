@@ -1,8 +1,4 @@
-Move the mapping directory into the projects (create a pools subdirectpry fo that)
-
-Run sari's data thourgh GEFES
-Run a test dataset through illumitag both locally and on Uppmax
-Finish the sphinxhub project
-Add the dependency checking (from setup.py and from the README.md)
-Add an automatic adding of bin/linux or bin/osx to the search path
-Make a pypi submission script (and update plumbing and fasta in pypi)
+Move the mapping directory into the projects (create a samples subdirectory for that)
+Make the SLURM module attribute a list, to copy several modules in the log directory at once
+Make the length distribution log-log in the sample report
+Add the hostname to the sample and aggregate reports

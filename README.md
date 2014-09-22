@@ -68,7 +68,7 @@ There are some dependencies that are not too large and can be bundled as binarie
     export PATH="$HOME/repos/gefes/bin/linux/mcl/:$PATH"
 
 ### Step 3: Install your own version of python
-Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available python. We prefer to just install our own in the home directory. Also, we will then be able to install modules without any administrator privileges.
+Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available setup. We prefer to just install our own in the home directory. Also, we will then be able to install modules without administrator privileges.
 
 For this we will be using this excellent project: https://github.com/yyuu/pyenv
 
@@ -111,6 +111,8 @@ GEFES uses many third party python libraries. You can get them by running these 
     $ pip install scikit-learn
     $ pip install rpy2
     $ pip install pysam
+    $ pip install playdoh
+    $ pip install shell_command
 
 Don't forget to rehash the executable links at the end:
 
@@ -130,8 +132,7 @@ GEFES will search for the raw reads in a directory called ``INBOX`` somewhere in
 ### Step 6: Obtaining extra dependencies
 GEFES also makes use of many third party programs which need to be installed and accessible from your ``$PATH``. These dependencies each have specific installation procedures and include:
 
- * [sickle](https://github.com/najoshi/sickle) version X.X.X providing ``sickle``
- * [Ray](http://sourceforge.net/projects/denovoassembler/) version X.X.X providing ``Ray23``
+ * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231``
  * [htslib](https://github.com/samtools/htslib) (needed by samtools) version X.X.X
  * [samtools](http://samtools.sourceforge.net) version X.X.X providing ``samtools``
  * [bedtools]() version X.X.X providing ``genomeCoverageBed``
@@ -167,5 +168,5 @@ Or something like this:
     $ module load pgi
     $ make -j16 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
 
-#### - matplotlib missing freetype:
+#### - "pip install matplotlib" missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`
