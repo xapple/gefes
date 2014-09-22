@@ -39,7 +39,7 @@ proj.runner.run_slurm(steps=['assembly61.run'], time='3-00:00:00', constraint='m
 proj.runner.run_slurm(steps=['assembly71.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
 
 # On Sisu #
-proj.runner.run_slurm(steps=['assembly71.run'], machines=64, cores=64*24, time='12:00:00', partition='large', job_name="alinen_ray_71", email=False)
+proj.runner.run_slurm(steps=['assembly71.run'], machines=42, cores=42*24, time='36:00:00', partition='large', job_name="alinen_ray_71", email=False)
 
 # On Halvan #
 proj.runner.run_slurm(steps=['assembly41.run'], time='10-00:00:00', project="b2011035", job_name="alinen_proj_41", cluster='halvan', partition='halvan', cores=64)
