@@ -1,4 +1,3 @@
 Move the mapping directory into the projects (create a samples subdirectory for that)
 Make the SLURM module attribute a list, to copy several modules in the log directory at once
 Make the length distribution log-log in the sample report
-Add the hostname to the sample and aggregate reports

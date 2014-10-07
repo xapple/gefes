@@ -87,9 +87,9 @@ These lines go into your ``.bash_profile``:
 
 Relaunch your shell and type these commands to get the right version of python:
 
-    $ pyenv install 2.7.6
+    $ pyenv install 2.7.8
     $ pyenv rehash
-    $ pyenv global 2.7.6
+    $ pyenv global 2.7.8
 
 ### Step 4: Install all required python packages
 GEFES uses many third party python libraries. You can get them by running these commands:
