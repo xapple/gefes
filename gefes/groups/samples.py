@@ -2,13 +2,13 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json
+import os
 
 # Internal modules #
 from gefes.preprocess.quality import QualityChecker
 from gefes.report.sample import SampleReport
 from gefes.running.sample_runner import SampleRunner
-from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.autopaths import AutoPaths
 from fasta import PairedFASTQ
 from fasta.fastqc import FastQC
 
@@ -40,20 +40,9 @@ class Sample(object):
     def __len__(self): return self.count
     def __getitem__(self, key): return self.samples[key]
 
-    def __init__(self, json_path, out_dir):
-        # Output #
-        self.out_dir = out_dir
-        # Parse #
-        self.json_path = FilePath(json_path)
-        with open(json_path) as handle: self.info = json.load(handle)
-        # Basic #
-        self.account = self.info['uppmax_id']
-        self.run_num = self.info['run_num']
-        self.run_label = self.info['run_id']
-        self.project_short_name = self.info['project']
-        self.project_long_name = self.info['project_name']
+    def __init__(self):
         # Own attributes #
-        self.num = self.info['pool_num']
+        self.num   = self.info['pool_num']
         self.label = self.info['pool_id']
         self.short_label = self.label.split('_')[1]
         self.name = self.info['pool']

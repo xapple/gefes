@@ -1,0 +1,19 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Ino De Bruijn",
+            "email": "ino.debruijn@scilifelab.se"
+        },
+        "pi": {
+            "name": "Christopher Quince",
+            "email": "C.Quince@warwick.ac.uk"
+        }
+    },
+
+    "project_name":       "strain_mock",
+    "project_long_name":  "The strain mock community test data",
+    "project_num":        1,
+
+    "samples_base_dir": "/network/storage01/ino/projects/concoct-paper-assemblies/reads/NewMock1/",
+    "auto_parse_samples": true
+}

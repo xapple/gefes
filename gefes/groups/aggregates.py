@@ -30,17 +30,6 @@ class Aggregate(object):
         elif isinstance(key, slice): return self.children[key]
         else: raise TypeError('key')
 
-    @property
-    def first(self): return self.samples[0]
-
-    def run_samples(self, steps=None, **kwargs):
-        for s in self.samples:
-            if not s.loaded: s.load()
-            s.runner.run(steps=steps, **kwargs)
-
-    def run_samples_slurm(self, steps=None, **kwargs):
-        return [s.run_slurm(steps=steps, **kwargs) for s in self.samples]
-
     def __init__(self, name, samples, base_dir=None):
         # Attributes #
         self.name = name
@@ -52,6 +41,8 @@ class Aggregate(object):
         self.loaded = False
 
     def load(self):
+        """A delayed kind of __init__ that is not called right away to avoid
+        crowding the RAM of the python interpreted when you just import gefes"""
         # Paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
@@ -73,3 +64,17 @@ class Aggregate(object):
         self.loaded = True
         # For convenience #
         return self
+
+    @property
+    def first(self): return self.samples[0]
+
+    def run_samples(self, steps=None, **kwargs):
+        """Run all the methods that need to be run on each of the samples
+        of this project"""
+        for s in self.samples:
+            if not s.loaded: s.load()
+            s.runner.run(steps=steps, **kwargs)
+
+    def run_samples_slurm(self, steps=None, **kwargs):
+        """Same thing but via SLURM"""
+        return [s.run_slurm(steps=steps, **kwargs) for s in self.samples]
