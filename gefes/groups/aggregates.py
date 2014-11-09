@@ -37,31 +37,25 @@ class Aggregate(object):
         # Base directory #
         if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
         else: self.base_dir = base_dir
-        # Load #
+        # Delayed init #
         self.loaded = False
 
     def load(self):
         """A delayed kind of __init__ that is not called right away to avoid
         crowding the RAM of the python interpreted when you just import gefes"""
-        # Paths #
+        # Load #
+        self.loaded = True
+        # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self.samples, self.p.assembly_dir)
-        self.assembly41 = Ray(self.samples, self.p.assembly_dir, 41)
-        self.assembly51 = Ray(self.samples, self.p.assembly_dir, 51)
-        self.assembly61 = Ray(self.samples, self.p.assembly_dir, 61)
-        self.assembly71 = Ray(self.samples, self.p.assembly_dir, 71)
         # Runner #
         self.runner = AggregateRunner(self)
-        # Assemble #
-        #self.mapper = Mapper(self)
         # Binner #
         #self.binner = Binner(self)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Binner(self)
-        # Load #
-        self.loaded = True
         # For convenience #
         return self
 

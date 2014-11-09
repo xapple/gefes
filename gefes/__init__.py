@@ -38,7 +38,6 @@ project_dir = view_dir + "projects/"
 # Load all projects by parsing project json files #
 json_paths = glob.glob(repos_dir + 'json/*.json')
 projects = [Project(j, project_dir) for j in json_paths]
-projects.sort(key=lambda x: str(x))
 
 # Convenience objects with indexing #
 projects = Projects(projects)

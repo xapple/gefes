@@ -8,8 +8,11 @@ import os
 from gefes.preprocess.quality import QualityChecker
 from gefes.report.sample import SampleReport
 from gefes.running.sample_runner import SampleRunner
-from plumbing.autopaths import AutoPaths
-from fasta import PairedFASTQ
+from gefes.map.bowtie import Bowtie
+
+# First party modules #
+from plumbing.autopaths import AutoPaths, FilePath
+from fasta import PairedFASTA, PairedFASTQ
 from fasta.fastqc import FastQC
 
 # Third party modules #
@@ -19,50 +22,67 @@ home = os.environ['HOME'] + '/'
 
 ###############################################################################
 class Sample(object):
-    """Corresponds to an Illumina HiSeq MID. It's a bunch of paired sequences
-    all coming from the same particular sample."""
+    """Consists of two FASTA or FASTQ files.
+    It's a bunch of paired sequences all coming from the same particular lab sample.
+    Might or not corresponds to an Illumina HiSeq MID. """
 
     all_paths = """
+    /logs/
     /info.json
     /clean/fwd.fastq
     /clean/rev.fastq
     /fastqc/fwd/
     /fastqc/rev/
     /mapping/
-    /logs/
     /graphs/
     /report/report.pdf
     """
 
-    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.id_name)
+    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
     def __str__(self): return self.id_name
     def __iter__(self): return iter(self.children)
     def __len__(self): return self.count
     def __getitem__(self, key): return self.samples[key]
 
-    def __init__(self):
-        # Own attributes #
-        self.num   = self.info['pool_num']
-        self.label = self.info['pool_id']
-        self.short_label = self.label.split('_')[1]
-        self.name = self.info['pool']
-        self.long_name = self.info['pool_name']
-        self.id_name = "run%03d-pool%02d" % (self.run_num, self.num)
+    def __init__(self, project, fwd_path, rev_path, out_dir, info=None, num=None, name=None):
+        # Required parameters #
+        self.project = project
+        self.fwd_path = FilePath(fwd_path)
+        self.rev_path = FilePath(rev_path)
+        self.out_dir  = out_dir
+        # Is it a FASTA pair or a FASTQ pair ? #
+        if "fastq" in fwd_path: self.pair = PairedFASTQ(fwd_path, rev_path)
+        else:                   self.pair = PairedFASTA(fwd_path, rev_path)
+        # Do we have extra information on this sample ? #
+        if info is None: self.info = {}
+        else:            self.info = info
+        # Do we have a number for this sample ? #
+        if num is None:  self.num = self.info.get('sample_num')
+        else:            self.num = num
+        # Do we have a name for this sample ? #
+        if name is None: self.name = self.info.get('sample_name')
+        else:            self.name = name
+        if name is None: self.name = self.fwd_path.short_prefix
+        # Optional parameters #
+        self.long_name = self.info.get('sample_long_name')
+        self.run_name  = self.info.get('illumina_run_name')
+        self.account   = self.info.get('uppmax_project_id')
+        # If we have the Illumina run XML report, we can extract some statistics later #
         self.report_stats = {'fwd': {}, 'rev': {}}
-        # Raw file pairs #
-        fwd_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['forward_reads'])
-        rev_path = home + "proj/%s/INBOX/%s/%s/%s" % (self.account, self.run_label, self.label, self.info['reverse_reads'])
-        self.pair = PairedFASTQ(fwd_path, rev_path)
-        # Directory #
-        self.base_dir = self.out_dir + self.id_name + '/'
-        # Load #
+        # The directory where we will place all the data for this sample #
+        self.base_dir = self.out_dir + self.name + '/'
+        # Delayed init #
         self.loaded = False
 
     def load(self):
+        """A delayed kind of __init__ that is not called right away to avoid
+        crowding the RAM of the python interpreted when you just import gefes"""
+        # Load #
+        self.loaded = True
+        # Check that the project is loaded #
+        if not self.project.loaded: self.project.load()
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Runner #
-        self.runner = SampleRunner(self)
         # Make an alias to the json #
         self.json_path.link_to(self.p.info_json, safe=True)
         # Change location of first FastQC #
@@ -72,10 +92,12 @@ class Sample(object):
         self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
         self.quality_checker = QualityChecker(self.pair, self.clean)
         self.singletons = self.quality_checker.singletons
+        # Map to an assembly #
+        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
+        # Runner #
+        self.runner = SampleRunner(self)
         # Report #
         self.report = SampleReport(self)
-        # Load #
-        self.loaded = True
         # For convenience #
         return self
 
