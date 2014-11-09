@@ -4,7 +4,9 @@ The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we could like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-### Warnings:
+It was developed by Lucas Sinclair (<lucas.sinclair@me.com>) while working in the Limnology department at the Evolution Biology Center of Uppsala University. The code has an MIT license and everyone is welcome to use, modify or extend the pipeline.
+
+## Warnings:
 
 * First of all, this is still very much work in progress. We are not yet at a stage where full metabolic predictions can be made.
 
@@ -14,7 +16,7 @@ This is yet another pipeline for assembling the short reads produced by shotgun-
 
 * Finally, the `gefes` project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the `gefes` project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.
 
-### Context:
+## Context:
 
 As you know almost all microbes living in natural environments can't be isolated or cultured easily. So instead, we go and do shotgun metagenomic sampling. We take a glass of water from a lake, do a total DNA extraction and insert the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
 
@@ -26,7 +28,7 @@ How do we put the reads together to make genomes ? How are we going to figure ou
 
 Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper" are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via SLURM).
 
-### Overview:
+## Overview:
 
 Starting from the raw reads there are about eight distinct processing steps in `gefes`:
 
@@ -62,7 +64,7 @@ If this still doesn't work, you might be missing the `pip` program on your syste
 
 In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.
 
-### Step 1: Cloning the repository
+#### Step 1: Cloning the repository
 Here you will download a copy of the code from github and place it in your home directory.
 
     $ cd ~
@@ -70,20 +72,20 @@ Here you will download a copy of the code from github and place it in your home 
     $ cd repos
     $ git clone git@github.com:limno/gefes.git
 
-### Step 2A: Modify your python search path
+#### Step 2A: Modify your python search path
 Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to the module you just downloaded. When you type `import gefes` python will know where to look !
 
     $ vim ~/.bash_profile
     export PYTHONPATH="$HOME/repos/gefes/":$PYTHONPATH
 
-### Step 2B: Modify your binary search path
+#### Step 2B: Modify your binary search path
 There are some dependencies that are not too large and can be bundled as binaries with this module. To avoid the hassle of downloading and compiling these requirements, we have added a bunch of them in the repository. Add them to your `$PATH`.
 
     $ vim ~/.bash_profile
     export PATH="$HOME/repos/gefes/bin/linux/:$PATH"
     export PATH="$HOME/repos/gefes/bin/linux/mcl/:$PATH"
 
-### Step 3: Install your own version of python
+#### Step 3: Install your own version of python
 Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available setup. We strongly recommand to just install our own in the home directory. Also, we will then be able to install modules without administrator privileges. You can skip this step if you are confident enough about what you are doing.
 
 For this we will be using this excellent project: https://github.com/yyuu/pyenv
@@ -107,7 +109,7 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pyenv rehash
     $ pyenv global 2.7.8
 
-### Step 4: Install all required python packages
+#### Step 4: Install all required python packages
 `gefes` uses many third party python libraries. You can get them by running these commands:
 
     $ pip install plumbing
@@ -134,7 +136,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
 
     $ pyenv rehash
 
-### Step 5: Obtaining extra dependencies
+#### Step 5: Obtaining extra dependencies
 `gefes` also makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
  * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231``
@@ -152,7 +154,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
 
 These can take some time to install and unfortunately we can't package them with our project !
 
-### Step 6: Make a working directory with the raw data linked
+#### Step 6: Make a working directory with the raw data linked
 `gefes` will generate results in a directory named `views` in a directory named `GEFES` in your home folder. You can change this by editing the code of course.
 
     $ cd ~
@@ -169,19 +171,19 @@ These can take some time to install and unfortunately we can't package them with
     $ cd INBOX
     $ ln -s /proj/b2011035/INBOX/* ./
 
-### Step 7: Make a JSON file describing your project
+#### Step 7: Make a JSON file describing your project
 `gefes` will create `Project` objects with associated `Sample` objects based on a user inputted JSON files. Look at the `json` directory at the root of the repository and make your own.
 
-### Step 8: Troubleshooting
+#### Step 8: Troubleshooting
 You might run into difficulties at some of the steps above -- if that is the case check this section for a solution.
 
-#### - "pip install scipy" missing BLAS:
+##### - "pip install scipy" missing BLAS:
 When you install scipy, you might need these two dependencies before hand if they are not on your system: http://stackoverflow.com/questions/7496547/python-scipy-needs-blas
 
-#### - git version too old:
+##### - git version too old:
 If your git version is too old you can follow these steps: http://blog.justin.kelly.org.au/install-git-in-your-home-directory-how-to/
 
-#### - Compiling Ray:
+##### - Compiling Ray:
 To compile Ray on a compute cluster you might have to do something this:
 
     $ module swap PrgEnv-intel PrgEnv-gnu
