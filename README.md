@@ -43,8 +43,8 @@ Starting from the raw reads there are about eight distinct processing steps in `
 
 Unfortunately, no other detailed documentation has been written yet but the code is clean and commented. In addition, these two descriptive files might help you figure out what is going on:
 
-* documentation/diagram.pdf
-* documentation/flowchart.pdf
+* [Flowchart of data processing](/../master/documentation/flowchart.pdf?raw=true "Flowchart")
+* [Tentative UML diagram of objects compositionn](/../master/documentation/diagram.pdf?raw=true "Diagram")
 
 ## Installing
 
@@ -197,3 +197,8 @@ Or something like this:
 
 #### - "pip install matplotlib" missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`
+
+## Flowchart
+Below is drawn the flowchart describing the data processing along all the steps of GEFES:
+
+![Flowchart](/../master/documentation/flowchart.png?raw=true "Flowchart")
