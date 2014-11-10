@@ -12,7 +12,8 @@ import pandas, sh
 ###############################################################################
 class Concoct(object):
     """Use CONCOCT at https://github.com/BinPro/CONCOCT
-    to bin contigs together.
+    to bin contigs together
+    Expects version 0.4.0.
     """
 
     short_name = 'concoct'
@@ -38,13 +39,15 @@ class Concoct(object):
         """A dataframe where each row corresponds to a contig, and each column
         corresponds to a sample. The values are the average coverage for that contig
         in that sample."""
-        return pandas.dataframe([s.mapper.results.coverage for s in self.samples])
+        return pandas.DataFrame({s.name: s.mapper.results.coverage_mean for s in self.samples})
 
     def run(self):
-        # Create the "coverage file" #
-        self.coverage_matrix.to_csv(self.p.coverage, sep='\t')
+        # Create the "coverage file" matrix to be inputed #
+        self.coverage_matrix.to_csv(self.p.coverage.path, sep='\t', float_format='%.5g')
         # Run the pipeline #
-        sh.concoct('--coverage_file', self.p.coverage, '--composition_file', self.assembly.results.contig_fasta, '-b', self.p.output_dir)
+        sh.concoct('--coverage_file', self.p.coverage,
+                   '--composition_file', self.assembly.results.contig_fasta,
+                   '-b', self.p.output_dir)
 
     @property_cached
     def results(self):
@@ -55,15 +58,10 @@ class Concoct(object):
 ###############################################################################
 class ConcoctResults(object):
 
-    all_paths = """
-    /output/lorem
-    """
-
     def __nonzero__(self): return 0
     def __init__(self, concoct):
         self.concoct = concoct
-        self.p = AutoPaths(self.concoct.base_dir, self.all_paths)
 
     @property_cached
-    def lorem(self):
+    def bins(self):
         pass

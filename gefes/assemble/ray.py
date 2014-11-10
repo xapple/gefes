@@ -22,6 +22,7 @@ hostname = socket.gethostname()
 class Ray(object):
     """Will run the co-assembly of several samples by calling the Ray assembler.
     https://github.com/sebhtml/ray
+    Expects version 2.3.1
     We remove the contigs below the length cutoff threshold."""
 
     short_name = 'ray'

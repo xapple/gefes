@@ -50,13 +50,13 @@ class Aggregate(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self.samples, self.p.assembly_dir)
-        # Runner #
-        self.runner = AggregateRunner(self)
         # Binner #
         self.binner = Concoct(self.samples, self.assembly, self.p.bins_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Binner(self)
+        # Runner #
+        self.runner = AggregateRunner(self)
         # For convenience #
         return self
 

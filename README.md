@@ -128,6 +128,7 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install statsmodels
     $ pip install scikit-learn
     $ pip install pysam
+    $ pip install concoct
 
 Don't forget to rehash the executable links at the end if you are using pyenv like we do:
 
@@ -141,14 +142,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
  * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
- * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct``
-
- * [Glimmer]() version X.X.X providing ``XXX``
- * [Prodigal]() version X.X.X providing ``XXX``
- * [Spades]() version X.X.X providing ``XXX``
- * long-orfs
- * extract
- * build-icm
+ * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in python package index)
 
 These can take some time to install and unfortunately we can't package them with our project !
 

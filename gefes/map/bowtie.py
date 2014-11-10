@@ -19,8 +19,10 @@ import sh, pandas
 class Bowtie(object):
     """Use Bowtie2 at http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
     to maps reads from a Sample object back to an Assembly object.
-    PCR Duplicates are subsequently removed using MarkDuplicates.
-    BEDTools is then used to determine coverage.
+    Expects version 2.2.4.
+    SAMtools is used to index and sort the result (v0.1.19).
+    PCR Duplicates are subsequently removed using MarkDuplicates (v1.101).
+    BEDTools is then used to determine coverage (v2.15.0).
 
     Names follow this standard:
       * The 'map_s' file is sorted.
@@ -41,7 +43,6 @@ class Bowtie(object):
     /map_smds.coverage
     /statistics.pickle
     """
-
 
     def __repr__(self): return '<%s object of %s on %s>' % \
                         (self.__class__.__name__, self.sample, self.assembly)

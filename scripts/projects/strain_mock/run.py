@@ -19,7 +19,7 @@ slurm.nr_threads = 32
 
 # Project and sample objects #
 p = gefes.projects['strain_mock'].load()
-s = p.first.load()
+for s in p: s.load()
 
 # Testing the pipeline #
 print p.assembly.results.contigs_fasta.count
