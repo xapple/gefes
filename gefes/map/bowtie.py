@@ -9,7 +9,7 @@ import gefes
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
-from plumbing.cache import property_cached
+from plumbing.cache import property_cached, pickled_property
 from plumbing.slurm import nr_threads
 
 # Third party modules #
@@ -37,6 +37,7 @@ class Bowtie(object):
     /map_smds.bai
     /map_smd.metrics
     /map_smds.coverage
+    /statistics.pickle
     """
 
 
@@ -116,8 +117,8 @@ class BowtieResults(object):
         self.assembly = bowtie.assembly
         self.p = bowtie.p
 
-    @property_cached
-    def coverage(self):
+    @pickled_property
+    def statistics(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
         coverage and percentage covered for each contig. Returns a dict with contig names as
         keys and containing 'percent_covered' with 'cov_mean' information inside.
@@ -127,24 +128,24 @@ class BowtieResults(object):
         out_dict = {}
         for contig in self.assembly.results.contigs:
             if contig.name not in frame.index:
-                cov_mean = 0
-                percent_covered = 0
+                cov_mean = 0.0
+                percent_covered = 0.0
                 continue
             subframe = frame.loc[contig.name]
             assert round(subframe['fraction'].sum(), 4) == 1.0
             cov_mean = (subframe['depth'] * subframe['fraction']).sum()
             not_covered = subframe['depth'] == 0
-            if not_covered.any(): percent_covered = 100 - subframe.loc[not_covered]['fraction']
+            if not_covered.any(): percent_covered = float(100 - subframe.loc[not_covered]['fraction'])
             else:                 percent_covered = 100.0
             out_dict[contig.name] = {"cov_mean": cov_mean, "percent_covered": percent_covered}
         return out_dict
 
-    @property
-    def percent_covered(self):
-        """The percentage covered in every contig. Dict with contig names as keys"""
-        return {}
-
-    @property
+    @property_cached
     def coverage_mean(self):
+        """The percentage covered in every contig. Dict with contig names as keys"""
+        return {contig.name: self.statistics[contig.name]['cov_mean'] for contig in self.assembly.results.contigs}
+
+    @property_cached
+    def covered_fraction(self):
         """The mean coverage in every contig. Dict with contig names as keys"""
-        return {}
+        return {contig.name: self.statistics[contig.name]['percent_covered'] for contig in self.assembly.results.contigs}

@@ -1,4 +1,4 @@
-## gefes version 0.0.5
+## gefes version 0.1.5
 
 The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**​nvironmental **S**​equencing.
 
