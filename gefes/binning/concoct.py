@@ -7,18 +7,19 @@ from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 
 # Third party modules #
-import sh
+import pandas, sh
 
 ###############################################################################
 class Concoct(object):
     """Use CONCOCT at https://github.com/BinPro/CONCOCT
-    to bin contigs togather.
+    to bin contigs together.
     """
 
     short_name = 'concoct'
 
     all_paths = """
     /output/
+    /coverage.tsv
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
@@ -32,8 +33,18 @@ class Concoct(object):
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
+    @property_cached
+    def coverage_matrix(self):
+        """A dataframe where each row corresponds to a contig, and each column
+        corresponds to a sample. The values are the average coverage for that contig
+        in that sample."""
+        return pandas.dataframe([s.mapper.results.coverage for s in self.samples])
+
     def run(self):
-        sh.concoct('--coverage_file', self.project, '--composition_file', self.assembly.results.contig_fasta, '-b', self.p.output_dir)
+        # Create the "coverage file" #
+        self.coverage_matrix.to_csv(self.p.coverage, sep='\t')
+        # Run the pipeline #
+        sh.concoct('--coverage_file', self.p.coverage, '--composition_file', self.assembly.results.contig_fasta, '-b', self.p.output_dir)
 
     @property_cached
     def results(self):

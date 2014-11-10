@@ -21,24 +21,29 @@ hostname = socket.gethostname()
 ###############################################################################
 class Ray(object):
     """Will run the co-assembly of several samples by calling the Ray assembler.
-    https://github.com/sebhtml/ray"""
+    https://github.com/sebhtml/ray
+    We remove the contigs below the length cutoff threshold."""
 
     short_name = 'ray'
     executable = 'ray231'
 
     all_paths = """
+    /output/Contigs.fasta
+    /output/report.txt
     /stdout.txt
     /stderr.txt
     /output/
+    /filtered_contigs.fasta
     """
 
     def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
 
-    def __init__(self, samples, result_dir, kmer_size=41):
+    def __init__(self, samples, result_dir, kmer_size=41, length_cutoff=1000):
         # Base parameters #
         self.samples = samples
         self.result_dir = result_dir
         self.kmer_size = kmer_size
+        self.length_cutoff = length_cutoff
         self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # To be set when run #
@@ -64,6 +69,8 @@ class Ray(object):
         else:                                                   stats = self.local()
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
+        # Filter short contigs #
+        FASTA(self.p.Contigs).extract_length(new_path=self.p.filtered, lower_bound=self.length_cutoff)
 
     def sisu(self):
         """Run the assembly on the Sisu super computer at sisu-login1.csc.fi"""
@@ -93,16 +100,10 @@ class Ray(object):
 ###############################################################################
 class RayResults(object):
 
-    all_paths = """
-    /output/Contigs.fasta
-    /output/report.txt
-    """
-
     def __nonzero__(self): return self.contigs_fasta.exists
     def __init__(self, ray):
         self.ray = ray
-        self.p = AutoPaths(self.ray.base_dir, self.all_paths)
-        self.contigs_fasta = FASTA(self.p.Contigs)
+        self.contigs_fasta = FASTA(self.ray.p.filtered)
 
     @property_cached
     def contigs(self):
