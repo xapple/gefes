@@ -115,22 +115,19 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install plumbing
     $ pip install fasta
     $ pip install pymarktex
+    $ pip install matplotlib
+    $ pip install pandas
+    $ pip install biopython
     $ pip install sh
     $ pip install tqdm
     $ pip install decorator
-    $ pip install biopython
+    $ pip install shell_command
     $ pip install threadpool
     $ pip install patsy
     $ pip install scipy
-    $ pip install matplotlib
-    $ pip install pandas
     $ pip install statsmodels
-    $ pip install ipython
     $ pip install scikit-learn
-    $ pip install rpy2
     $ pip install pysam
-    $ pip install playdoh
-    $ pip install shell_command
 
 Don't forget to rehash the executable links at the end if you are using pyenv like we do:
 
@@ -139,15 +136,15 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
 #### Step 5: Obtaining extra dependencies
 `gefes` also makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
- * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231``
- * [htslib](https://github.com/samtools/htslib) (needed by samtools) version X.X.X
- * [samtools](http://samtools.sourceforge.net) version X.X.X providing ``samtools``
- * [bedtools]() version X.X.X providing ``genomeCoverageBed``
- * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version X.X.X providing ``bowtie2``
+ * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
+ * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
+ * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
+ * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
+ * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
+
  * [Glimmer]() version X.X.X providing ``XXX``
  * [Prodigal]() version X.X.X providing ``XXX``
  * [Spades]() version X.X.X providing ``XXX``
- * get-motif-counts.awk
  * long-orfs
  * extract
  * build-icm
@@ -195,7 +192,7 @@ Or something like this:
     $ module load pgi
     $ make -j16 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
 
-#### - "pip install matplotlib" missing freetype:
+##### - "pip install matplotlib" missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`
 
 ## Flowchart

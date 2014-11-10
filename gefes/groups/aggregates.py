@@ -42,7 +42,7 @@ class Aggregate(object):
 
     def load(self):
         """A delayed kind of __init__ that is not called right away to avoid
-        crowding the RAM of the python interpreted when you just import gefes"""
+        crowding the RAM of the python interpreter when you just import gefes"""
         # Load #
         self.loaded = True
         # Automatic paths #

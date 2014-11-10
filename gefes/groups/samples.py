@@ -39,23 +39,33 @@ class Sample(object):
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
-    def __str__(self): return self.id_name
     def __iter__(self): return iter(self.children)
     def __len__(self): return self.count
     def __getitem__(self, key): return self.samples[key]
 
-    def __init__(self, project, fwd_path, rev_path, out_dir, info=None, num=None, name=None):
+    def __init__(self, project, fwd_path=None, rev_path=None, out_dir=None, info=None, num=None, name=None):
         # Required parameters #
         self.project = project
-        self.fwd_path = FilePath(fwd_path)
-        self.rev_path = FilePath(rev_path)
-        self.out_dir  = out_dir
-        # Is it a FASTA pair or a FASTQ pair ? #
-        if "fastq" in fwd_path: self.pair = PairedFASTQ(fwd_path, rev_path)
-        else:                   self.pair = PairedFASTA(fwd_path, rev_path)
+        # Do we have the file paths already ? #
+        if fwd_path is not None: self.fwd_path = FilePath(fwd_path)
+        if rev_path is not None: self.rev_path = FilePath(rev_path)
+        # Where should be put the output ? #
+        if out_dir is None: self.out_dir = self.project.p.samples_dir
+        else:               self.out_dir = out_dir
+        # Let's inherit the information from the project #
+        self.info = self.project.info.copy()
+        if 'samples' in self.info: self.info.pop('samples')
         # Do we have extra information on this sample ? #
-        if info is None: self.info = {}
-        else:            self.info = info
+        if info is not None: self.info.update(info)
+        # Extract fields from the extra information #
+        self.long_name = self.info.get('samples_long_name')
+        # Does the info contain the file location ? #
+        self.raw_dir = self.info.get('samples_base_dir', '')
+        if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
+        self.raw_dir += self.info.get('sample_directory', '') + '/'
+        if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
+        if 'forward_reads' in self.info: self.fwd_path = FilePath(self.raw_dir + self.info.get('forward_reads'))
+        if 'reverse_reads' in self.info: self.rev_path = FilePath(self.raw_dir + self.info.get('reverse_reads'))
         # Do we have a number for this sample ? #
         if num is None:  self.num = self.info.get('sample_num')
         else:            self.num = num
@@ -63,10 +73,12 @@ class Sample(object):
         if name is None: self.name = self.info.get('sample_name')
         else:            self.name = name
         if name is None: self.name = self.fwd_path.short_prefix
+        # Is it a FASTA pair or a FASTQ pair ? #
+        if "fastq" in fwd_path: self.pair = PairedFASTQ(fwd_path, rev_path)
+        else:                   self.pair = PairedFASTA(fwd_path, rev_path)
+        self.format = self.pair.format
         # Optional parameters #
         self.long_name = self.info.get('sample_long_name')
-        self.run_name  = self.info.get('illumina_run_name')
-        self.account   = self.info.get('uppmax_project_id')
         # If we have the Illumina run XML report, we can extract some statistics later #
         self.report_stats = {'fwd': {}, 'rev': {}}
         # The directory where we will place all the data for this sample #
@@ -76,22 +88,22 @@ class Sample(object):
 
     def load(self):
         """A delayed kind of __init__ that is not called right away to avoid
-        crowding the RAM of the python interpreted when you just import gefes"""
+        crowding the RAM of the python interpreter when you just import gefes"""
         # Load #
         self.loaded = True
         # Check that the project is loaded #
         if not self.project.loaded: self.project.load()
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Make an alias to the json #
-        self.json_path.link_to(self.p.info_json, safe=True)
         # Change location of first FastQC #
-        self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
-        self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
+        if self.format == 'fastq':
+            self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
+            self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
         # Cleaned pairs #
-        self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
-        self.quality_checker = QualityChecker(self.pair, self.clean)
-        self.singletons = self.quality_checker.singletons
+        if self.format == 'fastq':
+            self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
+            self.quality_checker = QualityChecker(self.pair, self.clean)
+            self.singletons = self.quality_checker.singletons
         # Map to an assembly #
         self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
         # Runner #

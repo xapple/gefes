@@ -1,0 +1,37 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        }
+    },
+
+    "project_name":       "test",
+    "project_long_name":  "Test dataset",
+    "project_num":        0,
+
+    "samples_base_dir": "~/GEFES/raw/projects/test/",
+    "samples": [
+        {
+            "sample_num":           1,
+            "forward_reads":        "Sample_pool1/pool1_fwd.fastq.gz",
+            "reverse_reads":        "Sample_pool1/pool1_rev.fastq.gz",
+            "sample_name":          "test1",
+            "sample_long_name":     "First pool of test data"
+        },
+        {
+            "sample_num":           2,
+            "forward_reads":        "Sample_pool2/pool2_fwd.fastq.gz",
+            "reverse_reads":        "Sample_pool2/pool2_rev.fastq.gz",
+            "sample_name":          "test2",
+            "sample_long_name":     "Second pool of test data"
+        },
+        {
+            "sample_num":           3,
+            "forward_reads":        "Sample_pool3/pool3_fwd.fastq.gz",
+            "reverse_reads":        "Sample_pool3/pool3_rev.fastq.gz",
+            "sample_name":          "test3",
+            "sample_long_name":     "Third pool of test data"
+        }
+    ]
+}

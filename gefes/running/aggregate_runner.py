@@ -15,10 +15,6 @@ class AggregateRunner(Runner):
         {'assembly.run':     {}},
     ]
 
-    def __init__(self, parent):
-        self.parent, self.aggregate = parent, parent
-        self.samples = parent.samples
-
     @property
     def job_name(self): return "agg_%s" % self.parent.name
 

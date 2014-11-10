@@ -12,5 +12,10 @@ sys.exit("Copy paste the commands you want in ipython, don't run this script.")
 import gefes
 
 ###############################################################################
+from plumbing import slurm
+slurm.nr_threads = 32
 p = gefes.projects['strain_mock'].load()
+s = p.first.load()
+
 print p.assembly.results.contigs_fasta.count
+s.mapper.run()

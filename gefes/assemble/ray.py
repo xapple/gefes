@@ -30,8 +30,6 @@ class Ray(object):
     /stdout.txt
     /stderr.txt
     /output/
-    /output/Contigs.fasta
-    /output/report.txt
     """
 
     def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
@@ -96,15 +94,19 @@ class Ray(object):
 class RayResults(object):
 
     all_paths = """
-    /lorem
+    /output/Contigs.fasta
+    /output/report.txt
     """
+
     def __nonzero__(self): return self.contigs_fasta.exists
-    def __init__(self, ray): self.ray = ray
+    def __init__(self, ray):
+        self.ray = ray
+        self.p = AutoPaths(self.ray.base_dir, self.all_paths)
 
     @property_cached
     def contigs_fasta(self):
         """Just the contigs as a FASTA file object"""
-        return FASTA(self.ray.p.Contigs)
+        return FASTA(self.p.Contigs)
 
     @property_cached
     def contigs(self):

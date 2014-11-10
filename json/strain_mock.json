@@ -14,6 +14,6 @@
     "project_long_name":  "The strain mock community test data",
     "project_num":        1,
 
-    "samples_base_dir": "/home/lucas/GEFES/raw/mock_strain/reads/",
+    "samples_base_dir": "~/GEFES/raw/projects/mock_strain/reads/",
     "auto_parse_samples": true
 }
