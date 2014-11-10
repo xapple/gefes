@@ -197,9 +197,9 @@ If you are on OS X you can simply fix this error by typing `$ brew install freet
 
 ## Acknowledgments
 A special thanks to all those who helped create this pipeline and make it as great as it is:
-* Ino De Bruijn @inodb
-* Moritz Buck @moritzbuck
-* Umer Zeeshan Ijaz @umerijaz
+* Ino De Bruijn [@inodb](https://github.com/inodb)
+* Moritz Buck [@moritzbuck](https://github.com/moritzbuck)
+* Umer Zeeshan Ijaz [@umerijaz](https://github.com/umerijaz)
 
 ## Flowchart
 Below is drawn the flowchart describing the data processing along all the steps of GEFES:
