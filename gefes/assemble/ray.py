@@ -39,7 +39,7 @@ class Ray(object):
         self.samples = samples
         self.result_dir = result_dir
         self.kmer_size = kmer_size
-        self.base_dir = self.result_dir + 'ray/%i/' % self.kmer_size
+        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # To be set when run #
         self.out_dir = None

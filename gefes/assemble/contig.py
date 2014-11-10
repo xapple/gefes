@@ -18,7 +18,7 @@ class Contig(object):
     /genes/
     """
 
-    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
 
     def __init__(self, assembly, record, num=None):
         # Save parent #

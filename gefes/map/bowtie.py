@@ -28,6 +28,8 @@ class Bowtie(object):
       * The 'map_smd' file is sorted, duplicated, and sorted again.
     """
 
+    short_name = 'bowtie'
+
     all_paths = """
     /map.sam
     /map.bam
@@ -52,7 +54,7 @@ class Bowtie(object):
         # Convenience shortcuts #
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Auto paths #
-        self.base_dir = self.result_dir + 'bowtie/'
+        self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
@@ -130,13 +132,13 @@ class BowtieResults(object):
             if contig.name not in frame.index:
                 cov_mean = 0.0
                 percent_covered = 0.0
-                continue
-            subframe = frame.loc[contig.name]
-            assert round(subframe['fraction'].sum(), 4) == 1.0
-            cov_mean = (subframe['depth'] * subframe['fraction']).sum()
-            not_covered = subframe['depth'] == 0
-            if not_covered.any(): percent_covered = float(100 - subframe.loc[not_covered]['fraction'])
-            else:                 percent_covered = 100.0
+            else:
+                subframe = frame.loc[contig.name]
+                assert round(subframe['fraction'].sum(), 4) == 1.0
+                cov_mean = (subframe['depth'] * subframe['fraction']).sum()
+                not_covered = subframe['depth'] == 0
+                if not_covered.any(): percent_covered = float(100 - subframe.loc[not_covered]['fraction'])
+                else:                 percent_covered = 100.0
             out_dict[contig.name] = {"cov_mean": cov_mean, "percent_covered": percent_covered}
         return out_dict
 

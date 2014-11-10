@@ -26,16 +26,16 @@ What we have as starting data in our case is more messy. Every DNA read is poten
 
 How do we put the reads together to make genomes ? How are we going to figure out which short sequence was coming from which species ? This is what `gefes` is supposed to help with.
 
-Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper" are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via SLURM).
+Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via SLURM).
 
 ## Overview:
 
 Starting from the raw reads there are about eight distinct processing steps in `gefes`:
 
-1. Cleaning
+1. Clean
 2. Co-Assemble
 3. Map
-4. Cluster contigs
+4. Bin contigs together
 5. Validate
 6. Assign taxonomy
 7. Annotate
@@ -48,7 +48,7 @@ Unfortunately, no other detailed documentation has been written yet but the code
 
 ## Installing
 
-No automated installation has been developed for the `gefes` package. Ultimately you will be able to install it like this:
+No automated installation has been developed for the `gefes` package. Ultimately you will be able to install it by following this procedure:
 
 ~~~
 To install `seqenv` onto your machine, use the python package manager:
@@ -141,6 +141,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
  * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
+ * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct``
 
  * [Glimmer]() version X.X.X providing ``XXX``
  * [Prodigal]() version X.X.X providing ``XXX``
@@ -205,3 +206,8 @@ A special thanks to all those who helped create this pipeline and make it as gre
 Below is drawn the flowchart describing the data processing along all the steps of GEFES:
 
 ![Flowchart](/../master/documentation/flowchart.png?raw=true "Flowchart")
+
+## Diagram
+Below is presented a tentative UML diagram detailing not the inheritance of the classes but the use of the composition design pattern between the objects created.
+
+![Diagram](/../master/documentation/diagram.png?raw=true "Diagram")

@@ -5,6 +5,7 @@ from __future__ import division
 import gefes
 from gefes.assemble.ray import Ray
 from gefes.running.aggregate_runner import AggregateRunner
+from gefes.binning.concoct import Concoct
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -17,7 +18,7 @@ class Aggregate(object):
     /logs/
     /graphs/
     /assembly/
-    /binning/
+    /bins/
     """
 
     def __repr__(self): return '<%s object "%s" with %i samples>' % \
@@ -52,7 +53,7 @@ class Aggregate(object):
         # Runner #
         self.runner = AggregateRunner(self)
         # Binner #
-        #self.binner = Binner(self)
+        self.binner = Concoct(self.samples, self.assembly, self.p.bins_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Binner(self)

@@ -7,6 +7,7 @@ from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 
 # Third party modules #
+import sh
 
 ###############################################################################
 class Concoct(object):
@@ -14,21 +15,25 @@ class Concoct(object):
     to bin contigs togather.
     """
 
+    short_name = 'concoct'
+
     all_paths = """
-    /lorem.fasta
+    /output/
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, contigs):
+    def __init__(self, samples, assembly, result_dir):
         # Save attributes #
-        self.contigs = contigs
+        self.samples = samples
+        self.assembly = assembly
+        self.result_dir = result_dir
         # Auto paths #
-        self.base_dir = self.result_dir + 'bowtie/'
+        self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
-        pass
+        sh.concoct('--coverage_file', self.project, '--composition_file', self.assembly.results.contig_fasta, '-b', self.p.output_dir)
 
     @property_cached
     def results(self):
