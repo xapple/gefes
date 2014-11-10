@@ -195,6 +195,12 @@ Or something like this:
 ##### - "pip install matplotlib" missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`
 
+## Acknowledgments
+A special thanks to all those who helped create this pipeline and make it as great as it is:
+* Ino De Bruijn @inodb
+* Moritz Buck @moritzbuck
+* Umer Zeeshan Ijaz @umerijaz
+
 ## Flowchart
 Below is drawn the flowchart describing the data processing along all the steps of GEFES:
 
