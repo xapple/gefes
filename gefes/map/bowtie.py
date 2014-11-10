@@ -113,20 +113,38 @@ class BowtieResults(object):
     def __nonzero__(self): return self.p.coverage.exists
     def __init__(self, bowtie):
         self.bowtie = bowtie
+        self.assembly = bowtie.assembly
         self.p = bowtie.p
 
     @property_cached
     def coverage(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
-        coverage and percentage covered for each contig. Returns a dict with fasta id as
-        key and containing 'percent_covered' with 'cov_mean' information inside.
-        The output file has the following headers:
-          * headers = ['name', 'depth', 'count', 'length', 'fraction']
+        coverage and percentage covered for each contig. Returns a dict with contig names as
+        keys and containing 'percent_covered' with 'cov_mean' information inside.
         http://bedtools.readthedocs.org/en/latest/content/tools/genomecov.html"""
-        frame = pandas.io.parsers.read_csv(self.p.map_smds_coverage, sep='\t')
+        headers = ['name', 'depth', 'count', 'length', 'fraction']
+        frame = pandas.io.parsers.read_csv(self.p.map_smds_coverage, sep='\t', index_col=0, names=headers)
         out_dict = {}
-        for name in self.assembly.contigs.names:
-            cov_mean = frame[name][3] * frame[name][4] if name in frame else 0
-            percent_covered = 100 if 0 not in frame[name][3] else 100 - frame[name][3][0] * 100.0
-            out_dict[name] = {"cov_mean": cov_mean, "percent_covered": percent_covered}
+        for contig in self.assembly.results.contigs:
+            if contig.name not in frame.index:
+                cov_mean = 0
+                percent_covered = 0
+                continue
+            subframe = frame.loc[contig.name]
+            assert round(subframe['fraction'].sum(), 4) == 1.0
+            cov_mean = (subframe['depth'] * subframe['fraction']).sum()
+            not_covered = subframe['depth'] == 0
+            if not_covered.any(): percent_covered = 100 - subframe.loc[not_covered]['fraction']
+            else:                 percent_covered = 100.0
+            out_dict[contig.name] = {"cov_mean": cov_mean, "percent_covered": percent_covered}
         return out_dict
+
+    @property
+    def percent_covered(self):
+        """The percentage covered in every contig. Dict with contig names as keys"""
+        return {}
+
+    @property
+    def coverage_mean(self):
+        """The mean coverage in every contig. Dict with contig names as keys"""
+        return {}

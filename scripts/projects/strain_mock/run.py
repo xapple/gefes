@@ -14,8 +14,10 @@ import gefes
 ###############################################################################
 from plumbing import slurm
 slurm.nr_threads = 32
+
 p = gefes.projects['strain_mock'].load()
 s = p.first.load()
 
 print p.assembly.results.contigs_fasta.count
 s.mapper.run()
+print s.mapper.results.coverage

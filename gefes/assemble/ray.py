@@ -102,13 +102,9 @@ class RayResults(object):
     def __init__(self, ray):
         self.ray = ray
         self.p = AutoPaths(self.ray.base_dir, self.all_paths)
-
-    @property_cached
-    def contigs_fasta(self):
-        """Just the contigs as a FASTA file object"""
-        return FASTA(self.p.Contigs)
+        self.contigs_fasta = FASTA(self.p.Contigs)
 
     @property_cached
     def contigs(self):
         """A list of all the contigs produced returned as our Contig custom objects"""
-        return [Contig(self.ray, s) for s in self.contigs_fasta]
+        return [Contig(self.ray, record, num=i) for i,record in enumerate(self.contigs_fasta)]
