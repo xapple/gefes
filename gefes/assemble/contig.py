@@ -26,7 +26,7 @@ class Contig(object):
         # Basic attributes #
         self.record = record
         self.name = self.record.id
-        self.num = num
+        self.num = int(num)
         # Auto paths #
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)

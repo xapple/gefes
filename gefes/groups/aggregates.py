@@ -18,7 +18,7 @@ class Aggregate(object):
     /logs/
     /graphs/
     /assembly/
-    /bins/
+    /binning/
     """
 
     def __repr__(self): return '<%s object "%s" with %i samples>' % \
@@ -51,7 +51,7 @@ class Aggregate(object):
         # Assemble #
         self.assembly = Ray(self.samples, self.p.assembly_dir)
         # Binner #
-        self.binner = Concoct(self.samples, self.assembly, self.p.bins_dir)
+        self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Binner(self)

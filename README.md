@@ -112,9 +112,6 @@ Relaunch your shell and type these commands to get the right version of python:
 #### Step 4: Install all required python packages
 `gefes` uses many third party python libraries. You can get them by running these commands:
 
-    $ pip install plumbing
-    $ pip install fasta
-    $ pip install pymarktex
     $ pip install matplotlib
     $ pip install pandas
     $ pip install biopython
@@ -130,21 +127,29 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install pysam
     $ pip install concoct
 
+It also uses several first party python libraries that we have developed and use in several projects `gefes`. You can get them by running these commands:
+
+    $ pip install plumbing
+    $ pip install fasta
+    $ pip install pymarktex
+
 Don't forget to rehash the executable links at the end if you are using pyenv like we do:
 
     $ pyenv rehash
 
 #### Step 5: Obtaining extra dependencies
-`gefes` also makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
+`gefes` makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing onesonly when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
+ * [NCBI BLAST](http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi) version 2.2.28+ providing ``blastn``
  * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
  * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
  * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
  * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in python package index)
+ * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.7.2 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
 
-These can take some time to install and unfortunately we can't package them with our project !
+These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system.
 
 #### Step 6: Make a working directory with the raw data linked
 `gefes` will generate results in a directory named `views` in a directory named `GEFES` in your home folder. You can change this by editing the code of course.
@@ -153,18 +158,17 @@ These can take some time to install and unfortunately we can't package them with
     $ mkdir GEFES
     $ cd GEFES
     $ mkdir views
-    $ mkdir INBOX
 
-`gefes` will usually search for the raw reads in a directory called `INBOX` somewhere in your home. You should set up the correct symbolic links.
+#### Step 7: Make a JSON file describing your project
+`gefes` will create `Project` objects with associated `Sample` objects based on a user inputted JSON files. Look at the `json` directory at the root of the repository and make your own. You have to tell `gefes` where to look for your raw reads.
+
+`gefes` will usually search for the raw reads in a directory called `INBOX` somewhere in your home. You can set up the correct symbolic links for instance:
 
     $ cd ~
     $ cd GEFES
     $ mkdir INBOX
     $ cd INBOX
     $ ln -s /proj/b2011035/INBOX/* ./
-
-#### Step 7: Make a JSON file describing your project
-`gefes` will create `Project` objects with associated `Sample` objects based on a user inputted JSON files. Look at the `json` directory at the root of the repository and make your own.
 
 #### Step 8: Troubleshooting
 You might run into difficulties at some of the steps above -- if that is the case check this section for a solution.

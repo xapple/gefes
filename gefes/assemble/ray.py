@@ -6,6 +6,8 @@ import os, socket
 
 # Internal modules #
 from gefes.assemble.contig import Contig
+
+# First party modules #
 from plumbing.common import flatter
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
