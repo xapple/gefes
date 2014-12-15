@@ -16,10 +16,10 @@ class QualityChecker(object):
     """Takes care of checking the PHRED score of the raw reads
     and will discard or trim bad ones."""
 
-    window_size = 10
-    threshold = 20
-    min_length = 50
-    discard_N = True
+    window_size = 10 # Size of the window we will slide along the read
+    threshold   = 20 # This is a PHRED score threshold
+    min_length  = 50
+    discard_N   = True
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.source)
     def __len__(self): return len(self.pair)
