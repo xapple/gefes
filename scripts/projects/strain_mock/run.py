@@ -35,3 +35,6 @@ for sample in p: print """python -c "import gefes; p = gefes.projects['strain_mo
 # Run concoct #
 p.binner.run()
 b = p.binner.results.bins[0]
+
+# Annotate #
+b.annotation.run()

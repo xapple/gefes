@@ -2,6 +2,7 @@
 
 # Internal modules #
 from gefes.annotation.prokka import Prokka
+from gefes.annotation.cogs import SingleCOGs
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -38,6 +39,7 @@ class Bin(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Extra objects #
         self.annotation = Prokka(self, self.p.annotation_dir)
+        self.single_cogs = SingleCOGs(self)
         #self.reassembly = Ray()
 
     @property_cached

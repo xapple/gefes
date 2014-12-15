@@ -147,7 +147,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
  * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in python package index)
- * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.7.2 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
+ * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.10 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
 
 These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system.
 
