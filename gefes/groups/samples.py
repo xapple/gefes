@@ -84,8 +84,6 @@ class Sample(object):
         self.format = self.pair.format
         # Optional parameters #
         self.long_name = self.info.get('sample_long_name')
-        # If we have the Illumina run XML report, we can extract some statistics later #
-        self.report_stats = {'fwd': {}, 'rev': {}}
         # The directory where we will place all the data for this sample #
         self.base_dir = self.out_dir + self.name + '/'
         # Delayed init #

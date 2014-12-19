@@ -35,7 +35,7 @@ class SampleRunner(Runner):
 
     @property
     def extra_slurm_params(self):
-        # Empty dictionary #
+        # Standard cases #
         params = {}
         # Special cases #
         if self.parent.project.name == 'test':
