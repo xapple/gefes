@@ -17,7 +17,7 @@ hostname = platform.node()
 class SampleRunner(Runner):
     """Will run stuff on a sample"""
     modules = [gefes, plumbing]
-    default_time = '1-00:00:00'
+    default_time = '2-00:00:00'
 
     default_steps = [
         {'pair.fwd.fastqc.run':                     {}},
@@ -36,7 +36,8 @@ class SampleRunner(Runner):
     @property
     def extra_slurm_params(self):
         # Standard cases #
-        params = {}
+        params = {'partition': 'core',
+                  'cores'    : 1}
         # Special cases #
         if self.parent.project.name == 'test':
             params['time'] = '00:15:00'
