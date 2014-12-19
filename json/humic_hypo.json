@@ -104,7 +104,7 @@
             "amplification":           "MDA",
             "dna_after_amplification": [67.0, "ng/µl", "NanoDrop"],
 
-            "biosample":               "SAMNXXXXXXXX",
+            "biosample":               "SAMNXXXXXXXX"
         },
 
         {
@@ -140,7 +140,7 @@
             "amplification":           "MDA",
             "dna_after_amplification": [55.0, "ng/µl", "NanoDrop"],
 
-            "biosample":               "SAMNXXXXXXXX",
+            "biosample":               "SAMNXXXXXXXX"
         }
     ]
 }
