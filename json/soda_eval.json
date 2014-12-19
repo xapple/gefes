@@ -7,13 +7,12 @@
         "pi": {
             "name": "Alexander Eiler",
             "email": "alexander.eiler@ebc.uu.se"
-        },
+        }
     },
 
     "project_name":       "soda_eval",
     "project_long_name":  "Preliminary soda lakes data for evaluation",
     "project_num":        4,
-    "remarks":            "Corresponds to the samples that were amplicon sequenced in ILLUMITAG run 3, pool 8."
 
     "uppmax_project_id":  "b2014083",
     "illumina_run_id":    "140912_D00457_0050_BC4TFBACXX",
@@ -30,6 +29,8 @@
     "country":      "Austria",
     "location":     "XXXXX",
     "bioproject":   "PRJNAXXXXXX",
+
+    "remarks":      "Corresponds to the samples that were amplicon sequenced in ILLUMITAG run 3, pool 8.",
 
     "samples_base_dir": "~/GEFES/raw/projects/soda_eval/",
     "samples": [
@@ -57,8 +58,8 @@
             "chla":        null,
             "microbes":    null,
             "real_name":  ["Silber Lacke (SS)", "de"],
-            "GPS N":      ["47°47'29''", "N"],
-            "GPS E":      ["16°46'50''", "E"],
+            "latitude":   ["47°47'29''", "N"],
+            "longitude":  ["16°46'50''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -86,8 +87,8 @@
             "chla":        null,
             "microbes":    null,
             "real_name":  ["Silber Lacke (SS)", "de"],
-            "GPS N":      ["47°47'29''", "N"],
-            "GPS E":      ["16°46'50''", "E"],
+            "latitude":   ["47°47'29''", "N"],
+            "longitude":  ["16°46'50''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -115,8 +116,8 @@
             "chla":        null,
             "microbes":    null,
             "real_name":  ["Silber Lacke (SS)", "de"],
-            "GPS N":      ["47°47'29''", "N"],
-            "GPS E":      ["16°46'50''", "E"],
+            "latitude":   ["47°47'29''", "N"],
+            "longitude":  ["16°46'50''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -144,8 +145,8 @@
             "chla":        [161,   "mg/l"],
             "microbes":    null,
             "real_name":  ["Silber Lacke (SS)", "de"],
-            "GPS N":      ["47°47'29''", "N"],
-            "GPS E":      ["16°46'50''", "E"],
+            "latitude":   ["47°47'29''", "N"],
+            "longitude":  ["16°46'50''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -173,8 +174,8 @@
             "chla":        [182.8,    "mg/l"],
             "microbes":    [3.29E+08, "cells/ml"],
             "real_name":   ["Zicklacke (ZL)", "de"],
-            "GPS N":       ["47°46'05''", "N"],
-            "GPS E":       ["16°46'51''", "E"],
+            "latitude":    ["47°46'05''", "N"],
+            "longitude":   ["16°46'51''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -202,8 +203,8 @@
             "chla":        [45.4,     "mg/l"],
             "microbes":    [2.82E+08, "cells/ml"],
             "real_name":   ["Zicklacke (ZL)", "de"],
-            "GPS N":       ["47°46'05''", "N"],
-            "GPS E":       ["16°46'51''", "E"],
+            "latitude":    ["47°46'05''", "N"],
+            "longitude":   ["16°46'51''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -231,8 +232,8 @@
             "chla":        [723,      "mg/l"],
             "microbes":    [8.10E+07, "cells/ml"],
             "real_name":   ["Zicklacke (ZL)", "de"],
-            "GPS N":       ["47°46'05''", "N"],
-            "GPS E":       ["16°46'51''", "E"],
+            "latitude":    ["47°46'05''", "N"],
+            "longitude":   ["16°46'51''", "E"],
 
             "biosample":               "SAMNXXXXXXXX"
         },
@@ -258,15 +259,14 @@
             "carbonate":   null,
             "phosphorus":  [240,  "mg/l", "Ptot"],
             "chla":        [31.4, "mg/l"],
-            "microbes":    null
+            "microbes":    null,
             "real_name":   ["Zicklacke (ZL)", "de"],
-            "GPS N":       ["47°46'05''", "N"],
-            "GPS E":       ["16°46'51''", "E"],
+            "latitude":    ["47°46'05''", "N"],
+            "longitude":   ["16°46'51''", "E"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMNXXXXXXXX",
 
             "remarks": "This one is found in ILLUMITAG run 4, pool 4 instead."
-        },
-
+        }
     ]
 }

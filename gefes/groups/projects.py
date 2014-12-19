@@ -1,5 +1,5 @@
 # Built-in modules #
-import re, os, json, glob
+import re, os, glob
 
 # Internal modules #
 from gefes.groups.aggregates import Aggregate
@@ -9,7 +9,7 @@ from gefes.common import join_paired_filepaths
 
 # First party modules #
 from plumbing.autopaths import FilePath, AutoPaths
-from plumbing.common import sort_string_by_pairs, natural_sort
+from plumbing.common import sort_string_by_pairs, natural_sort, load_json_path
 
 # Third party modules #
 
@@ -34,7 +34,7 @@ class Project(Aggregate):
     def __init__(self, json_path, project_dir):
         # Parse the json file describing the project #
         self.json_path = FilePath(json_path)
-        with open(json_path) as handle: self.info = json.load(handle)
+        self.info = load_json_path(json_path)
         # Required parameters #
         self.num       = self.info['project_num']
         self.name      = self.info['project_name']

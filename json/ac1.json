@@ -1,0 +1,44 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Sarahi Garcia",
+            "email": "sarilog@gmail.com"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "mrtz.buck@gmail.com"
+        }
+    },
+
+    "project_name":       "ac1",
+    "project_long_name":  "acI enrichments",
+    "project_num":        5,
+
+    "uppmax_project_id":  "b2011138",
+
+    "library_strategy":     "XXXXX",
+    "library_source":       "METAGENOMIC",
+    "library_selection":    "XXXXX",
+    "library_layout":       "Paired-end",
+    "platform":             "ILLUMINA",
+    "instrument_model":     "Illumina HiSeq",
+    "read_length":          [100, "bp"],
+
+    "date":         "XXXXX",
+    "latitude":     [null, "N"],
+    "longitude":    [null, "E"],
+    "country":      "XXXXX",
+    "location":     "XXXXX",
+    "bioproject":   "PRJNAXXXXXX",
+
+    "remarks":      "Was in a directory named b2011138/acI_enrichments.",
+
+    "samples_base_dir": "~/GEFES/raw/projects/ac1/",
+    "samples": [
+
+    ]
+}

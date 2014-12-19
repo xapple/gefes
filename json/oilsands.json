@@ -1,0 +1,43 @@
+{
+    "contacts": {
+        "main": {
+            "name": "Valerie Hubalek",
+            "email": "valerie.hubalek@ebc.uu.se"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        },
+        "bioinfo": {
+            "name": "Moritz Buck",
+            "email": "moritz.buck@ebc.uu.se"
+        }
+    },
+
+    "project_name":       "oilsands",
+    "project_long_name":  "Canadian oilsands",
+    "project_num":        6,
+
+    "uppmax_project_id":  "b2011138",
+    "illumina_run_id":    "140627_D00118_0147_AC4A0BACXX",
+
+    "library_strategy":     "XXXXX",
+    "library_source":       "METAGENOMIC",
+    "library_selection":    "XXXXX",
+    "library_layout":       "Paired-end",
+    "platform":             "ILLUMINA",
+    "instrument_model":     "Illumina HiSeq",
+    "read_length":          [100, "bp"],
+
+    "date":         "XXXXX",
+    "latitude":     [null, "N"],
+    "longitude":    [null, "E"],
+    "country":      "XXXXX",
+    "location":     "XXXXX",
+    "bioproject":   "PRJNAXXXXXX",
+
+    "samples_base_dir": "~/GEFES/raw/projects/oilsands/",
+    "samples": [
+
+    ]
+}
