@@ -15,7 +15,7 @@ hostname = platform.node()
 class AggregateRunner(Runner):
     """Will run stuff on an aggregate"""
     modules = [gefes, plumbing]
-    default_time = '2-00:00:00'
+    default_time = '7-00:00:00'
 
     default_steps = [
         {'assembly.run':     {}},
@@ -24,14 +24,14 @@ class AggregateRunner(Runner):
     @property
     def job_name(self): return "agg_%s" % self.parent.name
 
-    @property
     def extra_slurm_params(self):
         # Standard cases #
-        params = {}
+        params = {'partition':  'node',
+                  'constraint': 'mem512GB'}
         # Special cases #
         if self.parent.project.name == 'test':
-            params['time'] = '00:15:00'
-            if hostname.startswith('milou'): params['qos'] = 'short'
+            params['time'] = '01:00:00'
+            if hostname.startswith('milou'): params['partition'] = 'devel'
         # Return result #
         return params
 
