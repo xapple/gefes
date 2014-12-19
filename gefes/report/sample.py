@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import json, shutil, socket
+import os, json, shutil, socket
 
 # Internal modules #
 import gefes
@@ -14,7 +14,7 @@ from pymarktex.figures import ScaledFigure, DualFigure
 # Third party modules #
 
 # Constants #
-ssh_header = "ssh://" + socket.getfqdn() + "/"
+ssh_header = "ssh://" + socket.getfqdn()
 
 ###############################################################################
 class SampleReport(Document):
@@ -70,7 +70,15 @@ class SampleTemplate(Template):
     def project_other_samples(self): return len(self.project) - 1
 
     # Information dictionary #
-    def information(self): return json.dumps(self.sample.info, sort_keys=True, indent=4)
+    def json_url(self):
+        json_location = os.path.relpath(self.project.json_path, start=gefes.git_repo)
+        return gefes.url + ("tree/%s/" % gefes.git_repo.branch) + json_location
+    def information(self):
+        info = self.sample.info.copy()
+        info.pop("contacts")
+        info = json.dumps(info, sort_keys=True, indent=4)
+        info = info.strip("{}")
+        return info
 
     # Process info #
     def project_url(self):       return gefes.url
@@ -86,7 +94,9 @@ class SampleTemplate(Template):
     def fwd_count(self):       return split_thousands(self.sample.pair.fwd.count)
     def rev_size(self):        return             str(self.sample.pair.rev.size)
     def rev_count(self):       return split_thousands(self.sample.pair.rev.count)
-    def illumina_report(self): return    ssh_header + self.sample.illumina_info.report
+    def illumina_report(self):
+        if not self.sample.illumina_info.report.exists: return "<no report found>"
+        else: return ssh_header + self.sample.illumina_info.report
     def raw_per_base_qual(self):
         params = [self.sample.pair.fwd.fastqc.results.per_base_qual,
                   self.sample.pair.rev.fastqc.results.per_base_qual]
@@ -124,7 +134,7 @@ class SampleTemplate(Template):
         label = "singletons_len_dist"
         return str(ScaledFigure(path, caption, label))
 
-    # Fastqc graphs #
+    # FastQC graphs #
     def cleaned_per_base_qual(self):
         params = [self.sample.clean.fwd.fastqc.results.per_base_qual,
                   self.sample.clean.rev.fastqc.results.per_base_qual]

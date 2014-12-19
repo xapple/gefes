@@ -24,8 +24,8 @@ class SampleRunner(Runner):
         {'quality_checker.run':                     {}},
         {'clean.fwd.fastqc.run':                    {}},
         {'clean.rev.fastqc.run':                    {}},
-        {'clean.fwd.graphs.length_dist.plot':       {}},
-        {'clean.rev.graphs.length_dist.plot':       {}},
+        {'clean.fwd.graphs.length_dist.plot':       {'x_log': True, 'y_log': True}},
+        {'clean.rev.graphs.length_dist.plot':       {'x_log': True, 'y_log': True}},
         {'report.generate':                         {}},
     ]
 
