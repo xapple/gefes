@@ -17,7 +17,7 @@ hostname = platform.node()
 class SampleRunner(Runner):
     """Will run stuff on a sample"""
     modules = [gefes, plumbing]
-    default_time = '02:00:00'
+    default_time = '1-00:00:00'
 
     default_steps = [
         {'pair.fwd.fastqc.run':                     {}},
