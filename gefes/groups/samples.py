@@ -77,8 +77,8 @@ class Sample(object):
         if not self.fwd_path.exists: raise Exception("File '%s' does not exist" % self.fwd_path)
         if not self.rev_path.exists: raise Exception("File '%s' does not exist" % self.rev_path)
         # Is it a FASTA pair or a FASTQ pair ? #
-        if "fastq" in fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
-        else:                   self.pair = PairedFASTA(self.fwd_path, self.rev_path)
+        if "fastq" in self.fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
+        else:                        self.pair = PairedFASTA(self.fwd_path, self.rev_path)
         self.format = self.pair.format
         # Optional parameters #
         self.long_name = self.info.get('sample_long_name')

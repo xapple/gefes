@@ -28,7 +28,7 @@ class Project(Aggregate):
     /samples/
     """
 
-    def __repr__(self): return '<%s object "%s"' % \
+    def __repr__(self): return '<%s object "%s">' % \
                                (self.__class__.__name__, self.name)
 
     def __init__(self, json_path, project_dir):
