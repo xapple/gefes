@@ -2,6 +2,9 @@
 
 # Internal modules #
 import gefes
+
+# First party modules #
+import plumbing
 from plumbing.runner import Runner
 
 # Third party modules #
@@ -9,6 +12,8 @@ from plumbing.runner import Runner
 ###############################################################################
 class AggregateRunner(Runner):
     """Will run stuff on an aggregate"""
+    modules = [gefes, plumbing]
+
     default_time = '2-00:00:00'
 
     default_steps = [
@@ -27,6 +32,3 @@ class AggregateRunner(Runner):
         command += ["aggregate.load()"]
         command += ["aggregate.runner.run(steps)"]
         return command
-
-    def run_slurm(self, steps=None, **kwargs):
-        return Runner.run_slurm(self, steps=steps, module=gefes, **kwargs)

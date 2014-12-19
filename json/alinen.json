@@ -41,38 +41,184 @@
 
         {
             "sample_name":       "s1",
-            "sample_long_name":  "S1 depth surface",
+            "sample_long_name":  "S1",
             "sample_directory":  "Sample_S1",
             "sample_num":        1,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
+            "forward_reads": "S1_GGCTAC_L005_R1_001.fastq.gz",
+            "reverse_reads": "S1_GGCTAC_L005_R2_001.fastq.gz",
+
+            "depth":                   [0, "m"],
             "dna_after_purification":  [0, "ng/µl"],
-            "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
+
+            "biosample":               "SAMNXXXXXXXX"
         },
 
         {
             "sample_name":       "s2",
-            "sample_long_name":  "S2 depth surface",
+            "sample_long_name":  "S2",
             "sample_directory":  "Sample_S2",
             "sample_num":        2,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
+            "forward_reads": "S2_CTTGTA_L005_R1_001.fastq.gz",
+            "reverse_reads": "S2_CTTGTA_L005_R2_001.fastq.gz",
+
+            "depth":                   [1, "m"],
             "dna_after_purification":  [0, "ng/µl"],
-            "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
+
+            "biosample":               "SAMNXXXXXXXX"
         },
 
         {
             "sample_name":       "s3",
-            "sample_long_name":  "S3 depth surface",
+            "sample_long_name":  "S3",
             "sample_directory":  "Sample_S3",
             "sample_num":        3,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
-            "dna_after_purification":  [3.007, "ng/µl"],
-            "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
+            "forward_reads": "S3_ATCACG_L005_R1_001.fastq.gz",
+            "reverse_reads": "S3_ATCACG_L005_R2_001.fastq.gz",
+
+            "depth":                   [1.5, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s4",
+            "sample_long_name":  "S4",
+            "sample_directory":  "Sample_S4",
+            "sample_num":        4,
+            "forward_reads": "S4_CGATGT_L006_R1_001.fastq.gz",
+            "reverse_reads": "S4_CGATGT_L006_R2_001.fastq.gz",
+
+            "depth":                   [2, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s5",
+            "sample_long_name":  "S5",
+            "sample_directory":  "Sample_S5",
+            "sample_num":        5,
+            "forward_reads": "S5_TTAGGC_L006_R1_001.fastq.gz",
+            "reverse_reads": "S5_TTAGGC_L006_R2_001.fastq.gz",
+
+            "depth":                   [2.2, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s6",
+            "sample_long_name":  "S6",
+            "sample_directory":  "Sample_S6",
+            "sample_num":        6,
+            "forward_reads": "S6_TGACCA_L006_R1_001.fastq.gz",
+            "reverse_reads": "S6_TGACCA_L006_R2_001.fastq.gz",
+
+            "depth":                   [2.4, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s7",
+            "sample_long_name":  "S7",
+            "sample_directory":  "Sample_S7",
+            "sample_num":        7,
+            "forward_reads": "S7_ACAGTG_L007_R1_001.fastq.gz",
+            "reverse_reads": "S7_ACAGTG_L007_R2_001.fastq.gz",
+
+            "depth":                   [2.8, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s8",
+            "sample_long_name":  "S8",
+            "sample_directory":  "Sample_S8",
+            "sample_num":        8,
+            "forward_reads": "S8_GCCAAT_L007_R1_001.fastq.gz",
+            "reverse_reads": "S8_GCCAAT_L007_R2_001.fastq.gz",
+
+            "depth":                   [3.5, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s9",
+            "sample_long_name":  "S9",
+            "sample_directory":  "Sample_S9",
+            "sample_num":        9,
+            "forward_reads": "S9_CAGATC_L007_R1_001.fastq.gz",
+            "reverse_reads": "S9_CAGATC_L007_R2_001.fastq.gz",
+
+            "depth":                   [4, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s10",
+            "sample_long_name":  "S10",
+            "sample_directory":  "Sample_S10",
+            "sample_num":        10,
+            "forward_reads": "S10_ACTTGA_L008_R1_001.fastq.gz",
+            "reverse_reads": "S10_ACTTGA_L008_R2_001.fastq.gz",
+
+            "depth":                   [4.5, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s11",
+            "sample_long_name":  "S11",
+            "sample_directory":  "Sample_S11",
+            "sample_num":        11,
+            "forward_reads": "S11_GATCAG_L008_R1_001.fastq.gz",
+            "reverse_reads": "S11_GATCAG_L008_R2_001.fastq.gz",
+
+            "depth":                   [5, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s12",
+            "sample_long_name":  "S12",
+            "sample_directory":  "Sample_S12",
+            "sample_num":        12,
+            "forward_reads": "S12_TAGCTT_L008_R1_001.fastq.gz",
+            "reverse_reads": "S12_TAGCTT_L008_R2_001.fastq.gz",
+
+            "depth":                   [5.5, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
+        },
+
+        {
+            "sample_name":       "s13",
+            "sample_long_name":  "S13",
+            "sample_directory":  "Sample_S13",
+            "sample_num":        13,
+            "forward_reads": "S13_GGCTAC_L008_R1_001.fastq.gz",
+            "reverse_reads": "S13_GGCTAC_L008_R2_001.fastq.gz",
+
+            "depth":                   [6, "m"],
+            "dna_after_purification":  [0, "ng/µl"],
+
+            "biosample":               "SAMNXXXXXXXX"
         }
     ]
 }

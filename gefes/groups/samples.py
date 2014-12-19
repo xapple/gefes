@@ -9,6 +9,7 @@ from gefes.preprocess.quality import QualityChecker
 from gefes.report.sample import SampleReport
 from gefes.running.sample_runner import SampleRunner
 from gefes.map.bowtie import Bowtie
+from gefes.parsing.illumina import IlluminaInfo
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath
@@ -72,7 +73,8 @@ class Sample(object):
         # Do we have a name for this sample ? #
         if name is None: self.name = self.info.get('sample_name')
         else:            self.name = name
-        if name is None: self.name = self.fwd_path.short_prefix
+        # If we still don't have one, just use the file name #
+        if self.name is None: self.name = self.fwd_path.short_prefix
         # Check that the files exist #
         if not self.fwd_path.exists: raise Exception("File '%s' does not exist" % self.fwd_path)
         if not self.rev_path.exists: raise Exception("File '%s' does not exist" % self.rev_path)
@@ -98,6 +100,8 @@ class Sample(object):
         if not self.project.loaded: self.project.load()
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Maybe we have an Illumina report XML #
+        self.illumina_info = IlluminaInfo(self)
         # Change location of first FastQC #
         if self.format == 'fastq':
             self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)

@@ -18,15 +18,15 @@ It was developed by Lucas Sinclair (<lucas.sinclair@me.com>) while working in th
 
 ## Context:
 
-As you know almost all microbes living in natural environments can't be isolated or cultured easily. So instead, we go and do shotgun metagenomic sampling. We take a glass of water from a lake, do a total DNA extraction and insert the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
+As you know almost all microbes living in natural environments can't be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
 
-It's quite different from when you are able to isolate a bacterium such as E. Coli. In that case, your DNA reads are coming from random locations of the chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.
+It's quite different from when you are able to isolate a bacterium and grow it such as E. Coli. In that case, your DNA reads are coming from random locations of the E. Coli chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.
 
 What we have as starting data in our case is more messy. Every DNA read is potentially coming from a different species. Plus, the fragments are really short and only span a fraction of a typical microbial gene.
 
 How do we put the reads together to make genomes ? How are we going to figure out which short sequence was coming from which species ? This is what `gefes` is supposed to help with.
 
-Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via SLURM).
+Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via the SLURM queuing system).
 
 ## Overview:
 
@@ -51,7 +51,7 @@ Unfortunately, no other detailed documentation has been written yet but the code
 No automated installation has been developed for the `gefes` package. Ultimately you will be able to install it by following this procedure:
 
 ~~~
-To install `seqenv` onto your machine, use the python package manager:
+To install `gefes` onto your machine, use the python package manager:
 
     $ pip install gefes
 
@@ -59,7 +59,7 @@ You might be installing this onto a computer server which you don't own and thus
 
     $ pip install --user gefes
 
-If this still doesn't work, you might be missing the `pip` program on your system or the correct version of Python (any version `2.7.x`). You can get both of these things by using using this little project: https://github.com/yyuu/pyenv
+If this still doesn't work, you might be missing the `pip` program on your system or the correct version of Python (any version `2.7.x`). You can get both of these things by using this little project: https://github.com/yyuu/pyenv
 ~~~
 
 In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.
@@ -106,8 +106,8 @@ These lines go into your ``.bash_profile``:
 Relaunch your shell and type these commands to get the right version of python:
 
     $ pyenv install 2.7.8
-    $ pyenv rehash
     $ pyenv global 2.7.8
+    $ pyenv rehash
 
 #### Step 4: Install all required python packages
 `gefes` uses many third party python libraries. You can get them by running these commands:
@@ -127,7 +127,7 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install pysam
     $ pip install concoct
 
-It also uses several first party python libraries that we have developed and use in several projects `gefes`. You can get them by running these commands:
+It also uses several first party python libraries that we have developed and use in several projects. You can get them by running these commands:
 
     $ pip install plumbing
     $ pip install fasta
@@ -140,14 +140,15 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
 #### Step 5: Obtaining extra dependencies
 `gefes` makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing onesonly when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
- * [NCBI BLAST](http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi) version 2.2.28+ providing ``blastn``
+ * [NCBI BLAST](http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi) version 2.2.28+ providing ``blastn`` and ``blastp``
  * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
  * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
  * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
- * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in python package index)
+ * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in the python package index)
  * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.10 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
+ * [LaTeX](https://www.tug.org/texlive/) version `TeX Live 2014` providing ``xelatex``.
 
 These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system.
 
@@ -161,14 +162,6 @@ These can take some time to install and unfortunately we can't package them with
 
 #### Step 7: Make a JSON file describing your project
 `gefes` will create `Project` objects with associated `Sample` objects based on a user inputted JSON files. Look at the `json` directory at the root of the repository and make your own. You have to tell `gefes` where to look for your raw reads.
-
-`gefes` will usually search for the raw reads in a directory called `INBOX` somewhere in your home. You can set up the correct symbolic links for instance:
-
-    $ cd ~
-    $ cd GEFES
-    $ mkdir INBOX
-    $ cd INBOX
-    $ ln -s /proj/b2011035/INBOX/* ./
 
 #### Step 8: Troubleshooting
 You might run into difficulties at some of the steps above -- if that is the case check this section for a solution.
@@ -196,6 +189,7 @@ If you are on OS X you can simply fix this error by typing `$ brew install freet
 
 ## Acknowledgments
 A special thanks to all those who helped create this pipeline and make it as great as it is:
+
 * Ino De Bruijn ([@inodb](https://github.com/inodb))
 * Moritz Buck ([@moritzbuck](https://github.com/moritzbuck))
 * Umer Zeeshan Ijaz ([@umerijaz](https://github.com/umerijaz))

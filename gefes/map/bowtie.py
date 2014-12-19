@@ -52,13 +52,13 @@ class Bowtie(object):
         self.sample = sample
         self.assembly = assembly
         self.result_dir = result_dir
-        # Convenience shortcuts #
-        self.contigs_fasta = self.assembly.results.contigs_fasta
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
+        # Convenience shortcuts #
+        self.contigs_fasta = self.assembly.results.contigs_fasta
         # Check both type of indexes exist #
         if not os.path.exists(self.contigs_fasta + '.1.bt2'): self.contigs_fasta.index_bowtie()
         if not os.path.exists(self.contigs_fasta + '.fai'): self.contigs_fasta.index_samtools()

@@ -2,6 +2,9 @@
 
 # Internal modules #
 import gefes
+
+# First party modules #
+import plumbing
 from plumbing.runner import Runner
 
 # Third party modules #
@@ -10,7 +13,9 @@ from plumbing.runner import Runner
 
 ###############################################################################
 class SampleRunner(Runner):
-    """Will run stuff on an aggregate"""
+    """Will run stuff on a sample"""
+    modules = [gefes, plumbing]
+
     default_time = '02:00:00'
 
     default_steps = [
@@ -29,11 +34,11 @@ class SampleRunner(Runner):
 
     def command(self, steps):
         command =  ["steps = %s" % steps]
-        command += ["name = '%s'" % self.parent.name]
-        command += ["sample = [s for s in gefes.samples if s.name==name][0]"]
+        command += ["s_name = '%s'" % self.parent.name]
+        command += ["p_name = '%s'" % self.parent.project.name]
+        command += ["project = [p for p in gefes.projects if p.name==p_name][0]"]
+        command += ["project.load()"]
+        command += ["sample  = [s for s in project        if s.name==s_name][0]"]
         command += ["sample.load()"]
         command += ["sample.runner.run(steps)"]
         return command
-
-    def run_slurm(self, steps=None, **kwargs):
-        return Runner.run_slurm(self, steps=steps, module=gefes, **kwargs)

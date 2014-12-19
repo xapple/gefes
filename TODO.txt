@@ -1,2 +1,1 @@
-Make the SLURM module attribute a list, to copy several modules in the log directory at once
 Make the length distribution log-log in the sample report
