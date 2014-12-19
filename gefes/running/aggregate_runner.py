@@ -13,7 +13,6 @@ from plumbing.runner import Runner
 class AggregateRunner(Runner):
     """Will run stuff on an aggregate"""
     modules = [gefes, plumbing]
-
     default_time = '2-00:00:00'
 
     default_steps = [
