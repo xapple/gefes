@@ -19,7 +19,7 @@
     "project_num":        2,
 
     "uppmax_project_id":  "b2011035",
-    "illumina_run_id":    "140612_D00457_0037_AC49JKACXX",
+    "illumina_run_id":    "130419_SN344_0246_AD1W9VACXX",
 
     "library_strategy":     "XXXXX",
     "library_source":       "METAGENOMIC",
@@ -27,51 +27,120 @@
     "library_layout":       "Paired-end",
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
+    "read_length":          [100, "bp"],
 
-    "date":         "XXXXX",
-    "latitude":     [61.208142, "N"],
-    "longitude":    [25.113609, "E"],
-    "country":      "Finland",
-    "location":     "Alinen Mustajärvi in Hämeenlinna",
     "bioproject":   "PRJNAXXXXXX",
 
-    "samples_base_dir": "~/GEFES/raw/projects/alinen/",
+    "samples_base_dir": "~/GEFES/raw/projects/humic_hypo/",
     "samples": [
 
         {
-            "sample_name":       "s1",
-            "sample_long_name":  "S1 depth surface",
-            "sample_directory":  "Sample_S1",
+            "sample_name":       "halsjarvi",
+            "sample_long_name":  "Halsjärvi",
+            "sample_directory":  "Sample_AE09",
             "sample_num":        1,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
-            "dna_after_purification":  [0, "ng/µl"],
+            "forward_reads":     "AE09_TTAGGC_L007_R1_001.fastq.gz",
+            "reverse_reads":     "AE09_TTAGGC_L007_R2_001.fastq.gz",
+
+            "url":          "http://www.jarviwiki.fi/wiki/Halsjärvi_(35.787.1.052)",
+            "country":      "Finland",
+            "location":     "Halsjärvi in Hämeenlinna",
+            "latitude":     [61.22586, "N"],
+            "longitude":    [25.139937, "E"],
+
+            "date":  "2012-09-03",
+            "layer": "hypolimnion",
+            "depth": [4.0, "to", 6.5, "m"],
+
+            "ph":          [6.4, "-log10([H+])"],
+            "temperature": [5.0, "Celsius"],
+            "alkalinity":  [0.768, "mmol/l"],
+            "doc":         [14.7, "mgC/l"],
+            "poc":         [1.0, "mgC/l"],
+            "color":       [657.0, "mg/l", "420nm, platinum"],
+            "oxygen":      [0.48, null],
+            "methane":     [367105.9, "nM"],
+            "chlorophyll": [34.4, "µg/l"],
+
+            "extraction":              null,
+            "dna_after_extraction":    [3.82, "ng/µl", "PicoGreen"],
+            "amplification":           "MDA",
+            "dna_after_amplification": [77.0, "ng/µl", "NanoDrop"],
+
             "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
+
+            "remarks":       "Double the amount of reads in this pool for some reason."
         },
 
         {
-            "sample_name":       "s2",
-            "sample_long_name":  "S2 depth surface",
-            "sample_directory":  "Sample_S2",
+            "sample_name":       "mekkojarvi",
+            "sample_long_name":  "Mekkojärvi",
+            "sample_directory":  "Sample_AE012",
             "sample_num":        2,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
-            "dna_after_purification":  [0, "ng/µl"],
+            "forward_reads":     "AE012_CGATGT_L007_R1_001.fastq.gz",
+            "reverse_reads":     "AE012_CGATGT_L007_R2_001.fastq.gz",
+
+            "country":      "Finland",
+            "location":     "Mekkojärvi in Hämeenlinna",
+            "latitude":     [61.230963, "N"],
+            "longitude":    [25.141890, "E"],
+
+            "date":  "2012-09-03",
+            "layer": "hypolimnion",
+            "depth": [2.0, "to", 3.8, "m"],
+
+            "ph":          [5.88, "-log10([H+])"],
+            "temperature": [6, "Celsius"],
+            "alkalinity":  [0.455, "mmol/l"],
+            "doc":         [27.4, "mgC/l"],
+            "poc":         [1.2, "mgC/l"],
+            "color":       [497.0, "mg/l", "420nm, platinum"],
+            "oxygen":      [0.47, null],
+            "methane":     [195879.2, "nM"],
+            "chlorophyll": [63.1, "µg/l"],
+
+            "extraction":              null,
+            "dna_after_extraction":    [5.80, "ng/µl", "PicoGreen"],
+            "amplification":           "MDA",
+            "dna_after_amplification": [67.0, "ng/µl", "NanoDrop"],
+
             "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
         },
 
         {
-            "sample_name":       "s3",
-            "sample_long_name":  "S3 depth surface",
-            "sample_directory":  "Sample_S3",
+            "sample_name":       "alinen",
+            "sample_long_name":  "Alinen Mustajärvi",
+            "sample_directory":  "Sample_AE013",
             "sample_num":        3,
-            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
-            "dna_after_purification":  [3.007, "ng/µl"],
+            "forward_reads":     "AE013_ATCACG_L007_R1_001.fastq.gz",
+            "reverse_reads":     "AE013_ATCACG_L007_R2_001.fastq.gz",
+
+            "country":      "Finland",
+            "location":     "Alinen Mustajärvi in Hämeenlinna",
+            "latitude":     [61.208142, "N"],
+            "longitude":    [25.113609, "E"],
+
+            "date":     "2009-09-15",
+            "layer":    "hypolimnion",
+            "depth":    [4.0, "to", 6.0, "m"],
+            "codename": "H15",
+
+            "ph":          [5.5, "-log10([H+])"],
+            "temperature": [5.1, "Celsius"],
+            "alkalinity":  [0.1, null],
+            "doc":         [15.4, null],
+            "poc":         [1.5, null],
+            "color":       [192.0, null],
+            "oxygen":      [0.3, null],
+            "methane":     [565161.5, null],
+            "chlorophyll": [63.8, null],
+
+            "extraction":              null,
+            "dna_after_extraction":    [26.32, "ng/µl", "PicoGreen"],
+            "amplification":           "MDA",
+            "dna_after_amplification": [55.0, "ng/µl", "NanoDrop"],
+
             "biosample":               "SAMNXXXXXXXX",
-            "depth":                   [0, "m"]
         }
     ]
 }

@@ -55,7 +55,7 @@ class Sample(object):
         # Let's inherit the information from the project #
         self.info = self.project.info.copy()
         if 'samples' in self.info: self.info.pop('samples')
-        # Do we have extra information on this sample ? #
+        # Do we have extra information provided on this sample ? #
         if info is not None: self.info.update(info)
         # Extract fields from the extra information #
         self.long_name = self.info.get('samples_long_name')
@@ -73,9 +73,12 @@ class Sample(object):
         if name is None: self.name = self.info.get('sample_name')
         else:            self.name = name
         if name is None: self.name = self.fwd_path.short_prefix
+        # Check that the files exist #
+        if not self.fwd_path.exists: raise Exception("File '%s' does not exist" % self.fwd_path)
+        if not self.rev_path.exists: raise Exception("File '%s' does not exist" % self.rev_path)
         # Is it a FASTA pair or a FASTQ pair ? #
-        if "fastq" in fwd_path: self.pair = PairedFASTQ(fwd_path, rev_path)
-        else:                   self.pair = PairedFASTA(fwd_path, rev_path)
+        if "fastq" in fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
+        else:                   self.pair = PairedFASTA(self.fwd_path, self.rev_path)
         self.format = self.pair.format
         # Optional parameters #
         self.long_name = self.info.get('sample_long_name')

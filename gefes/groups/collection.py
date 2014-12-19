@@ -14,7 +14,10 @@ class Collection(object):
     def __add__(self, other): return self.__class__(self.children + other.children)
 
     def __init__(self, children):
+        # Base attribute #
         self.children = children
+        # Sort them #
+        if all(hasattr(c, "num") for c in self.children): self.children.sort(key = lambda x: x.num)
 
     @property
     def first(self): return self.children[0]
