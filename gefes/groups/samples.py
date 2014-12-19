@@ -63,7 +63,7 @@ class Sample(object):
         # Does the info contain the file location ? #
         self.raw_dir = self.info.get('samples_base_dir', '')
         if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
-        self.raw_dir += self.info.get('sample_directory', '') + '/'
+        self.raw_dir += self.info.get('sample_directory', '')
         if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
         if 'forward_reads' in self.info: self.fwd_path = FilePath(self.raw_dir + self.info.get('forward_reads'))
         if 'reverse_reads' in self.info: self.rev_path = FilePath(self.raw_dir + self.info.get('reverse_reads'))
