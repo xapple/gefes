@@ -16,7 +16,7 @@
 
     "project_name":       "alinen",
     "project_long_name":  "Alinen Mustarjärvi depth profile",
-    "project_num":        2,
+    "project_num":        3,
 
     "uppmax_project_id":  "b2014083",
     "illumina_run_id":    "140612_D00457_0037_AC49JKACXX",
@@ -27,6 +27,7 @@
     "library_layout":       "Paired-end",
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
+    "read_length":          [100, "bp"],
 
     "date":         "XXXXX",
     "latitude":     [61.208142, "N"],

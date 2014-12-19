@@ -11,7 +11,7 @@ from gefes.assemble.contig import Contig
 from plumbing.common import flatter
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
-from plumbing.slurm import nr_threads
+from plumbing.slurm import num_processors
 from fasta import FASTA
 
 # Third party modules #
@@ -77,16 +77,16 @@ class Ray(object):
 
     def sisu(self):
         """Run the assembly on the Sisu super computer at sisu-login1.csc.fi"""
-        return sh.aprun('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return sh.aprun('-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
     def halvan(self):
         """Run the assembly on the large memory computer at http://www.uppmax.uu.se/halvan-user-guide"""
-        return sh.mpiexec('-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return sh.mpiexec('-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
     def milou(self):
         """Run the assembly on one node of the milou cluster at http://www.uppmax.uu.se/milou-user-guide"""
         if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
-        commands = ['-n', nr_threads, self.executable, '-k', self.kmer_size, '-o', self.out_dir] + self.paths
+        commands = ['-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir] + self.paths
         return sh.mpiexec(*commands, _out=self.p.stdout.path, _err=self.p.stderr.path)
 
     def local(self):

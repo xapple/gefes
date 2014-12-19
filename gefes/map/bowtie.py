@@ -9,8 +9,8 @@ import gefes
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
-from plumbing.cache import property_cached, pickled_property
-from plumbing.slurm import nr_threads
+from plumbing.cache import property_cached, property_pickled
+from plumbing.slurm import num_processors
 
 # Third party modules #
 import sh, pandas
@@ -63,7 +63,7 @@ class Bowtie(object):
         if not os.path.exists(self.contigs_fasta + '.1.bt2'): self.contigs_fasta.index_bowtie()
         if not os.path.exists(self.contigs_fasta + '.fai'): self.contigs_fasta.index_samtools()
         # Make our options #
-        options = ['-p', nr_threads,
+        options = ['-p', num_processors,
                    '-x', self.assembly.results.contigs_fasta,
                    '-1', self.sample.fwd_path,
                    '-2', self.sample.rev_path,
@@ -94,7 +94,7 @@ class Bowtie(object):
         mem_size = "16"
         # Run the command #
         sh.java('-Xmx%sg' % mem_size,
-                '-XX:ParallelGCThreads=%s' % nr_threads,
+                '-XX:ParallelGCThreads=%s' % num_processors,
                 '-XX:+CMSClassUnloadingEnabled',
                 '-jar', gefes.repos_dir + 'bin/MarkDuplicates.jar',
                 'INPUT=%s' % self.p.map_s_bam,
@@ -120,7 +120,7 @@ class BowtieResults(object):
         self.assembly = bowtie.assembly
         self.p = bowtie.p
 
-    @pickled_property
+    @property_pickled
     def statistics(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
         coverage and percentage covered for each contig. Returns a dict with contig names as

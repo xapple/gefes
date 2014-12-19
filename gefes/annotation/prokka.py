@@ -4,7 +4,8 @@
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
-from plumbing.slurm import nr_threads
+from plumbing.slurm import num_processors
+from plumbing.cache import property_cached
 
 # Third party modules #
 import sh
@@ -43,7 +44,7 @@ class Prokka(object):
 
     def run(self):
         sh.prokka('--outdir', self.p.output,
-                  '--cpus', nr_threads,
+                  '--cpus', num_processors,
                   '--locustag', 'prokka',
                   '--compliant',
                   '--usegenus',
