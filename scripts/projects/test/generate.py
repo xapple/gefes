@@ -26,10 +26,15 @@ from plumbing.color import Color
 now = time.time()
 print "Making test files"
 
+# Choose a project #
+proj = projects['soda_eval']
+proj.load()
+
 # Do it #
+projects['test'].load()
 source_to_dest = []
-source_to_dest += [(projects['soda_eval'][i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
-source_to_dest += [(projects['soda_eval'][i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
+source_to_dest += [(proj[i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
+source_to_dest += [(proj[i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
 
 # Downsample #
 def downsample(source, dest): dest.write(source[0:2000])
