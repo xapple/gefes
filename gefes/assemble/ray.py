@@ -11,7 +11,7 @@ from gefes.assemble.contig import Contig
 from plumbing.common import flatter
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
-from plumbing.slurm import num_processors
+from plumbing.slurm import num_processors, current_server
 from fasta import FASTA
 
 # Third party modules #
@@ -43,15 +43,13 @@ class Ray(object):
 
     def __init__(self, samples, result_dir, kmer_size=41, length_cutoff=1000):
         # Base parameters #
-        self.samples = samples
-        self.result_dir = result_dir
-        self.kmer_size = kmer_size
+        self.samples       = samples
+        self.result_dir    = result_dir
+        self.kmer_size     = kmer_size
         self.length_cutoff = length_cutoff
+        # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # To be set when run #
-        self.out_dir = None
-        self.paths = []
 
     def run(self):
         # Check samples #
@@ -65,34 +63,58 @@ class Ray(object):
         # Make the pairs of fastq #
         self.paths = lambda s: ('-p', s.clean.fwd.path, s.clean.rev.path, '-s', s.singletons.path)
         self.paths = flatter([self.paths(s) for s in self.samples])
-        # Call Ray on different setting #
-        if os.environ.get('CSCSERVICE') == 'sisu':              stats = self.sisu()
-        elif os.environ.get('SLURM_JOB_PARTITION') == 'halvan': stats = self.halvan()
-        elif os.environ.get('SNIC_RESOURCE') == 'milou':        stats = self.milou()
-        else:                                                   stats = self.local()
+        # Call Ray on different servers #
+        if   current_server == 'sisu':   stats = self.sisu()
+        elif current_server == 'halvan': stats = self.halvan()
+        elif current_server == 'milou':  stats = self.milou()
+        else:                            stats = self.local()
         # Print the report #
         with open(self.p.report, 'w') as handle: handle.write(str(stats))
+        # Check it worked #
+        if not self.p.Contigs.exists: raise Exception("Ray exited with status 0 but did not create any contigs.")
+        # Check there is something #
+        contigs = FASTA(self.p.Contigs)
+        if len(contigs) == 0: raise Exception("Ray found exactly 0 contigs in your dataset.")
         # Filter short contigs #
-        FASTA(self.p.Contigs).extract_length(new_path=self.p.filtered, lower_bound=self.length_cutoff)
+        contigs.extract_length(new_path=self.p.filtered, lower_bound=self.length_cutoff)
 
+    #-------------------------------------------------------------------------#
     def sisu(self):
         """Run the assembly on the Sisu super computer at sisu-login1.csc.fi"""
-        return sh.aprun('-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return sh.aprun('-n', num_processors, self.executable,
+                        '-k', self.kmer_size,
+                        '-o', self.out_dir,
+                        *self.paths,
+                        _out=self.p.stdout.path,
+                        _err=self.p.stderr.path)
 
     def halvan(self):
         """Run the assembly on the large memory computer at http://www.uppmax.uu.se/halvan-user-guide"""
-        return sh.mpiexec('-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return sh.mpiexec('-n', num_processors, self.executable,
+                          '-k', self.kmer_size,
+                          '-o', self.out_dir,
+                          *self.paths,
+                          _out=self.p.stdout.path,
+                          _err=self.p.stderr.path)
 
     def milou(self):
         """Run the assembly on one node of the milou cluster at http://www.uppmax.uu.se/milou-user-guide"""
         if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
-        commands = ['-n', num_processors, self.executable, '-k', self.kmer_size, '-o', self.out_dir] + self.paths
-        return sh.mpiexec(*commands, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return sh.mpiexec('-n', num_processors, self.executable,
+                          '-k', self.kmer_size,
+                          '-o', self.out_dir,
+                          *self.paths,
+                          _out=self.p.stdout.path,
+                          _err=self.p.stderr.path)
 
     def local(self):
         """Run the assembly on the computer where this pipeline is running"""
         ray = sh.Command(self.executable)
-        return ray('-k', self.kmer_size, '-o', self.out_dir, *self.paths, _out=self.p.stdout.path, _err=self.p.stderr.path)
+        return ray('-k', self.kmer_size,
+                   '-o', self.out_dir,
+                   *self.paths,
+                   _out=self.p.stdout.path,
+                   _err=self.p.stderr.path)
 
     @property_cached
     def results(self):

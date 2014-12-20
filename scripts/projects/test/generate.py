@@ -1,8 +1,9 @@
 #!/usr/bin/env python2
 
 """
-A script to build three small test files.
-They should contain only 2000 sequences each.
+A script to build three small test files for
+running the pipeline quickly when developing.
+They should contain about 2000 sequences each.
 
 Written by Lucas Sinclair.
 Kopimi.
@@ -15,11 +16,10 @@ $ ./generate_test.py
 import time, datetime
 
 # Internal modules #
-from plumbing.color import Color
 from gefes import projects
 
-# Third party modules #
-from shell_command import shell_output
+# First party modules #
+from plumbing.color import Color
 
 ###############################################################################
 # Message #
@@ -28,12 +28,14 @@ print "Making test files"
 
 # Do it #
 source_to_dest = []
-source_to_dest += [(projects['alinen'][i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
-source_to_dest += [(projects['alinen'][i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
-downsample = lambda x : shell_output('zcat %s |head -n 8000| gzip > %s' % (x[0],x[1]))
+source_to_dest += [(projects['soda_eval'][i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
+source_to_dest += [(projects['soda_eval'][i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
 
-# Run it in parallel #
-map(downsample, source_to_dest)
+# Downsample #
+def downsample(source, dest): dest.write(source[0:2000])
+
+# Run each one #
+for source, dest in source_to_dest: downsample(source, dest)
 
 # Report Success #
 run_time = datetime.timedelta(seconds=round(time.time()-now))

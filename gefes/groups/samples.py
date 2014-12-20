@@ -1,20 +1,18 @@
-# Futures #
-from __future__ import division
-
 # Built-in modules #
 import os
 
 # Internal modules #
-from gefes.preprocess.quality import QualityChecker
-from gefes.report.sample import SampleReport
+from gefes.parsing.illumina      import IlluminaInfo
+from gefes.preprocess.quality    import QualityChecker
+from gefes.assemble.ray          import Ray
+from gefes.map.bowtie            import Bowtie
+from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
-from gefes.map.bowtie import Bowtie
-from gefes.parsing.illumina import IlluminaInfo
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath
-from fasta import PairedFASTA, PairedFASTQ
-from fasta.fastqc import FastQC
+from fasta              import PairedFASTA, PairedFASTQ
+from fasta.fastqc       import FastQC
 
 # Third party modules #
 
@@ -32,8 +30,10 @@ class Sample(object):
     /info.json
     /clean/fwd.fastq
     /clean/rev.fastq
+    /clean/singletons.fastq
     /fastqc/fwd/
     /fastqc/rev/
+    /assembly/
     /mapping/
     /graphs/
     /report/report.pdf
@@ -109,7 +109,11 @@ class Sample(object):
             self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
             self.quality_checker = QualityChecker(self.pair, self.clean)
             self.singletons = self.quality_checker.singletons
-        # Map to an assembly #
+        # If it's a FASTA we can't clean it #
+        if self.format == 'fasta': self.clean = self.pair
+        # Assembly of this sample by itself #
+        self.assembly = Ray([self], self.p.assembly_dir)
+        # Map to the co-assembly #
         self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
         # Runner #
         self.runner = SampleRunner(self)

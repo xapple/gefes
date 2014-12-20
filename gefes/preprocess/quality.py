@@ -18,7 +18,7 @@ class QualityChecker(object):
 
     window_size = 10 # Size of the window we will slide along the read
     threshold   = 20 # This is a PHRED score threshold
-    min_length  = 50
+    min_length  = 50 # Minimum number of remaining base pairs
     discard_N   = True
 
     def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.source)
@@ -60,9 +60,9 @@ class QualityChecker(object):
         new_end = list(reversed(above_yes_no)).index(True)
         if new_end == 0: read = read[new_start:]
         if new_end != 0: read = read[new_start:-new_end]
-        if not read.seq: return None
-        phred = read.letter_annotations["phred_quality"]
+        if len(read.seq) < self.min_length: return None
         # Now we run our moving average #
+        phred = read.letter_annotations["phred_quality"]
         averaged = moving_average(phred, self.window_size, 'copy_padding_and_cut')
         # And then search for the longest stretch above the threshold #
         stretches = itertools.groupby(averaged, lambda x: x>self.threshold)
