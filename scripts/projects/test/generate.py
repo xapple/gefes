@@ -20,6 +20,7 @@ from gefes import projects
 
 # First party modules #
 from plumbing.color import Color
+from fasta import FASTA
 
 ###############################################################################
 # Message #
@@ -27,7 +28,7 @@ now = time.time()
 print "Making test files"
 
 # Choose a project #
-proj = projects['soda_eval']
+proj = projects['alinen']
 proj.load()
 
 # Do it #
@@ -42,9 +43,14 @@ def downsample(source, dest): dest.write(itertools.islice(source, 0, 2000))
 # Run each one #
 for source, dest in source_to_dest: downsample(source, dest)
 
+# Count sequences #
+for source, dest in source_to_dest: print dest.prefix + ': ' + str(len(dest)) + ' sequences'
+
+# We need some contigs too... #
+contigs = FASTA(proj.base_dir + "assembly/ray/71/output/Contigs.fasta").parse()
+destinations = [FASTA(projects['test'][i].assembly.p.Contigs) for i in (0,1,2)]
+for dest in destinations: dest.write([contigs.next() for x in range(10)])
+
 # Report Success #
 run_time = datetime.timedelta(seconds=round(time.time()-now))
 print Color.grn + ("Run time: '%s'" % run_time) + Color.end
-
-# Count sequences #
-for source, dest in source_to_dest: print dest.prefix + ': ' + str(len(dest)) + ' sequences'
