@@ -127,9 +127,9 @@ def test():
     # Object #
     checker = QualityChecker(None, None)
     checker.window_size = 10
-    checker.threshold = 21
-    checker.min_length = 5
-    checker.discard_N = True
+    checker.threshold   = 21
+    checker.min_length  = 5
+    checker.discard_N   = True
     # Dummy test sequence #
     scores = "10 11 13 22 23 24 10 10 9 8 7 9 8 9 5 2 5 8 9 8 9 30 33 30 31 32 33 31 33 33 31 33 32 33 32 32 33 32 2 3 2 3 2 1 3 2 1 23 23 23 10 10 9 9"
     seq    = "A  T  C  G  T  T  G  A  C G G A G T G T A A C T C G  A  T  G  A  C  T  T  G  T  C  A  A  C  T  G  G  T A G G G T C A A C  T  G  A  T  C A"
