@@ -13,7 +13,7 @@ $ ./generate_test.py
 """
 
 # Built-in modules #
-import time, datetime
+import time, datetime, itertools
 
 # Internal modules #
 from gefes import projects
@@ -37,7 +37,7 @@ source_to_dest += [(proj[i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,
 source_to_dest += [(proj[i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
 
 # Downsample #
-def downsample(source, dest): dest.write(source[0:2000])
+def downsample(source, dest): dest.write(itertools.islice(source, 0, 2000))
 
 # Run each one #
 for source, dest in source_to_dest: downsample(source, dest)
