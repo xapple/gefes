@@ -54,6 +54,9 @@ contigs = FASTA(proj.base_dir + "assembly/ray/71/output/Contigs.fasta").parse()
 destinations = [FASTA(projects['test'][i].assembly.p.Contigs) for i in (0,1,2)]
 for dest in destinations: dest.write([contigs.next() for x in range(10)])
 
+# Count sequences #
+for dest in destinations: print dest.prefix + ': ' + str(len(dest)) + ' sequences'
+
 # Report Success #
 run_time = datetime.timedelta(seconds=round(time.time()-now))
 print Color.grn + ("Run time: '%s'" % run_time) + Color.end

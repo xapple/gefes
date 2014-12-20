@@ -28,6 +28,7 @@ proj.runner.run_slurm(steps=['assembly.run'], time='00:15:00', qos='short', part
 # On Sisu #
 proj.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='00:30:00', partition='test', job_name="test_ray_41")
 proj.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='04:00:00', partition='test-large', job_name="test_ray_41")
+proj.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small', job_name="test_ray_71")
 
 # On Halvan #
 proj.runner.run_slurm(steps=['assembly41.run'], cores=16, time='00:15:00', project="b2011035", job_name="test_41", cluster='halvan', partition='halvan')
