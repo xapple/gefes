@@ -154,6 +154,7 @@ class SampleTemplate(Template):
     def sample_assembler_version(self): return self.sample.assembly.long_name
     def sample_kmer_size(self):         return self.sample.assembly.kmer_size
     def sample_contig_cutoff(self):     return self.sample.assembly.length_cutoff
+    def sample_count_contigs(self):     return split_thousands(self.sample.assembly.results.contigs_fasta.count)
     def sample_contigs_len_dist(self):
         caption = "Mono-assembly length distribution"
         path = self.sample.assembly.results.contigs_fasta.length_dist
@@ -161,3 +162,4 @@ class SampleTemplate(Template):
         return str(ScaledFigure(path, caption, label))
 
     # Protein calling (annotation) #
+    pass

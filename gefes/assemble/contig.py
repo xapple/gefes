@@ -31,7 +31,7 @@ class Contig(object):
         self.name = self.record.id
         self.num = int(num)
         # Auto paths #
-        self.base_dir = self.parent.base_dir + "contigs/" + self.name
+        self.base_dir = self.parent.base_dir + "contigs/" + str(self.num) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     @property_cached
