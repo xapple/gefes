@@ -112,12 +112,12 @@ class Sample(object):
             self.singletons = self.quality_checker.singletons
         # If it's a FASTA we can't clean it #
         if self.format == 'fasta': self.clean = self.pair
+        # Map to the co-assembly #
+        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
-        # Map to the mono-assembly #
-        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
-        # Annotate the contigs #
-        self.annotation = Prokka(self)
+        # Annotate the contigs of the mono-assembly #
+        self.annotation = Prokka(self, )
         # Runner #
         self.runner = SampleRunner(self)
         # Report #

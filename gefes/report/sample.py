@@ -122,15 +122,15 @@ class SampleTemplate(Template):
 
     # Length distribution #
     def cleaned_len_dist(self):
-        params = [self.sample.clean.fwd.length_dist,
-                  self.sample.clean.rev.length_dist]
+        params = [self.sample.clean.fwd.length_dist.path,
+                  self.sample.clean.rev.length_dist.path]
         params += ["Forward", "Reverse"]
         params += ["fwd_length_dist", "rev_length_dist"]
         params += ["Distribution of sequence lengths after quality control", "cleaned_len_dist"]
         return str(DualFigure(*params))
     def singletons_len_dist(self):
         caption = "Singletons length distribution"
-        path = self.sample.clean.rev.length_dist
+        path = self.sample.clean.rev.length_dist.path
         label = "singletons_len_dist"
         return str(ScaledFigure(path, caption, label))
 
