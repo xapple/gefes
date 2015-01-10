@@ -112,6 +112,7 @@ class QualityResults(object):
     all_paths = """
     /lorem
     """
+
     def __nonzero__(self): return self.dest.exists
 
     def __init__(self, source, dest):

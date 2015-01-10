@@ -46,7 +46,7 @@ class Contig(object):
 
     @property_cached
     def annotation(self):
-        return Prokka(self.fasta, self.p.annotation_dir)
+        return Prokka(self, self.p.annotation_dir)
 
     @property
     def length(self):
