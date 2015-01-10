@@ -54,7 +54,7 @@ class Aggregate(object):
         self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
-        #self.annotation = Binner(self)
+        #self.annotation = Prokka(self)
         # Runner #
         self.runner = AggregateRunner(self)
         # For convenience #

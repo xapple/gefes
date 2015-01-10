@@ -28,6 +28,7 @@ class Ray(object):
     We remove the contigs below the length cutoff threshold."""
 
     short_name = 'ray'
+    long_name  = "Ray assembler v2.3.1"
     executable = 'ray231'
 
     all_paths = """

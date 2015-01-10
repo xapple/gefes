@@ -76,7 +76,7 @@ class SampleTemplate(Template):
     def information(self):
         info = self.sample.info.copy()
         info.pop("contacts")
-        info = json.dumps(info, sort_keys=True, indent=4)
+        info = json.dumps(info, sort_keys=True, indent=4, encoding='utf-8')
         info = info.strip("{}")
         return info
 
@@ -149,3 +149,15 @@ class SampleTemplate(Template):
         params += ["fwd_per_seq_qual", "rev_per_seq_qual"]
         params += ["Per sequence quality after quality control", "cleaned_per_seq_qual"]
         return str(DualFigure(*params))
+
+    # Assembly #
+    def sample_assembler_version(self): return self.sample.assembly.long_name
+    def sample_kmer_size(self):         return self.sample.assembly.kmer_size
+    def sample_contig_cutoff(self):     return self.sample.assembly.length_cutoff
+    def sample_contigs_len_dist(self):
+        caption = "Mono-assembly length distribution"
+        path = self.sample.assembly.results.contigs_fasta.length_dist
+        label = "sample_contigs_len_dist"
+        return str(ScaledFigure(path, caption, label))
+
+    # Protein calling (annotation) #

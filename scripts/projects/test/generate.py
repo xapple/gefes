@@ -36,7 +36,7 @@ projects['test'].load()
 for s in projects['test']: s.load()
 
 # Do it #
-source_to_dest = []
+source_to_dest  = []
 source_to_dest += [(proj[i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
 source_to_dest += [(proj[i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
 

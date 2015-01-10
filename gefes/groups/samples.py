@@ -8,6 +8,7 @@ from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
+from gefes.annotation.prokka     import Prokka
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath
@@ -113,8 +114,10 @@ class Sample(object):
         if self.format == 'fasta': self.clean = self.pair
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
-        # Map to the co-assembly #
+        # Map to the mono-assembly #
         self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
+        # Annotate the contigs #
+        self.annotation = Prokka(self)
         # Runner #
         self.runner = SampleRunner(self)
         # Report #

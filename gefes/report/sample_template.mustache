@@ -3,7 +3,7 @@ Sample "{{sample_short_name}}"
 
 General Information
 -------------------
-This sample has the code `{{sample_short_name}}` and is named "{{sample_long_name}}". It is part of the project code {{project_short_name}}` called `{{project_long_name}}" along with {{project_other_samples}} other samples.
+This sample has the code `{{sample_short_name}}` and is named "{{sample_long_name}}". It is part of the project code `{{project_short_name}}` called "{{project_long_name}}" along with {{project_other_samples}} other samples.
 
 -------
 
@@ -92,4 +92,7 @@ We can look again at the per base quality and the per sequence quality of the pa
 
 Assembly
 --------
-Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that we can try to run this sample into the assembler all by it self.
+Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by it self. For this we use the "{{sample_assembler_version}}"" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
+
+This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in in figure \ref{sample_contigs_len_dist}:
+
