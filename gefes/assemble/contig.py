@@ -4,18 +4,21 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
+from gefes.annotation.prokka import Prokka
+
+# First party modules #
+from fasta import FASTA
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 
-# Third party modules #
-
 ###############################################################################
 class Contig(object):
-    """A contig as predicted by the assembler. It has for instance a nucleotide frequency."""
+    """A contig as predicted by the assembler. It has for instance a nucleotide frequency
+    and annotations."""
 
     all_paths = """
-    /lorem.txt
-    /genes/
+    /contig.fasta
+    /annotation/
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -30,6 +33,20 @@ class Contig(object):
         # Auto paths #
         self.base_dir = self.parent.base_dir
         self.p = AutoPaths(self.base_dir, self.all_paths)
+
+    @property_cached
+    def fasta(self):
+        """A fasta file containing only this contig."""
+        fasta = FASTA(self.p.contig_fasta)
+        if not fasta.exists:
+            fasta.create()
+            fasta.add(self.record)
+            fasta.close()
+        return fasta
+
+    @property_cached
+    def annotation(self):
+        return Prokka(self.fasta, self.p.annotation_dir)
 
     @property
     def length(self):

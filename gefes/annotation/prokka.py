@@ -12,7 +12,7 @@ import sh
 
 ###############################################################################
 class Prokka(object):
-    """Will run the Prokka software on a set of contigs.
+    """Will run the Prokka software on one single contig.
     http://www.vicbioinformatics.com/software.prokka.shtml
     Expects version 1.10"""
 
@@ -34,9 +34,9 @@ class Prokka(object):
     /output/prokka_11112014.tbl
     """
 
-    def __init__(self, contigs, result_dir):
+    def __init__(self, contig, result_dir):
         # Save Attributes #
-        self.contigs = contigs
+        self.contig = contig
         self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
@@ -52,7 +52,7 @@ class Prokka(object):
                   '--addgene',
                   '--quiet',
                   '--force',
-                  self.contigs.fasta)
+                  self.contig.fasta)
 
 ###############################################################################
 class ProkkaResults(object):
@@ -63,5 +63,5 @@ class ProkkaResults(object):
 
     @property_cached
     def proteins(self):
-        """Returns ."""
-        return dict(line.strip('\n').split(',') for line in self.concoct.p.clustering)
+        """Returns LOREM."""
+        pass
