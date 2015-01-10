@@ -31,7 +31,7 @@ class Contig(object):
         self.name = self.record.id
         self.num = int(num)
         # Auto paths #
-        self.base_dir = self.parent.base_dir
+        self.base_dir = self.parent.base_dir + "contigs/" + self.name
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     @property_cached
@@ -40,7 +40,7 @@ class Contig(object):
         fasta = FASTA(self.p.contig_fasta)
         if not fasta.exists:
             fasta.create()
-            fasta.add(self.record)
+            fasta.add_seq(self.record)
             fasta.close()
         return fasta
 
