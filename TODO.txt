@@ -1,0 +1,3 @@
+Add percent off reads mapping back to the contigs.
+Add the annotation in theirms of metabolims. How many can be annotated (without what they are actually).
+Add some taxonmical annotation (scale with number of reads mapping back to contig). The broard groups, bacteria, virsuses etc. Any cyanobactera ?

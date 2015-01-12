@@ -130,9 +130,9 @@ class SampleTemplate(Template):
         return str(DualFigure(*params))
     def singletons_len_dist(self):
         caption = "Singletons length distribution"
-        path = self.sample.clean.rev.length_dist.path
+        graph = self.sample.clean.rev.length_dist
         label = "singletons_len_dist"
-        return str(ScaledFigure(path, caption, label))
+        return str(ScaledFigure(graph.path, caption, label))
 
     # FastQC graphs #
     def cleaned_per_base_qual(self):
@@ -157,9 +157,9 @@ class SampleTemplate(Template):
     def sample_count_contigs(self):     return split_thousands(self.sample.assembly.results.contigs_fasta.count)
     def sample_contigs_len_dist(self):
         caption = "Mono-assembly length distribution"
-        path = self.sample.assembly.results.contigs_fasta.length_dist
+        graph = self.sample.assembly.results.contigs_fasta.length_dist
         label = "sample_contigs_len_dist"
-        return str(ScaledFigure(path, caption, label))
+        return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
     pass
