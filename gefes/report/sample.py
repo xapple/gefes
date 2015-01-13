@@ -29,12 +29,14 @@ class SampleReport(Document):
         self.sample, self.parent = sample, sample
         # The output #
         self.output_path = self.sample.p.report_pdf
-        # The dynamic templates #
+        # The dynamic templates #
+
+    def generate(self):
+        # Dynamic templates #
         self.markdown = unicode(SampleTemplate(self))
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
-
-    def generate(self):
+        # Render to latex #
         self.make_body()
         self.make_latex()
         self.make_pdf()
@@ -185,14 +187,14 @@ class SampleTemplate(Template):
     def sample_count_proteins(self): return sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
     def sample_functions_table(self):
         counts = Counter()
-        for c in self.sample.contigs: counts.update(c.proteins)
+        for c in self.sample.contigs: counts.update(c.annotation.results.functions)
         table = counts.most_common(20)
         table = {'Function': table.keys(), 'Counts': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 20 most common predicted functions in the predicted proteins of the mono-assembly."
     def sample_taxa_table(self):
         counts = Counter()
-        for c in self.sample.contigs: counts.update(c.species)
+        for c in self.sample.contigs: counts.update(c.annotation.results.species)
         table = counts.most_common(20)
         table = {'Function': table.keys(), 'Counts': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
