@@ -25,15 +25,16 @@ class SampleReport(Document):
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
     def __init__(self, sample):
+        # The parent #
         self.sample, self.parent = sample, sample
+        # The output #
         self.output_path = self.sample.p.report_pdf
-
-    def generate(self):
-        # Dynamic templates #
+        # The dynamic templates #
         self.markdown = unicode(SampleTemplate(self))
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
-        # Render to latex #
+
+    def generate(self):
         self.make_body()
         self.make_latex()
         self.make_pdf()
