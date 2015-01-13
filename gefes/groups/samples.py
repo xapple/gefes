@@ -34,7 +34,8 @@ class Sample(object):
     /fastqc/fwd/
     /fastqc/rev/
     /assembly/
-    /mapping/
+    /mapping/project/
+    /mapping/mono/
     /graphs/
     /report/report.pdf
     """
@@ -112,9 +113,11 @@ class Sample(object):
         # If it's a FASTA we can't clean it #
         if self.format == 'fasta': self.clean = self.pair
         # Map to the co-assembly #
-        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_dir)
+        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_project_dir)
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
+        # Map to the mono-assembly #
+        self.mono_mapper = Bowtie(self, self.assembly, self.p.mapping_mono_dir)
         # Runner #
         self.runner = SampleRunner(self)
         # Report #

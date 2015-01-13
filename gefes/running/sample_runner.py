@@ -41,8 +41,12 @@ class SampleRunner(Runner):
                   'cores'    : 1}
         # Special cases #
         if self.parent.project.name == 'test':
-            params['time'] = '00:15:00'
-            if hostname.startswith('milou'): params['qos'] = 'short'
+            if hostname.startswith('milou'):
+                params['time'] = '00:15:00'
+                params['qos'] = 'short'
+            if hostname.startswith('taito'):
+                params['time'] = '00:30:00'
+                params['partition'] = 'test'
         # Return result #
         return params
 

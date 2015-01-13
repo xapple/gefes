@@ -32,13 +32,13 @@ proj = projects['alinen']
 proj.load()
 
 # Load stuff #
-projects['test'].load()
-for s in projects['test']: s.load()
+test = projects['test'].load()
+for s in test: s.load()
 
 # Do it #
 source_to_dest  = []
-source_to_dest += [(proj[i].pair.fwd, projects['test'][i].pair.fwd) for i in (0,1,2)]
-source_to_dest += [(proj[i].pair.rev, projects['test'][i].pair.rev) for i in (0,1,2)]
+source_to_dest += [(proj[i].pair.fwd, test[i].pair.fwd) for i in (0,1,2)]
+source_to_dest += [(proj[i].pair.rev, test[i].pair.rev) for i in (0,1,2)]
 
 # Downsample #
 def downsample(source, dest): dest.write(itertools.islice(source, 0, 2000))
@@ -51,7 +51,7 @@ for source, dest in source_to_dest: print dest.prefix + ': ' + str(len(dest)) + 
 
 # We need some contigs too... #
 contigs = FASTA(proj.base_dir + "assembly/ray/71/output/Contigs.fasta").parse()
-destinations = [FASTA(projects['test'][i].assembly.p.Contigs) for i in (0,1,2)]
+destinations = [FASTA(test[i].assembly.p.filtered) for i in (0,1,2)]
 for dest in destinations: dest.write([contigs.next() for x in range(10)])
 
 # Count sequences #

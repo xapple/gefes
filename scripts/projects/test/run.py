@@ -41,3 +41,9 @@ proj.runner.run_slurm(steps=['assembly41.run'], cores=16, time='00:15:00', proje
 a = gefes.groups.favorites.test_agg
 a.load()
 a.runner.run_slurm(steps=[{'assembly.run':{}}], time='00:15:00', partition='devel', threads=False)
+
+################################### Mapping ##################################
+sample = proj[0].load()
+
+# On taito #
+sample.runner.run_slurm(steps=['mono_mapper.run'], machines=1, cores=16, time='00:30:00', partition='test', job_name="test1_bowtie")
