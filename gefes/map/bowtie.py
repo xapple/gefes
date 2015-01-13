@@ -138,12 +138,12 @@ class BowtieResults(object):
     @property_cached
     def fraction_mapped(self):
         """The fraction of reads that mapped back to the contigs of the assembly"""
-        return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam))
+        return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam)) / self.filtered_count
 
     @property_cached
     def fraction_unmapped(self):
         """The fraction of reads that did not mapped back to the contigs of the assembly"""
-        return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam))
+        return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam)) / self.filtered_count
 
     @property_pickled
     def statistics(self):

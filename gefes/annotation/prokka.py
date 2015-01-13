@@ -3,6 +3,7 @@
 # Internal modules #
 
 # First party modules #
+from fasta import FASTA
 from plumbing.autopaths import AutoPaths
 from plumbing.slurm import num_processors
 from plumbing.cache import property_cached
@@ -71,6 +72,11 @@ class ProkkaResults(object):
         self.prokka = prokka
 
     @property_cached
-    def proteins(self):
-        """Returns LOREM."""
-        pass
+    def functions(self):
+        """Returns a list of predicted functions, one per predicted protein."""
+        return [p.description for p in FASTA(self.prokka.p.faa)]
+
+    @property_cached
+    def species(self):
+        """Returns the predicted species of this contig."""
+        return [p.description for p in FASTA(self.prokka.p.fsa)][0]

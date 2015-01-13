@@ -3,6 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 import os, json, shutil, socket
+from collections import Counter
 
 # Internal modules #
 import gefes
@@ -12,6 +13,7 @@ from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
 from pymarktex.figures import ScaledFigure, DualFigure
 
 # Third party modules #
+from tabulate import tabulate
 
 # Constants #
 ssh_header = "ssh://" + socket.getfqdn()
@@ -162,7 +164,7 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Mono Mapping #
-    def sample_mapper_version(self):          return self.sample.mono_mapper.long_name
+    def sample_mapper_version(self):   return self.sample.mono_mapper.long_name
     def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.results.filtered_count)
     def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
     def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)
@@ -172,10 +174,15 @@ class SampleTemplate(Template):
         label = "sample_mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def samples_percent_covered(self):
-        caption = "Mono-mapping mean percent covered distribution"
+        caption = "Mono-mapping percent covered distribution"
         graph = self.sample.mono_mapper.results.percent_covered_graph
         label = "samples_percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
     def annotation_version(self): return self.sample.contigs[0].annotation.long_name
+    def sample_functions(self):
+        counts = Counter()
+        for c in self.sample.contigs: counts.add(c.proteins)
+        table = tabulate(counts.most_common(20), headers="keys", numalign="right", tablefmt="pipe")
+        return table + "\n\n   : The 20 most abundant functions in the predicted proteins of the mono-assembly."
