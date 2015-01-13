@@ -180,9 +180,12 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
-    def annotation_version(self): return self.sample.contigs[0].annotation.long_name
-    def sample_functions(self):
+    def annotation_version(self):    return self.sample.contigs[0].annotation.long_name
+    def sample_count_proteins(self): return sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
+    def sample_functions_table(self):
         counts = Counter()
-        for c in self.sample.contigs: counts.add(c.proteins)
-        table = tabulate(counts.most_common(20), headers="keys", numalign="right", tablefmt="pipe")
+        for c in self.sample.contigs: counts.update(c.proteins)
+        table = counts.most_common(20)
+        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 20 most abundant functions in the predicted proteins of the mono-assembly."
