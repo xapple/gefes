@@ -178,4 +178,4 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
-    def annotation_version(self): return self.sample.assembly.contigs[0].annotation.long_name
+    def annotation_version(self): return self.sample.contigs[0].annotation.long_name
