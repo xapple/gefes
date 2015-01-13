@@ -188,4 +188,11 @@ class SampleTemplate(Template):
         table = counts.most_common(20)
         table = {'Function': table.keys(), 'Counts': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
-        return table + "\n\n   : The 20 most abundant functions in the predicted proteins of the mono-assembly."
+        return table + "\n\n   : The 20 most common predicted functions in the predicted proteins of the mono-assembly."
+    def sample_taxa_table(self):
+        counts = Counter()
+        for c in self.sample.contigs: counts.update(c.species)
+        table = counts.most_common(20)
+        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
+        return table + "\n\n   : The 20 most common predicted taxa in the contigs of the mono-assembly."
