@@ -29,7 +29,6 @@ class SampleReport(Document):
         self.sample, self.parent = sample, sample
         # The output #
         self.output_path = self.sample.p.report_pdf
-        # The dynamic templates #
 
     def generate(self):
         # Dynamic templates #
