@@ -3,7 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 import os, json, shutil, socket
-from collections import Counter
+from collections import Counter, OrderedDict
 
 # Internal modules #
 import gefes
@@ -187,14 +187,14 @@ class SampleTemplate(Template):
     def sample_functions_table(self):
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.functions)
-        table = counts.most_common(20)
+        table = OrderedDict(counts.most_common(20))
         table = {'Function': table.keys(), 'Counts': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 20 most common predicted functions in the predicted proteins of the mono-assembly."
     def sample_taxa_table(self):
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.species)
-        table = counts.most_common(20)
+        table = OrderedDict(counts.most_common(20))
         table = {'Function': table.keys(), 'Counts': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 20 most common predicted taxa in the contigs of the mono-assembly."
