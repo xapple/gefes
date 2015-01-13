@@ -162,7 +162,20 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Mono Mapping #
-    def mapper_version(self): return self.sample.mono_mapper.long_name
+    def mapper_version(self):          return self.sample.mono_mapper.long_name
+    def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.filtered_count)
+    def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.fraction_mapped * 100)
+    def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.fraction_unmapped * 100)
+    def sample_mean_coverage(self):
+        caption = "Mono-mapping mean coverage distribution"
+        graph = self.sample.assembly.results.contigs_fasta.length_dist
+        label = "sample_mean_coverage"
+        return str(ScaledFigure(graph.path, caption, label))
+    def samples_percent_covered(self):
+        caption = "Mono-mapping mean percent covered distribution"
+        graph = self.sample.assembly.results.contigs_fasta.length_dist
+        label = "samples_percent_covered"
+        return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
     def annotation_version(self): return self.sample.assembly.contigs[0].annotation.long_name

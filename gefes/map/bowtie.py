@@ -6,6 +6,7 @@ import os
 
 # Internal modules #
 import gefes
+from gefes.map import graphs
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -27,7 +28,7 @@ class Bowtie(object):
     Names follow this standard:
       * The 'map_s' file is sorted.
       * The 'map_smd' file is sorted and mark duplicated.
-      * The 'map_smd' file is sorted, duplicated, and sorted again.
+      * The 'map_smds' file is sorted, duplicated, and sorted again.
     """
 
     short_name = 'bowtie'
@@ -45,6 +46,7 @@ class Bowtie(object):
     /map_smd.metrics
     /map_smds.coverage
     /statistics.pickle
+    /graphs/
     """
 
     def __repr__(self): return '<%s object of %s on %s>' % \
@@ -68,8 +70,8 @@ class Bowtie(object):
         # Make our options #
         options = ['-p', num_processors,
                    '-x', self.assembly.results.contigs_fasta,
-                   '-1', self.sample.fwd_path,
-                   '-2', self.sample.rev_path,
+                   '-1', self.sample.pair.fwd,
+                   '-2', self.sample.pair.rev,
                    '-S', self.p.map_sam]
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.format == 'fasta': options += ['-f']
@@ -128,6 +130,21 @@ class BowtieResults(object):
         self.assembly = bowtie.assembly
         self.p = bowtie.p
 
+    @property_cached
+    def filtered_count(self):
+        """The number of reads after removing duplicates"""
+        return int(sh.samtools('view', '-c', self.p.map_smds_bam))
+
+    @property_cached
+    def fraction_mapped(self):
+        """The fraction of reads that mapped back to the contigs of the assembly"""
+        return int(sh.samtools('view', '-F', '4', self.p.map_smds_bam))
+
+    @property_cached
+    def fraction_unmapped(self):
+        """The fraction of reads that did not mapped back to the contigs of the assembly"""
+        return int(sh.samtools('view', '-f', '4', self.p.map_smds_bam))
+
     @property_pickled
     def statistics(self):
         """Uses the BEDTools genomeCoverageBed histogram output to determine mean
@@ -160,3 +177,24 @@ class BowtieResults(object):
     def covered_fraction(self):
         """The mean coverage in every contig. Dict with contig names as keys"""
         return {contig.name: self.statistics[contig.name]['percent_covered'] for contig in self.assembly.results.contigs}
+
+    @property_cached
+    def graphs(self):
+        class Graphs(object): pass
+        result = Graphs()
+        for graph in graphs.__all__:
+            cls = getattr(graphs, graph)
+            setattr(result, cls.short_name, cls(self))
+        return result
+
+    @property_cached
+    def mean_coverage_graph(self):
+        graph = self.graphs.mean_coverage
+        if not graph: graph.plot()
+        return graph
+
+    @property_cached
+    def percent_covered_graph(self):
+        graph = self.graphs.percent_covered
+        if not graph: graph.plot()
+        return graph
