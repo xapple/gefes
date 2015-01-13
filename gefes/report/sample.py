@@ -163,17 +163,17 @@ class SampleTemplate(Template):
 
     # Mono Mapping #
     def mapper_version(self):          return self.sample.mono_mapper.long_name
-    def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.filtered_count)
-    def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.fraction_mapped * 100)
-    def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.fraction_unmapped * 100)
+    def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.results.filtered_count)
+    def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
+    def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)
     def sample_mean_coverage(self):
         caption = "Mono-mapping mean coverage distribution"
-        graph = self.sample.assembly.results.contigs_fasta.length_dist
+        graph = self.sample.mono_mapper.results.mean_coverage_graph
         label = "sample_mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def samples_percent_covered(self):
         caption = "Mono-mapping mean percent covered distribution"
-        graph = self.sample.assembly.results.contigs_fasta.length_dist
+        graph = self.sample.mono_mapper.results.percent_covered_graph
         label = "samples_percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
