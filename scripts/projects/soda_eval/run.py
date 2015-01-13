@@ -23,3 +23,12 @@ for s in proj.samples: s.runner.run_slurm(steps=['assembly.run'], machines=3, co
 
 ################################### Solo-Mapping ##################################
 for s in proj.samples: s.runner.run_slurm(steps=['mono_mapper.run'], machines=1, cores=16, time='3-00:00:00', partition='serial')
+
+# Three which fail with memory errors #
+fail = [proj['ss10'], proj['ss12'], proj['zl01'], proj['zl12']]
+for s in fail: s.runner.run_slurm(steps=['mono_mapper.run'], machines=1, cores=32, time='1-00:00:00', partition='hugemem')
+
+################################ Solo-Annotation ###############################
+from tqdm import tqdm
+all_contigs = [c for s in proj.samples for c in s.contigs]
+for c in tqdm(all_contigs): c.annotation.run()

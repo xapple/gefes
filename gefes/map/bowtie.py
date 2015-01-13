@@ -74,17 +74,22 @@ class Bowtie(object):
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.format == 'fasta': options += ['-f']
         # Do the mapping #
+        print "Launching Bowtie..."
         sh.bowtie2(*options)
         ## Create bam file, then sort it and finally index bamfile #
+        print "Launching Samtools..."
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam)
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
+        print "Launching MarkDuplicates..."
         self.remove_duplicates()
         # Sort and index bam without duplicates #
+        print "Launching Samtools again..."
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
+        print "Launching BEDTools..."
         sh.genomeCoverageBed('-ibam', self.p.map_smds_bam, _out=str(self.p.map_smds_coverage))
         # Clean up the ones we don't need #
         os.remove(self.p.map_sam)

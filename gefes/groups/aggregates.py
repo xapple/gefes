@@ -26,7 +26,7 @@ class Aggregate(object):
     def __iter__(self): return iter(self.samples)
     def __len__(self): return len(self.samples)
     def __getitem__(self, key):
-        if isinstance(key, basestring): return [c for c in self.children if str(c) == key][0]
+        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
         elif isinstance(key, int): return self.children[key]
         elif isinstance(key, slice): return self.children[key]
         else: raise TypeError('key')
