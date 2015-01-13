@@ -90,10 +90,19 @@ We can look again at the per base quality and the per sequence quality of the pa
 
 -------
 
-Assembly
---------
-Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by it self. For this we use the "{{sample_assembler_version}}"" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
+Mono Assembly
+-------------
+Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by it self. For this we use the "{{sample_assembler_version}}" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
 
 This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in in figure \ref{sample_contigs_len_dist}:
 
 {{sample_contigs_len_dist}}
+
+Mono Mapping
+------------
+Now we will attempt to map every read of this sample back to the contigs that were generated in the previous mono-assembly step using the "{{mapper_version}}" software.
+
+Annotation
+----------
+Taking the {{sample_count_contigs}} contigs generated in the the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software.
+

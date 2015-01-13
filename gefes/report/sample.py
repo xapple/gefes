@@ -150,7 +150,7 @@ class SampleTemplate(Template):
         params += ["Per sequence quality after quality control", "cleaned_per_seq_qual"]
         return str(DualFigure(*params))
 
-    # Assembly #
+    # Mono Assembly #
     def sample_assembler_version(self): return self.sample.assembly.long_name
     def sample_kmer_size(self):         return self.sample.assembly.kmer_size
     def sample_contig_cutoff(self):     return self.sample.assembly.length_cutoff
@@ -161,5 +161,8 @@ class SampleTemplate(Template):
         label = "sample_contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
 
+    # Mono Mapping #
+    def mapper_version(self): return self.sample.mono_mapper.long_name
+
     # Protein calling (annotation) #
-    pass
+    def annotation_version(self): return self.sample.assembly.contigs[0].annotation.long_name

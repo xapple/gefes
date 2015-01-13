@@ -31,6 +31,9 @@ class Bowtie(object):
     """
 
     short_name = 'bowtie'
+    long_name  = 'Bowtie2 v2.15.0 (w/ SAMtools, MarkDuplicates & BEDTools)'
+    executable = 'bowtie2'
+    dependencies = ['samtools', 'genomeCoverageBed']
 
     all_paths = """
     /map.sam

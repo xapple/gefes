@@ -16,7 +16,10 @@ class Prokka(object):
     http://www.vicbioinformatics.com/software.prokka.shtml
     Expects version 1.10"""
 
-    short_name = "prokka"
+    short_name = 'prokka'
+    long_name  = 'Prokka v1.10'
+    executable = 'prokka'
+    dependencies = ['parallel']
 
     all_paths= """
     /output/
@@ -53,6 +56,12 @@ class Prokka(object):
                   '--quiet',
                   '--force',
                   self.contig.fasta)
+
+    @property_cached
+    def results(self):
+        results = ProkkaResults(self)
+        if not results: raise Exception("You can't access results from Prokka before running the annotation.")
+        return results
 
 ###############################################################################
 class ProkkaResults(object):

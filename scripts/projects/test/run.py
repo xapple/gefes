@@ -16,6 +16,7 @@ execfile("~/repos/gefes/scripts/projects/alinen/generate_test.py")
 # Constants #
 proj = gefes.projects['test'].load()
 samples = proj.samples
+for s in samples: s.load()
 
 # Clean #
 proj.run_samples()
@@ -24,7 +25,6 @@ for s in samples: s.runner.run_slurm(partition='test', time='00:15:00')
 ################################### Solo-Assembly ##################################
 sample = proj[0].load()
 sample.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small', job_name="test1_ray_71")
-
 
 ################################### Co-Assembly ##################################
 # On Milou #
