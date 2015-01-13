@@ -23,18 +23,18 @@ class Prokka(object):
 
     all_paths= """
     /output/
-    /output/prokka_11112014.txt
-    /output/prokka_11112014.ecn
-    /output/prokka_11112014.err
-    /output/prokka_11112014.faa
-    /output/prokka_11112014.ffn
-    /output/prokka_11112014.fna
-    /output/prokka_11112014.fsa
-    /output/prokka_11112014.gbf
-    /output/prokka_11112014.gff
-    /output/prokka_11112014.log
-    /output/prokka_11112014.sqn
-    /output/prokka_11112014.tbl
+    /output/prokka_*.txt
+    /output/prokka_*.ecn
+    /output/prokka_*.err
+    /output/prokka_*.faa
+    /output/prokka_*.ffn
+    /output/prokka_*.fna
+    /output/prokka_*.fsa
+    /output/prokka_*.gbf
+    /output/prokka_*.gff
+    /output/prokka_*.log
+    /output/prokka_*.sqn
+    /output/prokka_*.tbl
     """
 
     def __init__(self, contig, result_dir):

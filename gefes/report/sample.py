@@ -162,7 +162,7 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Mono Mapping #
-    def mapper_version(self):          return self.sample.mono_mapper.long_name
+    def sample_mapper_version(self):          return self.sample.mono_mapper.long_name
     def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.results.filtered_count)
     def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
     def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)

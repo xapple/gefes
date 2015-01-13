@@ -100,7 +100,7 @@ This results in the production of {{sample_count_contigs}} contigs, of which the
 
 Mono Mapping
 ------------
-Now we will attempt to map every read of this sample (the raw ones, before cleaning) back to the contigs that were generated in the previous mono-assembly step using the "{{mapper_version}}" software. We will remove the probable PCR duplciates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} percent of the read map back to the contigs generated and {{sample_didnt_map}} percent have no match.
+Now we will attempt to map every read of this sample (the raw ones, before cleaning) back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the probable PCR duplciates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} percent of the read map back to the contigs generated and {{sample_didnt_map}} percent have no match.
 
 For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as a the fraction coverged. The distribution can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
 
