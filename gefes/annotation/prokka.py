@@ -74,9 +74,9 @@ class ProkkaResults(object):
     @property_cached
     def functions(self):
         """Returns a list of predicted functions, one per predicted protein."""
-        return [p.description for p in FASTA(self.prokka.p.faa)]
+        return [p.description[len(p.id)+1:] for p in FASTA(self.prokka.p.faa)]
 
     @property_cached
     def species(self):
         """Returns the predicted species of this contig."""
-        return [p.description for p in FASTA(self.prokka.p.fsa)][0]
+        return [p.description[len(p.id)+1:] for p in FASTA(self.prokka.p.fsa)][0]
