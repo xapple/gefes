@@ -29,7 +29,7 @@ class SampleReport(Document):
         self.sample, self.parent = sample, sample
         # The output #
         self.output_path = self.sample.p.report_pdf
-        # The dynamic templates #
+        # The dynamic templates #
         self.markdown = unicode(SampleTemplate(self))
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
