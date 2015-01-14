@@ -15,12 +15,12 @@ class MeanCoverage(Graph):
     """mean_coverage"""
     short_name = 'mean_coverage'
 
-    def plot(self, x_log=False, y_log=False):
+    def plot(self, x_log=False, y_log=True):
         # Data #
         counts = self.parent.coverage_mean.values()
         # Plot #
         fig = pyplot.figure()
-        pyplot.hist(counts, bins=100, color='k')
+        pyplot.hist(counts, bins=100, color='gray')
         axes = pyplot.gca()
         # Information #
         title = 'Distribution of mean coverages'
@@ -38,12 +38,12 @@ class PercentCovered(Graph):
     """percent_covered"""
     short_name = 'percent_covered'
 
-    def plot(self, x_log=False, y_log=False):
+    def plot(self, x_log=False, y_log=True):
         # Data #
         counts = self.parent.covered_fraction.values()
         # Plot #
         fig = pyplot.figure()
-        pyplot.hist(counts, bins=100, color='k')
+        pyplot.hist(counts, bins=100, color='gray')
         axes = pyplot.gca()
         # Information #
         title = 'Distribution of percentages covered'

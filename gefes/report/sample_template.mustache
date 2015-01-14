@@ -100,9 +100,9 @@ This results in the production of {{sample_count_contigs}} contigs, of which the
 
 Mono Mapping
 ------------
-Now we will attempt to map every read of this sample (the raw ones, before cleaning) back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the probable PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} percent of the read map back to the contigs generated and {{sample_didnt_map}} percent have no match.
+Now we will attempt to map every read of this sample (the raw ones, before cleaning) back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the predicted PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} of the reads map back to the contigs generated in the mono-assembly and {{sample_didnt_map}} have no match.
 
-For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as a the fraction coverged. The distribution can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
+For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these variables can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
 
 {{sample_mean_coverage}}
 
@@ -110,10 +110,10 @@ For every of the {{sample_count_contigs}} contigs, we can now compute a mean cov
 
 Annotation
 ----------
-Taking the {{sample_count_contigs}} contigs generated in the the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software. This procedure predicts the presence of {{sample_count_proteins}}. WHen possible, each protein is assigned a function. The most common functions are shown in the table below:
+Taking the {{sample_count_contigs}} contigs generated in the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software. This procedure predicts the presence of {{sample_count_proteins}} proteins. When possible, each protein is assigned a function. The most common functions are shown in the table below:
 
 {{sample_functions_table}}
 
-The annotation provides a taxonmic classification when possible. The most common taxa are shown in the table below (not normalized):
+The annotation provides a taxonomic classification when possible. The most common taxa are shown in the table below (not normalized):
 
 {{sample_taxa_table}}
