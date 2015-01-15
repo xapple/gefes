@@ -14,7 +14,20 @@ from plumbing.cache import property_cached
 ###############################################################################
 class Contig(object):
     """A contig as predicted by the assembler. It has for instance a nucleotide frequency
-    and annotations."""
+    and annotations. Possibilities for analyzing a contig's content:
+    * Prokka
+         (protein calling and function assignment from contigs)
+    * PhyloPhlAn
+        (Input the the (unannotated) protein sequences of the input genomes, get taxonomic predictions,
+        more for complete genomes or bins)
+    * MetaPhlAn
+        (Input the raw reads and obtain some visualization)
+    * PhyloSift
+        (Input short or long sequence and have them compared against marker sets
+        of 40 genes from the tree domains, uses hmmalign and infernal)
+    * Blobology
+        (Similar to the GC-vs-Coverage plots we make)
+    """
 
     all_paths = """
     /contig.fasta
@@ -34,6 +47,10 @@ class Contig(object):
         self.base_dir = self.parent.base_dir + "contigs/" + str(self.num) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
+    @property
+    def length(self):
+        return len(self.record.seq)
+
     @property_cached
     def fasta(self):
         """A fasta file containing only this contig."""
@@ -46,18 +63,32 @@ class Contig(object):
 
     @property_cached
     def annotation(self):
+        """The annotation that can be made on this contig"""
         return Prokka(self, self.p.annotation_dir)
 
-    @property
-    def length(self):
-        return len(self.record.seq)
+    @property_cached
+    def proteins(self):
+        """The predicted proteins this contig contains."""
+        pass
 
+    @property_cached
+    def ribosomal_proteins(self):
+        """The predicted ribosomal proteins this contig contains."""
+        pass
+
+    @property_cached
+    def taxonomy(self):
+        """The predicted taxonomic information associated with this contig."""
+        pass
+
+    #-------------------------------------------------------------------------#
     @property
     def gc_content(self):
         pass
 
-    def get_nuc_freq(self, windowsize):
-        """Returns frequency of nucelotide in this contig with length windowsize"""
+    #-------------------------------------------------------------------------#
+    def get_nuc_freq(self, windowsize=4):
+        """Returns frequency of nucleotides in this contig with length windowsize"""
         freqs = {}
         allowed_nucs = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
         is_nuc = lambda x: x in allowed_nucs
@@ -81,5 +112,5 @@ class Contig(object):
 
     @property_cached
     def tetra_nuc_freq(self):
-        return self.get_nuc_freq(3)
+        return self.get_nuc_freq(4)
 

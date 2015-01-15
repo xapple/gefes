@@ -134,5 +134,5 @@ class RayResults(object):
 
     @property_cached
     def contigs(self):
-        """A list of all the contigs produced returned as our Contig custom objects"""
+        """All the contigs produced returned as a list of our Contig custom objects."""
         return [Contig(self.ray, record, num=i) for i,record in enumerate(self.contigs_fasta)]

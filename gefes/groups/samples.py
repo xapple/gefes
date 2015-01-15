@@ -4,6 +4,7 @@ import os
 # Internal modules #
 from gefes.parsing.illumina      import IlluminaInfo
 from gefes.preprocess.quality    import QualityChecker
+from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
 from gefes.report.sample         import SampleReport
@@ -112,6 +113,9 @@ class Sample(object):
             self.singletons = self.quality_checker.singletons
         # If it's a FASTA we can't clean it #
         if self.format == 'fasta': self.clean = self.pair
+        # Initial taxonomic predictions #
+        self.clean.fwd.kraken = Kraken(self.clean.fwd)
+        self.clean.rev.kraken = Kraken(self.clean.rev)
         # Map to the co-assembly #
         self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_project_dir)
         # Assembly of this sample by itself #

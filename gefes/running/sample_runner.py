@@ -27,6 +27,8 @@ class SampleRunner(Runner):
         {'clean.rev.fastqc.run':                    {}},
         {'clean.fwd.graphs.length_dist.plot':       {'x_log': True, 'y_log': True}},
         {'clean.rev.graphs.length_dist.plot':       {'x_log': True, 'y_log': True}},
+        {'clean.fwd.kraken.run':                    {}},
+        {'clean.rev.kraken.run':                    {}},
         #{'assembly.run':                           {}},
         {'report.generate':                         {}},
     ]
