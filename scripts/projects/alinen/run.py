@@ -13,6 +13,7 @@ import gefes
 # Constants #
 proj = gefes.projects['alinen'].load()
 samples = proj.samples
+for s in samples: s.load()
 
 # Manual #
 for s in samples:
@@ -44,10 +45,10 @@ proj.runner.run_slurm(steps=['assembly71.run'], machines=42, cores=42*24, time='
 # On Halvan #
 proj.runner.run_slurm(steps=['assembly41.run'], time='10-00:00:00', project="b2011035", job_name="alinen_proj_41", cluster='halvan', partition='halvan', cores=64)
 
-################################### Aggregate ##################################
+################################### Aggregates ###################################
 hypo = gefes.groups.favorites.alinen_hypo.load()
 meta = gefes.groups.favorites.alinen_meta.load()
-epi = gefes.groups.favorites.alinen_epi.load()
+epi  = gefes.groups.favorites.alinen_epi.load()
 
 meta.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='7-00:00:00', constraint='mem512GB', project="b2011105", job_name="alinen_epi_41")
 epi.runner.run_slurm(steps=[{'assembly41.run':{'threads':False}}], time='7-00:00:00', constraint='mem512GB', project="b2011105", job_name="alinen_hypo_41")

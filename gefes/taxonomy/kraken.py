@@ -11,7 +11,7 @@ from plumbing.slurm import num_processors
 # Third party modules #
 import sh
 
-# Constants #
+# Constants #
 home = os.environ['HOME'] + '/'
 
 ###############################################################################
