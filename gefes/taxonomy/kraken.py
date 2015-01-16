@@ -9,7 +9,7 @@ from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
 
 # Third party modules #
-import sh
+import sh, pandas
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -23,6 +23,7 @@ class Kraken(object):
 
     all_paths = """
     /raw_output.txt
+    /log.txt
     /summary.tsv
     """
 
@@ -43,7 +44,8 @@ class Kraken(object):
                   '--threads', str(num_processors),
                   '--db',      standard_db,
                   '--output',  self.p.raw_output,
-                  '--paired',  self.source.fwd, self.source.rev)
+                  '--paired',  self.source.fwd, self.source.rev,
+                  _out=str(self.p.log))
         # Run the report #
         report = sh.Command('kraken-report')
         report('--db', standard_db, self.p.raw_output, _out=str(self.p.summary))
@@ -70,5 +72,22 @@ class KrakenResults(object):
 
     @property_cached
     def composition(self):
-        return self.p.output.content
+        """1) Percentage of reads covered by the clade rooted at this taxon
+           2) Number of reads covered by the clade rooted at this taxon
+           3) Number of reads assigned directly to this taxon
+           4) A rank code, indicating (U)nclassified, (D)omain, (K)ingdom,
+              (P)hylum, (C)lass, (O)rder, (F)amily, (G)enus, or (S)pecies.
+              All other ranks are simply '-'.
+           5) NCBI taxonomy ID
+           6) indented scientific name
+        """
+        columns = ['percentage', 'total_reads', 'count_reads', 'rank', 'ncbi_id', 'name']
+        pandas.io.parsers.read_csv(self.otu_csv, sep='\t', index_col=0, encoding='utf-8', columns=columns)
 
+    @property_cached
+    def at_phylum_level(self):
+        pass
+
+    @property_cached
+    def at_spieces_level(self):
+        pass

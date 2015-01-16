@@ -66,12 +66,12 @@ class Bowtie(object):
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Check both type of indexes exist #
         if not os.path.exists(self.contigs_fasta + '.1.bt2'): self.contigs_fasta.index_bowtie()
-        if not os.path.exists(self.contigs_fasta + '.fai'): self.contigs_fasta.index_samtools()
+        if not os.path.exists(self.contigs_fasta + '.fai'):   self.contigs_fasta.index_samtools()
         # Make our options #
         options = ['-p', num_processors,
                    '-x', self.assembly.results.contigs_fasta,
-                   '-1', self.sample.pair.fwd,
-                   '-2', self.sample.pair.rev,
+                   '-1', self.sample.clean.fwd,
+                   '-2', self.sample.clean.rev,
                    '-S', self.p.map_sam]
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.format == 'fasta': options += ['-f']

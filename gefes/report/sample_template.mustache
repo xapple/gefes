@@ -90,23 +90,41 @@ We can look again at the per base quality and the per sequence quality of the pa
 
 -------
 
+Rough taxonomic prediction
+--------------------------
+After cleaning the sequences, we can straight away apply the {{kraken_version}} tool to get a rough estimate of the taxonomic composition of the sample. When possible, this classifies each sequence at one of the following levels depending on the accuracy obtained: Domain, Kingdom, Phylum, Class, Order, Family, Genus, or Species. Looking at all sequences that were classified at least at the Phylum level we get the following distribution:
+
+{{kraken_phylum_table}}
+
+However, if one takes only the sequences that were able to be classified at the speices level, the most abundant species are:
+
+{{kraken_species_table}}
+
+The full breakdown is availble in the file {{{{kraken_summary_file}}.
+
+-------
+
 Mono Assembly
 -------------
-Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by it self. For this we use the "{{sample_assembler_version}}" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
+Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by itself. For this we use the "{{sample_assembler_version}}" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
 
-This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in in figure \ref{sample_contigs_len_dist}:
+This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in figure \ref{sample_contigs_len_dist}:
 
 {{sample_contigs_len_dist}}
 
+-------
+
 Mono Mapping
 ------------
-Now we will attempt to map every read of this sample (the raw ones, before cleaning) back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the predicted PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} of the reads map back to the contigs generated in the mono-assembly and {{sample_didnt_map}} have no match.
+Now we will attempt to map every (cleaned) read of this sample back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the predicted PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} of the reads map back to the contigs generated in the mono-assembly and {{sample_didnt_map}} have no match.
 
-For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these variables can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
+For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these two variables can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
 
 {{sample_mean_coverage}}
 
 {{samples_percent_covered}}
+
+-------
 
 Annotation
 ----------
@@ -114,8 +132,3 @@ Taking the {{sample_count_contigs}} contigs generated in the previous mono-assem
 
 {{sample_functions_table}}
 
-Initial taxonomic prediction
-----------------------------
-The annotation provides a taxonomic classification when possible. The most common taxa are shown in the table below (not normalized):
-
-{{sample_taxa_table}}
