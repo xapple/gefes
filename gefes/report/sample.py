@@ -7,6 +7,8 @@ from collections import Counter, OrderedDict
 
 # Internal modules #
 import gefes
+
+# First party modules #
 from plumbing.autopaths import FilePath
 from plumbing.common import split_thousands, pretty_now
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
@@ -157,24 +159,18 @@ class SampleTemplate(Template):
     # Rough taxonomic prediction #
     def kraken_version(self): return self.sample.kraken.long_name
     def kraken_domain_table(self):
-        counts = Counter()
-        for c in self.sample.contigs: counts.update([c.annotation.results.species])
-        table = OrderedDict(counts.most_common(20))
-        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = self.sample.kraken.results.at_domain_level
+        table = {'Domain': table.keys(), 'Percentage': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Domain level breakdown predicted by Kraken."
     def kraken_phylum_table(self):
-        counts = Counter()
-        for c in self.sample.contigs: counts.update([c.annotation.results.species])
-        table = OrderedDict(counts.most_common(20))
-        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = self.sample.kraken.results.at_phylum_level
+        table = {'Phylum': table.keys(), 'Percentage': table.values()}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Phylum level distribution predicted by Kraken."
     def kraken_species_table(self):
-        counts = Counter()
-        for c in self.sample.contigs: counts.update([c.annotation.results.species])
-        table = OrderedDict(counts.most_common(20))
-        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = self.sample.kraken.results.at_species_level
+        table = {'Species': table.keys()[0:10], 'Percentage': table.values()[0:10]}
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 10 most common species predicted by Kraken."
     def kraken_summary_path(self): return ssh_header + self.sample.kraken.p.summary
@@ -207,7 +203,7 @@ class SampleTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
-    def annotation_version(self):    return self.sample.contigs[0].annotation.long_name
+    def annotation_version(self): return self.sample.contigs[0].annotation.long_name
     def sample_count_proteins(self):
         total = sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
         return split_thousands(total)

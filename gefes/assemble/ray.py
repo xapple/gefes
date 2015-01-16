@@ -110,7 +110,7 @@ class Ray(object):
                           _err=self.p.stderr.path)
 
     def local(self):
-        """Run the assembly on the computer where this pipeline is running"""
+        """Run the assembly on the computer where this pipeline is running."""
         ray = sh.Command(self.executable)
         return ray('-k', self.kmer_size,
                    '-o', self.out_dir,

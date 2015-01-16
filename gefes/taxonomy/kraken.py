@@ -1,5 +1,6 @@
 # Built-in modules #
 import os
+from collections import OrderedDict
 
 # Internal modules #
 
@@ -86,18 +87,32 @@ class KrakenResults(object):
            6) indented scientific name
         """
         columns = ['percentage', 'total_reads', 'count_reads', 'rank', 'ncbi_id', 'name']
-        pandas.io.parsers.read_csv(self.kraken.p.summary,
-                                   sep='\t', encoding='utf-8',
-                                   header=None, names=columns)
+        result  =  pandas.io.parsers.read_csv(self.kraken.p.summary,
+                                              sep='\t', encoding='utf-8',
+                                              header=None, names=columns)
+        result['name'] = result['name'].apply(lambda x: x.lstrip())
+        return result
 
     @property_cached
     def at_domain_level(self):
-        pass
+        x = self.composition
+        return {'Unclassified': x[x['rank']=='U']['percentage'],
+                'Bacteria':     x[x['name']=='Bacteria']['percentage'],
+                'Archaea':      x[x['name']=='Archaea']['percentage'],
+                'Viruses':      x[x['name']=='Viruses']['percentage']}
 
     @property_cached
     def at_phylum_level(self):
-        pass
+        result = self.composition
+        result = result[(result['rank']=='P') & (result['percentage'] != 0)]
+        result = result.sort(columns='percentage', ascending=False)
+        result = OrderedDict(zip(result['name'], result['percentage']))
+        return result
 
     @property_cached
     def at_species_level(self):
-        pass
+        result = self.composition
+        result = result[(result['rank']=='S') & (result['percentage'] != 0)]
+        result = result.sort(columns='percentage', ascending=False)
+        result = OrderedDict(zip(result['name'], result['percentage']))
+        return result
