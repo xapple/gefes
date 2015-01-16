@@ -4,7 +4,7 @@ import os
 # Internal modules #
 
 # First party modules #
-from plumbing.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths, DirectoryPath
 from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
 
@@ -26,19 +26,21 @@ class Kraken(object):
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, reads):
-        # Save attributes #
-        self.reads = reads
+    def __init__(self, source, base_dir=None):
+        # Basic #
+        self.source   = source
+        self.base_dir = base_dir
+        # Default case #
+        if base_dir is None: self.base_dir = self.source.prefix_path + '.kraken/'
         # Auto paths #
-        self.base_dir = self.result_dir + 'bowtie/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
-        sh.kraken('--preload', '--fastq-input', '--gzip-compressed',
+        sh.kraken('--preload', # '--fastq-input', '--gzip-compressed',
                   '--threads', num_processors,
                   '--db',      home + 'databases/kraken/standard',
                   '--output',  self.p.output,
-                  self.reads)
+                  self.source)
 
     @property_cached
     def results(self):

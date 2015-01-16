@@ -137,15 +137,3 @@ class Sample(object):
     def contigs(self):
         """Convenience shortcut. The contigs of the mono-assembly"""
         return self.assembly.results.contigs
-
-    def run_slurm(self, *args, **kwargs):
-        return self.runner.run_slurm(*args, **kwargs)
-
-    def clean_reads(self):
-        self.cleaner.run()
-
-    def map_reads(self):
-        self.mapper.map()
-
-    def make_plots(self):
-        for graph in self.graphs: graph.plot()
