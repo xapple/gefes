@@ -33,6 +33,9 @@ class SampleReport(Document):
         # The output #
         self.base_dir    = self.sample.p.report_dir
         self.output_path = self.sample.p.report_pdf
+        # Where should we cache stuff #
+        self.cache_dir = DirectoryPath(self.base_dir + 'cached/')
+        self.cache_dir.create(safe=True)
 
     def generate(self):
         # Dynamic templates #
@@ -69,11 +72,7 @@ class SampleTemplate(Template):
         self.report, self.parent = report, report
         self.sample  = self.parent.sample
         self.project = self.sample.project
-        # Paths #
-        self.base_dir  = self.parent.base_dir
-        # Where should we cache stuff #
-        self.cache_dir = DirectoryPath(self.base_dir + 'cached/')
-        self.cache_dir.create(safe=True)
+        self.cache_dir  = self.parent.cache_dir
 
     # General information #
     def sample_short_name(self):     return self.sample.name
