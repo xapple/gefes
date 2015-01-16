@@ -9,11 +9,13 @@ A script to contain the procedure for running the soda evaluation project.
 # Internal modules #
 import gefes
 
-################################ Preprocessing ################################
 # Constants #
 proj = gefes.projects['soda_eval'].load()
 samples = proj.samples
+for s in samples: s.load()
 
+
+################################ Preprocessing ################################
 # Clean #
 for s in proj.samples: s.load()
 for s in proj.samples: s.runner.run_slurm()

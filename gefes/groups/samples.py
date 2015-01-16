@@ -32,6 +32,7 @@ class Sample(object):
     /clean/fwd.fastq
     /clean/rev.fastq
     /clean/singletons.fastq
+    /kraken/
     /fastqc/fwd/
     /fastqc/rev/
     /assembly/
@@ -114,8 +115,7 @@ class Sample(object):
         # If it's a FASTA we can't clean it #
         if self.format == 'fasta': self.clean = self.pair
         # Initial taxonomic predictions #
-        self.clean.fwd.kraken = Kraken(self.clean.fwd)
-        self.clean.rev.kraken = Kraken(self.clean.rev)
+        self.kraken = Kraken(self.clean, self.p.kraken_dir)
         # Map to the co-assembly #
         self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_project_dir)
         # Assembly of this sample by itself #
