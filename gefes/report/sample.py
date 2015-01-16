@@ -9,7 +9,7 @@ from collections import Counter, OrderedDict
 import gefes
 
 # First party modules #
-from plumbing.autopaths import FilePath
+from plumbing.autopaths import FilePath, DirectoryPath
 from plumbing.common import split_thousands, pretty_now
 from plumbing.cache import property_pickled
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
@@ -71,7 +71,9 @@ class SampleTemplate(Template):
         self.project = self.sample.project
         # Paths #
         self.base_dir  = self.parent.base_dir
-        self.cache_dir = self.base_dir + 'cached/'
+        # Where should we cache stuff #
+        self.cache_dir = DirectoryPath(self.base_dir + 'cached/')
+        self.cache_dir.create(safe=True)
 
     # General information #
     def sample_short_name(self):     return self.sample.name
