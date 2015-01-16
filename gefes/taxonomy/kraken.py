@@ -45,7 +45,7 @@ class Kraken(object):
                   '--db',      standard_db,
                   '--output',  self.p.raw_output,
                   '--paired',  self.source.fwd, self.source.rev,
-                  _out=str(self.p.log))
+                  _err=str(self.p.log))
         # Run the report #
         report = sh.Command('kraken-report')
         report('--db', standard_db, self.p.raw_output, _out=str(self.p.summary))
@@ -65,7 +65,7 @@ class KrakenResults(object):
     /output/lorem
     """
 
-    def __nonzero__(self): return bool(self.p.kraken.summary)
+    def __nonzero__(self): return bool(self.kraken.p.summary)
     def __init__(self, kraken):
         self.kraken = kraken
 
