@@ -9,12 +9,17 @@ A script to contain the procedure for running the test sample.
 # Internal modules #
 import gefes
 
-################################ Preprocessing ################################
 # Constants #
 proj = gefes.projects['alinen'].load()
 samples = proj.samples
 for s in samples: s.load()
 
+################################ Status report ################################
+for s in samples: print "Raw:",      s, s.pair.exists
+for s in samples: print "First QC:", s, bool(s.pair.fwd.fastqc.results)
+for s in samples: print "Cleaned:",  s, bool(s.clean)
+
+################################ Preprocessing ################################
 # Manual #
 for s in samples:
     s.load()
@@ -30,22 +35,22 @@ for s in samples:
     s.report.generate()
 
 # By SLURM #
-for s in samples: s.load().runner.run_slurm(time='04:00:00')
+for s in samples: s.runner.run_slurm(time='04:00:00')
 
-################################### Assembly ##################################
+################################# Co-Assembly #################################
 # On Milou #
-proj.runner.run_slurm(steps=['assembly41.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_41")
-proj.runner.run_slurm(steps=['assembly51.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_51")
-proj.runner.run_slurm(steps=['assembly61.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_61")
-proj.runner.run_slurm(steps=['assembly71.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124", job_name="alinen_ray_71")
+proj.runner.run_slurm(steps=['assembly.run'], time='3-00:00:00', constraint='mem512GB', project="g2014124",
+                      job_name="alinen_ray")
 
 # On Sisu #
-proj.runner.run_slurm(steps=['assembly71.run'], machines=42, cores=42*24, time='36:00:00', partition='large', job_name="alinen_ray_71", email=False)
+proj.runner.run_slurm(steps=['assembly.run'], machines=42, cores=42*24, time='36:00:00', partition='large',
+                      job_name="alinen_ray", email=False)
 
 # On Halvan #
-proj.runner.run_slurm(steps=['assembly41.run'], time='10-00:00:00', project="b2011035", job_name="alinen_proj_41", cluster='halvan', partition='halvan', cores=64)
+proj.runner.run_slurm(steps=['assembly.run'], time='10-00:00:00', project="b2011035",
+                      job_name="alinen_ray", cluster='halvan', partition='halvan', cores=64)
 
-################################### Aggregates ###################################
+################################# Aggregates ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()
 meta = gefes.groups.favorites.alinen_meta.load()
 epi  = gefes.groups.favorites.alinen_epi.load()

@@ -90,7 +90,7 @@ class QualityChecker(object):
     @property_cached
     def results(self):
         results = QualityResults(self.source, self.dest)
-        if not results: self.run()
+        if not results: raise Exception("You can't access results from the quality check before running the algorithm.")
         return results
 
 ###############################################################################
