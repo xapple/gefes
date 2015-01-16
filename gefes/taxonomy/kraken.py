@@ -18,8 +18,13 @@ standard_db = home + 'databases/kraken/standard'
 ###############################################################################
 class Kraken(object):
     """Use Kraken at http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
-    to predict taxonomy on the raw reads.
+    to predict taxonomy on the raw reads. Expects version 1.1.11.
     """
+
+    short_name = 'kraken'
+    long_name  = 'Kraken v1.1.11'
+    executable = 'kraken'
+    dependencies = ['jellyfish']
 
     all_paths = """
     /raw_output.txt
@@ -27,7 +32,7 @@ class Kraken(object):
     /summary.tsv
     """
 
-    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.source)
 
     def __init__(self, source, base_dir=None):
         # Basic #
@@ -81,12 +86,18 @@ class KrakenResults(object):
            6) indented scientific name
         """
         columns = ['percentage', 'total_reads', 'count_reads', 'rank', 'ncbi_id', 'name']
-        pandas.io.parsers.read_csv(self.kraken.p.summary, sep='\t', index_col=0, encoding='utf-8', columns=columns)
+        pandas.io.parsers.read_csv(self.kraken.p.summary,
+                                   sep='\t', encoding='utf-8',
+                                   header=None, names=columns)
+
+    @property_cached
+    def at_domain_level(self):
+        pass
 
     @property_cached
     def at_phylum_level(self):
         pass
 
     @property_cached
-    def at_spieces_level(self):
+    def at_species_level(self):
         pass

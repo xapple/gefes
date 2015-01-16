@@ -92,15 +92,19 @@ We can look again at the per base quality and the per sequence quality of the pa
 
 Rough taxonomic prediction
 --------------------------
-After cleaning the sequences, we can straight away apply the {{kraken_version}} tool to get a rough estimate of the taxonomic composition of the sample. When possible, this classifies each sequence at one of the following levels depending on the accuracy obtained: Domain, Kingdom, Phylum, Class, Order, Family, Genus, or Species. Looking at all sequences that were classified at least at the Phylum level we get the following distribution:
+After cleaning the sequences, we can straight away apply the {{kraken_version}} tool to get a rough estimate of the taxonomic composition of the sample. When possible, this classifies each sequence at one of the following levels depending on the accuracy obtained: Domain, Kingdom, Phylum, Class, Order, Family, Genus, or Species. For instance, considering only the Domain level, the breakdown is the following:
+
+{{kraken_domain_table}}
+
+More interestingly, looking at all sequences that were classified at least at the Phylum level we get the following distribution:
 
 {{kraken_phylum_table}}
 
-However, if one takes only the sequences that were able to be classified at the speices level, the most abundant species are:
+Next, if one takes only the sequences that were able to be classified at the species level, the 10 most abundant species are:
 
 {{kraken_species_table}}
 
-The full breakdown is availble in the file {{{{kraken_summary_file}}.
+The full breakdown is available in the file {{kraken_summary_path}}.
 
 -------
 

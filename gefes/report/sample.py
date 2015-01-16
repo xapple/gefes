@@ -154,6 +154,31 @@ class SampleTemplate(Template):
         params += ["Per sequence quality after quality control", "cleaned_per_seq_qual"]
         return str(DualFigure(*params))
 
+    # Rough taxonomic prediction #
+    def kraken_version(self): return self.sample.kraken.long_name
+    def kraken_domain_table(self):
+        counts = Counter()
+        for c in self.sample.contigs: counts.update([c.annotation.results.species])
+        table = OrderedDict(counts.most_common(20))
+        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
+        return table + "\n\n   : The Domain level breakdown predicted by Kraken."
+    def kraken_phylum_table(self):
+        counts = Counter()
+        for c in self.sample.contigs: counts.update([c.annotation.results.species])
+        table = OrderedDict(counts.most_common(20))
+        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
+        return table + "\n\n   : The Phylum level distribution predicted by Kraken."
+    def kraken_species_table(self):
+        counts = Counter()
+        for c in self.sample.contigs: counts.update([c.annotation.results.species])
+        table = OrderedDict(counts.most_common(20))
+        table = {'Function': table.keys(), 'Counts': table.values()}
+        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
+        return table + "\n\n   : The 10 most common species predicted by Kraken."
+    def kraken_summary_path(self): return ssh_header + self.sample.kraken.p.summary
+
     # Mono Assembly #
     def sample_assembler_version(self): return self.sample.assembly.long_name
     def sample_kmer_size(self):         return self.sample.assembly.kmer_size
@@ -194,11 +219,3 @@ class SampleTemplate(Template):
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 20 most common predicted functions in the predicted proteins of the mono-assembly."
 
-    # Initial taxonomic prediction #
-    def sample_taxa_table(self):
-        counts = Counter()
-        for c in self.sample.contigs: counts.update([c.annotation.results.species])
-        table = OrderedDict(counts.most_common(20))
-        table = {'Function': table.keys(), 'Counts': table.values()}
-        table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
-        return table + "\n\n   : The 20 most common predicted taxa in the contigs of the mono-assembly."
