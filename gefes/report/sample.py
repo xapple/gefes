@@ -11,6 +11,7 @@ import gefes
 # First party modules #
 from plumbing.autopaths import FilePath
 from plumbing.common import split_thousands, pretty_now
+from plumbing.cache import property_pickled
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
 from pymarktex.figures import ScaledFigure, DualFigure
 
@@ -30,6 +31,7 @@ class SampleReport(Document):
         # The parent #
         self.sample, self.parent = sample, sample
         # The output #
+        self.base_dir    = self.sample.p.report_dir
         self.output_path = self.sample.p.report_pdf
 
     def generate(self):
@@ -67,6 +69,9 @@ class SampleTemplate(Template):
         self.report, self.parent = report, report
         self.sample  = self.parent.sample
         self.project = self.sample.project
+        # Paths #
+        self.base_dir  = self.parent.base_dir
+        self.cache_dir = self.base_dir + 'cached/'
 
     # General information #
     def sample_short_name(self):     return self.sample.name
@@ -97,8 +102,10 @@ class SampleTemplate(Template):
 
     # Raw data #
     def fwd_size(self):        return             str(self.sample.pair.fwd.size)
-    def fwd_count(self):       return split_thousands(self.sample.pair.fwd.count)
     def rev_size(self):        return             str(self.sample.pair.rev.size)
+    @property_pickled
+    def fwd_count(self):       return split_thousands(self.sample.pair.fwd.count)
+    @property_pickled
     def rev_count(self):       return split_thousands(self.sample.pair.rev.count)
     def illumina_report(self):
         if not self.sample.illumina_info.report.exists: return "<no report found>"
@@ -122,8 +129,11 @@ class SampleTemplate(Template):
     def phred_threshold(self):   return self.sample.quality_checker.threshold
     def window_size(self):       return self.sample.quality_checker.window_size
     def length_threshold(self):  return self.sample.quality_checker.min_length
+    @property_pickled
     def remaining_percent(self): return "%.2f%%" % (self.sample.quality_checker.results.ratio_kept * 100)
+    @property_pickled
     def remaining_pairs(self):   return split_thousands(len(self.sample.quality_checker.dest))
+    @property_pickled
     def remaining_singles(self): return split_thousands(len(self.sample.quality_checker.singletons))
 
     # Length distribution #
@@ -160,17 +170,17 @@ class SampleTemplate(Template):
     def kraken_version(self): return self.sample.kraken.long_name
     def kraken_domain_table(self):
         table = self.sample.kraken.results.at_domain_level
-        table = {'Domain': table.keys(), 'Percentage': table.values()}
+        table = OrderedDict((('Domain',table.keys()), ('Percentage',table.values())))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Domain level breakdown predicted by Kraken."
     def kraken_phylum_table(self):
         table = self.sample.kraken.results.at_phylum_level
-        table = {'Phylum': table.keys(), 'Percentage': table.values()}
+        table = OrderedDict((('Phylum',table.keys()), ('Percentage',table.values())))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Phylum level distribution predicted by Kraken."
     def kraken_species_table(self):
         table = self.sample.kraken.results.at_species_level
-        table = {'Species': table.keys()[0:10], 'Percentage': table.values()[0:10]}
+        table = OrderedDict((('Species',table.keys()[0:10]), ('Percentage',table.values()[0:10])))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The 10 most common species predicted by Kraken."
     def kraken_summary_path(self): return ssh_header + self.sample.kraken.p.summary
@@ -188,8 +198,11 @@ class SampleTemplate(Template):
 
     # Mono Mapping #
     def sample_mapper_version(self):   return self.sample.mono_mapper.long_name
+    @property_pickled
     def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.results.filtered_count)
+    @property_pickled
     def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
+    @property_pickled
     def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)
     def sample_mean_coverage(self):
         caption = "Mono-mapping mean coverage distribution"
@@ -204,9 +217,11 @@ class SampleTemplate(Template):
 
     # Protein calling (annotation) #
     def annotation_version(self): return self.sample.contigs[0].annotation.long_name
+    @property_pickled
     def sample_count_proteins(self):
         total = sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
         return split_thousands(total)
+    @property_pickled
     def sample_functions_table(self):
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.functions)
