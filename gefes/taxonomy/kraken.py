@@ -40,7 +40,7 @@ class Kraken(object):
 
     def run(self, keep_raw=False):
         # Run the main classification #
-        sh.kraken('--preload', '--fastq-input', '--gzip-compressed',
+        sh.kraken('--preload',
                   '--threads', str(num_processors),
                   '--db',      standard_db,
                   '--output',  self.p.raw_output,
@@ -65,10 +65,9 @@ class KrakenResults(object):
     /output/lorem
     """
 
-    def __nonzero__(self): return bool(self.p.summary)
+    def __nonzero__(self): return bool(self.p.kraken.summary)
     def __init__(self, kraken):
         self.kraken = kraken
-        self.p = AutoPaths(self.kraken.base_dir, self.all_paths)
 
     @property_cached
     def composition(self):
@@ -82,7 +81,7 @@ class KrakenResults(object):
            6) indented scientific name
         """
         columns = ['percentage', 'total_reads', 'count_reads', 'rank', 'ncbi_id', 'name']
-        pandas.io.parsers.read_csv(self.otu_csv, sep='\t', index_col=0, encoding='utf-8', columns=columns)
+        pandas.io.parsers.read_csv(self.kraken.p.summary, sep='\t', index_col=0, encoding='utf-8', columns=columns)
 
     @property_cached
     def at_phylum_level(self):
