@@ -55,7 +55,7 @@ class KrakenResults(object):
     /output/lorem
     """
 
-    def __nonzero__(self): return 0
+    def __nonzero__(self): return bool(self.p.output)
     def __init__(self, kraken):
         self.kraken = kraken
         self.p = AutoPaths(self.kraken.base_dir, self.all_paths)

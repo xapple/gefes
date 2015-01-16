@@ -124,7 +124,7 @@ class Bowtie(object):
 ###############################################################################
 class BowtieResults(object):
 
-    def __nonzero__(self): return self.p.coverage.exists
+    def __nonzero__(self): return bool(self.p.coverage)
     def __init__(self, bowtie):
         self.bowtie = bowtie
         self.assembly = bowtie.assembly

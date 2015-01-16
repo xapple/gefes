@@ -127,7 +127,7 @@ class Ray(object):
 ###############################################################################
 class RayResults(object):
 
-    def __nonzero__(self): return self.contigs_fasta.exists
+    def __nonzero__(self): return bool(self.contigs_fasta)
     def __init__(self, ray):
         self.ray = ray
         self.contigs_fasta = FASTA(self.ray.p.filtered)

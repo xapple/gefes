@@ -113,7 +113,7 @@ class QualityResults(object):
     /lorem
     """
 
-    def __nonzero__(self): return self.dest.exists
+    def __nonzero__(self): return bool(self.dest)
 
     def __init__(self, source, dest):
         self.source = source
