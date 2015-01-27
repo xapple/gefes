@@ -26,6 +26,8 @@ for s in samples: print "Map to co-assebmly:", s, bool(s.clean.rev.kraken.result
 # Logs #
 for s in samples: print "Logs:",               s, list(s.p.logs_dir.contents)
 print "Logs:", proj, list(proj.p.logs_dir.contents)
+# Report #
+for s in samples: s.report.generate()
 
 ################################ Preprocessing ################################
 # Manual #
@@ -46,13 +48,18 @@ for s in samples:
 for s in samples: s.runner.run_slurm(time='04:00:00')
 
 ################################### Kraken ####################################
-for s in samples: s.kraken.run()
+for s in samples: print s, s.kraken.run()
 
 ############################### Solo-Assembly #################################
 for s in proj.samples: s.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small')
 
 ################################ Solo-Mapping #################################
+for s in samples: print s, s.mono_mapper.run()
 
+############################### Solo-Prokka #################################
+from tqdm import tqdm
+all_contigs = [c for s in proj.samples for c in s.contigs]
+for c in tqdm(all_contigs): c.annotation.run()
 
 ################################# Co-Assembly #################################
 # On Milou #
