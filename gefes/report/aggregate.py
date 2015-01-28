@@ -22,8 +22,8 @@ class AggregateReport(Document):
         # The parent #
         self.aggregate, self.parent = sample, sample
         # The output #
-        self.base_dir    = self.sample.p.report_dir
-        self.output_path = self.sample.p.report_pdf
+        self.base_dir    = self.aggregate.p.report_dir
+        self.output_path = self.aggregate.p.report_pdf
 
     def generate(self):
         # Dynamic templates #

@@ -20,6 +20,7 @@ class Aggregate(object):
     /graphs/
     /assembly/
     /binning/
+    /report/report.pdf
     """
 
     def __repr__(self): return '<%s object "%s" with %i samples>' % \
