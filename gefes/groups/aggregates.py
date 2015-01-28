@@ -3,9 +3,10 @@ from __future__ import division
 
 # Built-in modules #
 import gefes
-from gefes.assemble.ray import Ray
+from gefes.assemble.ray             import Ray
+from gefes.binning.concoct          import Concoct
 from gefes.running.aggregate_runner import AggregateRunner
-from gefes.binning.concoct import Concoct
+from gefes.report.aggregate         import AggregateReport
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -57,19 +58,10 @@ class Aggregate(object):
         #self.annotation = Prokka(self)
         # Runner #
         self.runner = AggregateRunner(self)
+        # Report #
+        self.report = AggregateReport(self)
         # For convenience #
         return self
 
     @property
     def first(self): return self.samples[0]
-
-    def run_samples(self, steps=None, **kwargs):
-        """Run all the methods that need to be run on each of the samples
-        of this project"""
-        for s in self.samples:
-            if not s.loaded: s.load()
-            s.runner.run(steps=steps, **kwargs)
-
-    def run_samples_slurm(self, steps=None, **kwargs):
-        """Same thing but via SLURM"""
-        return [s.run_slurm(steps=steps, **kwargs) for s in self.samples]

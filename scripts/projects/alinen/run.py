@@ -19,13 +19,18 @@ for s in samples: s.load()
 for s in samples: print "Raw:",                s, bool(s.pair)
 for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
 for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
+for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for s in samples: print "Map to co-assebmly:", s, bool(s.clean.rev.kraken.results)
+for s in samples: print "Map to co-assebmly:", s, bool(s.mapper.results)
+
+# Project #
+
 # Logs #
 for s in samples: print "Logs:",               s, list(s.p.logs_dir.contents)
 print "Logs:", proj, list(proj.p.logs_dir.contents)
+
 # Report #
 for s in samples: s.report.generate()
 

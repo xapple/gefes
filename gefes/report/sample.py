@@ -47,21 +47,6 @@ class SampleReport(Document):
         self.make_latex()
         self.make_pdf()
 
-    @property
-    def location(self):
-        loc = "GEFES/samples/run%03d_sample%02d.pdf"
-        return loc % (self.sample.run_num, self.sample.num)
-
-    def web_export(self):
-        """Copy the report to the webexport directory where it can be viewed by anyone"""
-        dest = FilePath(("/proj/%s/webexport/" + self.location) % self.sample.account)
-        dest.make_directory()
-        shutil.copy(self.output_path, dest)
-
-    @property
-    def url(self):
-        return ("https://export.uppmax.uu.se/%s/" + self.location) % self.sample.account
-
 ###############################################################################
 class SampleTemplate(Template):
     """All the parameters to be rendered in the markdown template"""

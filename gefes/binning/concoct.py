@@ -28,7 +28,7 @@ class Concoct(object):
     /bins/
     """
 
-    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.assembly)
 
     def __init__(self, samples, assembly, result_dir):
         # Save attributes #
@@ -39,20 +39,21 @@ class Concoct(object):
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    @property_cached
-    def coverage_matrix(self):
+    @property
+    def coverage_matrix_tsv(self):
         """A dataframe where each row corresponds to a contig, and each column
         corresponds to a sample. The values are the average coverage for that contig
         in that sample."""
-        return self.coverage_matrix_tsv.to_dataframe(index_col=0)
-
-    @property
-    def coverage_matrix_tsv(self):
         tsv = TSVTable(self.p.coverage)
         if not tsv.exists:
+            print "Computing coverage matrix for %i samples" % len(self.samples)
             frame = pandas.DataFrame({s.name: s.mapper.results.coverage_mean for s in self.samples})
-            frame.to_csv(self.coverage_matrix_tsv.path, sep='\t', float_format='%.5g')
+            frame.to_csv(tsv, sep='\t', float_format='%.5g')
         return tsv
+
+    @property_cached
+    def coverage_matrix(self):
+        return self.coverage_matrix_tsv.to_dataframe(index_col=0)
 
     def run(self):
         # Run the pipeline #
