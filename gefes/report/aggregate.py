@@ -39,7 +39,9 @@ class AggregateReport(Document):
 
     def generate(self):
         # Dynamic templates #
-        self.markdown = unicode(AggregateTemplate(self))
+        self.main = AggregateTemplate(self)
+        self.markdown = unicode(self.main)
+        # Header and footer #
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
         # Render to latex #
@@ -97,7 +99,7 @@ class AggregateTemplate(Template):
     def count_contigs(self):     return split_thousands(self.aggregate.assembly.results.contigs_fasta.count)
     def contigs_len_dist(self):
         caption = "Co-assembly length distribution"
-        graph = self.aggregate.assembly.results.contigs_fasta.length_dist
+        graph = self.aggregate.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
         label = "contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
 
@@ -106,6 +108,6 @@ class AggregateTemplate(Template):
     def count_bins(self):      return split_thousands(len(self.aggregate.binner.results))
     def bins_size_dist(self):
         caption = "Bin size distribution"
-        graph = self.aggregate.binner.results.bins_size_dist_graph
+        graph = self.aggregate.binner.results.graphs.bins_size_dist.plot(x_log=True, y_log=True)
         label = "bins_size_dist"
         return str(ScaledFigure(graph.path, caption, label))

@@ -5,6 +5,7 @@ from __future__ import division
 
 # Internal modules #
 from gefes.annotation.prokka import Prokka
+from gefes.taxonomy.phylosift import Phylosift
 
 # First party modules #
 from fasta import FASTA
@@ -79,7 +80,7 @@ class Contig(object):
     @property_cached
     def taxonomy(self):
         """The predicted taxonomic information associated with this contig."""
-        pass
+        return Phylosift(self)
 
     #-------------------------------------------------------------------------#
     @property

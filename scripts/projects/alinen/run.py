@@ -33,6 +33,7 @@ print "Logs:", proj, list(proj.p.logs_dir.contents)
 
 # Report #
 for s in samples: s.report.generate()
+proj.report.generate()
 
 ################################ Preprocessing ################################
 # Manual #
