@@ -30,6 +30,7 @@ class Concoct(object):
     /output/original_data_gt1000.csv
     /coverage.tsv
     /bins/
+    /graphs/
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.assembly)
@@ -79,7 +80,10 @@ class ConcoctResults(object):
 
     def __nonzero__(self): return self.concoct.p.clustering.exists
     def __len__(self):     return len(self.bin_id_to_contig_ids)
-    def __init__(self, concoct): self.concoct = concoct
+
+    def __init__(self, concoct):
+        self.concoct = concoct
+        self.p = concoct.p
 
     @property_cached
     def contig_id_to_bin_id(self):

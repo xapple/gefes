@@ -103,7 +103,7 @@ class AggregateTemplate(Template):
 
     # Binning #
     def binning_version(self): return self.aggregate.binner.long_name
-    def count_bins(self):      return split_thousands(len(self.self.aggregate.binner.results))
+    def count_bins(self):      return split_thousands(len(self.aggregate.binner.results))
     def bins_size_dist(self):
         caption = "Bin size distribution"
         graph = self.aggregate.assembly.binner.results.bins_size_dist_graph
