@@ -21,7 +21,7 @@ class Phylosift(object):
     dependencies = []
 
     all_paths = """
-    /lorem.fasta
+    /results/
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)

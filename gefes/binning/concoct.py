@@ -63,9 +63,9 @@ class Concoct(object):
     def run(self):
         # Run the pipeline #
         print "Launching CONCOCT..."
-        sh.concoct('--coverage_file', self.coverage_matrix_tsv,
+        sh.concoct('--coverage_file',    self.coverage_matrix_tsv,
                    '--composition_file', self.assembly.results.contigs_fasta,
-                   '-b', self.p.output_dir)
+                   '-b',                 self.p.output_dir)
         # Remove the large and useless original data #
         self.p.original_data.remove()
 

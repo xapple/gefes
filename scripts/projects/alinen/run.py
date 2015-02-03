@@ -78,6 +78,12 @@ proj.runner.run_slurm(steps=['assembly.run'], machines=42, cores=42*24, time='36
 proj.runner.run_slurm(steps=['assembly.run'], time='10-00:00:00', project="b2011035",
                       job_name="alinen_ray", cluster='halvan', partition='halvan', cores=64)
 
+################################# Co-Mapping ##################################
+for s in samples: s.mapper.run()
+
+################################# Concoct ##################################
+proj.binner.run()
+
 ################################# Aggregates ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()
 meta = gefes.groups.favorites.alinen_meta.load()
