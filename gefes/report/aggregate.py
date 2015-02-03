@@ -27,9 +27,9 @@ class AggregateReport(Document):
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, sample):
+    def __init__(self, aggregate):
         # The parent #
-        self.aggregate, self.parent = sample, sample
+        self.aggregate, self.parent = aggregate, aggregate
         # The output #
         self.base_dir    = self.aggregate.p.report_dir
         self.output_path = self.aggregate.p.report_pdf
@@ -56,7 +56,7 @@ class AggregateTemplate(Template):
         # Attributes #
         self.report, self.parent = report, report
         self.aggregate = self.parent.aggregate
-        self.cache_dir  = self.parent.cache_dir
+        self.cache_dir = self.parent.cache_dir
 
     # General information #
     def aggregate_short_name(self): return self.aggregate.name
