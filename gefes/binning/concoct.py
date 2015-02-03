@@ -20,6 +20,9 @@ class Concoct(object):
     """
 
     short_name = 'concoct'
+    long_name  = 'concoct v0.4.0'
+    executable = 'concoct'
+    dependencies = []
 
     all_paths = """
     /output/clustering_gt1000.csv
@@ -74,13 +77,13 @@ class Concoct(object):
 class ConcoctResults(object):
 
     def __nonzero__(self): return self.concoct.p.clustering.exists
-    def __init__(self, concoct):
-        self.concoct = concoct
+    def __len__(self):     return len(set(self.contig_to_bin_id.values()))
+    def __init__(self, concoct): self.concoct = concoct
 
     @property_cached
     def contig_to_bin_id(self):
         """Parse the result of CONOCT and return a dictionary with
-        contig names as keys and strings as values."""
+        contig names as keys and bin names as values."""
         return dict(line.strip('\n').split(',') for line in self.concoct.p.clustering)
 
     @property_cached

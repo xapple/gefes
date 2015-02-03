@@ -2,14 +2,14 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json, shutil, socket
+import os, json, socket
 from collections import Counter, OrderedDict
 
 # Internal modules #
 import gefes
 
 # First party modules #
-from plumbing.autopaths import FilePath, DirectoryPath
+from plumbing.autopaths import DirectoryPath
 from plumbing.common import split_thousands, pretty_now
 from plumbing.cache import property_pickled
 from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
@@ -199,6 +199,25 @@ class SampleTemplate(Template):
         caption = "Mono-mapping percent covered distribution"
         graph = self.sample.mono_mapper.results.percent_covered_graph
         label = "samples_percent_covered"
+        return str(ScaledFigure(graph.path, caption, label))
+
+    # Co-Mapping #
+    def mapper_version(self):   return self.sample.mapper.long_name
+    @property_pickled
+    def map_filter_count(self): return split_thousands(self.sample.mapper.results.filtered_count)
+    @property_pickled
+    def did_map(self):          return "%.2f%%" % (self.sample.mapper.results.fraction_mapped * 100)
+    @property_pickled
+    def didnt_map(self):        return "%.2f%%" % (self.sample.mapper.results.fraction_unmapped * 100)
+    def mean_coverage(self):
+        caption = "Co-mapping mean coverage distribution"
+        graph = self.sample.mapper.results.mean_coverage_graph
+        label = "mean_coverage"
+        return str(ScaledFigure(graph.path, caption, label))
+    def percent_covered(self):
+        caption = "Co-mapping percent covered distribution"
+        graph = self.sample.mapper.results.percent_covered_graph
+        label = "percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
