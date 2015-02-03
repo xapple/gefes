@@ -59,9 +59,9 @@ class AggregateTemplate(Template):
         self.cache_dir  = self.parent.cache_dir
 
     # General information #
-    def aggregate_short_name(self):    return self.aggregate.name
-    def aggregate_long_name(self):     return self.aggregate.long_name
-    def count_samples(self):           return len(self.aggregate)
+    def aggregate_short_name(self): return self.aggregate.name
+    def aggregate_long_name(self):  return self.aggregate.long_name
+    def count_samples(self):        return len(self.aggregate)
 
     # Samples #
     @property_pickled

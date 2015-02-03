@@ -22,10 +22,10 @@ class BinSizeDistribution(Graph):
         pyplot.hist(counts, bins=100, color='gray')
         axes = pyplot.gca()
         # Information #
-        title = 'Distribution of mean coverages'
+        title = 'Distribution of bin sizes'
         axes.set_title(title)
-        axes.set_xlabel('Mean coverage of a contig')
-        axes.set_ylabel('Number of contigs with this much mean coverage')
+        axes.set_xlabel('Number of contigs in a bin')
+        axes.set_ylabel('Number of bins with this many contigs in them')
         axes.xaxis.grid(False)
         # Add logarithm to axes #
         if x_log: axes.set_xscale('symlog')
