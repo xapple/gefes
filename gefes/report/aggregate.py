@@ -106,6 +106,6 @@ class AggregateTemplate(Template):
     def count_bins(self):      return split_thousands(len(self.aggregate.binner.results))
     def bins_size_dist(self):
         caption = "Bin size distribution"
-        graph = self.aggregate.assembly.binner.results.bins_size_dist_graph
+        graph = self.aggregate.binner.results.bins_size_dist_graph
         label = "bins_size_dist"
         return str(ScaledFigure(graph.path, caption, label))
