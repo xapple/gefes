@@ -24,7 +24,7 @@ class Phylosift(object):
     /results/
     """
 
-    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.contig)
 
     def __init__(self, contig, result_dir):
         # Save attributes #
@@ -35,7 +35,7 @@ class Phylosift(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
-        sh.phylosift('all', '--output', self.base_dir, self.contig.fasta)
+        sh.phylosift('all', '--output=' + self.base_dir, self.contig.fasta)
 
     @property_cached
     def results(self):
