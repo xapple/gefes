@@ -2,6 +2,7 @@
 from collections import defaultdict
 
 # Internal modules #
+from gefes.binning import graphs
 from gefes.binning.bin import Bin
 
 # First party modules #
@@ -77,21 +78,39 @@ class Concoct(object):
 class ConcoctResults(object):
 
     def __nonzero__(self): return self.concoct.p.clustering.exists
-    def __len__(self):     return len(set(self.contig_to_bin_id.values()))
+    def __len__(self):     return len(self.bin_id_to_contig_ids)
     def __init__(self, concoct): self.concoct = concoct
 
     @property_cached
-    def contig_to_bin_id(self):
-        """Parse the result of CONOCT and return a dictionary with
+    def contig_id_to_bin_id(self):
+        """Parse the raw result of CONOCT and return a dictionary with
         contig names as keys and bin names as values."""
         return dict(line.strip('\n').split(',') for line in self.concoct.p.clustering)
 
     @property_cached
+    def bin_id_to_contig_ids(self):
+        """The opposite of the above dictionary. Bin names as keys and
+        lists of contig ids as values."""
+        result = defaultdict(list)
+        for c_id, b_id in self.contig_id_to_bin_id.items(): result[b_id].append(c_id)
+        return result
+
+    @property_cached
     def bins(self):
-        """Return a list of all `Bin` objects by making a dictionary with
-        bin numbers as keys and a list of contig objects as values."""
-        bins = defaultdict(list)
-        for contig_name, bin_num in self.contig_to_bin_id.items():
-            contig = [c for c in self.concoct.assembly.results.contigs if c.name == contig_name][0]
-            bins[bin_num].append(contig)
-        return [Bin(self.concoct, contigs, num=bin_num) for bin_num, contigs in bins.items()]
+        """Return a list of all `Bin` objects."""
+        return [Bin(self.concoct, c_ids, num=b_id) for b_id, c_ids in self.bin_id_to_contig_ids.items()]
+
+    @property_cached
+    def graphs(self):
+        class Graphs(object): pass
+        result = Graphs()
+        for graph in graphs.__all__:
+            cls = getattr(graphs, graph)
+            setattr(result, cls.short_name, cls(self))
+        return result
+
+    @property_cached
+    def bins_size_dist_graph(self):
+        graph = self.graphs.bins_size_dist
+        if not graph: graph.plot()
+        return graph

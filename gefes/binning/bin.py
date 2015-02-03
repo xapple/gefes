@@ -24,16 +24,19 @@ class Bin(object):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
 
     def __init__(self, binner, contigs, result_dir=None, num=None, name=None):
+        """You have to specify one of either a `name` or a `num`."""
         # Save Attributes #
         self.binner = binner
         self.contigs = contigs
-        self.num = int(num)
-        # Base directory #
-        if result_dir is None: self.result_dir = self.binner.p.bins_dir
-        else:                  self.result_dir = result_dir
+        # Num #
+        if num is None: self.num = 0
+        else:           self.num = num
         # Name #
         if name is None: self.name = str(self.num)
         else:            self.name = name
+        # Base directory #
+        if result_dir is None: self.result_dir = self.binner.p.bins_dir
+        else:                  self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
