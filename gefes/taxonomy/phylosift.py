@@ -26,9 +26,10 @@ class Phylosift(object):
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
 
-    def __init__(self, contig):
+    def __init__(self, contig, result_dir):
         # Save attributes #
         self.contig = contig
+        self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)

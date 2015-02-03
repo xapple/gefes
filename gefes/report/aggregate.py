@@ -69,7 +69,7 @@ class AggregateTemplate(Template):
     @property_pickled
     def sample_table(self):
         info = OrderedDict((
-            ('Name',          lambda s: "**" + s.short_name + "**"),
+            ('Name',          lambda s: "**" + s.name + "**"),
             ('Details',       lambda s: s.long_name),
             ('Reads lost',    lambda s: "%.1f%%" % (100 - ((len(s.clean)/len(s.pair)) * 100))),
             ('Reads left',    lambda s: split_thousands(len(s.clean))),

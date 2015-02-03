@@ -33,6 +33,7 @@ class Contig(object):
     all_paths = """
     /contig.fasta
     /annotation/
+    /taxonomy/
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -80,7 +81,7 @@ class Contig(object):
     @property_cached
     def taxonomy(self):
         """The predicted taxonomic information associated with this contig."""
-        return Phylosift(self)
+        return Phylosift(self, self.p.taxonomy_dir)
 
     #-------------------------------------------------------------------------#
     @property
