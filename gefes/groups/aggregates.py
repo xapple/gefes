@@ -52,6 +52,11 @@ class Aggregate(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self.samples, self.p.assembly_dir)
+        # Different kmer sizes #
+        self.assembly_51 = Ray(self.samples, self.base_dir + 'assembly_51/', kmer_size=51)
+        self.assembly_61 = Ray(self.samples, self.base_dir + 'assembly_61/', kmer_size=61)
+        self.assembly_71 = self.assembly
+        self.assembly_81 = Ray(self.samples, self.base_dir + 'assembly_81/', kmer_size=81)
         # Binner #
         self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #
@@ -66,3 +71,8 @@ class Aggregate(object):
 
     @property
     def first(self): return self.samples[0]
+
+    @property
+    def assemblies(self):
+        """A dynamic dictionary usefull for trying different assemblies of different sizes. Keys are kmer-sizes and values are assembler objects"""
+        pass

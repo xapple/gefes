@@ -73,8 +73,8 @@ class AggregateTemplate(Template):
             ('Details',       lambda s: s.long_name),
             ('Reads lost',    lambda s: "%.1f%%" % (100 - ((len(s.clean)/len(s.pair)) * 100))),
             ('Reads left',    lambda s: split_thousands(len(s.clean))),
-            ('Mono mapped',   lambda s: "%.1f%%" % s.mono_mapper.results.fraction_mapped),
-            ('Co mapped',     lambda s: "%.1f%%" % s.mapper.results.fraction_mapped),
+            ('Mono mapped',   lambda s: "%.3f%%" % s.mono_mapper.results.fraction_mapped),
+            ('Co mapped',     lambda s: "%.3f%%" % s.mapper.results.fraction_mapped),
         ))
         # The table #
         table = [[i+1] + [f(self.aggregate[i]) for f in info.values()] for i in range(len(self.aggregate))]
@@ -108,6 +108,11 @@ class AggregateTemplate(Template):
     def count_bins(self):      return split_thousands(len(self.aggregate.binner.results))
     def bins_size_dist(self):
         caption = "Bin size distribution"
-        graph = self.aggregate.binner.results.graphs.bins_size_dist.plot(x_log=True, y_log=True)
+        graph = self.aggregate.binner.results.graphs.bins_size_dist.plot(x_log=True)
         label = "bins_size_dist"
+        return str(ScaledFigure(graph.path, caption, label))
+    def bins_nucleotide_dist(self):
+        caption = "Bin size distribution"
+        graph = self.aggregate.binner.results.graphs.bins_nucleotide_dist.plot(x_log=True)
+        label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))

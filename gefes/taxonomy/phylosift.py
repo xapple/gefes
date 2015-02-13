@@ -35,7 +35,7 @@ class Phylosift(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
-        sh.phylosift('all', '--output=' + self.base_dir, self.contig.fasta)
+        sh.phylosift('all', '-f', '--output=' + self.base_dir.rstrip('/'), self.contig.fasta)
 
     @property_cached
     def results(self):

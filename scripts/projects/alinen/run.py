@@ -84,6 +84,17 @@ for s in samples: s.mapper.run()
 ################################# Concoct ##################################
 proj.binner.run()
 
+################################# Phylosift ##################################
+for c in proj.assembly.results.contigs: c.taxonomy.run()
+
+############################## Different kmers ##################################
+proj.runner.run_slurm(steps=['assembly_51.run'], machines=42, cores=42*24,
+                      time='36:00:00', partition='large', job_name="alinen_ray_51")
+proj.runner.run_slurm(steps=['assembly_61.run'], machines=42, cores=42*24,
+                      time='36:00:00', partition='large', job_name="alinen_ray_61")
+proj.runner.run_slurm(steps=['assembly_81.run'], machines=42, cores=42*24,
+                      time='36:00:00', partition='large', job_name="alinen_ray_81")
+
 ################################# Aggregates ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()
 meta = gefes.groups.favorites.alinen_meta.load()

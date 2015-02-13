@@ -118,3 +118,9 @@ class ConcoctResults(object):
         graph = self.graphs.bins_size_dist
         if not graph: graph.plot()
         return graph
+
+    @property_cached
+    def bins_nucleotide_dist_graph(self):
+        graph = self.graphs.bins_nucleotide_dist
+        if not graph: graph.plot()
+        return graph

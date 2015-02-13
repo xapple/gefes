@@ -24,14 +24,21 @@ class AggregateRunner(Runner):
     @property
     def job_name(self): return "agg_%s" % self.parent.name
 
+    @property
     def extra_slurm_params(self):
-        # Standard cases #
-        params = {'partition':  'node',
-                  'constraint': 'mem512GB'}
-        # Special cases #
-        if self.parent.project.name == 'test':
-            params['time'] = '01:00:00'
-            if hostname.startswith('milou'): params['partition'] = 'devel'
+        # Taito #
+        if hostname.startswith('taito'):
+            params = {'partition':  'node',
+                      'constraint': 'mem512GB'}
+        # Sisu #
+        if hostname.startswith('sisu'):
+            params = {}
+        # Milou #
+        if hostname.startswith('milou'):
+            params = {}
+            if self.parent.project.name == 'test':
+                params['time'] = '01:00:00'
+                params['partition'] = 'devel'
         # Return result #
         return params
 

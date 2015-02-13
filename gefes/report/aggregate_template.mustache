@@ -41,12 +41,20 @@ This results in the production of {{count_contigs}} contigs, of which the length
 
 {{contigs_len_dist}}
 
+We can know take every read of every map and attempt to map them back to the set of contigs we created, such that we compute, for every contig, a mean coverage in every sample.
+
+
 -------
 
 Binning
 -------
-The next step is to determine which of the {{count_contigs}} contigs are likely to belong together and are part of the same population. For this we use the "{{binning_version}}" software. This produces exactly {{count_bins}} different bins. Each bin containing varying number of contigs, we can plot a distribution as seen in in figure \ref{bins_size_dist}:
+The next step is to determine which of the {{count_contigs}} contigs are likely to belong together and are part of the same population. For this we use the "{{binning_version}}" software. This produces exactly {{count_bins}} different bins. Each bin containing varying number of contigs, we can plot a distribution as seen in figure \ref{bins_size_dist}:
 
 {{bins_size_dist}}
 
+Of course, it is more interesting to look, not at the contig count, but at the total amount of nucleotides in a given bin in terms of base pair counts. This distribution can be seen in figure \ref{bins_nucleotide_dist}:
+
+{{bins_nucleotide_dist}}
+
 For further investigation please refer to the individual report of every bin.
+
