@@ -117,12 +117,12 @@ class Sample(object):
         # Initial taxonomic predictions #
         self.kraken = Kraken(self.clean, self.p.kraken_dir)
         # Map to the co-assembly #
-        self.mapper = Bowtie(self, self.project.assembly, self.p.mapping_project_dir)
+        self.mapper = Bowtie(self, self.project.assembly, self.p.project_dir)
         # Map to different co-assemblies #
-        self.mapper_51 = Bowtie(self, self.project.assembly_51, self.p.project_dir + "_51/")
-        self.mapper_61 = Bowtie(self, self.project.assembly_61, self.p.project_dir + "_61/")
+        self.mapper_51 = Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
+        self.mapper_61 = Bowtie(self, self.project.assembly_61, self.p.project_dir + "61/")
         self.mapper_71 = self.mapper
-        self.mapper_81 = Bowtie(self, self.project.assembly_81, self.p.project_dir + "_71/")
+        self.mapper_81 = Bowtie(self, self.project.assembly_81, self.p.project_dir + "81/")
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
         # Map to the mono-assembly #

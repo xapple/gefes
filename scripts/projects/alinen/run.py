@@ -97,7 +97,7 @@ proj.runner.run_slurm(steps=['assembly_81.run'], machines=42, cores=42*24,
 
 for s in samples:
     params = dict(machines=1, cores=1*24, time='24:00:00', partition='large')
-    params = dict(machines=1, time='00:30:00', partition='test')
+    params = dict(machines=1, cores=24, time='00:30:00', partition='test', constraint='hsw')
     s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + "_co_51_map", **params)
     s.runner.run_slurm(steps=['mapper_61.run'], job_name=s.name + "_co_61_map", **params)
     s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
