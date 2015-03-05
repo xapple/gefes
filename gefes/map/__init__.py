@@ -55,16 +55,18 @@ class Mapper(object):
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Convenience shortcuts #
-        self.contigs_fasta = self.assembly.results.contigs_fasta
 
     def pre_run(self, verbose=True):
+        # Convenience shortcuts #
+        self.contigs_fasta = self.assembly.results.contigs_fasta
         # Check both type of indexes exist #
         if verbose: print "Making both types of indexes"
         if not os.path.exists(self.contigs_fasta + '.1.bt2'): self.contigs_fasta.index_bowtie()
         if not os.path.exists(self.contigs_fasta + '.fai'):   self.contigs_fasta.index_samtools()
 
     def post_run(self, verbose=True):
+        # Convenience shortcuts #
+        self.contigs_fasta = self.assembly.results.contigs_fasta
         # Create bam file, then sort it and finally index the bamfile #
         if verbose: print "Launching samtools view..."
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam)

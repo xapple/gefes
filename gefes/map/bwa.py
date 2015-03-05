@@ -26,9 +26,6 @@ class Bwa(Mapper):
     executable = 'bwa'
 
     def run(self, verbose=True):
-        # Check both type of indexes exist #
-        if verbose: print "Making both types of indexes"
-        if not os.path.exists(self.contigs_fasta + '.fai'): self.contigs_fasta.index_samtools()
         # Make our options #
         options = ['mem',
                    self.assembly.results.contigs_fasta,
