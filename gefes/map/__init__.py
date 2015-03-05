@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os
+import sys, os
 
 # Internal modules #
 import gefes
@@ -60,7 +60,7 @@ class Mapper(object):
         # Convenience shortcuts #
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Check both type of indexes exist #
-        if verbose: print "Making both types of indexes"
+        if verbose: print "Making both types of indexes"; sys.stdout.flush()
         if not os.path.exists(self.contigs_fasta + '.1.bt2'): self.contigs_fasta.index_bowtie()
         if not os.path.exists(self.contigs_fasta + '.fai'):   self.contigs_fasta.index_samtools()
 
@@ -68,19 +68,19 @@ class Mapper(object):
         # Convenience shortcuts #
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Create bam file, then sort it and finally index the bamfile #
-        if verbose: print "Launching samtools view..."
+        if verbose: print "Launching samtools view..."; sys.stdout.flush()
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam)
-        if verbose: print "Launching samtools sort..."
+        if verbose: print "Launching samtools sort..."; sys.stdout.flush()
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
-        if verbose: print "Launching samtools index..."
+        if verbose: print "Launching samtools index..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
-        if verbose: print "Launching MarkDuplicates..."
+        if verbose: print "Launching MarkDuplicates..."; sys.stdout.flush()
         self.remove_duplicates()
         # Sort and index bam without duplicates #
-        if verbose: print "Launching Samtools sort again..."
+        if verbose: print "Launching Samtools sort again..."; sys.stdout.flush()
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
-        if verbose: print "Launching Samtools index again..."
+        if verbose: print "Launching Samtools index again..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
         if verbose: print "Launching BEDTools..."
@@ -93,7 +93,7 @@ class Mapper(object):
     def remove_duplicates(self):
         """Remove PCR duplicates with MarkDuplicates."""
         # Estimate size #
-        mem_size = "16"
+        mem_size = "4"
         # Run the command #
         sh.java('-Xmx%sg' % mem_size,
                 '-XX:ParallelGCThreads=%s' % num_processors,
