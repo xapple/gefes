@@ -52,7 +52,7 @@ class Aggregate(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Assemble #
         self.assembly = Ray(self.samples, self.p.assembly_dir)
-        # Different kmer sizes #
+        # Assemble with different kmer sizes #
         self.assembly_51 = Ray(self.samples, self.p.assembly_dir, kmer_size=51)
         self.assembly_61 = Ray(self.samples, self.p.assembly_dir, kmer_size=61)
         self.assembly_71 = self.assembly
