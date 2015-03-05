@@ -6,6 +6,7 @@ from gefes.parsing.illumina      import IlluminaInfo
 from gefes.preprocess.quality    import QualityChecker
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
+from gefes.map.bwa               import Bowtie
 from gefes.map.bwa               import Bwa
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
