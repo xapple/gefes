@@ -95,9 +95,10 @@ proj.runner.run_slurm(steps=['assembly_61.run'], machines=42, cores=42*24,
 proj.runner.run_slurm(steps=['assembly_81.run'], machines=42, cores=42*24,
                       time='36:00:00', partition='large', job_name="alinen_ray_81")
 
+params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+import time
+time.sleep(60*60*2)
 for s in samples:
-    params = dict(machines=1, cores=1*24, time='24:00:00', partition='large')
-    params = dict(machines=1, cores=24, time='00:30:00', partition='test', constraint='hsw')
     s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + "_co_51_map", **params)
     s.runner.run_slurm(steps=['mapper_61.run'], job_name=s.name + "_co_61_map", **params)
     s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)

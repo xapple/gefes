@@ -6,7 +6,7 @@ from gefes.parsing.illumina      import IlluminaInfo
 from gefes.preprocess.quality    import QualityChecker
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
-from gefes.map.bowtie            import Bowtie
+from gefes.map.bwa               import Bwa
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
 
@@ -117,12 +117,12 @@ class Sample(object):
         # Initial taxonomic predictions #
         self.kraken = Kraken(self.clean, self.p.kraken_dir)
         # Map to the co-assembly #
-        self.mapper = Bowtie(self, self.project.assembly, self.p.project_dir)
+        self.mapper = Bwa(self, self.project.assembly, self.p.project_dir)
         # Map to different co-assemblies #
-        self.mapper_51 = Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
-        self.mapper_61 = Bowtie(self, self.project.assembly_61, self.p.project_dir + "61/")
+        self.mapper_51 = Bwa(self, self.project.assembly_51, self.p.project_dir + "51/")
+        self.mapper_61 = Bwa(self, self.project.assembly_61, self.p.project_dir + "61/")
         self.mapper_71 = self.mapper
-        self.mapper_81 = Bowtie(self, self.project.assembly_81, self.p.project_dir + "81/")
+        self.mapper_81 = Bwa(self, self.project.assembly_81, self.p.project_dir + "81/")
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
         # Map to the mono-assembly #

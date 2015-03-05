@@ -78,7 +78,11 @@ class Ray(object):
         contigs = FASTA(self.p.Contigs)
         if len(contigs) == 0: raise Exception("Ray found exactly 0 contigs in your dataset.")
         # Filter short contigs #
-        contigs.extract_length(new_path=self.p.filtered, lower_bound=self.length_cutoff)
+        filtered = FASTA(self.p.filtered)
+        contigs.extract_length(new_path=filtered, lower_bound=self.length_cutoff)
+        # Make indexes (used later) #
+        if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
+        if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
     #-------------------------------------------------------------------------#
     def sisu(self):
