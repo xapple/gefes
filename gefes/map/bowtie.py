@@ -80,16 +80,19 @@ class Bowtie(object):
         if verbose: print "Launching Bowtie on sample '%s'..." % self.sample.name
         sh.bowtie2(*options)
         ## Create bam file, then sort it and finally index bamfile #
-        if verbose: print "Launching Samtools..."
+        if verbose: print "Launching samtools view..."
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam)
+        if verbose: print "Launching samtools sort..."
         sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
+        if verbose: print "Launching samtools index..."
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
         if verbose: print "Launching MarkDuplicates..."
         self.remove_duplicates()
         # Sort and index bam without duplicates #
-        if verbose: print "Launching Samtools again..."
+        if verbose: print "Launching Samtools sort again..."
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
+        if verbose: print "Launching Samtools index again..."
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
         if verbose: print "Launching BEDTools..."
