@@ -58,7 +58,7 @@ class Aggregate(object):
         self.assembly_61 = Ray(self.samples, self.p.assembly_dir, kmer_size=61)
         self.assembly_71 = self.assembly
         self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
-        # Combine the different kmer sizes #
+        # Combine the different kmer sizes #
         self.merged = Newbler(self.assemblies.values())
         # Binner #
         self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)

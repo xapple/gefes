@@ -51,7 +51,7 @@ class Newbler(Merger):
         if verbose: print 'Combining contigs from %s' % self.assemblies; sys.stdout.flush()
         paths = [assembly.p.cut_up.path for assembly in self.assemblies]
         shell_output('cat %s > %s' % (' '.join(paths), self.p.combined))
-        # Call newbler #
+        # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
         sh.runAssembly('-force', '-o', self.p.output_dir.path, self.p.combined.path)
 
