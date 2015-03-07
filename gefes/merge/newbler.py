@@ -37,6 +37,7 @@ class Newbler(Merger):
     def __init__(self, assemblies, result_dir):
         # Base parameters #
         self.assemblies = assemblies
+        self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
