@@ -7,6 +7,7 @@ from gefes.assemble.ray             import Ray
 from gefes.binning.concoct          import Concoct
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
+from gefes.merge.newbler            import Newbler
 
 # Internal modules #
 from plumbing.autopaths import AutoPaths
@@ -57,6 +58,8 @@ class Aggregate(object):
         self.assembly_61 = Ray(self.samples, self.p.assembly_dir, kmer_size=61)
         self.assembly_71 = self.assembly
         self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
+        # Combine the different kmer sizes #
+        self.merged = Newbler(self.assemblies.values())
         # Binner #
         self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #
@@ -74,5 +77,8 @@ class Aggregate(object):
 
     @property
     def assemblies(self):
-        """A dynamic dictionary usefull for trying different assemblies of different sizes. Keys are kmer-sizes and values are assembler objects"""
-        pass
+        """A dynamic dictionary useful for trying different assemblies of different sizes. Keys are kmer-sizes and values are assembler objects"""
+        return {51: self.assembly_51,
+                61: self.assembly_61,
+                71: self.assembly_71,
+                81: self.assembly_81,}

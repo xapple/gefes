@@ -39,6 +39,7 @@ class Ray(object):
     /stderr.txt
     /output/
     /filtered_contigs.fasta
+    /cut_up_contigs.fasta
     """
 
     def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
