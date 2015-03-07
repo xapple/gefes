@@ -21,6 +21,7 @@ class Aggregate(object):
     /graphs/
     /assembly/
     /binning/
+    /merged/
     /report/report.pdf
     """
 
@@ -59,7 +60,7 @@ class Aggregate(object):
         self.assembly_71 = self.assembly
         self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
         # Combine the different kmer sizes #
-        self.merged = Newbler(self.assemblies.values())
+        self.merged = Newbler(self.assemblies.values(), self.p.merged_dir)
         # Binner #
         self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #

@@ -34,11 +34,11 @@ class Newbler(Merger):
     /output/
     """
 
-    def __init__(self, assemblies):
+    def __init__(self, assemblies, result_dir):
         # Base parameters #
-        pass
+        self.assemblies = assemblies
         # Auto paths #
-        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
+        self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self, verbose=True):
