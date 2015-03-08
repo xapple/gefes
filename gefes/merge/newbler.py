@@ -60,7 +60,7 @@ class Newbler(Merger):
         # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
         sh.runAssembly('-force',
-                       '-cpu', num_processors,
+                       #'-cpu', num_processors,
                        '-o', self.p.output_dir.path,
                        self.p.combined.path,
                        _out=self.p.stdout.path,

@@ -110,10 +110,10 @@ for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.nam
 
 # Run Concoct #
 params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
-proj.runner.run_slurm(steps=['assembly_51.results.binner.run()'], job_name="concot_51", **params)
-proj.runner.run_slurm(steps=['assembly_61.results.binner.run()'], job_name="concot_61", **params)
-proj.runner.run_slurm(steps=['assembly_71.results.binner.run()'], job_name="concot_71", **params)
-proj.runner.run_slurm(steps=['assembly_81.results.binner.run()'], job_name="concot_81", **params)
+proj.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name="concot_51", **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name="concot_61", **params)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name="concot_71", **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name="concot_81", **params)
 
 # Run CheckM #
 params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
