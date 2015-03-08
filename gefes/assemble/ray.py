@@ -3,6 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 import os, socket
+from collections import OrderedDict
 
 # Internal modules #
 from gefes.assemble.contig import Contig
@@ -147,6 +148,13 @@ class RayResults(object):
     def contig_id_to_contig(self):
         """A dictionary with contig names as keys and contig objects as values."""
         return {c.name: c for c in self.contigs}
+
+    @property_cached
+    def mappings(self):
+        """Map each of the samples used in the assembly back to this assembly.
+        TODO: This should be updated to use a directory in the assembly results directory
+        and to remove the attributes from the Sample objects."""
+        return OrderedDict([(s.name, getattr(s, "mapper_" + self.ray.kmer_size)) for s in self.ray.samples])
 
     @property_cached
     def binner(self):
