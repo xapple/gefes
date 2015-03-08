@@ -121,8 +121,3 @@ proj.runner.run_slurm(steps=['assembly_51.results.binner.checkm.run()'], job_nam
 proj.runner.run_slurm(steps=['assembly_61.results.binner.checkm.run()'], job_name="checkm_61", **params)
 proj.runner.run_slurm(steps=['assembly_71.results.binner.checkm.run()'], job_name="checkm_71", **params)
 proj.runner.run_slurm(steps=['assembly_81.results.binner.checkm.run()'], job_name="checkm_81", **params)
-
-################################# Aggregates ##################################
-hypo = gefes.groups.favorites.alinen_hypo.load()
-meta = gefes.groups.favorites.alinen_meta.load()
-epi  = gefes.groups.favorites.alinen_epi.load()

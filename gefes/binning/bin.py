@@ -25,11 +25,12 @@ class Bin(object):
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
 
-    def __init__(self, binner, contigs, result_dir=None, num=None, name=None):
+    def __init__(self, binner, contig_ids, result_dir=None, num=None, name=None):
         """You have to specify one of either a `name` or a `num`."""
         # Save Attributes #
-        self.binner = binner
-        self.contigs = contigs
+        self.binner     = binner
+        self.contig_ids = contig_ids
+        self.assembly   = self.binner.assembly
         # Num #
         if num is None: self.num = 0
         else:           self.num = num
@@ -42,6 +43,11 @@ class Bin(object):
         # Auto paths #
         self.base_dir = self.result_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
+
+    @property_cached
+    def contigs(self):
+        """A list of Contig objects."""
+        return [self.assembly.contig_id_to_contig[c_id] for c_id in self.contig_ids]
 
     @property_cached
     def fasta(self):
