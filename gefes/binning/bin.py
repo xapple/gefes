@@ -2,7 +2,8 @@
 
 # Internal modules #
 from gefes.annotation.prokka import Prokka
-from gefes.annotation.cogs import SingleCOGs
+from gefes.annotation.cogs   import SingleCOGs
+from gefes.annotation.checkm import Checkm
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -19,6 +20,7 @@ class Bin(object):
     all_paths = """
     /contigs.fasta
     /annotation/
+    /evaluation/
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -40,10 +42,6 @@ class Bin(object):
         # Auto paths #
         self.base_dir = self.result_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Extra objects #
-        self.annotation = Prokka(self, self.p.annotation_dir)
-        self.single_cogs = SingleCOGs(self)
-        #self.reassembly = Ray()
 
     @property_cached
     def fasta(self):
@@ -54,3 +52,18 @@ class Bin(object):
                 for contig in self.contigs:
                     handle.add_seq(contig.record)
         return fasta
+
+    @property_cached
+    def annotation(self):
+        """The results from annotation the bin."""
+        return Prokka(self, self.p.annotation_dir)
+
+    @property_cached
+    def single_cogs(self):
+        """The results from finding single copy COGs in the bin."""
+        return SingleCOGs(self, self.p.annotation_dir)
+
+    @property_cached
+    def evaluation(self):
+        """The results from evaluating the bin completness."""
+        return Checkm(self, self.p.evaluation_dir)

@@ -75,7 +75,8 @@ class Newbler(Merger):
 ###############################################################################
 class NewblerResults(object):
 
-    def __nonzero__(self): return 0 # bool(self.contigs_fasta)
+    def __nonzero__(self): return 0
+
     def __init__(self, newbler):
         self.newbler = newbler
 
