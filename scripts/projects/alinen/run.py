@@ -109,7 +109,7 @@ proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_co_merged_map", **params)
 
 # Run Concoct #
-params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+params = dict(machines=1, cores=1, time='24:00:00', partition='serial', memory=100000)
 proj.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name="concot_51", **params)
 proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name="concot_61", **params)
 proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name="concot_71", **params)

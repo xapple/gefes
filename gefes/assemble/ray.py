@@ -154,7 +154,7 @@ class RayResults(object):
         """Map each of the samples used in the assembly back to this assembly.
         TODO: This should be updated to use a directory in the assembly results directory
         and to remove the attributes from the Sample objects."""
-        return OrderedDict([(s.name, getattr(s, "mapper_" + self.ray.kmer_size)) for s in self.ray.samples])
+        return OrderedDict([(s.name, getattr(s, "mapper_%i" % self.ray.kmer_size)) for s in self.ray.samples])
 
     @property_cached
     def binner(self):
