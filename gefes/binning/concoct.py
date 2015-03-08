@@ -52,7 +52,7 @@ class Concoct(object):
         in that sample."""
         tsv = TSVTable(self.p.coverage)
         if not tsv.exists:
-            print "Computing coverage matrix for %i samples..." % len(self.samples)
+            print "Computing coverage matrix for %i samples..." % len(self.samples); sys.stdout.flush()
             name_to_cov_mean = lambda s: self.assembly.results.mappings[s].results.coverage_mean
             frame = pandas.DataFrame({s.name: name_to_cov_mean(s.name) for s in self.samples})
             frame.to_csv(tsv.path, sep='\t', float_format='%.5g')
@@ -66,6 +66,8 @@ class Concoct(object):
         # Check samples loaded #
         for s in self.samples:
             if not s.loaded: s.load()
+        # Check TSV is made #
+        self.coverage_matrix_tsv
         # Run the pipeline #
         print "Launching CONCOCT..."; sys.stdout.flush()
         sh.concoct('--coverage_file',    self.coverage_matrix_tsv,

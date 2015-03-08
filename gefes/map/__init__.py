@@ -140,7 +140,7 @@ class MapperResults(object):
         coverage and percentage covered for each contig. Returns a dict with contig names as
         keys and containing 'percent_covered' with 'cov_mean' information inside.
         http://bedtools.readthedocs.org/en/latest/content/tools/genomecov.html"""
-        print "Computing mapping statistics for sample '%s'" % self.mapper.sample.name
+        print "Computing mapping statistics for sample '%s'" % self.mapper.sample.name; sys.stdout.flush()
         headers = ['name', 'depth', 'count', 'length', 'fraction']
         frame = pandas.io.parsers.read_csv(self.p.map_smds_coverage, sep='\t', index_col=0, names=headers)
         out_dict = {}
