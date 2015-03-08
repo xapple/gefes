@@ -53,8 +53,8 @@ class Concoct(object):
         tsv = TSVTable(self.p.coverage)
         if not tsv.exists:
             print "Computing coverage matrix for %i samples..." % len(self.samples)
-            sample_to_cov_mean = lambda s: self.assembly.results.mappings[s.name].results.coverage_mean
-            frame = pandas.DataFrame({s.name: sample_to_cov_mean(s.name) for s in self.samples})
+            name_to_cov_mean = lambda s: self.assembly.results.mappings[s].results.coverage_mean
+            frame = pandas.DataFrame({s.name: name_to_cov_mean(s.name) for s in self.samples})
             frame.to_csv(tsv.path, sep='\t', float_format='%.5g')
         return tsv
 
