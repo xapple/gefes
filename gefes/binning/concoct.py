@@ -1,4 +1,5 @@
 # Built-in modules #
+import sys
 from collections import defaultdict
 
 # Internal modules #
@@ -62,7 +63,7 @@ class Concoct(object):
 
     def run(self):
         # Run the pipeline #
-        print "Launching CONCOCT..."
+        print "Launching CONCOCT..."; sys.stdout.flush()
         sh.concoct('--coverage_file',    self.coverage_matrix_tsv,
                    '--composition_file', self.assembly.results.contigs_fasta,
                    '-b',                 self.p.output_dir)

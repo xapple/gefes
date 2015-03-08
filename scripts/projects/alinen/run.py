@@ -82,7 +82,7 @@ proj.runner.run_slurm(steps=['assembly.run'], time='10-00:00:00', project="b2011
 for s in samples: s.mapper.run()
 
 ################################# Concoct ##################################
-proj.binner.run()
+proj.assembly.results.binner.run()
 
 ################################# Phylosift ##################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
@@ -104,12 +104,23 @@ for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + 
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
 
 # Merge with Newbler #
-proj.merged.run()
+params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_co_merged_map", **params)
 
 # Run Concoct #
+params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+proj.runner.run_slurm(steps=['assembly_51.results.binner.run()'], job_name="concot_51", **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.run()'], job_name="concot_61", **params)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.run()'], job_name="concot_71", **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.run()'], job_name="concot_81", **params)
 
 # Run CheckM #
+params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+proj.runner.run_slurm(steps=['assembly_51.results.binner.checkm.run()'], job_name="checkm_51", **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.checkm.run()'], job_name="checkm_61", **params)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.checkm.run()'], job_name="checkm_71", **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.checkm.run()'], job_name="checkm_81", **params)
 
 ################################# Aggregates ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()

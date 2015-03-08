@@ -7,7 +7,6 @@ from collections import OrderedDict
 # Internal modules #
 import gefes
 from gefes.assemble.ray             import Ray
-from gefes.binning.concoct          import Concoct
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
 from gefes.merge.newbler            import Newbler
@@ -23,7 +22,6 @@ class Aggregate(object):
     /logs/
     /graphs/
     /assembly/
-    /binning/
     /merged/
     /report/report.pdf
     """
@@ -62,10 +60,8 @@ class Aggregate(object):
         self.assembly_61 = Ray(self.samples, self.p.assembly_dir, kmer_size=61)
         self.assembly_71 = self.assembly
         self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
-        # Combine the different kmer sizes #
+        # Also combine the different kmer sizes #
         self.merged = Newbler(self.assemblies.values(), self.p.merged_dir)
-        # Binner #
-        self.binner = Concoct(self.samples, self.assembly, self.p.binning_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Prokka(self)

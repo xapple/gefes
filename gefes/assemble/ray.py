@@ -6,6 +6,7 @@ import os, socket
 
 # Internal modules #
 from gefes.assemble.contig import Contig
+from gefes.binning.concoct import Concoct
 
 # First party modules #
 from plumbing.common import flatter
@@ -37,9 +38,9 @@ class Ray(object):
     /output/report.txt
     /stdout.txt
     /stderr.txt
-    /output/
     /filtered_contigs.fasta
     /cut_up_contigs.fasta
+    /bins/
     """
 
     def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
@@ -146,3 +147,8 @@ class RayResults(object):
     def contig_id_to_contig(self):
         """A dictionary with contig names as keys and contig objects as values."""
         return {c.name: c for c in self.contigs}
+
+    @property_cached
+    def binner(self):
+        """Put the contigs of this assembly into bins."""
+        return Concoct(self.ray.samples, self.ray, self.p.bins_dir)

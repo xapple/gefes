@@ -53,9 +53,10 @@ class Newbler(Merger):
                 params = (assembly.results.contigs_fasta, assembly.p.cut_up)
                 shell_output("fasta_cut_up %s > %s" % params)
         # Merge the cut-uped fastas #
-        if verbose: print 'Combining contigs from %s' % self.assemblies; sys.stdout.flush()
-        paths = [assembly.p.cut_up.path for assembly in self.assemblies]
-        shell_output('cat %s > %s' % (' '.join(paths), self.p.combined))
+        if not self.p.cut_up:
+            if verbose: print 'Combining contigs from %s' % self.assemblies; sys.stdout.flush()
+            paths = [assembly.p.cut_up.path for assembly in self.assemblies]
+            shell_output('cat %s > %s' % (' '.join(paths), self.p.combined))
         # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
         sh.runAssembly('-force',
