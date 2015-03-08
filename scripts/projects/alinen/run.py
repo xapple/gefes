@@ -88,6 +88,7 @@ proj.binner.run()
 for c in proj.assembly.results.contigs: c.taxonomy.run()
 
 ############################## Different kmers ##################################
+# Run assembly #
 proj.runner.run_slurm(steps=['assembly_51.run'], machines=42, cores=42*24,
                       time='36:00:00', partition='large', job_name="alinen_ray_51")
 proj.runner.run_slurm(steps=['assembly_61.run'], machines=42, cores=42*24,
@@ -95,11 +96,20 @@ proj.runner.run_slurm(steps=['assembly_61.run'], machines=42, cores=42*24,
 proj.runner.run_slurm(steps=['assembly_81.run'], machines=42, cores=42*24,
                       time='36:00:00', partition='large', job_name="alinen_ray_81")
 
+# Run mapping #
 params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + "_co_51_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_61.run'], job_name=s.name + "_co_61_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + "_co_71_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
+
+# Merge with Newbler #
+proj.merged.run()
+for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_co_merged_map", **params)
+
+# Run Concoct #
+
+# Run CheckM #
 
 ################################# Aggregates ##################################
 hypo = gefes.groups.favorites.alinen_hypo.load()

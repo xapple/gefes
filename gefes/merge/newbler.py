@@ -8,6 +8,7 @@ from gefes.assemble.contig import Contig
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
+from plumbing.slurm import num_processors
 
 # Third party modules #
 import sh
@@ -32,6 +33,8 @@ class Newbler(Merger):
     all_paths = """
     /combined_cut_up.fasta
     /output/
+    /stdout.txt
+    /stderr.txt
     """
 
     def __init__(self, assemblies, result_dir):
@@ -55,7 +58,12 @@ class Newbler(Merger):
         shell_output('cat %s > %s' % (' '.join(paths), self.p.combined))
         # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
-        sh.runAssembly('-force', '-o', self.p.output_dir.path, self.p.combined.path)
+        sh.runAssembly('-force',
+                       '-cpu', num_processors,
+                       '-o', self.p.output_dir.path,
+                       self.p.combined.path,
+                       _out=self.p.stdout.path,
+                       _err=self.p.stderr.path)
 
     @property_cached
     def results(self):

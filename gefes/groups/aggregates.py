@@ -2,6 +2,9 @@
 from __future__ import division
 
 # Built-in modules #
+from collections import OrderedDict
+
+# Internal modules #
 import gefes
 from gefes.assemble.ray             import Ray
 from gefes.binning.concoct          import Concoct
@@ -9,7 +12,7 @@ from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
 from gefes.merge.newbler            import Newbler
 
-# Internal modules #
+# First party modules #
 from plumbing.autopaths import AutoPaths
 
 ###############################################################################
@@ -79,7 +82,7 @@ class Aggregate(object):
     @property
     def assemblies(self):
         """A dynamic dictionary useful for trying different assemblies of different sizes. Keys are kmer-sizes and values are assembler objects"""
-        return {51: self.assembly_51,
-                61: self.assembly_61,
-                71: self.assembly_71,
-                81: self.assembly_81,}
+        return OrderedDict((51, self.assembly_51),
+                           (61, self.assembly_61),
+                           (71, self.assembly_71),
+                           (81, self.assembly_81),)

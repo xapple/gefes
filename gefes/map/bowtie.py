@@ -2,6 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
+import sys
 
 # Internal modules #
 from gefes.map import Mapper, MapperResults
@@ -36,7 +37,7 @@ class Bowtie(Mapper):
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.format == 'fasta': options += ['-f']
         # Do the mapping #
-        if verbose: print "Launching Bowtie on sample '%s'..." % self.sample.name
+        if verbose: print "Launching Bowtie on sample '%s'..." % self.sample.name; sys.stdout.flush()
         sh.bowtie2(*options)
         # Create bam file, then sort it and finally index the bamfile #
         self.post_run()
