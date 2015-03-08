@@ -43,7 +43,7 @@ class Checkm(object):
         sh.checkm('lineage_wf',
                   '-x', 'fasta',
                   '-t', num_processors,
-                  self.base_dir,
+                  self.result_dir,
                   self.p.output_dir)
 
     @property_cached
