@@ -104,7 +104,7 @@ for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + 
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
 
 # Merge with Newbler #
-params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
+params = dict(machines=1, cores=16, time='24:00:00', partition='serial', constraint='bigmem')
 proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_co_merged_map", **params)
 

@@ -151,4 +151,4 @@ class RayResults(object):
     @property_cached
     def binner(self):
         """Put the contigs of this assembly into bins."""
-        return Concoct(self.ray.samples, self.ray, self.p.bins_dir)
+        return Concoct(self.ray.samples, self.ray, self.ray.p.bins_dir)
