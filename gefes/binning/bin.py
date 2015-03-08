@@ -47,13 +47,13 @@ class Bin(object):
     @property_cached
     def contigs(self):
         """A list of Contig objects."""
-        return [self.assembly.contig_id_to_contig[c_id] for c_id in self.contig_ids]
+        return [self.assembly.results.contig_id_to_contig[c_id] for c_id in self.contig_ids]
 
     @property_cached
     def fasta(self):
         """A fasta file containing only the contigs pertaining to this bin in it."""
         fasta = FASTA(self.p.fasta)
-        if not fasta.exists:
+        if not fasta:
             with fasta as handle:
                 for contig in self.contigs:
                     handle.add_seq(contig.record)
