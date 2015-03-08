@@ -28,8 +28,7 @@ class AggregateRunner(Runner):
     def extra_slurm_params(self):
         # Taito #
         if hostname.startswith('taito'):
-            params = {'partition':  'node',
-                      'constraint': 'mem512GB'}
+            params = {}
         # Sisu #
         if hostname.startswith('sisu'):
             params = {}
