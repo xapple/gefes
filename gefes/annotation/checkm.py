@@ -25,6 +25,8 @@ class Checkm(object):
 
     all_paths = """
     /contigs.fasta
+    /stdout.txt
+    /stderr.txt
     /output/
     """
 
@@ -36,7 +38,7 @@ class Checkm(object):
         self.p = AutoPaths(self.result_dir, self.all_paths)
 
     def run(self):
-        # Link the bin fasta file #
+        # Link the bin's fasta file #
         self.bin.fasta.link_to(self.p.fasta)
         # Run the pipeline #
         print "Launching CheckM..."; sys.stdout.flush()
@@ -44,7 +46,9 @@ class Checkm(object):
                   '-x', 'fasta',
                   '-t', num_processors,
                   self.result_dir,
-                  self.p.output_dir)
+                  self.p.output_dir,
+                  _out=self.p.stdout.path,
+                  _err=self.p.stderr.path)
 
     @property_cached
     def results(self):

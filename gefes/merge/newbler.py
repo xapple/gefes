@@ -1,14 +1,16 @@
 # Built-in modules #
 import sys
+from collections import OrderedDict
 
 # Internal modules #
 from gefes.merge import Merger
 from gefes.assemble.contig import Contig
+from gefes.binning.concoct import Concoct
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
-from plumbing.slurm import num_processors
+from fasta import FASTA
 
 # Third party modules #
 import sh
@@ -32,7 +34,7 @@ class Newbler(Merger):
 
     all_paths = """
     /combined_cut_up.fasta
-    /output/
+    /output/454AllContigs.fna
     /stdout.txt
     /stderr.txt
     """
@@ -75,17 +77,27 @@ class Newbler(Merger):
 ###############################################################################
 class NewblerResults(object):
 
-    def __nonzero__(self): return 0
-
+    def __nonzero__(self): return bool(self.contigs_fasta)
     def __init__(self, newbler):
         self.newbler = newbler
+        self.contigs_fasta = FASTA(self.newbler.p.fna)
 
     @property_cached
     def contigs(self):
         """All the contigs produced returned as a list of our Contig custom objects."""
-        return [Contig(self.ray, record, num=i) for i,record in enumerate(self.contigs_fasta)]
+        return [Contig(self.newbler, record, num=i) for i,record in enumerate(self.contigs_fasta)]
 
     @property_cached
     def contig_id_to_contig(self):
         """A dictionary with contig names as keys and contig objects as values."""
         return {c.name: c for c in self.contigs}
+
+    @property_cached
+    def mappings(self):
+        """Map each of the samples used in the assembly back to this assembly."""
+        return OrderedDict([(s.name, getattr(s, "mapper_merged")) for s in self.newbler.samples])
+
+    @property_cached
+    def binner(self):
+        """Put the contigs of this assembly into bins."""
+        return Concoct(self.ray.samples, self.ray, self.ray.p.bins_dir)

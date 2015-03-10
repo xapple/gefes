@@ -124,6 +124,7 @@ class Sample(object):
         self.mapper_61 = Bowtie(self, self.project.assembly_61, self.p.project_dir + "61/")
         self.mapper_71 = self.mapper
         self.mapper_81 = Bowtie(self, self.project.assembly_81, self.p.project_dir + "81/")
+        self.mapper_merged = Bowtie(self, self.project.merged, self.p.project_dir + "merged/")
         # Assembly of this sample by itself #
         self.assembly = Ray([self], self.p.assembly_dir)
         # Map to the mono-assembly #
