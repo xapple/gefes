@@ -1,5 +1,5 @@
 # Built-in modules #
-import sys
+import sys, os
 from collections import OrderedDict
 
 # Internal modules #
@@ -37,12 +37,14 @@ class Newbler(Merger):
     /output/454AllContigs.fna
     /stdout.txt
     /stderr.txt
+    /filtered_contigs.fasta
     """
 
-    def __init__(self, assemblies, result_dir):
+    def __init__(self, assemblies, result_dir, length_cutoff=1000):
         # Base parameters #
         self.assemblies = assemblies
         self.result_dir = result_dir
+        self.length_cutoff = length_cutoff
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
@@ -67,6 +69,15 @@ class Newbler(Merger):
                        self.p.combined.path,
                        _out=self.p.stdout.path,
                        _err=self.p.stderr.path)
+        # Check there is something #
+        contigs = FASTA(self.p.fna)
+        if len(contigs) == 0: raise Exception("Newbler found exactly 0 contigs in your dataset.")
+        # Filter short contigs #
+        filtered = FASTA(self.p.filtered)
+        contigs.extract_length(new_path=filtered, lower_bound=self.length_cutoff)
+        # Make indexes (used later) #
+        if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
+        if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
     @property_cached
     def results(self):
@@ -80,7 +91,7 @@ class NewblerResults(object):
     def __nonzero__(self): return bool(self.contigs_fasta)
     def __init__(self, newbler):
         self.newbler = newbler
-        self.contigs_fasta = FASTA(self.newbler.p.fna)
+        self.contigs_fasta = FASTA(self.newbler.p.filtered)
 
     @property_cached
     def contigs(self):

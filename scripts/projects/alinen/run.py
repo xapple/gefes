@@ -102,6 +102,7 @@ for s in samples: s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + 
 for s in samples: s.runner.run_slurm(steps=['mapper_61.run'], job_name=s.name + "_co_61_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + "_co_71_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
 
 # Merge with Newbler #
 params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
