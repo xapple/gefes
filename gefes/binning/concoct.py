@@ -13,6 +13,7 @@ from plumbing.csv_tables import TSVTable
 
 # Third party modules #
 import pandas, sh
+from tqdm import tqdm
 
 ###############################################################################
 class Concoct(object):
@@ -131,3 +132,7 @@ class ConcoctResults(object):
         graph = self.graphs.bins_nucleotide_dist
         if not graph: graph.plot()
         return graph
+
+    def run_all_bin_eval(self):
+        """Run the evaluation procedure on all bins"""
+        for b in tqdm(self.bins): b.evaluation.run()

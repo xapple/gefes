@@ -71,5 +71,5 @@ class Bin(object):
 
     @property_cached
     def evaluation(self):
-        """The results from evaluating the bin completness."""
+        """The results from evaluating the bin completeness and other metrics."""
         return Checkm(self, self.p.evaluation_dir)

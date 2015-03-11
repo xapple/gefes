@@ -41,7 +41,7 @@ class Checkm(object):
         # Link the bin's fasta file #
         self.bin.fasta.link_to(self.p.fasta)
         # Run the pipeline #
-        print "Launching CheckM..."; sys.stdout.flush()
+        print "Launching CheckM on bin '%s'..." % self.bin.name; sys.stdout.flush()
         sh.checkm('lineage_wf',
                   '-x', 'fasta',
                   '-t', num_processors,

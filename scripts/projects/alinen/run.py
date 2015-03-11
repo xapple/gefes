@@ -96,6 +96,10 @@ proj.runner.run_slurm(steps=['assembly_61.run'], machines=42, cores=42*24,
 proj.runner.run_slurm(steps=['assembly_81.run'], machines=42, cores=42*24,
                       time='36:00:00', partition='large', job_name="alinen_ray_81")
 
+# Merge with Newbler #
+params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
+
 # Run mapping #
 params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
 for s in samples: s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + "_co_51_map", **params)
@@ -104,21 +108,18 @@ for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + 
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'], job_name=s.name + "_co_81_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
 
-# Merge with Newbler #
-params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
-proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_co_merged_map", **params)
-
 # Run Concoct #
 params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
 proj.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name="concot_51", **params)
 proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name="concot_61", **params)
 proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name="concot_71", **params)
 proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name="concot_81", **params)
+proj.runner.run_slurm(steps=['merged.results.binner.run'], job_name="concot_merged", **params)
 
 # Run CheckM #
 params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw')
-proj.runner.run_slurm(steps=['assembly_51.results.binner.checkm.run()'], job_name="checkm_51", **params)
-proj.runner.run_slurm(steps=['assembly_61.results.binner.checkm.run()'], job_name="checkm_61", **params)
-proj.runner.run_slurm(steps=['assembly_71.results.binner.checkm.run()'], job_name="checkm_71", **params)
-proj.runner.run_slurm(steps=['assembly_81.results.binner.checkm.run()'], job_name="checkm_81", **params)
+proj.runner.run_slurm(steps=['assembly_51.results.binner.run_all_bin_eval'], job_name="checkm_51", **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.run_all_bin_eval'], job_name="checkm_61", **params)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.run_all_bin_eval'], job_name="checkm_71", **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.run_all_bin_eval'], job_name="checkm_81", **params)
+proj.runner.run_slurm(steps=['merged.results.binner.run_all_bin_eval'], job_name="checkm_81", **params)
