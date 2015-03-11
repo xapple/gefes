@@ -1,10 +1,10 @@
 {
     "contacts": {
-        "main": {
+        "pi": {
             "name": "Sari Peura",
             "email": "sari.peura@ebc.uu.se"
         },
-        "pi": {
+        "prof": {
             "name": "Alexander Eiler",
             "email": "alexander.eiler@ebc.uu.se"
         },
@@ -21,15 +21,15 @@
     "uppmax_project_id":  "b2014083",
     "illumina_run_id":    "140612_D00457_0037_AC49JKACXX",
 
-    "library_strategy":     "XXXXX",
+    "library_strategy":     "WGS",
     "library_source":       "METAGENOMIC",
-    "library_selection":    "XXXXX",
+    "library_selection":    "RANDOM",
     "library_layout":       "Paired-end",
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
     "read_length":          [100, "bp"],
 
-    "date":         "XXXXX",
+    "date":         "2013-09-23",
     "latitude":     [61.208142, "N"],
     "longitude":    [25.113609, "E"],
     "country":      "Finland",
@@ -41,11 +41,11 @@
 
         {
             "sample_name":       "s1",
-            "sample_long_name":  "S1",
+            "sample_long_name":  "AM depth 0m",
             "sample_directory":  "Sample_S1",
             "sample_num":        1,
-            "forward_reads": "S1_GGCTAC_L005_R1_001.fastq.gz",
-            "reverse_reads": "S1_GGCTAC_L005_R2_001.fastq.gz",
+            "forward_reads":     "S1_GGCTAC_L005_R1_001.fastq.gz",
+            "reverse_reads":     "S1_GGCTAC_L005_R2_001.fastq.gz",
 
             "depth":                   [0, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -55,11 +55,11 @@
 
         {
             "sample_name":       "s2",
-            "sample_long_name":  "S2",
+            "sample_long_name":  "AM depth 1m",
             "sample_directory":  "Sample_S2",
             "sample_num":        2,
-            "forward_reads": "S2_CTTGTA_L005_R1_001.fastq.gz",
-            "reverse_reads": "S2_CTTGTA_L005_R2_001.fastq.gz",
+            "forward_reads":     "S2_CTTGTA_L005_R1_001.fastq.gz",
+            "reverse_reads":     "S2_CTTGTA_L005_R2_001.fastq.gz",
 
             "depth":                   [1, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -69,11 +69,11 @@
 
         {
             "sample_name":       "s3",
-            "sample_long_name":  "S3",
+            "sample_long_name":  "AM depth 1.5m",
             "sample_directory":  "Sample_S3",
             "sample_num":        3,
-            "forward_reads": "S3_ATCACG_L005_R1_001.fastq.gz",
-            "reverse_reads": "S3_ATCACG_L005_R2_001.fastq.gz",
+            "forward_reads":     "S3_ATCACG_L005_R1_001.fastq.gz",
+            "reverse_reads":     "S3_ATCACG_L005_R2_001.fastq.gz",
 
             "depth":                   [1.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -83,11 +83,11 @@
 
         {
             "sample_name":       "s4",
-            "sample_long_name":  "S4",
+            "sample_long_name":  "AM depth 2m",
             "sample_directory":  "Sample_S4",
             "sample_num":        4,
-            "forward_reads": "S4_CGATGT_L006_R1_001.fastq.gz",
-            "reverse_reads": "S4_CGATGT_L006_R2_001.fastq.gz",
+            "forward_reads":     "S4_CGATGT_L006_R1_001.fastq.gz",
+            "reverse_reads":     "S4_CGATGT_L006_R2_001.fastq.gz",
 
             "depth":                   [2, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -97,11 +97,11 @@
 
         {
             "sample_name":       "s5",
-            "sample_long_name":  "S5",
+            "sample_long_name":  "AM depth 2.2m",
             "sample_directory":  "Sample_S5",
             "sample_num":        5,
-            "forward_reads": "S5_TTAGGC_L006_R1_001.fastq.gz",
-            "reverse_reads": "S5_TTAGGC_L006_R2_001.fastq.gz",
+            "forward_reads":     "S5_TTAGGC_L006_R1_001.fastq.gz",
+            "reverse_reads":     "S5_TTAGGC_L006_R2_001.fastq.gz",
 
             "depth":                   [2.2, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -111,11 +111,11 @@
 
         {
             "sample_name":       "s6",
-            "sample_long_name":  "S6",
+            "sample_long_name":  "AM depth 2.4m",
             "sample_directory":  "Sample_S6",
             "sample_num":        6,
-            "forward_reads": "S6_TGACCA_L006_R1_001.fastq.gz",
-            "reverse_reads": "S6_TGACCA_L006_R2_001.fastq.gz",
+            "forward_reads":     "S6_TGACCA_L006_R1_001.fastq.gz",
+            "reverse_reads":     "S6_TGACCA_L006_R2_001.fastq.gz",
 
             "depth":                   [2.4, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -125,11 +125,11 @@
 
         {
             "sample_name":       "s7",
-            "sample_long_name":  "S7",
+            "sample_long_name":  "AM depth 2.8m",
             "sample_directory":  "Sample_S7",
             "sample_num":        7,
-            "forward_reads": "S7_ACAGTG_L007_R1_001.fastq.gz",
-            "reverse_reads": "S7_ACAGTG_L007_R2_001.fastq.gz",
+            "forward_reads":     "S7_ACAGTG_L007_R1_001.fastq.gz",
+            "reverse_reads":     "S7_ACAGTG_L007_R2_001.fastq.gz",
 
             "depth":                   [2.8, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -139,11 +139,11 @@
 
         {
             "sample_name":       "s8",
-            "sample_long_name":  "S8",
+            "sample_long_name":  "AM depth 3.5m",
             "sample_directory":  "Sample_S8",
             "sample_num":        8,
-            "forward_reads": "S8_GCCAAT_L007_R1_001.fastq.gz",
-            "reverse_reads": "S8_GCCAAT_L007_R2_001.fastq.gz",
+            "forward_reads":     "S8_GCCAAT_L007_R1_001.fastq.gz",
+            "reverse_reads":     "S8_GCCAAT_L007_R2_001.fastq.gz",
 
             "depth":                   [3.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -153,11 +153,11 @@
 
         {
             "sample_name":       "s9",
-            "sample_long_name":  "S9",
+            "sample_long_name":  "AM depth 4m",
             "sample_directory":  "Sample_S9",
             "sample_num":        9,
-            "forward_reads": "S9_CAGATC_L007_R1_001.fastq.gz",
-            "reverse_reads": "S9_CAGATC_L007_R2_001.fastq.gz",
+            "forward_reads":     "S9_CAGATC_L007_R1_001.fastq.gz",
+            "reverse_reads":     "S9_CAGATC_L007_R2_001.fastq.gz",
 
             "depth":                   [4, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -167,11 +167,11 @@
 
         {
             "sample_name":       "s10",
-            "sample_long_name":  "S10",
+            "sample_long_name":  "AM depth 4.5m",
             "sample_directory":  "Sample_S10",
             "sample_num":        10,
-            "forward_reads": "S10_ACTTGA_L008_R1_001.fastq.gz",
-            "reverse_reads": "S10_ACTTGA_L008_R2_001.fastq.gz",
+            "forward_reads":     "S10_ACTTGA_L008_R1_001.fastq.gz",
+            "reverse_reads":     "S10_ACTTGA_L008_R2_001.fastq.gz",
 
             "depth":                   [4.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -181,11 +181,11 @@
 
         {
             "sample_name":       "s11",
-            "sample_long_name":  "S11",
+            "sample_long_name":  "AM depth 5m",
             "sample_directory":  "Sample_S11",
             "sample_num":        11,
-            "forward_reads": "S11_GATCAG_L008_R1_001.fastq.gz",
-            "reverse_reads": "S11_GATCAG_L008_R2_001.fastq.gz",
+            "forward_reads":     "S11_GATCAG_L008_R1_001.fastq.gz",
+            "reverse_reads":     "S11_GATCAG_L008_R2_001.fastq.gz",
 
             "depth":                   [5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -195,11 +195,11 @@
 
         {
             "sample_name":       "s12",
-            "sample_long_name":  "S12",
+            "sample_long_name":  "AM depth 5.5m",
             "sample_directory":  "Sample_S12",
             "sample_num":        12,
-            "forward_reads": "S12_TAGCTT_L008_R1_001.fastq.gz",
-            "reverse_reads": "S12_TAGCTT_L008_R2_001.fastq.gz",
+            "forward_reads":     "S12_TAGCTT_L008_R1_001.fastq.gz",
+            "reverse_reads":     "S12_TAGCTT_L008_R2_001.fastq.gz",
 
             "depth":                   [5.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
@@ -209,11 +209,11 @@
 
         {
             "sample_name":       "s13",
-            "sample_long_name":  "S13",
+            "sample_long_name":  "AM depth 6m",
             "sample_directory":  "Sample_S13",
             "sample_num":        13,
-            "forward_reads": "S13_GGCTAC_L008_R1_001.fastq.gz",
-            "reverse_reads": "S13_GGCTAC_L008_R2_001.fastq.gz",
+            "forward_reads":     "S13_GGCTAC_L008_R1_001.fastq.gz",
+            "reverse_reads":     "S13_GGCTAC_L008_R2_001.fastq.gz",
 
             "depth":                   [6, "m"],
             "dna_after_purification":  [0, "ng/µl"],

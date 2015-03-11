@@ -32,9 +32,7 @@ class Aggregate(object):
     def __len__(self): return len(self.samples)
     def __getitem__(self, key):
         if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
-        elif isinstance(key, int): return self.children[key]
-        elif isinstance(key, slice): return self.children[key]
-        else: raise TypeError('key')
+        return self.children[key]
 
     def __init__(self, name, samples, base_dir=None):
         # Attributes #
@@ -77,7 +75,8 @@ class Aggregate(object):
 
     @property
     def assemblies(self):
-        """A dynamic dictionary useful for trying different assemblies of different sizes. Keys are kmer-sizes and values are assembler objects"""
+        """A dictionary useful for trying different assemblies of different sizes.
+        Keys are kmer-sizes and values are assembler objects"""
         return OrderedDict(((51, self.assembly_51),
                             (61, self.assembly_61),
                             (71, self.assembly_71),

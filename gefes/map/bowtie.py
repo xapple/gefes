@@ -37,7 +37,8 @@ class Bowtie(Mapper):
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.format == 'fasta': options += ['-f']
         # Do the mapping #
-        if verbose: print "Launching Bowtie on sample '%s' with %i cores..." % (self.sample.name, num_processors)
+        if verbose: print "Launching Bowtie on sample '%s' with %i cores" % (self.sample.name, num_processors)
+        if verbose: print "Mapping against assembly '%s'." % self.assembly
         sys.stdout.flush()
         sh.bowtie2(*options)
         # Create bam file, then sort it and finally index the bamfile #

@@ -1,5 +1,6 @@
 # Built-in modules #
 import os
+from collections import OrderedDict
 
 # Internal modules #
 from gefes.parsing.illumina      import IlluminaInfo
@@ -7,7 +8,6 @@ from gefes.preprocess.quality    import QualityChecker
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
-from gefes.map.bwa               import Bwa
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
 
@@ -144,3 +144,13 @@ class Sample(object):
     def contigs(self):
         """Convenience shortcut. The contigs of the mono-assembly"""
         return self.assembly.results.contigs
+
+    @property
+    def mappers(self):
+        """A dictionary useful for trying different assemblies of different sizes.
+        Keys are assembly objects, and values are corresponding mapper objects"""
+        return OrderedDict(((self.project.assembly_51, self.mapper_51),
+                            (self.project.assembly_61, self.mapper_61),
+                            (self.project.assembly_71, self.mapper_71),
+                            (self.project.assembly_81, self.mapper_81),
+                            (self.project.merged, self.mapper_merged)))

@@ -10,6 +10,7 @@ from gefes.binning.concoct import Concoct
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
+from plumbing.slurm import num_processors
 from fasta import FASTA
 
 # Third party modules #
@@ -64,7 +65,7 @@ class Newbler(Merger):
         # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
         sh.runAssembly('-force',
-                       #'-cpu', num_processors,
+                       '-cpu', num_processors,
                        '-o', self.p.output_dir.path,
                        self.p.combined.path,
                        _out=self.p.stdout.path,

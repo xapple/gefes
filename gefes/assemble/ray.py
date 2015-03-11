@@ -6,8 +6,9 @@ import os, socket
 from collections import OrderedDict
 
 # Internal modules #
-from gefes.assemble.contig import Contig
-from gefes.binning.concoct import Concoct
+from gefes.assemble.contig  import Contig
+from gefes.binning.concoct  import Concoct
+from gefes.report.aggregate import AssemblyReport
 
 # First party modules #
 from plumbing.common import flatter
@@ -42,16 +43,24 @@ class Ray(object):
     /filtered_contigs.fasta
     /cut_up_contigs.fasta
     /bins/
+    /report/report.pdf
     """
 
     def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
+    def __len__(self):  return len(self.samples)
+    def __getitem__(self, key):
+        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
+        return self.children[key]
 
     def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
         # Base parameters #
         self.samples       = samples
+        self.children      = samples
         self.result_dir    = result_dir
         self.kmer_size     = kmer_size
         self.length_cutoff = length_cutoff
+        # Report #
+        self.report = AssemblyReport(self)
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)

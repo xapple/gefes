@@ -122,8 +122,8 @@ class ConcoctResults(object):
         return result
 
     @property_cached
-    def bins_size_dist_graph(self):
-        graph = self.graphs.bins_size_dist
+    def bins_contig_dist_graph(self):
+        graph = self.graphs.bins_contig_dist
         if not graph: graph.plot()
         return graph
 
