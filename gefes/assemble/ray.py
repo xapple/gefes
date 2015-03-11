@@ -59,11 +59,11 @@ class Ray(object):
         self.result_dir    = result_dir
         self.kmer_size     = kmer_size
         self.length_cutoff = length_cutoff
-        # Report #
-        self.report = AssemblyReport(self)
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Report #
+        self.report = AssemblyReport(self)
 
     def run(self):
         # Check samples #
