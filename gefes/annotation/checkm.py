@@ -59,8 +59,15 @@ class Checkm(object):
 ###############################################################################
 class CheckmResults(object):
 
-    def __nonzero__(self): return 0
-    def __len__(self):     return 0
+    def __nonzero__(self): return bool(self.checkm.p.stdout)
 
     def __init__(self, checkm):
         self.checkm = checkm
+
+    @property_cached
+    def statistcs(self):
+        """The various statistics produced by checkm in a dictionary."""
+        keys = ["bin_id", "lineage", "genomes", "markers", "marker_sets",
+                "0", "1", "2", "3", "4", "5+",
+                "completeness", "contamination", "heterogeneity"]
+        return dict(zip(keys, list(self.checkm.p.stdout)[4].split()))
