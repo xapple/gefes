@@ -6,9 +6,9 @@ import os, socket
 from collections import OrderedDict
 
 # Internal modules #
-from gefes.assemble.contig  import Contig
-from gefes.binning.concoct  import Concoct
-from gefes.report.aggregate import AssemblyReport
+from gefes.assemble.contig import Contig
+from gefes.binning.concoct import Concoct
+from gefes.report.assembly import AssemblyReport
 
 # First party modules #
 from plumbing.common import flatter
