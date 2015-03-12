@@ -29,18 +29,18 @@ class Bowtie(Mapper):
         # Check both type of indexes exist #
         self.pre_run()
         # Make our options #
-        options = ['-p', num_processors,
-                   '-x', self.assembly.results.contigs_fasta,
-                   '-1', self.sample.clean.fwd,
-                   '-2', self.sample.clean.rev,
-                   '-S', self.p.map_sam]
+        self.options = ['-p', num_processors,
+                        '-x', self.assembly.results.contigs_fasta,
+                        '-1', self.sample.clean.fwd,
+                        '-2', self.sample.clean.rev,
+                        '-S', self.p.map_sam]
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
-        if self.sample.format == 'fasta': options += ['-f']
+        if self.sample.format == 'fasta': self.options += ['-f']
         # Do the mapping #
         if verbose: print "Launching Bowtie on sample '%s' with %i cores" % (self.sample.name, num_processors)
         if verbose: print "Mapping against assembly '%s'." % self.assembly
         sys.stdout.flush()
-        sh.bowtie2(*options)
+        sh.bowtie2(*self.options)
         # Create bam file, then sort it and finally index the bamfile #
         self.post_run()
 

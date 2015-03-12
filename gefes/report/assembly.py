@@ -104,7 +104,7 @@ class AssemblyTemplate(Template):
 
     # Binning #
     def binning_version(self): return self.assembly.results.binner.long_name
-    def count_bins(self):      return split_thousands(len(self.assembly.binner.results))
+    def count_bins(self):      return split_thousands(len(self.assembly.results.binner.results))
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
         graph = self.assembly.results.binner.results.graphs.bins_contig_dist.plot(x_log=True)
