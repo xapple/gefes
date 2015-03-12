@@ -117,4 +117,4 @@ class AssemblyTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Evaluation #
-    def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].results.evaluation.long_name
+    def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
