@@ -59,7 +59,7 @@ class Aggregate(object):
         self.assembly_71 = self.assembly
         self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
         # Also combine the different kmer sizes #
-        self.merged = Newbler(self.assemblies.values(), self.p.merged_dir)
+        self.merged = Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
         # Annotation #
         #self.phylotyper = Phylotyper(self)
         #self.annotation = Prokka(self)
