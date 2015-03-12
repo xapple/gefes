@@ -37,6 +37,7 @@ class Contig(object):
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
+    def __len__(self): return len(self.record)
 
     def __init__(self, assembly, record, num=None):
         # Save parent #
