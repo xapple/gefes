@@ -96,6 +96,10 @@ class Ray(object):
         if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
         if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
+    @property
+    def description(self):
+        return "Ray with kmer %i and %i bp cutoff" % (self.kmer_size, self.length_cutoff)
+
     #-------------------------------------------------------------------------#
     def sisu(self):
         """Run the assembly on the Sisu super computer at sisu-login1.csc.fi"""

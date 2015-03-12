@@ -63,6 +63,7 @@ class AssemblyTemplate(Template):
         self.aggregate = self.assembly.samples[0].project
 
     # Assembly #
+    def assembly_title(self):     return self.assembly.description
     def count_samples(self):     return len(self.assembly.samples)
     def assembler_version(self): return self.assembly.long_name
     def kmer_size(self):         return self.assembly.kmer_size
@@ -97,7 +98,7 @@ class AssemblyTemplate(Template):
         info = OrderedDict((('Name',      lambda s: "**" + s.name + "**"),
                             ('Details',   lambda s: s.long_name),
                             ('Reads',     lambda s: split_thousands(len(s.clean))),
-                            ('Did map',   lambda s: "%.3f%%" % s.mappers[self.assembly].results.fraction_mapped)))
+                            ('Did map',   lambda s: "%.3f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100))))
         table = [[i+1] + [f(self.assembly[i]) for f in info.values()] for i in range(len(self.assembly))]
         table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary information for mapping of all samples."
@@ -118,3 +119,12 @@ class AssemblyTemplate(Template):
 
     # Evaluation #
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
+    @property_pickled
+    def evaluation_table(self):
+        info = OrderedDict((('Name',      lambda s: "**" + s.name + "**"),
+                            ('Details',   lambda s: s.long_name),
+                            ('Reads',     lambda s: split_thousands(len(s.clean))),
+                            ('Did map',   lambda s: "%.3f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100))))
+        table = [[i+1] + [f(self.assembly[i]) for f in info.values()] for i in range(len(self.assembly))]
+        table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
+        return table + "\n\n   : Summary information for evaluation of all samples."

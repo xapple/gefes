@@ -1,5 +1,5 @@
-Assembly "{{assembly_short_name}}"
-===================================
+Assembly "{{assembly_title}}"
+=============================
 
 General Information
 -------------------
@@ -33,7 +33,7 @@ The results and all the files generated for this aggregate can be found at:
 
 Contigs
 -------
-The first step is to take all reads from all samples in this aggregate and input them into the assembly algorithm. This results in the production of {{count_contigs}} contigs, of which the length distribution can be seen in figure \ref{contigs_len_dist}:
+The first step is to take all reads from all samples and input them into the assembly algorithm. This results in the production of {{count_contigs}} contigs, of which the length distribution can be seen in figure \ref{contigs_len_dist}:
 
 {{contigs_len_dist}}
 
@@ -41,7 +41,7 @@ The total amount of base pairs generated is {{contigs_total_bp}}.
 
 Mapping
 -------
-We can know take every read of every sample and attempt to map them back to the set of contigs we created, such that we compute, for every contig, a mean coverage in every sample. For this we use the "{{mapping_version}}" software. A brief summary of the mapping step is included below:
+We can now take every read of every sample and attempt to map them back to the set of contigs we created, such that we compute, for every contig, a mean coverage in every sample. For this we use the "{{mapping_version}}" software. A brief summary of the mapping step is included below:
 
 {{mapping_table}}
 
@@ -59,6 +59,10 @@ Of course, it is more interesting to look, not at the contig count, but at the t
 
 For further investigation please refer to the individual report of every bin.
 
+-------
+
 Evaluation
 ----------
 Now we would like to measure the consistency or completeness of each bin. For this we use the "{{bin_eval_version}}" software.
+
+{{evaluation_table}}

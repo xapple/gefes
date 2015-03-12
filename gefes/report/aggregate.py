@@ -73,8 +73,8 @@ class AggregateTemplate(Template):
             ('Details',       lambda s: s.long_name),
             ('Reads lost',    lambda s: "%.1f%%" % (100 - ((len(s.clean)/len(s.pair)) * 100))),
             ('Reads left',    lambda s: split_thousands(len(s.clean))),
-            ('Mono mapped',   lambda s: "%.3f%%" % s.mono_mapper.results.fraction_mapped),
-            ('Co mapped',     lambda s: "%.3f%%" % s.mapper.results.fraction_mapped),
+            ('Mono mapped',   lambda s: "%.3f%%" % (s.mono_mapper.results.fraction_mapped * 100)),
+            ('Co mapped',     lambda s: "%.3f%%" % (s.mapper.results.fraction_mapped * 100)),
         ))
         # The table #
         table = [[i+1] + [f(self.aggregate[i]) for f in info.values()] for i in range(len(self.aggregate))]
