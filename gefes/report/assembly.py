@@ -103,7 +103,7 @@ class AssemblyTemplate(Template):
         return table + "\n\n   : Summary information for mapping of all samples."
 
     # Binning #
-    def binning_version(self): return self.assembly.binner.long_name
+    def binning_version(self): return self.assembly.results.binner.long_name
     def count_bins(self):      return split_thousands(len(self.assembly.binner.results))
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
