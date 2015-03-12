@@ -44,8 +44,9 @@ class Newbler(Merger):
     /report/report.pdf
     """
 
-    def __init__(self, assemblies, result_dir, length_cutoff=1000):
+    def __init__(self, samples, assemblies, result_dir, length_cutoff=1000):
         # Base parameters #
+        self.samples = samples
         self.assemblies = assemblies
         self.result_dir = result_dir
         self.length_cutoff = length_cutoff
