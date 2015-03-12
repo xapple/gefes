@@ -6,6 +6,7 @@ from collections import OrderedDict
 from gefes.merge import Merger
 from gefes.assemble.contig import Contig
 from gefes.binning.concoct import Concoct
+from gefes.report.assembly import AssemblyReport
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -39,6 +40,8 @@ class Newbler(Merger):
     /stdout.txt
     /stderr.txt
     /filtered_contigs.fasta
+    /bins/
+    /report/report.pdf
     """
 
     def __init__(self, assemblies, result_dir, length_cutoff=1000):
@@ -49,6 +52,8 @@ class Newbler(Merger):
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Report #
+        self.report = AssemblyReport(self)
 
     def run(self, verbose=True):
         # Check that all the sets of contigs have a cut-up version #
@@ -112,4 +117,4 @@ class NewblerResults(object):
     @property_cached
     def binner(self):
         """Put the contigs of this assembly into bins."""
-        return Concoct(self.ray.samples, self.ray, self.ray.p.bins_dir)
+        return Concoct(self.newbler.samples, self.newbler, self.newbler.p.bins_dir)

@@ -9,22 +9,23 @@ from plumbing.cache import property_cached
 # Third party modules #
 
 ###############################################################################
-class Concoct(object):
-    """Use CONCOCT at http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
-    to bin contigs togather.
+class Phylophlan(object):
+    """Use Phylophlan at http://example.com
+    to predict taxonomy on bins.
     """
 
     all_paths = """
     /lorem.fasta
     """
 
-    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.parent)
+    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.bin)
 
-    def __init__(self, contigs):
+    def __init__(self, bin, result_dir):
         # Save attributes #
-        self.contigs = contigs
+        self.bin = bin
+        self.result_dir = result_dir
         # Auto paths #
-        self.base_dir = self.result_dir + 'bowtie/'
+        self.base_dir = self.result_dir + 'phylophlan/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self):
@@ -32,21 +33,21 @@ class Concoct(object):
 
     @property_cached
     def results(self):
-        results = ConcoctResults(self)
-        if not results: raise Exception("You can't access results from ConcoctResults before running the binning.")
+        results = PhylophlanResults(self)
+        if not results: raise Exception("You can't access results from Phylophlan before running the algorithm.")
         return results
 
 ###############################################################################
-class ConcoctResults(object):
+class PhylophlanResults(object):
 
     all_paths = """
     /output/lorem
     """
 
     def __nonzero__(self): return 0
-    def __init__(self, concoct):
-        self.concoct = concoct
-        self.p = AutoPaths(self.concoct.base_dir, self.all_paths)
+    def __init__(self, phylophlan):
+        self.phylophlan = phylophlan
+        self.p = AutoPaths(self.phylophlan.base_dir, self.all_paths)
 
     @property_cached
     def lorem(self):

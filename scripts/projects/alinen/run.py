@@ -117,7 +117,7 @@ proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name="concot
 proj.runner.run_slurm(steps=['merged.results.binner.run'], job_name="concot_merged", **params)
 
 # Run CheckM #
-params = dict(machines=1, cores=24, time='24:00:00', partition='serial', constraint='hsw', memory=120000)
+params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial', constraint='hsw', memory=124000)
 proj.runner.run_slurm(steps=['assembly_51.results.binner.results.run_all_bin_eval'], job_name="checkm_51", **params)
 proj.runner.run_slurm(steps=['assembly_61.results.binner.results.run_all_bin_eval'], job_name="checkm_61", **params)
 params = dict(cores=10, time='24:00:00', partition='hugemem', memory=400000)
