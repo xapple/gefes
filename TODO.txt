@@ -1,2 +1,4 @@
 - Look at the "bucky" algorithm for placement of the COG genes (of one bin) on a phylogenetic tree in order to estimate the taxonomy of the each bin. http://www.stat.wisc.edu/~ane/bucky/
 - We compute, for every contig, a mean coverage in every sample, Applying PCA analysis to this matrix to make an ordination plot.
+- Check that in the assembly report, plots are not replotted everytime
+- Change the directory creation calls, to always set the correct permissions.

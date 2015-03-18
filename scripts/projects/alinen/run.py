@@ -101,7 +101,7 @@ params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', con
 proj.runner.run_slurm(steps=['merged.run'], job_name="gefes_newbler", **params)
 
 # Run mapping #
-params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+params = dict(machines=1, cores=1, threads=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
 for s in samples: s.runner.run_slurm(steps=['mapper_51.run'], job_name=s.name + "_co_51_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_61.run'], job_name=s.name + "_co_61_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_71.run'], job_name=s.name + "_co_71_map", **params)
@@ -123,4 +123,4 @@ proj.runner.run_slurm(steps=['assembly_61.results.binner.results.run_all_bin_eva
 params = dict(cores=10, time='24:00:00', partition='hugemem', memory=400000)
 proj.runner.run_slurm(steps=['assembly_71.results.binner.results.run_all_bin_eval'], job_name="checkm_71", **params)
 proj.runner.run_slurm(steps=['assembly_81.results.binner.results.run_all_bin_eval'], job_name="checkm_81", **params)
-proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_81", **params)
+proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)

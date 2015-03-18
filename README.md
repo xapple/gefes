@@ -10,7 +10,7 @@ It was developed by Lucas Sinclair (<lucas.sinclair@me.com>) while working in th
 
 * First of all, this is still very much work in progress. We are not yet at a stage where full metabolic predictions can be made.
 
-* Secondly, of course these kind of approaches are not entirely revolutionary. Other labs on the globe have been doing things like this for a two or three years. But the main reason we are replicating these efforts in a way is to acquire our own setup that we are able to control. Other labs do make their tools available, but if you manage to install them on your computer you end up with something that was tailored for their type of data and that you can't change. Moreover, you you don't really understand how it works. With our own setup we have a flexibility that lets us try new ideas and implement them in the code very quickly.
+* Secondly, of course these kind of approaches are not entirely revolutionary. Other labs on the globe have been doing things like this for a two or three years. But the main reason we are replicating these efforts in a way is to acquire our own setup that we are able to control. Other labs do make their tools available, but if you manage to install them on your computer you end up with something that was tailored for their type of data and that you can't change. Moreover, you don't really understand how it works. With our own setup we have a flexibility that lets us try new ideas and implement them in the code very quickly.
 
 * Thirdly, you also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like `gefes` to direct your laboratory assays which will truly confirm if a given process is taking place.
 
@@ -48,7 +48,7 @@ Unfortunately, no other detailed documentation has been written yet but the code
 
 ## Installing
 
-No automated installation has been developed for the `gefes` package. Ultimately you will be able to install it by following this procedure:
+No automated installation has been developed for the `gefes` package yet. Ultimately you will be able to install it by following this procedure:
 
 ~~~
 To install `gefes` onto your machine, use the python package manager:
@@ -138,12 +138,12 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
     $ pyenv rehash
 
 #### Step 5: Obtaining extra dependencies
-`gefes` makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing onesonly when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
+`gefes` makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones only when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
  * [NCBI BLAST](http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi) version 2.2.28+ providing ``blastn`` and ``blastp``
  * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
  * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
- * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2_build2``
+ * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2-build``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
  * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in the python package index)
