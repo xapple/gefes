@@ -108,12 +108,12 @@ class AssemblyTemplate(Template):
     def count_bins(self):      return split_thousands(len(self.assembly.results.binner.results))
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_contig_dist.plot(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_log=True)
         label = "bins_contig_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def bins_nucleotide_dist(self):
         caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist.plot(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
         label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))
 
@@ -121,11 +121,11 @@ class AssemblyTemplate(Template):
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
     def bins_genes_predicted_dist(self):
         caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist.plot(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
         label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def bins_eval_denisties_graph(self):
         caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist.plot(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
         label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))
