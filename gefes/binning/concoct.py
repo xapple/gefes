@@ -143,7 +143,7 @@ class ConcoctResults(object):
         for name in names:
             graph = Graph(self, short_name=name)
             def plot(s, bins=250):
-                counts = [b.evaluation.results.get(name) for b in s.parent.bins]
+                counts = [b.evaluation.results.statistics.get(name) for b in s.parent.bins]
                 fig = pyplot.figure()
                 pyplot.hist(counts, bins=bins, color='gray')
                 axes = pyplot.gca()
