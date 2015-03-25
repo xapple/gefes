@@ -1,5 +1,5 @@
 # Built-in modules #
-import sys
+import sys, types
 from collections import defaultdict
 
 # Internal modules #
@@ -154,6 +154,6 @@ class ConcoctResults(object):
                 s.save_plot(fig, axes, sep=('x'))
                 pyplot.close(fig)
                 return s
-            graph.plot = plot
+            graph.plot = types.MethodType(plot, graph)
             setattr(result, name, graph)
         return result
