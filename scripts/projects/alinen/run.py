@@ -28,8 +28,8 @@ for s in samples: print "Map to co-assebmly:", s, bool(s.mapper.results)
 # Project #
 
 # Logs #
-for s in samples: print "Logs:",               s, list(s.p.logs_dir.contents)
-print "Logs:", proj, list(proj.p.logs_dir.contents)
+for s in samples: print "Logs:", s, ','.join(s.p.logs_dir.flat_directories)
+print "Logs:", proj, '\n'.join(proj.p.logs_dir.flat_directories)
 
 # Report #
 for s in samples: s.report.generate()

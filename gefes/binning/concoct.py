@@ -155,4 +155,5 @@ class ConcoctResults(object):
                 pyplot.close(fig)
                 return s
             graph.plot = plot
+            setattr(result, name, graph)
         return result

@@ -86,7 +86,7 @@ class AssemblyTemplate(Template):
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)
     def contigs_len_dist(self):
         caption = "Assembly length distribution"
-        graph = self.aggregate.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+        graph = self.aggregate.assembly.results.contigs_fasta.graphs.length_dist(x_log=True, y_log=True)
         label = "contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def contigs_total_bp(self): return split_thousands(sum(self.assembly.results.contigs_fasta.lengths))
@@ -119,13 +119,12 @@ class AssemblyTemplate(Template):
 
     # Evaluation #
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
-    def bins_genes_predicted_dist(self):
-        caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
-        label = "bins_nucleotide_dist"
-        return str(ScaledFigure(graph.path, caption, label))
-    def bins_eval_denisties_graph(self):
-        caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
-        label = "bins_nucleotide_dist"
-        return str(ScaledFigure(graph.path, caption, label))
+    def bins_eval_graphs(self, name):
+        graph = getattr(self.assembly.results.binner.results.eval_graphs, name)()
+        return str(ScaledFigure(graph.path, "CheckMs '%s' metric" % name, "bins_eval_%s_graph" % name))
+    def bins_eval_genomes_graph(self):       return self.bins_eval_graphs('genomes')
+    def bins_eval_markers_graph(self):       return self.bins_eval_graphs('markers')
+    def bins_eval_marker_sets_graph(self):   return self.bins_eval_graphs('marker_sets')
+    def bins_eval_completeness_graph(self):  return self.bins_eval_graphs('completeness')
+    def bins_eval_contamination_graph(self): return self.bins_eval_graphs('contamination')
+    def bins_eval_heterogeneity_graph(self): return self.bins_eval_graphs('heterogeneity')
