@@ -90,7 +90,7 @@ class Newbler(Merger):
     @property
     def description(self):
         return "Newbler merging %i assemblies (%s)" \
-            % (len(self.assemblies), andify(a.kmer_size for a in self.assemblies))
+            % (len(self.assemblies), andify(str(a.kmer_size) for a in self.assemblies))
 
     @property_cached
     def results(self):
