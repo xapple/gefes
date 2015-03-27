@@ -123,4 +123,5 @@ proj.runner.run_slurm(steps=['assembly_61.results.binner.results.run_all_bin_eva
 params = dict(cores=10, time='24:00:00', partition='hugemem', memory=400000)
 proj.runner.run_slurm(steps=['assembly_71.results.binner.results.run_all_bin_eval'], job_name="checkm_71", **params)
 proj.runner.run_slurm(steps=['assembly_81.results.binner.results.run_all_bin_eval'], job_name="checkm_81", **params)
+params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
 proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)

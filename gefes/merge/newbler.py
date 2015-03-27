@@ -12,6 +12,7 @@ from gefes.report.assembly import AssemblyReport
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
+from plumbing.common import andify
 from fasta import FASTA
 
 # Third party modules #
@@ -85,6 +86,11 @@ class Newbler(Merger):
         # Make indexes (used later) #
         if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
         if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
+
+    @property
+    def description(self):
+        return "Newbler merging %i assemblies (%s)" \
+            % (len(self.assemblies), andify(a.kmer_size for a in self.assemblies))
 
     @property_cached
     def results(self):

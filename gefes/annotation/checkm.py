@@ -2,6 +2,7 @@
 
 # Internal modules #
 import sys
+from collections import OrderedDict
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -49,6 +50,8 @@ class Checkm(object):
                   self.p.output_dir,
                   _out=self.p.stdout.path,
                   _err=self.p.stderr.path)
+        # Check that it worked #
+        assert 'unrecoverable error' not in self.p.stdout.contents
 
     @property_cached
     def results(self):
@@ -67,7 +70,15 @@ class CheckmResults(object):
     @property_cached
     def statistics(self):
         """The various statistics produced by checkm in a dictionary."""
-        keys = ["bin_id", "lineage", "genomes", "markers", "marker_sets",
-                "0", "1", "2", "3", "4", "5+",
-                "completeness", "contamination", "heterogeneity"]
-        return dict(zip(keys, list(self.checkm.p.stdout)[3].split()))
+        keys = OrderedDict((
+            ("bin_id", str),
+            ("lineage", str),
+            ("genomes", int),
+            ("markers", int),
+            ("marker_sets", int),
+            ("0", int), ("1", int), ("2", int), ("3", int), ("4", int), ("5+", int),
+            ("completeness", float),
+            ("contamination", float),
+            ("heterogeneity", float)))
+        values = list(self.checkm.p.stdout)[3].split()
+        return {k: keys[k](values[i]) for i,k in enumerate(keys)}
