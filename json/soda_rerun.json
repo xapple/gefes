@@ -10,12 +10,12 @@
         }
     },
 
-    "project_name":       "soda_eval",
-    "project_long_name":  "Preliminary soda lakes data for evaluation",
-    "project_num":        4,
+    "project_name":       "soda_rerun",
+    "project_long_name":  "Rerun of the sample soda lakes samples",
+    "project_num":        8,
 
     "uppmax_project_id":  "b2014083",
-    "illumina_run_id":    "140912_D00457_0050_BC4TFBACXX",
+    "illumina_run_id":    "150204_D00458_0061_AC6H3GANXX",
 
     "library_strategy":     "WGS",
     "library_source":       "METAGENOMIC",
