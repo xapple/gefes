@@ -17,7 +17,7 @@ git_repo = GitRepo(repos_dir)
 
 # Dependencies #
 from plumbing import dependencies
-dependencies.check_setup(module_dir + 'setup.py')
+dependencies.check_setup_py(module_dir + 'setup.py')
 
 # No need for an X display #
 import matplotlib
