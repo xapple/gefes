@@ -131,7 +131,7 @@ class ConcoctResults(object):
     @property_cached
     def eval_graphs(self):
         """All graphs summarizing the results from the evaluation (checkm)
-        procedure"""
+        procedure. One graph for every statistic, later included in the assembly report."""
         names = ["genomes",
                  "markers",
                  "marker_sets",

@@ -12,7 +12,7 @@
 
     "project_name":       "soda_rerun",
     "project_long_name":  "Rerun of the sample soda lakes samples",
-    "project_num":        8,
+    "project_num":        7,
 
     "uppmax_project_id":  "b2014083",
     "illumina_run_id":    "150204_D00458_0061_AC6H3GANXX",

@@ -69,7 +69,7 @@ class CheckmResults(object):
 
     @property_cached
     def statistics(self):
-        """The various statistics produced by checkm in a dictionary."""
+        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field actually has a space in it, be carefull when parsing. Use this rule: more than one space is necessary to split."""
         keys = OrderedDict((
             ("bin_id", str),
             ("lineage", str),
@@ -82,3 +82,4 @@ class CheckmResults(object):
             ("heterogeneity", float)))
         values = list(self.checkm.p.stdout)[3].split()
         return {k: keys[k](values[i]) for i,k in enumerate(keys)}
+        #TODO the id in the lineage has a space in it !!!
