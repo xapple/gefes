@@ -10,9 +10,9 @@
         }
     },
 
-    "project":       "under_ice_lb",
-    "project_name":  "Under ice depth profile of lake LB",
-    "project_num":   8,
+    "project_name":          "under_ice_lb",
+    "project_long_name":     "Under ice depth profile of lake LB",
+    "project_num":           8,
 
     "uppmax_project_id":    "b2014083",
     "illumina_run_id":      "150123_D00118_0178_BC6KV6ANXX",

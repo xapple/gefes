@@ -30,9 +30,9 @@ template_proj = u"""{
         }
     },
 
-    "project":       "%(project_short_name)s",
-    "project_name":  "%(project_long_name)s",
-    "project_num":   %(project_num)s,
+    "project_name":          "%(project_short_name)s",
+    "project_long_name":     "%(project_long_name)s",
+    "project_num":           %(project_num)s,
 
     "uppmax_project_id":    "%(uppmax_project_id)s",
     "illumina_run_id":      "%(illumina_run_id)s",
