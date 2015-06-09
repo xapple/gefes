@@ -239,8 +239,8 @@
     },
 
     {
-        "sample_name":          "kt6",
-        "sample_long_name":     "KT6",
+        "sample_name":          "kt7",
+        "sample_long_name":     "KT7",
         "sample_directory":     "Sample_KT7",
         "sample_num":           6,
 
@@ -279,8 +279,8 @@
     },
 
     {
-        "sample_name":          "kt7",
-        "sample_long_name":     "KT7",
+        "sample_name":          "kt8",
+        "sample_long_name":     "KT8",
         "sample_directory":     "Sample_KT8",
         "sample_num":           7,
 

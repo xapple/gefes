@@ -32,9 +32,9 @@ FASTA(p.assembly.p.Contigs).extract_length(new_path=p.assembly.p.filtered, lower
 # Compute all coverages #
 for sample in p: print """python -c "import gefes; p = gefes.projects['strain_mock'].load(); i=%s; s = p[i].load(); s.mapper.results.statistics" &""" % sample.num
 
-# Run concoct #
+# Run concoct #
 p.binner.run()
 b = p.binner.results.bins[0]
 
-# Annotate #
+# Annotate #
 b.annotation.run()

@@ -15,7 +15,7 @@ samples = proj.samples
 for s in samples: s.load()
 
 ################################ Status report ################################
-# How far did we run things #
+# How far did we run things #
 for s in samples: print "Raw:",                s, bool(s.pair)
 for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
 for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
