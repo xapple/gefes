@@ -143,9 +143,10 @@ class Sample(object):
     def quality_checker(self):
         """With what are we going to preprocess the sequences and clean them ?"""
         assert self.pair.format == 'fastq'
-        info = self.info['gefes_settings']['quality_checker']
-        obj = importlib(info['object']['source'], info['object']['name'])
-        return obj(self.pair, self.clean)
+        #info = self.info['gefes_settings']['quality_checker']
+        #obj = importlib(info['object']['source'], info['object']['name'])
+        #return obj(self.pair, self.clean)
+        return SlidingWindow(self.pair, self.clean)
 
     @property
     def mappers(self):
