@@ -45,12 +45,12 @@ class Newbler(Merger):
     /report/report.pdf
     """
 
-    def __init__(self, samples, assemblies, result_dir, length_cutoff=1000):
+    def __init__(self, samples, assemblies, result_dir, slice_length=1000):
         # Base parameters #
         self.samples = samples
         self.assemblies = assemblies
         self.result_dir = result_dir
-        self.length_cutoff = length_cutoff
+        self.slice_length = slice_length
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
@@ -82,7 +82,7 @@ class Newbler(Merger):
         if len(contigs) == 0: raise Exception("Newbler found exactly 0 contigs in your dataset.")
         # Filter short contigs #
         filtered = FASTA(self.p.filtered)
-        contigs.extract_length(new_path=filtered, lower_bound=self.length_cutoff)
+        contigs.extract_length(new_path=filtered, lower_bound=self.slice_length)
         # Make indexes (used later) #
         if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
         if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
