@@ -27,6 +27,8 @@ class Sample(object):
     It's a bunch of paired sequences all coming from the same particular lab sample.
     Might or not corresponds to an Illumina HiSeq MID. """
 
+    raw_files_must_exist = False
+
     all_paths = """
     /logs/
     /info.json
@@ -54,7 +56,7 @@ class Sample(object):
         # Do we have the file paths already ? #
         if fwd_path is not None: self.fwd_path = FilePath(fwd_path)
         if rev_path is not None: self.rev_path = FilePath(rev_path)
-        # Where should be put the output ? #
+        # Where should we put the output ? #
         if out_dir is None: self.out_dir = self.project.p.samples_dir
         else:               self.out_dir = out_dir
         # Let's inherit the information from the project #
@@ -80,8 +82,9 @@ class Sample(object):
         # If we still don't have one, just use the file name #
         if self.name is None: self.name = self.fwd_path.short_prefix
         # Check that the files exist #
-        if not self.fwd_path.exists: raise Exception("File '%s' does not exist" % self.fwd_path)
-        if not self.rev_path.exists: raise Exception("File '%s' does not exist" % self.rev_path)
+        if self.raw_files_must_exist:
+            self.fwd_path.must_exist()
+            self.rev_path.must_exist()
         # Is it a FASTA pair or a FASTQ pair ? #
         if "fastq" in self.fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
         else:                        self.pair = PairedFASTA(self.fwd_path, self.rev_path)
