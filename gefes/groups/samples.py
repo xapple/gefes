@@ -13,6 +13,7 @@ from gefes.running.sample_runner import SampleRunner
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.cache     import property_cached
 from fasta              import PairedFASTA, PairedFASTQ
 from fasta.fastqc       import FastQC
 
@@ -23,9 +24,9 @@ home = os.environ['HOME'] + '/'
 
 ###############################################################################
 class Sample(object):
-    """Consists of two FASTA or FASTQ files.
-    It's a bunch of paired sequences all coming from the same particular lab sample.
-    Might or not corresponds to an Illumina HiSeq MID. """
+    """Consists of wither two FASTA or two FASTQ files.
+    It's a bunch of paired sequences all coming from the same particular IRL lab sample.
+    Might or might not corresponds to an Illumina MID."""
 
     raw_files_must_exist = False
 
@@ -88,7 +89,6 @@ class Sample(object):
         # Is it a FASTA pair or a FASTQ pair ? #
         if "fastq" in self.fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
         else:                        self.pair = PairedFASTA(self.fwd_path, self.rev_path)
-        self.format = self.pair.format
         # Optional parameters #
         self.long_name = self.info.get('sample_long_name')
         # The directory where we will place all the data for this sample #
@@ -107,17 +107,16 @@ class Sample(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Maybe we have an Illumina report XML #
         self.illumina_info = IlluminaInfo(self)
-        # Change location of first FastQC #
-        if self.format == 'fastq':
+        # Change location of first FastQC, we don't want to modify the INBOX #
+        if self.pair.format == 'fastq':
             self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
             self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
-        # Cleaned pairs #
-        if self.format == 'fastq':
+        # Cleaned pairs if it's a FASTA: we can't clean it #
+        if self.pair.format == 'fasta': self.clean = self.pair
+        # Cleaned pairs if it's a FASTQ #
+        if self.pair.format == 'fastq':
             self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
-            self.quality_checker = SlidingWindow(self.pair, self.clean)
             self.singletons = self.quality_checker.singletons
-        # If it's a FASTA we can't clean it #
-        if self.format == 'fasta': self.clean = self.pair
         # Initial taxonomic predictions #
         self.kraken = Kraken(self.clean, self.p.kraken_dir)
         # Map to the co-assembly #
@@ -139,14 +138,14 @@ class Sample(object):
         # For convenience #
         return self
 
-    @property
-    def count(self):
-        return self.pair.count
-
-    @property
-    def contigs(self):
-        """Convenience shortcut. The contigs of the mono-assembly"""
-        return self.assembly.results.contigs
+    #-------------------------------- Properties -----------------------------#
+    @property_cached
+    def quality_checker(self):
+        """With what are we going to preprocess the sequences and clean them ?"""
+        assert self.pair.format == 'fastq'
+        info = self.info['gefes_settings']['quality_checker']
+        obj = importlib(info['object']['source'], info['object']['name'])
+        return obj(self.pair, self.clean)
 
     @property
     def mappers(self):
@@ -157,3 +156,19 @@ class Sample(object):
                             (self.project.assembly_71, self.mapper_71),
                             (self.project.assembly_81, self.mapper_81),
                             (self.project.merged, self.mapper_merged)))
+
+    #-------------------------------- Shortcuts -----------------------------#
+    @property
+    def count(self):
+        """Convenience shortcut. The number of sequences of the raw pair"""
+        return self.pair.count
+
+    @property
+    def singletons(self):
+        """Convenience shortcut. The singletons of the quality check"""
+        return self.quality_checker.singletons
+
+    @property
+    def contigs(self):
+        """Convenience shortcut. The contigs of the mono-assembly"""
+        return self.assembly.results.contigs
