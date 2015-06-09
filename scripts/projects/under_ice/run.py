@@ -27,6 +27,5 @@ for s in samples: print s.pair.rev.count
 for s in samples: print s.pair.fwd.md5
 for s in samples: print s.pair.rev.md5
 
-
 # Clean #
 for s in samples: s.runner.run_slurm()
