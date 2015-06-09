@@ -2,20 +2,19 @@
 import re
 
 # Internal modules #
+from gefes.preprocess import QualityChecker, QualityResults
+
+# First party modules #
+from plumbing.cache import property_cached
 
 # Third party modules #
 import sh
 
 ###############################################################################
-class Sickle(object):
+class Sickle(QualityChecker):
     """Takes care of running the sickle program that removes low quality reads.
-    The "singles" file contains reads that passed filter in either the forward or reverse direction, but not the other"""
-
-    def __repr__(self): return "<%s object on '%s'>" % (self.__class__.__name__, self.source)
-
-    def __init__(self, source, dest):
-        self.source = source
-        self.dest = dest
+    The 'singletons' file contains reads that passed the filter in either
+    the forward or reverse direction, but not the other"""
 
     def run(self):
         # Cleanup #
@@ -32,31 +31,26 @@ class Sickle(object):
         assert self.paired_records_kept == len(self.fwd)
         assert self.single_records_kept == len(self.single)
         assert self.kept + self.discarded == len(self.pool.fwd)
+        # Make sanity checks #
+        assert len(self.source) == self.discarded + len(self.singletons) + len(self.dest)
+        # Return result #
+        return self.results
 
-    def parse_stats(self):
-        # Parse the report file #
-        self.paired_records_kept = int(re.findall('^FastQ paired records kept (.+) .+$', self.p.report.contents, re.M))
-        self.single_records_kept = int(re.findall('^FastQ single records kept (.+) .+$', self.p.report.contents, re.M))
-        self.paired_records_discarded = int(re.findall('^FastQ paired records discarded (.+) .+$', self.p.report.contents, re.M))
-        self.single_records_discarded = int(re.findall('^FastQ single records discarded (.+) .+$', self.p.report.contents, re.M))
+    @property_cached
+    def results(self):
+        results = SickleResults(self.source, self.dest, self.singletons)
+        if not results: raise Exception("You can't access results from sickle before running the algorithm.")
+        return results
 
 ###############################################################################
-class SickleResults(object):
+class SickleResults(QualityResults):
 
-    all_paths = """
-    /cleaned_fwd.fastq
-    /cleaned_rev.fastq
-    /cleaned_single.fastq
-    /report.txt
-    """
-
-    def __init__(self, base_dir):
-        self.base_dir = base_dir
-
-    @property
-    def kept(self):
-        return (self.paired_records_kept*2) + self.single_records_kept
-
-    @property
-    def discarded(self):
-        return (self.paired_records_discarded*2) + self.single_records_discarded
+    @property_cached
+    def stats(self):
+        """Parse the report file for statistics"""
+        result = {}
+        result['paired_records_kept']      = int(re.findall('^FastQ paired records kept (.+) .+$',      self.p.report.contents, re.M))
+        result['single_records_kept']      = int(re.findall('^FastQ single records kept (.+) .+$',      self.p.report.contents, re.M))
+        result['paired_records_discarded'] = int(re.findall('^FastQ paired records discarded (.+) .+$', self.p.report.contents, re.M))
+        result['single_records_discarded'] = int(re.findall('^FastQ single records discarded (.+) .+$', self.p.report.contents, re.M))
+        return result

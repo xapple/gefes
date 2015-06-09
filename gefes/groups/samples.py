@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 # Internal modules #
 from gefes.parsing.illumina      import IlluminaInfo
-from gefes.preprocess.quality    import QualityChecker
+from gefes.preprocess.sliding    import SlidingWindow
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
@@ -114,7 +114,7 @@ class Sample(object):
         # Cleaned pairs #
         if self.format == 'fastq':
             self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
-            self.quality_checker = QualityChecker(self.pair, self.clean)
+            self.quality_checker = SlidingWindow(self.pair, self.clean)
             self.singletons = self.quality_checker.singletons
         # If it's a FASTA we can't clean it #
         if self.format == 'fasta': self.clean = self.pair

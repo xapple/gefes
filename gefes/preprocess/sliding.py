@@ -5,14 +5,16 @@ from __future__ import division
 import itertools
 
 # Internal modules #
+from gefes.preprocess import QualityChecker, QualityResults
+
+# First party modules #
 from plumbing.common import moving_average
 from plumbing.cache import property_cached
-from fasta import PairedFASTQ, FASTQ
 
 # Third party modules #
 
 ###############################################################################
-class QualityChecker(object):
+class SlidingWindow(QualityChecker):
     """Takes care of checking the PHRED score of the raw reads
     and will discard or trim bad ones."""
 
@@ -20,20 +22,6 @@ class QualityChecker(object):
     threshold   = 20 # This is a PHRED score threshold
     min_length  = 50 # Minimum number of remaining base pairs
     discard_N   = True
-
-    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.source)
-    def __len__(self): return len(self.pair)
-
-    def __init__(self, source, dest=None):
-        # Basic #
-        self.source = source
-        self.dest = dest
-        # Default case #
-        if dest is None:
-            self.dest = PairedFASTQ(self.source.fwd.prefix_path + '_clean.fastq',
-                                    self.source.rev.prefix_path + '_clean.fastq')
-        # Single read #
-        self.singletons = FASTQ(self.dest.fwd.directory + 'singletons.fastq')
 
     def run(self):
         # Count #
@@ -49,6 +37,7 @@ class QualityChecker(object):
                 else: self.discarded += 1
         # Make sanity checks #
         assert len(self.source) == self.discarded + len(self.singletons) + len(self.dest)
+        # Return result #
         return self.results
 
     def trim_read(self, read):
@@ -89,9 +78,12 @@ class QualityChecker(object):
 
     @property_cached
     def results(self):
-        results = QualityResults(self.source, self.dest)
+        results = SlidingWindowResults(self.source, self.dest, self.singletons)
         if not results: raise Exception("You can't access results from the quality check before running the algorithm.")
         return results
+
+###############################################################################
+class SlidingWindowResults(QualityResults): pass
 
 ###############################################################################
 class Stretch(object):
@@ -101,30 +93,14 @@ class Stretch(object):
     def __repr__(self): return "%s from %i to %i" % (self.above, self.start, self.end)
     def __len__(self): return len(self.scores)
     def __init__(self, above, scores):
-        self.above = above
+        self.above  = above
         self.scores = list(scores)
-        self.start = -1
-        self.end = -1
-
-###############################################################################
-class QualityResults(object):
-
-    all_paths = """
-    /lorem
-    """
-
-    def __nonzero__(self): return bool(self.dest)
-
-    def __init__(self, source, dest):
-        self.source = source
-        self.dest = dest
-
-    @property
-    def ratio_kept(self):
-        return len(self.dest) / len(self.source)
+        self.start  = -1
+        self.end    = -1
 
 ###############################################################################
 def test():
+    """Test that our implementation is correct on one sequence"""
     # Object #
     checker = QualityChecker(None, None)
     checker.window_size = 10
