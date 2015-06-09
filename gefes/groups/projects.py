@@ -23,6 +23,8 @@ class Project(Aggregate):
     """A project containing several samples. You can describe your
     projects in the a JSON placed in the repository."""
 
+    make_json_links = False
+
     all_paths = Aggregate.all_paths + """
     /info.json
     /samples/
@@ -56,7 +58,7 @@ class Project(Aggregate):
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Make an alias to the json #
-        self.json_path.link_to(self.p.info_json, safe=True)
+        if self.make_json_links: self.json_path.link_to(self.p.info_json, safe=True)
         # Make all the samples object that this project possesses #
         if self.info.get('auto_parse_samples'):
             search_dir = self.info['samples_base_dir']
