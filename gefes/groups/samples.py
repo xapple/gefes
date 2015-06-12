@@ -162,8 +162,8 @@ class Sample(object):
         We want to cat these to files called fwd.fastq.gz and rev.fastq.gz"""
         fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
-        fwd_files = [f for f in self.raw_dir.flat_files if fwd_match(f)]
-        rev_files = [f for f in self.raw_dir.flat_files if rev_match(f)]
+        fwd_files = [f for f in self.raw_dir.files if fwd_match(f)]
+        rev_files = [f for f in self.raw_dir.files if rev_match(f)]
         shell_output("zcat %s |gzip -c > %s" % (' '.join(fwd_files), self.pair.fwd))
         shell_output("zcat %s |gzip -c > %s" % (' '.join(rev_files), self.pair.rev))
 
