@@ -52,7 +52,7 @@ template_proj = u"""{
 
     "bioproject":           "%(bioproject)s",
 
-    "remarks":              "%(remarks)s",
+    "remarks":              "%(project_remarks)s",
 
     "samples_base_dir":     "%(samples_base_dir)s",
     "samples": [
@@ -63,45 +63,44 @@ template_proj = u"""{
 
 ###############################################################################
 template_sample = u"""    {
-        "sample_name":          "%(sample_short_name)s",
-        "sample_long_name":     "%(sample_long_name)s",
-        "sample_directory":     "%(sample_directory)s",
-        "sample_num":           %(sample_num)s,
+        "sample_name":             "%(sample_short_name)s",
+        "sample_long_name":        "%(sample_long_name)s",
+        "sample_directory":        "%(sample_directory)s",
+        "sample_num":              %(sample_num)s,
 
-        "forward_reads":        "%(fwd_filename)s",
-        "reverse_reads":        "%(rev_filename)s",
-        "forward_md5":          "%(fwd_md5)s",
-        "reverse_md5":          "%(rev_md5)s",
-        "forward_read_count":   %(fwd_count)s,
-        "reverse_read_count":   %(rev_count)s,
+        "forward_reads":           "%(fwd_filename)s",
+        "reverse_reads":           "%(rev_filename)s",
+        "forward_md5":             "%(fwd_md5)s",
+        "reverse_md5":             "%(rev_md5)s",
+        "forward_read_count":      %(fwd_count)s,
+        "reverse_read_count":      %(rev_count)s,
 
+        "date":                    "%(date)s",
+        "latitude":                [%(latitude)s, "N"],
+        "longitude":               [%(longitude)s, "E"],
+        "real_name":               ["%(real_name)s", "de"],
 
-        "organism":             "%(organism)s",
-        "env_biome":            "%(env_biome)s",
-        "env_feature":          "%(env_feature)s",
-        "env_material":         "%(env_material)s",
-        "design_description":   "%(design_description)s",
+        "organism":                "%(organism)s",
+        "env_biome":               "%(env_biome)s",
+        "env_feature":             "%(env_feature)s",
+        "env_material":            "%(env_material)s",
+        "design_description":      "%(design_description)s",
+        "biosample":               "%(biosample)s",
 
-        "date":                 "%(date)s",
+        "TSS":                     [%(tss)s, "mg/l"],
+        "DOC":                     [%(doc)s, "mg/l"],
+        "temperature":             [%(temperature)s, "Celsius"],
+        "pH":                      [%(ph)s, "-log10([H+])"],
+        "conductance":             [%(conductance)s, "μS/cm"],
+        "sodium":                  [%(sodium)s, "mg/l", "Na"],
+        "sulfate":                 [%(sulfate)s, "mg/l", "SO4"],
+        "bicarbonate":             [%(bicarbonate)s, "mg/l", "HCO3"],
+        "carbonate":               [%(carbonate)s, "mg/l", "CO3"],
+        "phosphorus":              [%(phosphorus)s, "mg/l", "Ptot"],
+        "chla":                    [%(chla)s, "mg/l"],
+        "cell_counts":             [%(cell_counts)s, "cells/ml"],
 
-        "TSS":                  [%(tss)s, "mg/l"],
-        "DOC":                  [%(doc)s, "mg/l"],
-        "temperature":          [%(temperature)s, "Celsius"],
-        "pH":                   [%(ph)s, "-log10([H+])"],
-        "conductance":          [%(conductance)s, "μS/cm"],
-        "sodium":               [%(sodium)s, "mg/l", "Na"],
-        "sulfate":              [%(sulfate)s, "mg/l", "SO4"],
-        "bicarbonate":          [%(bicarbonate)s, "mg/l", "HCO3"],
-        "carbonate":            [%(carbonate)s, "mg/l", "CO3"],
-        "phosphorus":           [%(phosphorus)s, "mg/l", "Ptot"],
-        "chla":                 [%(chla)s, "mg/l"],
-        "cell_counts":          [%(cell_counts)s, "cells/ml"],
-        "real_name":            ["%(real_name)s", "de"],
-
-        "latitude":             [%(latitude)s, "N"],
-        "longitude":            [%(longitude)s, "E"],
-
-        "biosample":            "%(biosample)s"
+        "remarks":                 "%(sample_remarks)s",
     }"""
 
 ###############################################################################
@@ -110,7 +109,8 @@ correspondence = {
     u'Run name':                             'illumina_run_id',
     u'Sample name':                          'sample_directory',
     u'Base directory':                       'samples_base_dir',
-    u'Remarks':                              'remarks',
+    u'Remarks':                              'project_remarks',
+    u'Sample remarks':                       'sample_remarks',
 
     u'Forward filename':                     'fwd_filename',
     u'Reverse filename':                     'rev_filename',
@@ -166,7 +166,7 @@ correspondence = {
     u"Na":                           'sodium',
     u"SO4":                          'sulfate',
     u"HC03":                         'bicarbonate',
-    u"C03":                          'carbonate',
+    u"CO3":                          'carbonate',
     u"Ptot":                         'phosphorus',
     u"Chla":                         'chla',
     u"Cell counts":                  'cell_counts',
