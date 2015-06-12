@@ -24,18 +24,28 @@ class Sickle(QualityChecker):
     url        = 'https://github.com/najoshi/sickle/'
     dependencies = []
 
+    window_size = 10 # Size of the window we will slide along the read
+    threshold   = 20 # This is a PHRED score threshold
+    min_length  = 50 # Minimum number of remaining base pairs
+    discard_N   = True
+
     def run(self):
         # Check version #
         assert "version 1.33" in sh.sickle133('--version')
+        # Prepare the command #
+        command = ["pe",
+                   "-f", self.source.fwd, "-r", self.source.rev,
+                   "-o", self.dest.fwd,   "-p", self.dest.rev,
+                   "-s", self.singletons,
+                   "-t", "sanger"]
+        if self.discard_N: command += "-n"
         # Call sickle #
-        sh.sickle133("pe", "-n",
-                     "-f", self.source.fwd, "-r", self.source.rev,
-                     "-o", self.dest.fwd,   "-p", self.dest.rev,
-                     "-s", self.singletons,
-                     "-t", "sanger",
-                     _out=self.p.report.path)
+        sh.sickle133(*command, _out=self.p.report.path)
+        # Count discarded #
+        self.discarded = self.resutls.stats['paired_records_discarded']
         # Make sanity checks #
-        assert len(self.dest.fwd) == len(self.dest.rev)
+        assert self.resutls.stats['paired_records_kept'] == len(self.dest.fwd) == len(self.dest.rev)
+        assert self.resutls.stats['single_records_discarded'] == len(self.singletons)
         assert len(self.source) == len(self.dest) + len(self.singletons) + self.discarded
         # Return result #
         return self.results

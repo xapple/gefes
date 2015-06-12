@@ -24,8 +24,8 @@
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
     "instrument_software":  "v2.2.58",
-    "forward_read_length":  125.0,
-    "reverse_read_length":  125.0,
+    "forward_read_length":  125,
+    "reverse_read_length":  125,
 
     "country":              "Austria",
     "location":             "Die Salzlacken des Seewinkels im Nationalpark Neusiedler See",
@@ -45,10 +45,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "a7b04c567045ef4ef8d3838cffb4d5a9",
+        "reverse_md5":             "12c9fc0cdae4d667083c7f35fa7585b5",
+        "forward_read_count":      67169028,
+        "reverse_read_count":      67169028,
 
         "date":                    "2012-04-02",
         "latitude":                [47.791389, "N"],
@@ -86,10 +86,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "aab80aef28c4e1b0b971cb84af62d41b",
+        "reverse_md5":             "5ab4dbfbf98d4f38febc320ad309f455",
+        "forward_read_count":      37585237,
+        "reverse_read_count":      37585237,
 
         "date":                    "2012-05-14",
         "latitude":                [47.791389, "N"],
@@ -127,10 +127,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "307e8b93e6141c5e1148331562142a68",
+        "reverse_md5":             "df41ab47eee41cd52303fb82e4dfc446",
+        "forward_read_count":      73593472,
+        "reverse_read_count":      73593472,
 
         "date":                    "2012-08-06",
         "latitude":                [47.791389, "N"],
@@ -168,10 +168,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "dbd0c75cfd24bdb2271270c51be9b801",
+        "reverse_md5":             "50b3eed03ca51dad6a874c577c1a1913",
+        "forward_read_count":      45978734,
+        "reverse_read_count":      45978734,
 
         "date":                    "2012-09-10",
         "latitude":                [47.791389, "N"],
@@ -209,10 +209,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "1cba9f85ccfa9bb083798b960143a79a",
+        "reverse_md5":             "23cd46ecc5b984f862ad8867bb8d1b92",
+        "forward_read_count":      124471218,
+        "reverse_read_count":      124471218,
 
         "date":                    "2012-04-02",
         "latitude":                [47.768056, "N"],
@@ -250,10 +250,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "74c4f06936290d48d8ebcf99def294e6",
+        "reverse_md5":             "a6b5acac07e4e09c4a64bd23641cf87a",
+        "forward_read_count":      37770014,
+        "reverse_read_count":      37770014,
 
         "date":                    "2012-04-16",
         "latitude":                [47.768056, "N"],
@@ -291,10 +291,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "55fd26f0c0e3964415ea8ae83a699454",
+        "reverse_md5":             "626c5cb199a26a6c20a8b34fd3ada4ac",
+        "forward_read_count":      58650577,
+        "reverse_read_count":      58650577,
 
         "date":                    "2012-09-10",
         "latitude":                [47.768056, "N"],
@@ -332,10 +332,10 @@
 
         "forward_reads":           "fwd.fastq.gz",
         "reverse_reads":           "rev.fastq.gz",
-        "forward_md5":             null,
-        "reverse_md5":             null,
-        "forward_read_count":      null,
-        "reverse_read_count":      null,
+        "forward_md5":             "1d6470067b9aa22d7e0b2b70d9033737",
+        "reverse_md5":             "1be86e35b31b69037545bbf7417e8811",
+        "forward_read_count":      51786260,
+        "reverse_read_count":      51786260,
 
         "date":                    "2013-02-04",
         "latitude":                [47.768056, "N"],
