@@ -14,7 +14,7 @@ from gefes.running.sample_runner import SampleRunner
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath, DirectoryPath
 from plumbing.cache     import property_cached
-from fasta              import PairedFASTA, PairedFASTQ
+from fasta              import FASTQ, PairedFASTA, PairedFASTQ
 from fasta.fastqc       import FastQC
 
 # Third party modules #
@@ -157,15 +157,16 @@ class Sample(object):
                             (self.project.merged, self.mapper_merged)))
 
     #------------------------------ Special cases ---------------------------#
-    def merge_lanes(self):
+    def merge_lanes(self, remove_orig=False):
         """We got a run that had several lanes in the same sample directory.
         We want to cat these to files called fwd.fastq.gz and rev.fastq.gz"""
         fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
-        fwd_files = [f for f in self.raw_dir.files if fwd_match(f)]
-        rev_files = [f for f in self.raw_dir.files if rev_match(f)]
-        shell_output("zcat %s |gzip -c > %s" % (' '.join(fwd_files), self.pair.fwd))
-        shell_output("zcat %s |gzip -c > %s" % (' '.join(rev_files), self.pair.rev))
+        fwd_files = [FASTQ(f) for f in self.raw_dir.files if fwd_match(f)]
+        rev_files = [FASTQ(f) for f in self.raw_dir.files if rev_match(f)]
+        shell_output("zcat %s |gzip > %s" % (' '.join(fwd_files), self.pair.fwd))
+        shell_output("zcat %s |gzip > %s" % (' '.join(rev_files), self.pair.rev))
+        if remove_orig: for f in fwd_files + rev_files: f.remove()
 
     #-------------------------------- Shortcuts -----------------------------#
     @property

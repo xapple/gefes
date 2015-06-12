@@ -32,7 +32,7 @@ template_proj = u"""{
 
     "project_name":          "%(project_short_name)s",
     "project_long_name":     "%(project_long_name)s",
-    "project_num":           %(project_num)s,
+    "project_num":           %(project_num)i,
 
     "uppmax_project_id":    "%(uppmax_project_id)s",
     "illumina_run_id":      "%(illumina_run_id)s",
@@ -44,8 +44,8 @@ template_proj = u"""{
     "platform":             "%(platform)s",
     "instrument_model":     "%(instrument_model)s",
     "instrument_software":  "%(instrument_software)s",
-    "forward_read_length":  %(forward_read_length)s,
-    "reverse_read_length":  %(reverse_read_length)s,
+    "forward_read_length":  %(forward_read_length)i,
+    "reverse_read_length":  %(reverse_read_length)i,
 
     "country":              "%(country)s",
     "location":             "%(location)s",
@@ -66,14 +66,14 @@ template_sample = u"""    {
         "sample_name":             "%(sample_short_name)s",
         "sample_long_name":        "%(sample_long_name)s",
         "sample_directory":        "%(sample_directory)s",
-        "sample_num":              %(sample_num)s,
+        "sample_num":              %(sample_num)i,
 
         "forward_reads":           "%(fwd_filename)s",
         "reverse_reads":           "%(rev_filename)s",
         "forward_md5":             "%(fwd_md5)s",
         "reverse_md5":             "%(rev_md5)s",
-        "forward_read_count":      %(fwd_count)s,
-        "reverse_read_count":      %(rev_count)s,
+        "forward_read_count":      %(fwd_count)i,
+        "reverse_read_count":      %(rev_count)i,
 
         "date":                    "%(date)s",
         "latitude":                [%(latitude)s, "N"],
@@ -201,8 +201,6 @@ for proj in projects:
         if sample_data.get('sample_short_name') is numpy.nan: continue
         # Sometimes the time is introduced in the date #
         if isinstance(sample_data['date'], datetime.datetime): sample_data['date'] = sample_data['date'].date().isoformat()
-        # Sometimes the sample number becomes a float #
-        sample_data['sample_num'] = int(sample_data['sample_num'])
         # Template the text #
         text = template_sample % sample_data
         text = text.replace('"nan",', 'null,')
@@ -215,8 +213,6 @@ for proj in projects:
     project_data['samples_json'] = samples_text
     # Sometimes the time is introduced in the date #
     if isinstance(project_data['date'], datetime.datetime): project_data['date'] = project_data['date'].date().isoformat()
-    # Sometimes the sample number becomes a float #
-    project_data['project_num'] = int(project_data['project_num'])
     # Template the text #
     text = template_proj % project_data
     text = text.replace('"nan",', 'null,')
