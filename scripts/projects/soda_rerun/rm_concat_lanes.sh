@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 rm ~/GEFES/raw/projects/soda_rerun/Sample_SS01/SS01_ACAGTG_L001_R1_001.fastq.gz
 rm ~/GEFES/raw/projects/soda_rerun/Sample_SS01/SS01_ACAGTG_L001_R2_001.fastq.gz
@@ -48,7 +48,3 @@ rm ~/GEFES/raw/projects/soda_rerun/Sample_ZL24/ZL24_TAGCTT_L002_R1_001.fastq.gz
 rm ~/GEFES/raw/projects/soda_rerun/Sample_ZL24/ZL24_TAGCTT_L002_R2_001.fastq.gz
 rm ~/GEFES/raw/projects/soda_rerun/Sample_ZL24/ZL24_TAGCTT_L003_R1_001.fastq.gz
 rm ~/GEFES/raw/projects/soda_rerun/Sample_ZL24/ZL24_TAGCTT_L003_R2_001.fastq.gz
-
-
-
-
