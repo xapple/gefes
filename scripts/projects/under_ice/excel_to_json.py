@@ -55,6 +55,8 @@ template_proj = u"""{
 
     "bioproject":           "%(bioproject)s",
 
+    "gefes_settings": {},
+
     "samples_base_dir":     "%(samples_base_dir)s",
     "samples": [
 

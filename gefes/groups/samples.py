@@ -1,6 +1,6 @@
 # Built-in modules #
-import os, re
-from collections import OrderedDict
+import os, importlib
+from collections import defaultdict, OrderedDict
 
 # Internal modules #
 from gefes.parsing.illumina      import IlluminaInfo
@@ -65,6 +65,8 @@ class Sample(object):
         if 'samples' in self.info: self.info.pop('samples')
         # Do we have extra information provided on this sample ? #
         if info is not None: self.info.update(info)
+        # We should have the 'gefes_settings' key even if it is missing #
+        if 'gefes_settings' not in self.info: self.info['gefes_settings'] = defaultdict(None)
         # Extract fields from the extra information #
         self.long_name = self.info.get('samples_long_name')
         # Does the info contain the file location ? #
@@ -141,10 +143,11 @@ class Sample(object):
     def quality_checker(self):
         """With what are we going to preprocess the sequences and clean them ?"""
         assert self.pair.format == 'fastq'
-        #info = self.info['gefes_settings']['quality_checker']
-        #obj = importlib(info['object']['source'], info['object']['name'])
-        #return obj(self.pair, self.clean)
-        return SlidingWindow(self.pair, self.clean)
+        info = self.info['gefes_settings']['quality_checker']
+        if info is None: return SlidingWindow(self.pair, self.clean)
+        module = importlib.import_module(info['object']['source'])
+        obj    = getattr(module, info['object']['name'])
+        return obj(self.pair, self.clean)
 
     @property
     def mappers(self):

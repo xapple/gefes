@@ -54,6 +54,8 @@ template_proj = u"""{
 
     "remarks":              "%(project_remarks)s",
 
+    "gefes_settings": {},
+
     "samples_base_dir":     "%(samples_base_dir)s",
     "samples": [
 

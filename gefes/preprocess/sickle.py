@@ -16,6 +16,7 @@ class Sickle(QualityChecker):
     The 'singletons' file contains reads that passed the filter in either
     the forward or reverse direction, but not the other.
     Expects version 1.33
+    You can't chose the window size, it's always 10% of read length.
     """
 
     short_name = 'sickle'
@@ -24,7 +25,6 @@ class Sickle(QualityChecker):
     url        = 'https://github.com/najoshi/sickle/'
     dependencies = []
 
-    window_size = 10 # Size of the window we will slide along the read
     threshold   = 20 # This is a PHRED score threshold
     min_length  = 50 # Minimum number of remaining base pairs
     discard_N   = True
@@ -37,6 +37,8 @@ class Sickle(QualityChecker):
                    "-f", self.source.fwd, "-r", self.source.rev,
                    "-o", self.dest.fwd,   "-p", self.dest.rev,
                    "-s", self.singletons,
+                   "-l", self.min_length,
+                   "-q", self.threshold,
                    "-t", "sanger"]
         if self.discard_N: command += "-n"
         # Call sickle #

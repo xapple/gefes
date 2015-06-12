@@ -35,6 +35,8 @@
 
     "bioproject":           "PRJNAXXXXXX",
 
+    "gefes_settings": {},
+
     "samples_base_dir":     "~/GEFES/raw/projects/under_ice/",
     "samples": [
 

@@ -1,14 +1,7 @@
 {
     "gefes_settings": {
-
-        "samples": {
-            "quality_checker": {
-                "object": {"source": "gefes.preprocess.sickle", "name": "Sickle"}
-            }
-        },
-
-        "project": {
-            "quality_checker": "asd"
+        "quality_checker": {
+            "object": {"source": "gefes.preprocess.sickle", "name": "Sickle"}
         }
     }
 }
