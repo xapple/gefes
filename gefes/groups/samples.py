@@ -166,7 +166,8 @@ class Sample(object):
         rev_files = [FASTQ(f) for f in self.raw_dir.files if rev_match(f)]
         shell_output("zcat %s |gzip > %s" % (' '.join(fwd_files), self.pair.fwd))
         shell_output("zcat %s |gzip > %s" % (' '.join(rev_files), self.pair.rev))
-        if remove_orig: for f in fwd_files + rev_files: f.remove()
+        if remove_orig:
+            for f in fwd_files + rev_files: f.remove()
 
     #-------------------------------- Shortcuts -----------------------------#
     @property
