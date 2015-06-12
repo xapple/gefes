@@ -9,11 +9,17 @@ A script to contain the procedure for running the soda evaluation project.
 # Internal modules #
 import gefes
 
+# Third party modules #
+from tqdm import tqdm
+
 #################################### Load #####################################
 # One project #
-proj = gefes.projects['soda_eval'].load()
+proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
 for s in samples: s.load()
+
+############################## Special Merging ################################
+for s in tqdm(samples): s.merge_lanes()
 
 ################################## Meta-data ##################################
 # Print number of sequences #

@@ -23,7 +23,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for s in samples: print "Map to co-assebmly:", s, bool(s.mapper.results)
+for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 # Project #
 

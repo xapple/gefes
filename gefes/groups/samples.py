@@ -1,5 +1,5 @@
 # Built-in modules #
-import os
+import os, re
 from collections import OrderedDict
 
 # Internal modules #
@@ -12,12 +12,13 @@ from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
 
 # First party modules #
-from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.autopaths import AutoPaths, FilePath, DirectoryPath
 from plumbing.cache     import property_cached
 from fasta              import PairedFASTA, PairedFASTQ
 from fasta.fastqc       import FastQC
 
 # Third party modules #
+from shell_command import shell_call
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -28,7 +29,7 @@ class Sample(object):
     It's a bunch of paired sequences all coming from the same particular IRL lab sample.
     Might or might not corresponds to an Illumina MID."""
 
-    raw_files_must_exist = False
+    raw_files_must_exist = True
 
     all_paths = """
     /logs/
@@ -71,7 +72,7 @@ class Sample(object):
         self.raw_dir = self.info.get('samples_base_dir', '')
         if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
         self.raw_dir += self.info.get('sample_directory', '')
-        if self.raw_dir and not self.raw_dir.endswith('/'): self.raw_dir += '/'
+        self.raw_dir = DirectoryPath(self.raw_dir)
         if 'forward_reads' in self.info: self.fwd_path = FilePath(self.raw_dir + self.info.get('forward_reads'))
         if 'reverse_reads' in self.info: self.rev_path = FilePath(self.raw_dir + self.info.get('reverse_reads'))
         # Do we have a number for this sample ? #
@@ -155,6 +156,17 @@ class Sample(object):
                             (self.project.assembly_71, self.mapper_71),
                             (self.project.assembly_81, self.mapper_81),
                             (self.project.merged, self.mapper_merged)))
+
+    #------------------------------ Special cases ---------------------------#
+    def merge_lanes(self):
+        """We got a run that had several lanes in the same sample directory.
+        We want to cat these to files called fwd.fastq.gz and rev.fastq.gz"""
+        fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
+        rev_match = lambda f: f.endswith('R2_001.fastq.gz')
+        fwd_files = [fwd_match(f) for f in self.raw_dir.flat_files]
+        rev_files = [rev_match(f) for f in self.raw_dir.flat_files]
+        shell_call("zcat %s |gzip -c > %s" % (' '.join(fwd_files), self.pair.fwd))
+        shell_call("zcat %s |gzip -c > %s" % (' '.join(rev_files), self.pair.rev))
 
     #-------------------------------- Shortcuts -----------------------------#
     @property
