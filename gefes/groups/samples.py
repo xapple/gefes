@@ -18,8 +18,7 @@ from fasta              import PairedFASTA, PairedFASTQ
 from fasta.fastqc       import FastQC
 
 # Third party modules #
-from shell_command import shell_call
-
+from shell_command import shell_output
 # Constants #
 home = os.environ['HOME'] + '/'
 
@@ -165,8 +164,8 @@ class Sample(object):
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
         fwd_files = [fwd_match(f) for f in self.raw_dir.flat_files]
         rev_files = [rev_match(f) for f in self.raw_dir.flat_files]
-        shell_call("zcat %s |gzip -c > %s" % (' '.join(fwd_files), self.pair.fwd))
-        shell_call("zcat %s |gzip -c > %s" % (' '.join(rev_files), self.pair.rev))
+        shell_output("zcat %s |gzip -c > %s" % (' '.join(fwd_files), self.pair.fwd))
+        shell_output("zcat %s |gzip -c > %s" % (' '.join(rev_files), self.pair.rev))
 
     #-------------------------------- Shortcuts -----------------------------#
     @property
