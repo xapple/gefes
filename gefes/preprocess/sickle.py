@@ -68,4 +68,4 @@ class SickleResults(QualityResults):
                     'single_records_kept':      '^FastQ single records kept (.+) .+$',
                     'paired_records_discarded': '^FastQ paired records discarded (.+) .+$',
                     'single_records_discarded': '^FastQ single records discarded (.+) .+$'}
-        return {k: int(re.findall(v, self.p.report.contents, re.M)) for k,v in patterns.items()}
+        return {k: int(re.findall(v, self.checker.p.report.contents, re.M)) for k,v in patterns.items()}

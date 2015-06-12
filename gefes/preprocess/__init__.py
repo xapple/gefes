@@ -4,7 +4,10 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
+
+# First party #
 from fasta import PairedFASTQ, FASTQ
+from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 
@@ -12,19 +15,29 @@ from fasta import PairedFASTQ, FASTQ
 class QualityChecker(object):
     """The base QualityChecker others should inherit from."""
 
-    def __repr__(self): return '<%s object of %s>' % (self.__class__.__name__, self.source)
+    all_paths = """
+    /report.txt
+    """
+
+    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.source)
     def __len__(self): return len(self.pair)
 
-    def __init__(self, source, dest=None):
+    def __init__(self, result_dir, source, dest=None, singletons=None):
         # Basic #
-        self.source = source
-        self.dest = dest
-        # Default case #
-        if dest is None:
+        self.result_dir = result_dir
+        self.source     = source
+        self.dest       = dest
+        self.singletons = singletons
+        # Destination #
+        if self.dest is None:
             self.dest = PairedFASTQ(self.source.fwd.prefix_path + '_clean.fastq',
                                     self.source.rev.prefix_path + '_clean.fastq')
         # Single read #
-        self.singletons = FASTQ(self.dest.fwd.directory + 'singletons.fastq')
+        if self.singletons is None:
+            self.singletons = FASTQ(self.dest.fwd.directory + 'singletons.fastq')
+        # Auto paths #
+        self.base_dir = self.result_dir # + self.short_name + '/'
+        self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self): raise NotImplementedError('You have to implement this method.')
 
@@ -34,10 +47,6 @@ class QualityChecker(object):
 ###############################################################################
 class QualityResults(object):
     """The base QualityResults others should inherit from."""
-
-    all_paths = """
-    /lorem
-    """
 
     def __nonzero__(self): return bool(self.dest)
 

@@ -144,10 +144,10 @@ class Sample(object):
         """With what are we going to preprocess the sequences and clean them ?"""
         assert self.pair.format == 'fastq'
         info = self.info['gefes_settings']['quality_checker']
-        if info is None: return SlidingWindow(self.pair, self.clean)
+        if info is None: return SlidingWindow(self.p.clean_dir, self.pair, self.clean)
         module = importlib.import_module(info['object']['source'])
         obj    = getattr(module, info['object']['name'])
-        return obj(self.pair, self.clean)
+        return obj(self.p.clean_dir, self.pair, self.clean)
 
     @property
     def mappers(self):

@@ -16,9 +16,7 @@ from tqdm import tqdm
 # One project #
 proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
-for s in samples:
-    s.raw_files_must_exist = False
-    s.load()
+for s in samples: s.load()
 
 ############################## Special Merging ################################
 for s in tqdm(samples): s.merge_lanes()
