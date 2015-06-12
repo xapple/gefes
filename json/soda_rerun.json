@@ -23,7 +23,7 @@
     "library_layout":       "Paired-end",
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
-    "read_length":          [100, "bp"],
+    "read_length":          [125, "bp"],
 
     "country":      "Austria",
     "location":     "Die Salzlacken des Seewinkels im Nationalpark Neusiedler See",
@@ -32,7 +32,7 @@
 
     "remarks":      "Corresponds to the samples that were amplicon sequenced in ILLUMITAG run 3, pool 8.",
 
-    "samples_base_dir": "~/GEFES/raw/projects/soda_eval/",
+    "samples_base_dir": "~/GEFES/raw/projects/soda_rerun/",
     "samples": [
 
         {

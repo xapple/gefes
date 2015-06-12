@@ -47,13 +47,12 @@ template_proj = u"""{
     "forward_read_length":  %(forward_read_length)s,
     "reverse_read_length":  %(reverse_read_length)s,
 
-    "date":                 "%(date)s",
-    "latitude":             [%(latitude)s, "N"],
-    "longitude":            [%(longitude)s, "E"],
     "country":              "%(country)s",
     "location":             "%(location)s",
 
     "bioproject":           "%(bioproject)s",
+
+    "remarks":              "%(remarks)s",
 
     "samples_base_dir":     "%(samples_base_dir)s",
     "samples": [
@@ -76,31 +75,33 @@ template_sample = u"""    {
         "forward_read_count":   %(fwd_count)s,
         "reverse_read_count":   %(rev_count)s,
 
+
         "organism":             "%(organism)s",
         "env_biome":            "%(env_biome)s",
         "env_feature":          "%(env_feature)s",
         "env_material":         "%(env_material)s",
         "design_description":   "%(design_description)s",
 
-        "biosample":            "%(biosample)s",
+        "date":                 "%(date)s",
 
-        "depth":                [%(depth)s, "m"],
-        "ph":                   %(ph)s,
-        "toc":                  [%(toc)s, "mg/l"],
-        "ton":                  [%(ton)s, "mg/l"],
-        "top":                  [%(top)s, "µg/l"],
-        "sulfate":              [%(sulfate)s, "mg/l"],
-        "oxygen":               [%(oxygen)s, "mg/l"],
-        "conductance":          [%(conductance)s, "µS/cm"],
+        "TSS":                  [%(tss)s, "mg/l"],
+        "DOC":                  [%(doc)s, "mg/l"],
         "temperature":          [%(temperature)s, "Celsius"],
-        "filtered_volume":      [%(filtered_volume)s, "ml"],
+        "pH":                   [%(ph)s, "-log10([H+])"],
+        "conductance":          [%(conductance)s, "μS/cm"],
+        "sodium":               [%(sodium)s, "mg/l", "Na"],
+        "sulfate":              [%(sulfate)s, "mg/l", "SO4"],
+        "bicarbonate":          [%(bicarbonate)s, "mg/l", "HCO3"],
+        "carbonate":            [%(carbonate)s, "mg/l", "CO3"],
+        "phosphorus":           [%(phosphorus)s, "mg/l", "Ptot"],
+        "chla":                 [%(chla)s, "mg/l"],
         "cell_counts":          [%(cell_counts)s, "cells/ml"],
-        "co2":                  [%(co2)s, "µM"],
-        "ch4":                  [%(ch4)s, "µM"],
-        "feII":                 [%(fe2)s, "µM"],
-        "feIII":                [%(fe3)s, "µM"],
-        "fe_total":             [%(fe_total)s, "µM"],
-        "suva":                 [%(suva)s, "mg/l*m"]
+        "real_name":            ["%(real_name)s", "de"],
+
+        "latitude":             [%(latitude)s, "N"],
+        "longitude":            [%(longitude)s, "E"],
+
+        "biosample":            "%(biosample)s"
     }"""
 
 ###############################################################################
@@ -109,6 +110,7 @@ correspondence = {
     u'Run name':                             'illumina_run_id',
     u'Sample name':                          'sample_directory',
     u'Base directory':                       'samples_base_dir',
+    u'Remarks':                              'remarks',
 
     u'Forward filename':                     'fwd_filename',
     u'Reverse filename':                     'rev_filename',
@@ -156,23 +158,19 @@ correspondence = {
     u'Bioproject':                   'bioproject',
     u'Biosample':                    'biosample',
 
-    u'Depth':                        "depth",
-    u'pH':                           "ph",
-    u"TOC average":                  "toc",
-    u"TON average":                  "ton",
-    u"TOP average":                  "top",
-    u"Sulfate average":              "sulfate",
-    u"Oxygen":                       "oxygen",
-    u"Cond.":                        "conductance",
-    u"Temp.":                        "temperature",
-    u"Volume chosen":                "filtered_volume",
-    u"Cell counts":                  "cell_counts",
-    u"CO2":                          "co2",
-    u"CH4":                          "ch4",
-    u"FeII":                         "fe2",
-    u"FeIII":                        "fe3",
-    u"Fe Total":                     "fe_total",
-    u"SUVA":                         "suva",
+    u"TSS":                          'tss',
+    u"DOC":                          'doc',
+    u"Temp.":                        'temperature',
+    u"pH":                           'ph',
+    u"Cond":                         'conductance',
+    u"Na":                           'sodium',
+    u"SO4":                          'sulfate',
+    u"HC03":                         'bicarbonate',
+    u"C03":                          'carbonate',
+    u"Ptot":                         'phosphorus',
+    u"Chla":                         'chla',
+    u"Cell counts":                  'cell_counts',
+    u"Real name":                    'real_name'
 }
 
 ###############################################################################
