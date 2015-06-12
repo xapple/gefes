@@ -24,8 +24,8 @@
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
     "instrument_software":  "v2.2.38",
-    "forward_read_length":  125.0,
-    "reverse_read_length":  125.0,
+    "forward_read_length":  124.0,
+    "reverse_read_length":  124.0,
 
     "date":                 "2014-03-18",
     "latitude":             [63.582139, "N"],
