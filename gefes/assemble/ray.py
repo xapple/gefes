@@ -26,13 +26,13 @@ hostname = socket.gethostname()
 ###############################################################################
 class Ray(object):
     """Will run the co-assembly of several samples by calling the Ray assembler.
-    https://github.com/sebhtml/ray
     Expects version 2.3.1
     We remove the contigs below the length cutoff threshold."""
 
     short_name = 'ray'
     long_name  = 'Ray assembler v2.3.1'
     executable = 'ray231'
+    url        = 'https://github.com/sebhtml/ray'
     dependencies = []
 
     all_paths = """

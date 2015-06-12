@@ -16,14 +16,15 @@ from shell_command import shell_output
 
 ###############################################################################
 class Bwa(Mapper):
-    """Use BWA at http://bio-bwa.sourceforge.net
-    to maps reads from a Sample object back to the contigs of an
+    """Use BWA to maps reads from a Sample object back to the contigs of an
     Assembly object. Expects version 0.7.12-r1039 of bwa.
     """
 
     short_name = 'bwa-mem'
     long_name  = 'BWA-MEM 0.7.12-r1039'
     executable = 'bwa'
+    url        = 'http://bio-bwa.sourceforge.net'
+    dependencies = []
 
     def run(self, verbose=True):
         # Make our options #

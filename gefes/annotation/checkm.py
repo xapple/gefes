@@ -14,14 +14,14 @@ import sh
 
 ###############################################################################
 class Checkm(object):
-    """Use CheckM at https://github.com/Ecogenomics/CheckM/wiki
-    to evaluate a bin of contigs.
+    """Use CheckM at to evaluate a bin of contigs.
     Expects version v0.9.7.
     """
 
     short_name = 'checkm'
     long_name  = 'CheckM v0.9.7'
     executable = 'checkm'
+    url        = 'https://github.com/Ecogenomics/CheckM/wiki'
     dependencies = ['hmmer', 'prodigal', 'pplacer']
 
     all_paths = """

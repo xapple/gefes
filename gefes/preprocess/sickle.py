@@ -14,31 +14,35 @@ import sh
 class Sickle(QualityChecker):
     """Takes care of running the sickle program that removes low quality reads.
     The 'singletons' file contains reads that passed the filter in either
-    the forward or reverse direction, but not the other"""
+    the forward or reverse direction, but not the other.
+    Expects version 1.33
+    """
+
+    short_name = 'sickle'
+    long_name  = 'Sickle cleaner v1.33'
+    executable = 'sickle133'
+    url        = 'https://github.com/najoshi/sickle/'
+    dependencies = []
 
     def run(self):
-        # Cleanup #
-        self.fwd.remove()
-        self.rev.remove()
-        self.single.remove()
-        self.p.report.remove()
+        # Check version #
+        assert "version 1.33" in sh.sickle133('--version')
         # Call sickle #
-        sh.sickle("pe", "-f", self.pool.fwd, "-r", self.pool.rev, "-t", "sanger", "-n",
-                  "-o", self.fwd, "-p", self.rev, "-s", self.single, _out=str(self.p.report))
+        sh.sickle133("pe", "-n",
+                     "-f", self.source.fwd, "-r", self.source.rev,
+                     "-o", self.dest.fwd,   "-p", self.dest.rev,
+                     "-s", self.singletons,
+                     "-t", "sanger",
+                     _out=self.p.report.path)
         # Make sanity checks #
-        self.parse_stats()
-        assert len(self.fwd) == len(self.rev)
-        assert self.paired_records_kept == len(self.fwd)
-        assert self.single_records_kept == len(self.single)
-        assert self.kept + self.discarded == len(self.pool.fwd)
-        # Make sanity checks #
-        assert len(self.source) == self.discarded + len(self.singletons) + len(self.dest)
+        assert len(self.dest.fwd) == len(self.dest.rev)
+        assert len(self.source) == len(self.dest) + len(self.singletons) + self.discarded
         # Return result #
         return self.results
 
     @property_cached
     def results(self):
-        results = SickleResults(self.source, self.dest, self.singletons)
+        results = SickleResults(self, self.source, self.dest, self.singletons)
         if not results: raise Exception("You can't access results from sickle before running the algorithm.")
         return results
 
@@ -48,9 +52,8 @@ class SickleResults(QualityResults):
     @property_cached
     def stats(self):
         """Parse the report file for statistics"""
-        result = {}
-        result['paired_records_kept']      = int(re.findall('^FastQ paired records kept (.+) .+$',      self.p.report.contents, re.M))
-        result['single_records_kept']      = int(re.findall('^FastQ single records kept (.+) .+$',      self.p.report.contents, re.M))
-        result['paired_records_discarded'] = int(re.findall('^FastQ paired records discarded (.+) .+$', self.p.report.contents, re.M))
-        result['single_records_discarded'] = int(re.findall('^FastQ single records discarded (.+) .+$', self.p.report.contents, re.M))
-        return result
+        patterns = {'paired_records_kept':      '^FastQ paired records kept (.+) .+$',
+                    'single_records_kept':      '^FastQ single records kept (.+) .+$',
+                    'paired_records_discarded': '^FastQ paired records discarded (.+) .+$',
+                    'single_records_discarded': '^FastQ single records discarded (.+) .+$'}
+        return {k: int(re.findall(v, self.p.report.contents, re.M)) for k,v in patterns.items()}

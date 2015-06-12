@@ -14,12 +14,12 @@ import sh
 ###############################################################################
 class Prokka(object):
     """Will run the Prokka software on one single contig.
-    http://www.vicbioinformatics.com/software.prokka.shtml
     Expects version 1.10"""
 
     short_name = 'prokka'
     long_name  = 'Prokka v1.10'
     executable = 'prokka'
+    url        = 'http://www.vicbioinformatics.com/software.prokka.shtml'
     dependencies = ['parallel']
 
     all_paths= """

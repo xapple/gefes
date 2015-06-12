@@ -41,7 +41,8 @@ class QualityResults(object):
 
     def __nonzero__(self): return bool(self.dest)
 
-    def __init__(self, source, dest, singletons):
+    def __init__(self, checker, source, dest, singletons):
+        self.checker    = checker
         self.source     = source
         self.dest       = dest
         self.singletons = singletons

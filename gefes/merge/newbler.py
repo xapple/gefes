@@ -26,13 +26,14 @@ class Newbler(Merger):
     """Used for merging of several assemblies together.
     Acts as a new assembly.
     Newbler is outdated as Roche has stopped making sequencing machines in 2013.
-    Newbler is closed source and Roche dismissed the community
+    Newbler is closed source and Roche dismissed the community's
     petition to make it open source.
     You can only obtain the software via a registration form."""
 
     short_name = 'newbler'
     long_name  = 'Newbler in Roche GS De Novo Assembler software v2.9'
     executable = 'runAssembly'
+    url        = ''
     dependencies = []
 
     all_paths = """

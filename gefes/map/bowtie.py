@@ -16,14 +16,15 @@ import sh
 
 ###############################################################################
 class Bowtie(Mapper):
-    """Uses Bowtie2 at http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
-    to maps reads from a Sample object back to an Assembly object.
+    """Uses Bowtie2 to maps reads from a Sample object back to an Assembly object.
     Expects version 2.2.4.
     """
 
     short_name = 'bowtie'
     long_name  = 'Bowtie2 2.2.4'
     executable = 'bowtie2'
+    url        = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
+    dependencies = []
 
     def run(self, verbose=True):
         # Check both type of indexes exist #

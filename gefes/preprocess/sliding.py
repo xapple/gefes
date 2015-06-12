@@ -36,7 +36,7 @@ class SlidingWindow(QualityChecker):
                 elif two: singles.add_seq(two)
                 else: self.discarded += 1
         # Make sanity checks #
-        assert len(self.source) == self.discarded + len(self.singletons) + len(self.dest)
+        assert len(self.source) == len(self.dest) + len(self.singletons) + self.discarded
         # Return result #
         return self.results
 
@@ -78,7 +78,7 @@ class SlidingWindow(QualityChecker):
 
     @property_cached
     def results(self):
-        results = SlidingWindowResults(self.source, self.dest, self.singletons)
+        results = SlidingWindowResults(self, self.source, self.dest, self.singletons)
         if not results: raise Exception("You can't access results from the quality check before running the algorithm.")
         return results
 
@@ -113,7 +113,7 @@ def test():
     scores = map(int, scores.split())
     seq    = ''.join(seq.split())
     assert len(seq) == len(scores)
-    # Make into biopython object #
+    # Make them into biopython objects #
     from Bio.SeqRecord import SeqRecord
     from Bio.Seq import Seq
     read = SeqRecord(Seq(seq), id="test", name="test", description="test")
