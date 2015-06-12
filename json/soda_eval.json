@@ -23,7 +23,7 @@
     "library_layout":       "Paired-end",
     "platform":             "ILLUMINA",
     "instrument_model":     "Illumina HiSeq",
-    "instrument_software":  "v2.2.58",
+    "instrument_software":  "v2.2.38",
     "forward_read_length":  100.0,
     "reverse_read_length":  100.0,
 
