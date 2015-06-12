@@ -83,10 +83,6 @@ class Sample(object):
         else:            self.name = name
         # If we still don't have one, just use the file name #
         if self.name is None: self.name = self.fwd_path.short_prefix
-        # Check that the files exist #
-        if self.raw_files_must_exist:
-            self.fwd_path.must_exist()
-            self.rev_path.must_exist()
         # Is it a FASTA pair or a FASTQ pair ? #
         if "fastq" in self.fwd_path: self.pair = PairedFASTQ(self.fwd_path, self.rev_path)
         else:                        self.pair = PairedFASTA(self.fwd_path, self.rev_path)
@@ -104,6 +100,10 @@ class Sample(object):
         self.loaded = True
         # Check that the project is loaded #
         if not self.project.loaded: self.project.load()
+        # Check that the files exist #
+        if self.raw_files_must_exist:
+            self.fwd_path.must_exist()
+            self.rev_path.must_exist()
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Maybe we have an Illumina report XML #
