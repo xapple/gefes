@@ -105,6 +105,9 @@ class Sample(object):
         if self.raw_files_must_exist:
             self.fwd_path.must_exist()
             self.rev_path.must_exist()
+        # For speed let's update the sequence count cache if available #
+        if self.info['forward_read_count'] is not None: self.pair.fwd.count = self.info['forward_read_count']
+        if self.info['reverse_read_count'] is not None: self.pair.rev.count = self.info['reverse_read_count']
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Maybe we have an Illumina report XML #

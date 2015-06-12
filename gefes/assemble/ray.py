@@ -102,7 +102,8 @@ class Ray(object):
 
     #-------------------------------------------------------------------------#
     def sisu(self):
-        """Run the assembly on the Sisu super computer at sisu-login1.csc.fi"""
+        """Run the assembly on the Sisu super computer at
+        https://research.csc.fi/sisu-user-guide"""
         return sh.aprun('-n', num_processors, self.executable,
                         '-k', self.kmer_size,
                         '-o', self.out_dir,
@@ -111,7 +112,8 @@ class Ray(object):
                         _err=self.p.stderr.path)
 
     def halvan(self):
-        """Run the assembly on the large memory computer at http://www.uppmax.uu.se/halvan-user-guide"""
+        """Run the assembly on the large memory computer at
+        http://www.uppmax.uu.se/halvan-user-guide"""
         return sh.mpiexec('-n', num_processors, self.executable,
                           '-k', self.kmer_size,
                           '-o', self.out_dir,
@@ -120,7 +122,8 @@ class Ray(object):
                           _err=self.p.stderr.path)
 
     def milou(self):
-        """Run the assembly on one node of the milou cluster at http://www.uppmax.uu.se/milou-user-guide"""
+        """Run the assembly on one node of the milou cluster at
+        http://www.uppmax.uu.se/milou-user-guide"""
         if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
         return sh.mpiexec('-n', num_processors, self.executable,
                           '-k', self.kmer_size,

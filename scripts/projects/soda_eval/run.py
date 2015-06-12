@@ -40,3 +40,4 @@ for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 for s in samples:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
+

@@ -1,3 +1,6 @@
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 import re
 
@@ -43,11 +46,12 @@ class Sickle(QualityChecker):
         if self.discard_N: command += "-n"
         # Call sickle #
         sh.sickle133(*command, _out=self.p.report.path)
-        # Count discarded #
-        self.discarded = self.resutls.stats['paired_records_discarded']
-        # Make sanity checks #
-        assert self.resutls.stats['paired_records_kept'] == len(self.dest.fwd) == len(self.dest.rev)
+        # Count discarded and check #
+        self.discarded = self.results.stats['paired_records_discarded']/2
+        assert self.resutls.stats['single_records_discarded'] == self.resutls.stats['single_records_kept']
         assert self.resutls.stats['single_records_discarded'] == len(self.singletons)
+        # Make other sanity checks #
+        assert self.resutls.stats['paired_records_kept']/2 == len(self.dest.fwd) == len(self.dest.rev)
         assert len(self.source) == len(self.dest) + len(self.singletons) + self.discarded
         # Return result #
         return self.results
@@ -68,4 +72,4 @@ class SickleResults(QualityResults):
                     'single_records_kept':      '^FastQ single records kept (.+) .+$',
                     'paired_records_discarded': '^FastQ paired records discarded (.+) .+$',
                     'single_records_discarded': '^FastQ single records discarded (.+) .+$'}
-        return {k: int(re.findall(v, self.checker.p.report.contents, re.M)) for k,v in patterns.items()}
+        return {k: int(re.findall(v, self.checker.p.report.contents, re.M)[0]) for k,v in patterns.items()}
