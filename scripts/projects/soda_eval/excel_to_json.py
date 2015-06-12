@@ -100,7 +100,7 @@ template_sample = u"""    {
         "chla":                    [%(chla)s, "mg/l"],
         "cell_counts":             [%(cell_counts)s, "cells/ml"],
 
-        "remarks":                 "%(sample_remarks)s",
+        "remarks":                 "%(sample_remarks)s"
     }"""
 
 ###############################################################################

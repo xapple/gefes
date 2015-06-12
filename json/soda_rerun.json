@@ -75,7 +75,7 @@
         "chla":                    [null, "mg/l"],
         "cell_counts":             [null, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -116,7 +116,7 @@
         "chla":                    [null, "mg/l"],
         "cell_counts":             [null, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -157,7 +157,7 @@
         "chla":                    [null, "mg/l"],
         "cell_counts":             [null, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -198,7 +198,7 @@
         "chla":                    [160.7, "mg/l"],
         "cell_counts":             [null, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -239,7 +239,7 @@
         "chla":                    [182.8, "mg/l"],
         "cell_counts":             [329062500, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -280,7 +280,7 @@
         "chla":                    [45.4, "mg/l"],
         "cell_counts":             [281812500, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -321,7 +321,7 @@
         "chla":                    [723, "mg/l"],
         "cell_counts":             [81000000, "cells/ml"],
 
-        "remarks":                 null,
+        "remarks":                 "nan"
     },
 
     {
@@ -362,7 +362,7 @@
         "chla":                    [31.4, "mg/l"],
         "cell_counts":             [null, "cells/ml"],
 
-        "remarks":                 "This one is found in ILLUMITAG run 4, pool 4 instead.",
+        "remarks":                 "This one is found in ILLUMITAG run 4, pool 4 instead."
     }
     ]
 }
