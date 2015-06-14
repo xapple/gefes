@@ -39,7 +39,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-print                   "Co-assembly:",     proj, bool(s.assembly.results)
+print                   "Co-assembly:",     proj, bool(proj.assembly.results)
 for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
@@ -52,8 +52,9 @@ for s in samples:
 old = "/homeappl/home/bob/"
 new = "/wrk/alice/"
 for s in samples:
-    print s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
-    print s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+    s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
+    s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+    s.singletons.link_from(s.singletons.path.replace(old, new))
 
 ################################# Co-Assembly #################################
 proj.runner.run_slurm(steps     = ['assembly.run'],
@@ -61,5 +62,5 @@ proj.runner.run_slurm(steps     = ['assembly.run'],
                       cores     = 42*24,
                       time      = '36:00:00',
                       partition = 'large',
-                      job_name  = 'alinen_ray',
+                      job_name  = proj.name + '_ray71',
                       email     = False)

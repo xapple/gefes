@@ -38,7 +38,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for p in projects: print "Co-assembly:",       p, bool(s.assembly.results)
+for p in projects: print "Co-assembly:",       p, bool(p.assembly.results)
 for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
@@ -57,8 +57,9 @@ for s in kt:
 old = "/homeappl/home/bob/"
 new = "/wrk/alice/"
 for s in samples:
-    print s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
-    print s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+    s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
+    s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+    s.singletons.link_from(s.singletons.path.replace(old, new))
 
 ################################# Co-Assembly #################################
 for proj in projects:

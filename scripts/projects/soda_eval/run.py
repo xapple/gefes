@@ -33,6 +33,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+print                   "Co-assembly:",     proj, bool(proj.assembly.results)
 for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
@@ -41,3 +42,19 @@ for s in samples:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
+########################## Link from Sisu to Taito ############################
+old = "/homeappl/home/lsinclai/"
+new = "/wrk/eiler/"
+for s in samples:
+    s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
+    s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+    s.singletons.link_from(s.singletons.path.replace(old, new))
+
+################################# Co-Assembly #################################
+proj.runner.run_slurm(steps     = ['assembly.run'],
+                      machines  = 24,
+                      cores     = 24*24,
+                      time      = '12:00:00',
+                      partition = 'small',
+                      job_name  = proj.name + '_ray71',
+                      email     = False)
