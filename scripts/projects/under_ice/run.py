@@ -17,7 +17,8 @@ kt = gefes.projects['under_ice_kt'].load()
 for s in bt.samples: s.load()
 for s in lb.samples: s.load()
 for s in kt.samples: s.load()
-samples = bt.samples + lb.samples + kt.samples
+samples = tuple(bt.samples + lb.samples + kt.samples)
+projects = (bt, lb, kt)
 
 ################################## Meta-data ##################################
 # Print number of sequences #
@@ -37,6 +38,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+for p in projects: print "Co-assembly:",       p, bool(s.assembly.results)
 for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
@@ -50,3 +52,20 @@ for s in lb:
 for s in kt:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
+
+########################## Link from Sisu to Taito ############################
+old = "/homeappl/home/bob/"
+new = "/wrk/alice/"
+for s in samples:
+    print s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
+    print s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
+
+################################# Co-Assembly #################################
+for proj in projects:
+    proj.runner.run_slurm(steps     = ['assembly.run'],
+                          machines  = 24,
+                          cores     = 24*24,
+                          time      = '12:00:00',
+                          partition = 'small',
+                          job_name  = proj.name + '_ray71',
+                          email     = False)

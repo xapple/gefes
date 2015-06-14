@@ -20,9 +20,6 @@ from fasta import FASTA
 # Third party modules #
 import sh
 
-# Constant #
-hostname = socket.gethostname()
-
 ###############################################################################
 class Ray(object):
     """Will run the co-assembly of several samples by calling the Ray assembler.
@@ -124,7 +121,7 @@ class Ray(object):
     def milou(self):
         """Run the assembly on one node of the milou cluster at
         http://www.uppmax.uu.se/milou-user-guide"""
-        if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = hostname
+        if 'SLURM_NODELIST' not in os.environ: os.environ['SLURM_NODELIST'] = socket.gethostname()
         return sh.mpiexec('-n', num_processors, self.executable,
                           '-k', self.kmer_size,
                           '-o', self.out_dir,
