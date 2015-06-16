@@ -18,13 +18,14 @@ standard_db = home + 'databases/kraken/standard'
 
 ###############################################################################
 class Kraken(object):
-    """Use Kraken at http://bowtie-bio.sourceforge.net/bowtie2/index.shtml
-    to predict taxonomy on the raw reads. Expects version 1.1.11.
+    """Use Kraken at to predict taxonomy on the raw reads.
+    Expects version 1.1.11.
     """
 
-    short_name = 'kraken'
-    long_name  = 'Kraken v1.1.11'
-    executable = 'kraken'
+    short_name   = 'kraken'
+    long_name    = 'Kraken v1.1.11'
+    executable   = 'kraken'
+    url          = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
     dependencies = ['jellyfish']
 
     all_paths = """
