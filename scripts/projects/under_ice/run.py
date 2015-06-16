@@ -20,6 +20,10 @@ for s in kt.samples: s.load()
 samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
+# Don't run it #
+import sys
+sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+
 ################################## Meta-data ##################################
 # Print number of sequences #
 for s in samples: print s.pair.fwd.count
@@ -31,15 +35,15 @@ for s in samples: print s.pair.rev.md5
 
 ################################ Status report ################################
 # How far did we run things #
-for s in samples: print "Raw:",                s, bool(s.pair)
-for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
-for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
-for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
-for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
-for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
-for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for p in projects: print "Co-assembly:",       p, bool(p.assembly.results)
-for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
+for s in samples:  print "Raw:",                s, bool(s.pair)
+for s in samples:  print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
+for s in samples:  print "Cleaned:",            s, bool(s.quality_checker.results)
+for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
+for s in samples:  print "Initial taxa:",       s, bool(s.kraken.results)
+for s in samples:  print "Solo-assembly:",      s, bool(s.assembly.results)
+for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+for p in projects: print "Co-assembly:",        p, bool(p.assembly.results)
+for s in samples:  print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
 # Clean #
@@ -71,12 +75,12 @@ for proj in projects: proj.runner.run_slurm(steps=['assembly_61.run'], job_name=
 for proj in projects: proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
-for proj in projects: print proj.name, proj.assembly_71.p.filtered.exists
-
+import os
+for proj in projects: print proj.name, os.path.exists(proj.assembly_71.p.filtered+'.fai')
 from fasta import FASTA
-for proj in projects:
-    params = dict(new_path=proj.assembly_71.p.filtered, lower_bound=1000)
-    print FASTA(proj.assembly_71.p.Contigs).extract_length(**params).count
+for proj in projects: print proj.name, FASTA(proj.assembly_51.p.filtered).index_samtools()
+for s in samples: print s.name, os.path.exists(s.assembly.p.filtered+'.fai')
+for s in samples: print s.name, FASTA(s.assembly.p.filtered).index_samtools()
 
 
 ################################# Solo-Assembly ###############################

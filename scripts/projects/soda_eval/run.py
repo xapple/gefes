@@ -15,6 +15,10 @@ proj = gefes.projects['soda_eval'].load()
 samples = proj.samples
 for s in samples: s.load()
 
+# Don't run it #
+import sys
+sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+
 ################################## Meta-data ##################################
 # Print number of sequences #
 for s in samples: print s.pair.fwd.count

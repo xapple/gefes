@@ -18,6 +18,10 @@ proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
 for s in samples: s.load()
 
+# Don't run it #
+import sys
+sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+
 ############################## Special Merging ################################
 for s in tqdm(samples): s.merge_lanes()
 
