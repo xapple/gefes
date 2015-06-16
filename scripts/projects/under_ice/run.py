@@ -70,3 +70,12 @@ for proj in projects:
                           partition = 'small',
                           job_name  = proj.name + '_ray71',
                           email     = False)
+
+################################# Solo-Assembly ###############################
+params = {'steps'     : ['assembly.run'],
+          'machines'  : 8,
+          'cores'     : 8*24,
+          'time'      : '12:00:00',
+          'partition' : 'small'}
+
+for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)

@@ -34,7 +34,7 @@ class Ray(object):
 
     all_paths = """
     /output/Contigs.fasta
-    /output/stdout.txt
+    /output/log.txt
     /stdout.txt
     /stderr.txt
     /filtered_contigs.fasta
@@ -80,7 +80,7 @@ class Ray(object):
         elif current_server == 'milou':  stats = self.milou()
         else:                            stats = self.local()
         # Print the report #
-        with open(self.p.stdout, 'w') as handle: handle.write(str(stats))
+        with open(self.p.log, 'w') as handle: handle.write(str(stats))
         # Check it worked #
         if not self.p.Contigs.exists: raise Exception("Ray exited with status 0 but did not create any contigs.")
         # Check there is something #
