@@ -70,6 +70,13 @@ proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', *
 proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
 proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
+import os
+from fasta import FASTA
+print proj.name, os.path.exists(proj.assembly_51.p.filtered+'.fai')
+print proj.name, FASTA(proj.assembly_51.p.filtered).index_samtools()
+for s in samples: print s.name, os.path.exists(s.assembly.p.filtered+'.fai')
+for s in samples: print s.name, FASTA(s.assembly.p.filtered).index_samtools()
+
 ################################# Solo-Assembly ###############################
 params = {'steps'     : ['assembly.run'],
           'machines'  : 12,
