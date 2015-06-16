@@ -57,13 +57,14 @@ for s in samples:
     s.singletons.link_from(s.singletons.path.replace(old, new))
 
 ################################# Co-Assembly #################################
-params = {'steps'     : ['assembly.run'],
-          'machines'  : 42,
+params = {'machines'  : 42,
           'cores'     : 42*24,
           'time'      : '36:00:00',
           'partition' : 'large'}
-
-proj.runner.run_slurm(job_name = proj.name+'_ray',**params)
+proj.runner.run_slurm(steps=['assembly_51.run'], job_name=proj.name+'_ray_51', **params)
+proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', **params)
+proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
+proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
 ################################# Solo-Assembly ###############################
 params = {'steps'     : ['assembly.run'],
@@ -73,3 +74,4 @@ params = {'steps'     : ['assembly.run'],
           'partition' : 'small'}
 
 for s in proj.samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
+for s in proj.samples: print s.runner.slurm_job.log_tail

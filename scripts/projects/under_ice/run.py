@@ -62,14 +62,22 @@ for s in samples:
     s.singletons.link_from(s.singletons.path.replace(old, new))
 
 ################################# Co-Assembly #################################
+params = {'machines'  : 24,
+          'cores'     : 24*24,
+          'time'      : '12:00:00',
+          'partition' : 'small'}
+for proj in projects: proj.runner.run_slurm(steps=['assembly_51.run'], job_name=proj.name+'_ray_51', **params)
+for proj in projects: proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', **params)
+for proj in projects: proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
+for proj in projects: proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
+
+for proj in projects: print proj.name, proj.assembly_71.p.filtered.exists
+
+from fasta import FASTA
 for proj in projects:
-    proj.runner.run_slurm(steps     = ['assembly.run'],
-                          machines  = 24,
-                          cores     = 24*24,
-                          time      = '12:00:00',
-                          partition = 'small',
-                          job_name  = proj.name + '_ray71',
-                          email     = False)
+    params = dict(new_path=proj.assembly_71.p.filtered, lower_bound=1000)
+    print FASTA(proj.assembly_71.p.Contigs).extract_length(**params).count
+
 
 ################################# Solo-Assembly ###############################
 params = {'steps'     : ['assembly.run'],
