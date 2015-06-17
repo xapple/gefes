@@ -60,29 +60,38 @@ for s in samples:
     s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
     s.singletons.link_from(s.singletons.path.replace(old, new))
 
-################################# Co-Assembly #################################
-params = {'machines'  : 42,
-          'cores'     : 42*24,
-          'time'      : '36:00:00',
-          'partition' : 'large'}
+############################### Co-Assemblies #################################
+params = dict(machines=42, cores=42*24, time='36:00:00', partition='large')
 proj.runner.run_slurm(steps=['assembly_51.run'], job_name=proj.name+'_ray_51', **params)
 proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', **params)
 proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
 proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
+# Fix # TODO
 import os
 from fasta import FASTA
 print proj.name, os.path.exists(proj.assembly_51.p.filtered+'.fai')
 print proj.name, FASTA(proj.assembly_51.p.filtered).index_samtools()
-for s in samples: print s.name, os.path.exists(s.assembly.p.filtered+'.fai')
-for s in samples: print s.name, FASTA(s.assembly.p.filtered).index_samtools()
 
 ################################# Solo-Assembly ###############################
-params = {'steps'     : ['assembly.run'],
-          'machines'  : 12,
-          'cores'     : 12*24,
-          'time'      : '12:00:00',
-          'partition' : 'small'}
+params = dict(steps=['assembly.run'], machines=12, cores=12*24, time='12:00:00', partition='small')
+for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
 
-for s in proj.samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
-for s in proj.samples: print s.runner.slurm_job.log_tail
+########################## Link from Taito to Sisu ############################
+old = "/homeappl/home/alice/"
+new = "/wrk/bob/"
+for s in samples:
+    pass
+
+################################ Merge-Assembly ###############################
+params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
+
+################################## Mappings ###################################
+params = dict(machines=1, cores=1, threads=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+for s in samples: s.runner.run_slurm(steps=['mapper_51.run'],     job_name=s.name + "_co_51_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_61.run'],     job_name=s.name + "_co_61_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_81.run'],     job_name=s.name + "_co_81_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mono_mapper.run'],   job_name=s.name + "_merge_map", **params)

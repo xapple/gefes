@@ -65,21 +65,32 @@ for s in samples:
     s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
     s.singletons.link_from(s.singletons.path.replace(old, new))
 
-################################# Co-Assembly #################################
-params = {'machines'  : 24,
-          'cores'     : 24*24,
-          'time'      : '12:00:00',
-          'partition' : 'small'}
+############################### Co-Assemblies #################################
+params = dict(machines=24, cores=24*24, time='12:00:00', partition='small')
 for proj in projects: proj.runner.run_slurm(steps=['assembly_51.run'], job_name=proj.name+'_ray_51', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
-################################# Solo-Assembly ###############################
-params = {'steps'     : ['assembly.run'],
-          'machines'  : 8,
-          'cores'     : 8*24,
-          'time'      : '12:00:00',
-          'partition' : 'small'}
-
+############################### Solo-Assemblies ###############################
+params = dict(steps=['assembly.run'], machines=8, cores=8*24, time='12:00:00', partition='small')
 for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
+
+########################## Link from Taito to Sisu ############################
+old = "/homeappl/home/alice/"
+new = "/wrk/bob/"
+for s in samples:
+    pass
+
+################################ Merge-Assembly ###############################
+params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
+
+################################## Mappings ###################################
+params = dict(machines=1, cores=1, threads=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+for s in samples: s.runner.run_slurm(steps=['mapper_51.run'],     job_name=s.name + "_co_51_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_61.run'],     job_name=s.name + "_co_61_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_81.run'],     job_name=s.name + "_co_81_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
+for s in samples: s.runner.run_slurm(steps=['mono_mapper.run'],   job_name=s.name + "_merge_map", **params)
