@@ -29,8 +29,10 @@ class Bowtie(Mapper):
     def run(self, verbose=True, threads=None):
         # Check both type of indexes exist #
         self.pre_run()
+        # Variable threads #
+        if threads is None: threads = num_processors
         # Make our options #
-        self.options = ['-p', num_processors if threads is None else threads,
+        self.options = ['-p', str(threads),
                         '-x', self.assembly.results.contigs_fasta,
                         '-1', self.sample.clean.fwd,
                         '-2', self.sample.clean.rev,
@@ -38,7 +40,7 @@ class Bowtie(Mapper):
         # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.clean.format == 'fasta': self.options += ['-f']
         # Do the mapping #
-        if verbose: print "Launching Bowtie on sample '%s' with %i cores" % (self.sample.name, num_processors)
+        if verbose: print "Launching Bowtie on sample '%s' with %i cores" % (self.sample.name, threads)
         if verbose: print "Mapping against assembly '%s'." % self.assembly
         sys.stdout.flush()
         sh.bowtie2(*self.options)
