@@ -27,7 +27,7 @@ class Bowtie(Mapper):
     dependencies = []
 
     def run(self, verbose=True, threads=None):
-        print "Threads is": threads
+        print "Threads is:", threads
         # Check both type of indexes exist #
         self.pre_run()
         # Variable threads #
