@@ -26,11 +26,11 @@ class Bowtie(Mapper):
     url        = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
     dependencies = []
 
-    def run(self, verbose=True):
+    def run(self, verbose=True, threads=None):
         # Check both type of indexes exist #
         self.pre_run()
         # Make our options #
-        self.options = ['-p', num_processors,
+        self.options = ['-p', num_processors if threads is None else threads,
                         '-x', self.assembly.results.contigs_fasta,
                         '-1', self.sample.clean.fwd,
                         '-2', self.sample.clean.rev,
