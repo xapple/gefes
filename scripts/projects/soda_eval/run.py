@@ -37,7 +37,7 @@ for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.result
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-print                   "Co-assembly:",     proj, bool(proj.assembly.results)
+for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
 for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################

@@ -42,7 +42,7 @@ for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc.resul
 for s in samples:  print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples:  print "Solo-assembly:",      s, bool(s.assembly.results)
 for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for p in projects: print "Co-assembly:",        p, bool(p.assembly.results)
+for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v.results)) for k,v in p.assemblies.items()])
 for s in samples:  print "Map to co-assembly:", s, bool(s.mapper.results)
 
 ################################ Preprocessing ################################
@@ -79,18 +79,27 @@ for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
 ########################## Link from Sisu to Taito ############################
 old = "/homeappl/home/alice/"
 new = "/wrk/bob/"
-for p in projects: p.p.assembly_dir.link_from(p.p.assembly_dir.path.replace(old, new), safe=True)
-for s in samples:  s.p.assembly_dir.link_from(s.p.assembly_dir.path.replace(old, new), safe=True)
+for p in projects:
+    print "rsync -av --progress %s %s" % (p.p.assembly_dir.path.replace(old, new), p.p.assembly_dir)
+for s in samples:
+    print "rsync -av --progress %s %s" % (s.p.assembly_dir.path.replace(old, new), s.p.assembly_dir)
 
 ################################ Merge-Assembly ###############################
-params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun',
+              memory=120000, constraint='hsw')
 proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
 
-################################## Mappings ###################################
-params = dict(machines=1, cores=1, threads=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
+########################### Mappings to Co-Assembly ###########################
+params = dict(machines=1, cores=1, time='00:30:00', partition='test',
+              threads=6, mem_per_cpu=5300, constraint='hsw')
+s = samples[0]
+s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map_test", **params)
+
+params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun',
+              threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=['mapper_51.run'],     job_name=s.name + "_co_51_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_61.run'],     job_name=s.name + "_co_61_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
+for s in samples[1:]: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_81.run'],     job_name=s.name + "_co_81_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
 for s in samples: s.runner.run_slurm(steps=['mono_mapper.run'],   job_name=s.name + "_merge_map", **params)
