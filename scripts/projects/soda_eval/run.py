@@ -46,9 +46,9 @@ for s in samples:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
-########################## Link from Sisu to Taito ############################
-old = "/homeappl/home/lsinclai/"
-new = "/wrk/eiler/"
+########################## Link from Taito to Sisu ############################
+old = "/homeappl/home/bob/"
+new = "/wrk/alice/"
 for s in samples:
     s.clean.fwd.link_from(s.clean.fwd.path.replace(old, new))
     s.clean.rev.link_from(s.clean.rev.path.replace(old, new))
@@ -65,11 +65,11 @@ proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', *
 params = dict(steps=['assembly.run'], machines=6, cores=6*24, time='12:00:00', partition='small')
 for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
 
-########################## Link from Taito to Sisu ############################
+########################## Link from Sisu to Taito ############################
 old = "/homeappl/home/alice/"
 new = "/wrk/bob/"
-for s in samples:
-    pass
+proj.p.assembly_dir.link_from(proj.p.assembly_dir.path.replace(old, new), safe=True)
+for s in samples:  s.p.assembly_dir.link_from(s.p.assembly_dir.path.replace(old, new), safe=True)
 
 ################################ Merge-Assembly ###############################
 params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)

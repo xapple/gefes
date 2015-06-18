@@ -57,7 +57,7 @@ for s in kt:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
-########################## Link from Sisu to Taito ############################
+########################## Link from Taito to Sisu ############################
 old = "/homeappl/home/bob/"
 new = "/wrk/alice/"
 for s in samples:
@@ -76,11 +76,11 @@ for proj in projects: proj.runner.run_slurm(steps=['assembly_81.run'], job_name=
 params = dict(steps=['assembly.run'], machines=8, cores=8*24, time='12:00:00', partition='small')
 for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
 
-########################## Link from Taito to Sisu ############################
+########################## Link from Sisu to Taito ############################
 old = "/homeappl/home/alice/"
 new = "/wrk/bob/"
-for s in samples:
-    pass
+for p in projects: p.p.assembly_dir.link_from(p.p.assembly_dir.path.replace(old, new), safe=True)
+for s in samples:  s.p.assembly_dir.link_from(s.p.assembly_dir.path.replace(old, new), safe=True)
 
 ################################ Merge-Assembly ###############################
 params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
