@@ -93,7 +93,7 @@ proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
 params = dict(machines=1, cores=1, time='00:30:00', partition='test',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 s = samples[0]
-s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map_test", **params)
+s.runner.run_slurm(steps=[{'mapper_71.run':{'cpus':6}}], job_name=s.name + "_co_71_map_test", **params)
 
 params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun',
               threads=6, mem_per_cpu=5300, constraint='hsw')
