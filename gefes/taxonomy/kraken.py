@@ -19,13 +19,13 @@ standard_db = home + 'databases/kraken/standard'
 ###############################################################################
 class Kraken(object):
     """Use Kraken at to predict taxonomy on the raw reads.
-    Expects version 1.1.11.
+    Expects version v0.10.5-beta.
     """
 
     short_name   = 'kraken'
-    long_name    = 'Kraken v1.1.11'
+    long_name    = 'Kraken v0.10.5-beta'
     executable   = 'kraken'
-    url          = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
+    url          = 'https://github.com/DerrickWood/kraken'
     dependencies = ['jellyfish']
 
     all_paths = """
@@ -45,10 +45,12 @@ class Kraken(object):
         # Auto paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def run(self, keep_raw=False):
+    def run(self, keep_raw=False, cpus=None):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
         # Run the main classification #
         sh.kraken('--preload',
-                  '--threads', str(num_processors),
+                  '--threads', str(cpus),
                   '--db',      standard_db,
                   '--output',  self.p.raw_output,
                   '--paired',  self.source.fwd, self.source.rev,

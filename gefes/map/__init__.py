@@ -11,7 +11,6 @@ from gefes.map import graphs
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached, property_pickled
-from plumbing.slurm import num_processors
 
 # Third party modules #
 import sh, pandas
@@ -67,7 +66,7 @@ class Mapper(object):
             if verbose: print "Making samtools index"; sys.stdout.flush()
             self.contigs_fasta.index_samtools()
 
-    def post_run(self, verbose=True):
+    def post_run(self, cpus=1, verbose=True):
         # Convenience shortcuts #
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Create bam file, then sort it and finally index the bamfile #
@@ -79,7 +78,7 @@ class Mapper(object):
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
         if verbose: print "Launching MarkDuplicates..."; sys.stdout.flush()
-        self.remove_duplicates()
+        self.remove_duplicates(cpus=cpus)
         # Sort and index bam without duplicates #
         if verbose: print "Launching Samtools sort again..."; sys.stdout.flush()
         sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
@@ -93,13 +92,13 @@ class Mapper(object):
         os.remove(self.p.map_bam)
         os.remove(self.p.map_smd_bam)
 
-    def remove_duplicates(self):
+    def remove_duplicates(self, cpus=1):
         """Remove PCR duplicates with MarkDuplicates."""
         # Estimate size #
-        mem_size = "4"
+        mem_size = "5"
         # Run the command #
         sh.java('-Xmx%sg' % mem_size,
-                '-XX:ParallelGCThreads=%s' % num_processors,
+                '-XX:ParallelGCThreads=%s' % cpus,
                 '-XX:+CMSClassUnloadingEnabled',
                 '-jar', gefes.repos_dir + 'bin/MarkDuplicates.jar',
                 'INPUT=%s' % self.p.map_s_bam,

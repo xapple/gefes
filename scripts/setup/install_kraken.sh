@@ -12,10 +12,10 @@ export PATH="$HOME/programs/jellyfish1/bin:$PATH"
 
 # Install #
 cd ~/test/
-wget http://ccb.jhu.edu/software/kraken/dl/kraken-0.10.4-beta.tgz
-tar -xzf kraken-0.10.4-beta.tgz
-rm kraken-0.10.4-beta.tgz
-cd kraken-0.10.4-beta
+wget http://ccb.jhu.edu/software/kraken/dl/kraken-0.10.5-beta.tgz
+tar -xzf kraken-0.10.5-beta.tgz
+rm kraken-0.10.5-beta.tgz
+cd kraken-0.10.5-beta
 mkdir $HOME/programs/kraken/
 ./install_kraken.sh $HOME/programs/kraken/
 
@@ -29,4 +29,4 @@ ln -s $HOME/programs/kraken/kraken-report     $HOME/programs/kraken/bin/kraken-r
 export PATH="$HOME/programs/kraken/bin:$PATH"
 
 # Build DB #
-kraken-build --standard --threads 32 --db $HOME/databases/kraken/standard
+kraken-build --standard --threads 16 --db $HOME/databases/kraken/standard

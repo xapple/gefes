@@ -58,7 +58,9 @@ class Newbler(Merger):
         # Report #
         self.report = AssemblyReport(self)
 
-    def run(self, verbose=True):
+    def run(self, cpus=None, verbose=True):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
         # Check that all the sets of contigs have a cut-up version #
         for assembly in self.assemblies:
             if not assembly.p.cut_up:
@@ -73,7 +75,7 @@ class Newbler(Merger):
         # Call newbler #
         if verbose: print 'Calling Newbler...'; sys.stdout.flush()
         sh.runAssembly('-force',
-                       '-cpu', num_processors,
+                       '-cpu', cpus,
                        '-o', self.p.output_dir.path,
                        self.p.combined.path,
                        _out=self.p.stdout.path,

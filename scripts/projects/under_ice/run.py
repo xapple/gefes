@@ -57,6 +57,9 @@ for s in kt:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
+################################## Kraken #####################################
+for s in samples: print s, s.kraken.run(cpus=4)
+
 ########################## Link from Taito to Sisu ############################
 old = "/homeappl/home/bob/"
 new = "/wrk/alice/"
@@ -84,22 +87,36 @@ for p in projects:
 for s in samples:
     print "rsync -av --progress %s %s" % (s.p.assembly_dir.path.replace(old, new), s.p.assembly_dir)
 
-################################ Merge-Assembly ###############################
-params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun',
-              memory=120000, constraint='hsw')
-proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
+############################### Merged-Assembly ###############################
+for p in projects: p.merged.run(cpus=4)
 
-########################### Mappings to Co-Assembly ###########################
-params = dict(machines=1, cores=1, time='00:30:00', partition='test',
+################################ All Mappings #################################
+params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
               threads=6, mem_per_cpu=5300, constraint='hsw')
-s = samples[0]
-s.runner.run_slurm(steps=[{'mapper_71.run':{'cpus':6}}], job_name=s.name + "_co_71_map_test", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_51.run':{'cpus':6}}],     job_name=s.name + "_co_51_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_61.run':{'cpus':6}}],     job_name=s.name + "_co_61_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_71.run':{'cpus':6}}],     job_name=s.name + "_co_71_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_81.run':{'cpus':6}}],     job_name=s.name + "_co_81_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_merged.run':{'cpus':6}}], job_name=s.name + "_merge_map", **params)
 
-params = dict(machines=1, cores=1, time='14-00:00:00', partition='longrun',
+params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
-for s in samples: s.runner.run_slurm(steps=['mapper_51.run'],     job_name=s.name + "_co_51_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_61.run'],     job_name=s.name + "_co_61_map", **params)
-for s in samples[1:]: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_81.run'],     job_name=s.name + "_co_81_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mono_mapper.run'],   job_name=s.name + "_merge_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   job_name=s.name + "_mono_map",  **params)
+
+################################# Binning #####################################
+proj.assembly.results.binner.run()
+
+################################ Phylosift ####################################
+for c in proj.assembly.results.contigs: c.taxonomy.run()
+
+################################## CheckM #####################################
+params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial', constraint='hsw', memory=124000)
+proj.runner.run_slurm(steps=['assembly_51.results.binner.results.run_all_bin_eval'], job_name="checkm_51", **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.results.run_all_bin_eval'], job_name="checkm_61", **params)
+
+params = dict(cores=10, time='24:00:00', partition='hugemem', memory=400000)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.results.run_all_bin_eval'], job_name="checkm_71", **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.results.run_all_bin_eval'], job_name="checkm_81", **params)
+
+params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
+proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)

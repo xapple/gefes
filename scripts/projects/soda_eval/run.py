@@ -46,6 +46,9 @@ for s in samples:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
+################################## Kraken #####################################
+for s in samples: print s, s.kraken.run()
+
 ########################## Link from Taito to Sisu ############################
 old = "/homeappl/home/bob/"
 new = "/wrk/alice/"
@@ -71,15 +74,18 @@ new = "/wrk/bob/"
 proj.p.assembly_dir.link_from(proj.p.assembly_dir.path.replace(old, new), safe=True)
 for s in samples:  s.p.assembly_dir.link_from(s.p.assembly_dir.path.replace(old, new), safe=True)
 
-################################ Merge-Assembly ###############################
-params = dict(machines=1, cores=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
-proj.runner.run_slurm(steps=['merged.run'], job_name="ice_newbler", **params)
+############################### Merged-Assembly ###############################
+proj.merged.run(cpus=4)
 
 ################################## Mappings ###################################
-params = dict(machines=1, cores=1, threads=24, time='14-00:00:00', partition='longrun', constraint='hsw', memory=120000)
-for s in samples: s.runner.run_slurm(steps=['mapper_51.run'],     job_name=s.name + "_co_51_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_61.run'],     job_name=s.name + "_co_61_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_71.run'],     job_name=s.name + "_co_71_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_81.run'],     job_name=s.name + "_co_81_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mapper_merged.run'], job_name=s.name + "_merge_map", **params)
-for s in samples: s.runner.run_slurm(steps=['mono_mapper.run'],   job_name=s.name + "_merge_map", **params)
+params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
+              threads=6, mem_per_cpu=5300, constraint='hsw')
+for s in samples: s.runner.run_slurm(steps=[{'mapper_51.run':{'cpus':6}}], job_name=s.name + "_eval_co_51_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_61.run':{'cpus':6}}], job_name=s.name + "_eval_co_61_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_71.run':{'cpus':6}}], job_name=s.name + "_eval_co_71_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_81.run':{'cpus':6}}], job_name=s.name + "_eval_co_81_map", **params)
+for s in samples: s.runner.run_slurm(steps=[{'mapper_merged.run':{'cpus':6}}], job_name=s.name + "_eval_m_map", **params)
+
+params = dict(machines=1, cores=1, time='1-00:00:00', partition='serial',
+              threads=6, mem_per_cpu=5300, constraint='hsw')
+for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}], job_name=s.name + "_eval_mono_map",  **params)

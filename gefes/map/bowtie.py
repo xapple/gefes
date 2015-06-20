@@ -45,7 +45,7 @@ class Bowtie(Mapper):
         sys.stdout.flush()
         sh.bowtie2(*self.options)
         # Create bam file, then sort it and finally index the bamfile #
-        self.post_run()
+        self.post_run(cpus=cpus)
 
     @property_cached
     def results(self):
