@@ -122,7 +122,7 @@ class Sample(object):
         if self.pair.format == 'fastq': self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
         # Initial taxonomic predictions #
         self.kraken = Kraken(self.clean, self.p.kraken_dir)
-        # Map to the co-assembly #
+        # Map to the co-assembly # TODO: rename the 71 mapper
         self.mapper = Bowtie(self, self.project.assembly, self.p.project_dir)
         # Map to different co-assemblies #
         self.mapper_51 = Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")

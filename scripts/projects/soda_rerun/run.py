@@ -53,7 +53,9 @@ for s in samples:
     s.quality_checker.run()
 
 ################################## Kraken #####################################
-for s in samples: print s, s.kraken.run()
+for s in samples:
+    print s
+    s.kraken.run(cpus=4)
 
 ########################## Link from Taito to Sisu ############################
 old = "/homeappl/home/bob/"
@@ -97,3 +99,12 @@ for s in samples: s.runner.run_slurm(steps=[{'mapper_merged.run':{'cpus':6}}], j
 params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   job_name=s.name + "_mono_map",  **params)
+
+################################# Binning #####################################
+params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
+              threads=6, mem_per_cpu=5300, constraint='hsw')
+proj.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name=proj.name+'_bin_51', **params)
+proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name=proj.name+'_bin_61', **params)
+proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=proj.name+'_bin_71', **params)
+proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=proj.name+'_bin_81', **params)
+proj.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=proj.name+'_bin_04', **params)
