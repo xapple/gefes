@@ -26,7 +26,7 @@ class AggregateRunner(Runner):
 
     @property
     def extra_slurm_params(self):
-        # Default #
+        # Default #
         params = {}
         # Taito #
         if hostname.startswith('taito'):
