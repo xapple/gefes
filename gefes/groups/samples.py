@@ -174,7 +174,7 @@ class Sample(object):
         print "Combining these files:", zip(fwd_files, rev_files)
         shell_output("zcat %s |gzip > %s" % (' '.join(fwd_files), self.pair.fwd))
         shell_output("zcat %s |gzip > %s" % (' '.join(rev_files), self.pair.rev))
-        # Check #
+        # Check #
         assert self.pair.fwd.first.id == self.pair.rev.first.id
         # Remove the original #
         if remove_orig:
