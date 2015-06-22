@@ -25,8 +25,8 @@ home = os.environ['HOME'] + '/'
 ###############################################################################
 class Sample(object):
     """Consists of wither two FASTA or two FASTQ files.
-    It's a bunch of paired sequences all coming from the same particular IRL lab sample.
-    Might or might not corresponds to an Illumina MID."""
+    It's a bunch of paired sequences all coming from the same particular
+    IRL lab sample. Might or might not corresponds to an Illumina MID."""
 
     raw_files_must_exist = True
 
@@ -165,13 +165,18 @@ class Sample(object):
     #------------------------------ Special cases ---------------------------#
     def merge_lanes(self, remove_orig=False):
         """We got a run that had several lanes in the same sample directory.
-        We want to cat these to files called fwd.fastq.gz and rev.fastq.gz"""
+        We want to cat all these to files called fwd.fastq.gz and rev.fastq.gz"""
+        # Find all lanes #
         fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
-        fwd_files = [FASTQ(f) for f in self.raw_dir.files if fwd_match(f)]
-        rev_files = [FASTQ(f) for f in self.raw_dir.files if rev_match(f)]
+        fwd_files = [FASTQ(f) for f in self.raw_dir.flat_files if fwd_match(f)]
+        rev_files = [FASTQ(f) for f in self.raw_dir.flat_files if rev_match(f)]
+        print "Combining these files:", zip(fwd_files, rev_files)
         shell_output("zcat %s |gzip > %s" % (' '.join(fwd_files), self.pair.fwd))
         shell_output("zcat %s |gzip > %s" % (' '.join(rev_files), self.pair.rev))
+        # Check #
+        assert self.pair.fwd.first.id == self.pair.rev.first.id
+        # Remove the original #
         if remove_orig:
             for f in fwd_files + rev_files: f.remove()
 

@@ -38,7 +38,7 @@ for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
 for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.results)
+for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
 
 ################################# Search logs ##################################
 from plumbing.common import tail
