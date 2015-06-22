@@ -166,7 +166,7 @@ class Sample(object):
     def merge_lanes(self, remove_orig=False):
         """We got a run that had several lanes in the same sample directory.
         We want to cat all these to files called fwd.fastq.gz and rev.fastq.gz"""
-        # Find all lanes #
+        # Find all lanes #
         fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
         fwd_files = [FASTQ(f) for f in self.raw_dir.flat_files if fwd_match(f)]
