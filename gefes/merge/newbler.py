@@ -46,11 +46,18 @@ class Newbler(Merger):
     /report/report.pdf
     """
 
+    def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
+    def __len__(self):  return len(self.samples)
+    def __getitem__(self, key):
+        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
+        return self.children[key]
+
     def __init__(self, samples, assemblies, result_dir, slice_length=1000):
         # Base parameters #
-        self.samples = samples
-        self.assemblies = assemblies
-        self.result_dir = result_dir
+        self.samples      = samples
+        self.assemblies   = assemblies
+        self.children     = samples
+        self.result_dir   = result_dir
         self.slice_length = slice_length
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'

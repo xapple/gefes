@@ -36,9 +36,18 @@ for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results
 for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
-for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
-for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
+for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.results)
+
+################################# Search logs ##################################
+from plumbing.common import tail
+from plumbing.autopaths import FilePath
+for s in samples:
+    for log in s.runner.logs:
+        out = FilePath(log + 'run.out')
+        if out.exists and 'mapper_71.run' in out.contents:
+            print '-'*50 + '\n'  + tail(log + 'run.out')
 
 ################################ Preprocessing ################################
 # Clean #

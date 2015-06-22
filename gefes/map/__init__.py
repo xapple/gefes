@@ -41,6 +41,8 @@ class Mapper(object):
     /map_smds.coverage
     /statistics.pickle
     /graphs/
+    /stdout.txt
+    /stderr.txt
     """
 
     def __repr__(self): return '<%s object of %s on %s>' % \
@@ -71,9 +73,9 @@ class Mapper(object):
         self.contigs_fasta = self.assembly.results.contigs_fasta
         # Create bam file, then sort it and finally index the bamfile #
         if verbose: print "Launching samtools view..."; sys.stdout.flush()
-        sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam)
+        sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam, '-@', cpus)
         if verbose: print "Launching samtools sort..."; sys.stdout.flush()
-        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path)
+        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path, '-@', cpus)
         if verbose: print "Launching samtools index..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
@@ -81,7 +83,7 @@ class Mapper(object):
         self.remove_duplicates(cpus=cpus)
         # Sort and index bam without duplicates #
         if verbose: print "Launching Samtools sort again..."; sys.stdout.flush()
-        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path)
+        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path, '-@', cpus)
         if verbose: print "Launching Samtools index again..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #

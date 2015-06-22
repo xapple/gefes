@@ -41,9 +41,18 @@ for s in samples:  print "Cleaned:",            s, bool(s.quality_checker.result
 for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples:  print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples:  print "Solo-assembly:",      s, bool(s.assembly.results)
-for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v.results)) for k,v in p.assemblies.items()])
-for s in samples:  print "Map to co-assembly:", s, bool(s.mapper.results)
+for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.results)
+
+################################# Search logs ##################################
+from plumbing.common import tail
+from plumbing.autopaths import FilePath
+for s in samples:
+    for log in s.runner.logs:
+        out = FilePath(log + 'run.out')
+        if out.exists and 'mapper_71.run' in out.contents:
+            print '-'*50 + '\n'  + tail(log + 'run.out')
 
 ################################ Preprocessing ################################
 # Clean #
@@ -107,7 +116,7 @@ for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   j
 
 ################################# Binning #####################################
 params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
-              threads=6, mem_per_cpu=5300, constraint='hsw')
+              threads=12, mem_per_cpu=5300, constraint='hsw')
 for p in projects: p.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name=p.name+'_bin_51', **params)
 for p in projects: p.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name=p.name+'_bin_61', **params)
 for p in projects: p.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=p.name+'_bin_71', **params)
