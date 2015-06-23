@@ -171,7 +171,7 @@ class Sample(object):
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')
         fwd_files = [FASTQ(f) for f in self.raw_dir.flat_files if fwd_match(f)]
         rev_files = [FASTQ(f) for f in self.raw_dir.flat_files if rev_match(f)]
-        for x,y in zip(fwd_files, rev_files): print "Combining these files:", x.prefix, y.prefix
+        for x,y in zip(fwd_files, rev_files): print "Combining these files:", x.prefix, 'with', y.prefix
         shell_output("zcat %s |gzip > %s" % (' '.join(fwd_files), self.pair.fwd))
         shell_output("zcat %s |gzip > %s" % (' '.join(rev_files), self.pair.rev))
         # Check #
