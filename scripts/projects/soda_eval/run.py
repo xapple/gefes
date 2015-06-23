@@ -35,10 +35,13 @@ for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results
 for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
 for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
-for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
-for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
+for s in samples: print "Mono-assembly:",      s, bool(s.assembly.results)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
+for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
+print                   "Merged assembly:", proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
+for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.results)
+print                   "Merged binning:", bool(proj.merged.results.binner.results)
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -89,7 +92,7 @@ for s in samples:  s.p.assembly_dir.link_from(s.p.assembly_dir.path.replace(old,
 proj.merged.run(cpus=4)
 
 ################################## Mappings ###################################
-params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
+params = dict(machines=1, cores=1, time='1-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=[{'mapper_51.run':{'cpus':6}}], job_name=s.name + "_eval_co_51_map", **params)
 for s in samples: s.runner.run_slurm(steps=[{'mapper_61.run':{'cpus':6}}], job_name=s.name + "_eval_co_61_map", **params)
@@ -102,7 +105,7 @@ params = dict(machines=1, cores=1, time='1-00:00:00', partition='serial',
 for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}], job_name=s.name + "_eval_mono_map",  **params)
 
 ################################# Binning #####################################
-params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
+params = dict(machines=1, cores=1, time='2-00:00:00', partition='longrun',
               threads=12, mem_per_cpu=5300, constraint='hsw')
 proj.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name=proj.name+'_bin_51', **params)
 proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name=proj.name+'_bin_61', **params)

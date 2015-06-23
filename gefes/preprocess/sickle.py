@@ -68,8 +68,8 @@ class SickleResults(QualityResults):
     @property_cached
     def stats(self):
         """Parse the report file for statistics"""
-        patterns = {'paired_records_kept':      '^FastQ paired records kept (.+) .+$',
-                    'single_records_kept':      '^FastQ single records kept (.+) .+$',
-                    'paired_records_discarded': '^FastQ paired records discarded (.+) .+$',
-                    'single_records_discarded': '^FastQ single records discarded (.+) .+$'}
+        patterns = {'paired_records_kept':      '^FastQ paired records kept: (.+?) .+$',
+                    'single_records_kept':      '^FastQ single records kept: (.+?) .+$',
+                    'paired_records_discarded': '^FastQ paired records discarded: (.+?) .+$',
+                    'single_records_discarded': '^FastQ single records discarded: (.+?) .+$'}
         return {k: int(re.findall(v, self.checker.p.report.contents, re.M)[0]) for k,v in patterns.items()}
