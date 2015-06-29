@@ -28,16 +28,20 @@ from gefes.groups.projects import Project, Projects
 
 # Constants #
 url = 'http://github.com/limno/gefes/'
-home = os.environ['HOME'] + '/'
+home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
 # Output directory #
 view_dir = home + 'GEFES/views/'
 project_dir = view_dir + "projects/"
 
-# Load all projects by parsing project json files #
+# Load all projects by parsing the project json files #
 json_paths = glob.glob(repos_dir + 'json/*.json')
+
+# Remove the defaults file #
 json_paths.remove(repos_dir + 'json/defaults.json')
+
+# Create the project objects #
 projects = [Project(j, project_dir) for j in json_paths]
 
 # Convenience objects with indexing #

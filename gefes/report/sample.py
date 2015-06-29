@@ -19,7 +19,7 @@ from pymarktex.figures import ScaledFigure, DualFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + socket.getfqdn()
+ssh_header = "ssh://" + os.envrion.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class SampleReport(Document):
@@ -39,7 +39,9 @@ class SampleReport(Document):
 
     def generate(self):
         # Dynamic templates #
-        self.markdown = unicode(SampleTemplate(self))
+        self.main = SampleTemplate(self)
+        self.markdown = unicode(self.main)
+        # Header and footer #
         self.header = HeaderTemplate()
         self.footer = FooterTemplate()
         # Render to latex #
@@ -73,7 +75,7 @@ class SampleTemplate(Template):
     def information(self):
         info = self.sample.info.copy()
         info.pop("contacts")
-        info = json.dumps(info, sort_keys=True, indent=4, encoding='utf-8')
+        info = json.dumps(info, indent=4, encoding='utf-8', ensure_ascii=False)
         info = info.strip("{}")
         return info
 
@@ -201,6 +203,9 @@ class SampleTemplate(Template):
         label = "samples_percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
+    # Co Assembly #
+    def count_contigs(self):    return split_thousands(self.sample.project.assembly.results.contigs_fasta.count)
+
     # Co-Mapping #
     def mapper_version(self):   return self.sample.mapper.long_name
     @property_pickled
@@ -224,12 +229,12 @@ class SampleTemplate(Template):
     def annotation_version(self): return self.sample.contigs[0].annotation.long_name
     @property_pickled
     def sample_count_proteins(self):
-        if not all(c.annotation for c in self.sample.contigs): return "*Not computed yet*"
+        if not all(c.annotation for c in self.sample.contigs): return "<*Not computed yet*>"
         total = sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
         return split_thousands(total)
     @property_pickled
     def sample_functions_table(self):
-        if not all(c.annotation for c in self.sample.contigs): return "*Not computed yet*"
+        if not all(c.annotation for c in self.sample.contigs): return "<*Not computed yet*>"
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.functions)
         table = OrderedDict(counts.most_common(20))

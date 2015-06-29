@@ -126,15 +126,15 @@ Now we will attempt to map every (cleaned) read (excluding singletons) of this s
 
 For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these two variables can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
 
-{{mean_coverage}}
+{{sample_mean_coverage}}
 
-{{percent_covered}}
+{{samples_percent_covered}}
 
 -------
 
 Co-Mapping
 ----------
-We can also attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the co-assembly step using the "{{mapper_version}}" software. Again, we will remove the predicted PCR duplicates, leaving us with {{map_filter_count}} reads to map. Exactly {{did_map}} of the reads map back to the contigs generated in the mono-assembly and {{didnt_map}} have no match.
+We can also attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the co-assembly step using the "{{mapper_version}}" software. Again, we will remove the predicted PCR duplicates, leaving us with {{map_filter_count}} reads to map. Exactly {{did_map}} of the reads map back to the contigs generated in the co-assembly and {{didnt_map}} have no match.
 
 For every of the {{count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these two variables can be seen in figure \ref{mean_coverage} and \ref{percent_covered}:
 
@@ -149,4 +149,3 @@ Annotation
 Taking the {{sample_count_contigs}} contigs generated in the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software. This procedure predicts the presence of {{sample_count_proteins}} proteins. When possible, each protein is assigned a function. The most common functions are shown in the table below:
 
 {{sample_functions_table}}
-
