@@ -224,10 +224,12 @@ class SampleTemplate(Template):
     def annotation_version(self): return self.sample.contigs[0].annotation.long_name
     @property_pickled
     def sample_count_proteins(self):
+        if not all(c.annotation for c in self.sample.contigs): return "*Not computed yet*"
         total = sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
         return split_thousands(total)
     @property_pickled
     def sample_functions_table(self):
+        if not all(c.annotation for c in self.sample.contigs): return "*Not computed yet*"
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.functions)
         table = OrderedDict(counts.most_common(20))
