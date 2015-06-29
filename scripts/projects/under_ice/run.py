@@ -9,6 +9,9 @@ A script to contain the procedure for running the soda evaluation project.
 # Internal modules #
 import gefes
 
+# Third party modules #
+from tqdm import tqdm
+
 #################################### Load #####################################
 # Three projects #
 bt = gefes.projects['under_ice_bt'].load()
@@ -41,8 +44,8 @@ for s in samples:  print "Cleaned:",            s, bool(s.quality_checker.result
 for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples:  print "Initial taxa:",       s, bool(s.kraken.results)
 for s in samples:  print "Mono-assembly:",      s, bool(s.assembly.results)
-for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v.results)) for k,v in p.assemblies.items()])
+for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.results)
 for p,n,a in ((p,n,a) for n,a in p.assemblies.items() for p in projects):
@@ -70,9 +73,17 @@ for s in kt:
     print "Cleaning sample '%s'" % s.name
     s.quality_checker.run()
 
+################################## FASTQC #####################################
+for s in tqdm(samples):
+    print "FastQC on sample '%s'" % s.name
+    s.pair.fwd.fastqc.run(cpus=4)
+    s.pair.rev.fastqc.run(cpus=4)
+    s.clean.fwd.fastqc.run(cpus=4)
+    s.clean.rev.fastqc.run(cpus=4)
+
 ################################## Kraken #####################################
-for s in samples:
-    print s
+for s in tqdm(samples):
+    print "Kraken on sample '%s'" % s.name
     s.kraken.run(cpus=4)
 
 ########################## Link from Taito to Sisu ############################
@@ -118,7 +129,7 @@ params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   job_name=s.name + "_mono_map",  **params)
 
-################################# Binning #####################################
+################################# Binnings ####################################
 params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
               threads=12, mem_per_cpu=5300, constraint='hsw')
 for p in projects: p.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name=p.name+'_bin_51', **params)
@@ -126,6 +137,9 @@ for p in projects: p.runner.run_slurm(steps=['assembly_61.results.binner.run'], 
 for p in projects: p.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=p.name+'_bin_71', **params)
 for p in projects: p.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=p.name+'_bin_81', **params)
 for p in projects: p.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=p.name+'_bin_04', **params)
+
+################################## Prokka #####################################
+
 
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
@@ -141,3 +155,23 @@ proj.runner.run_slurm(steps=['assembly_81.results.binner.results.run_all_bin_eva
 
 params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
 proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)
+
+################################## Plots ######################################
+for s in tqdm(samples):
+    print "Plots for sample '%s'" % s.name
+    s.clean.fwd.graphs.length_dist.plot(x_log=True, y_log=True)
+    s.clean.rev.graphs.length_dist.plot(x_log=True, y_log=True)
+    s.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+for p in tqdm(projects):
+    print "Plots for project '%s'" % p.name
+    for a in p.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+    p.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+
+################################## Report #####################################
+for s in samples:
+    print "Report on sample '%s'" % s.name
+    s.report.generate()
+for p in projects:
+    for a in p.assemblies.values():
+        print "Plots for project '%s', assembly '%s'" % (p.name, a)
+        a.report.generate()

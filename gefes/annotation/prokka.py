@@ -67,7 +67,7 @@ class Prokka(object):
 ###############################################################################
 class ProkkaResults(object):
 
-    def __nonzero__(self): return self.prokka.p.log.exists
+    def __nonzero__(self): return not self.prokka.p.output_dir.empty
     def __init__(self, prokka):
         self.prokka = prokka
 
