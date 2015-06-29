@@ -134,5 +134,6 @@ for a in proj.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.pl
 proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 
 ################################## Report #####################################
-for s in samples:
-    print "Rerpot on sample '%s'" % s.name
+for s in tqdm(samples):
+    print "Report on sample '%s'" % s.name
+    s.report.generate()

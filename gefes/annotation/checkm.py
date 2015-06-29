@@ -31,6 +31,8 @@ class Checkm(object):
     /output/
     """
 
+    def __nonzero__(self): return bool(self.p.stdout)
+
     def __init__(self, bin, result_dir):
         # Save attributes #
         self.bin = bin

@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import socket
+import os, socket
 from collections import OrderedDict
 
 # Internal modules #
@@ -19,7 +19,7 @@ from pymarktex.figures import ScaledFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + socket.getfqdn()
+ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class AggregateReport(Document):

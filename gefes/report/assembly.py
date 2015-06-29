@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import socket
+import os, socket
 from collections import OrderedDict
 
 # Internal modules #
@@ -19,7 +19,7 @@ from pymarktex.figures  import ScaledFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + socket.getfqdn()
+ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class AssemblyReport(Document):
@@ -120,6 +120,7 @@ class AssemblyTemplate(Template):
     # Evaluation #
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
     def bins_eval_graphs(self, name):
+        if not self.assembly.results.binner: return "<*Not computed yet*>"
         graph = getattr(self.assembly.results.binner.results.eval_graphs, name)()
         return str(ScaledFigure(graph.path, "CheckMs '%s' metric" % name, "bins_eval_%s_graph" % name))
     def bins_eval_genomes_graph(self):       return self.bins_eval_graphs('genomes')
