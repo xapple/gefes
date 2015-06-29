@@ -38,6 +38,7 @@ class Concoct(object):
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.assembly)
+    def __nonzero__(self): return self.p.clustering.exists
 
     def __init__(self, samples, assembly, result_dir):
         # Save attributes #

@@ -120,7 +120,7 @@ class AssemblyTemplate(Template):
     # Evaluation #
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
     def bins_eval_graphs(self, name):
-        if not self.assembly.results.binner: return "<*Not computed yet*>"
+        if not all(b.evaluation for b in self.assembly.results.binner.results.bins): return "<*Not computed yet*>"
         graph = getattr(self.assembly.results.binner.results.eval_graphs, name)()
         return str(ScaledFigure(graph.path, "CheckMs '%s' metric" % name, "bins_eval_%s_graph" % name))
     def bins_eval_genomes_graph(self):       return self.bins_eval_graphs('genomes')
