@@ -38,6 +38,8 @@ class Prokka(object):
     /output/prokka_*.tbl
     """
 
+    def __nonzero__(self): return not self.p.output_dir.empty
+
     def __init__(self, contig, result_dir):
         # Save Attributes #
         self.contig = contig
@@ -46,9 +48,12 @@ class Prokka(object):
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def run(self):
+    def run(self, cpus=None):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
+        # Run it #
         sh.prokka('--outdir', self.p.output,
-                  '--cpus', num_processors,
+                  '--cpus', cpus,
                   '--locustag', 'prokka',
                   '--compliant',
                   '--usegenus',

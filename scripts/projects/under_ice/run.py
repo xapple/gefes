@@ -139,7 +139,9 @@ for p in projects: p.runner.run_slurm(steps=['assembly_81.results.binner.run'], 
 for p in projects: p.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=p.name+'_bin_04', **params)
 
 ################################## Prokka #####################################
-
+for a in p.assemblies.values():
+    print "Prokka for project '%s', assembly '%s'" % (p.name, a)
+    for c in tqdm(a.results.contigs): c.annotation.run()
 
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
