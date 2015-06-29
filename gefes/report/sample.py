@@ -19,7 +19,7 @@ from pymarktex.figures import ScaledFigure, DualFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + os.envrion.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
+ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class SampleReport(Document):
