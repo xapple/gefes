@@ -1,0 +1,323 @@
+{
+    "contacts": {
+        "phd": {
+            "name": "Lucas Sinclair",
+            "email": "lucas.sinclair@me.com"
+        },
+        "pi": {
+            "name": "Alexander Eiler",
+            "email": "alexander.eiler@ebc.uu.se"
+        }
+    },
+
+    "project_name":          "under_ice_rerun_kt",
+    "project_long_name":     "Rerun of under ice depth profile of lake KT",
+    "project_num":           13,
+
+    "uppmax_project_id":    "b2014083",
+    "illumina_run_id":      "150611_D00457_0101_AC6VPBANXX",
+
+    "library_strategy":     "WGS",
+    "library_source":       "METAGENOMIC",
+    "library_selection":    "RANDOM",
+    "library_layout":       "Paired-end",
+    "platform":             "ILLUMINA",
+    "instrument_model":     "Illumina HiSeq",
+    "instrument_software":  "v2.2.58",
+    "forward_read_length":  124,
+    "reverse_read_length":  124,
+
+    "date":                 "2014-03-20",
+    "latitude":             [63.349357, "N"],
+    "longitude":            [14.45878, "E"],
+    "country":              "Sweden",
+    "location":             "Lake near Krokom",
+
+    "bioproject":           "PRJNAXXXXXX",
+
+    "gefes_settings": {},
+
+    "samples_base_dir":     "~/GEFES/raw/projects/under_ice_rerun/",
+    "samples": [
+
+    {
+        "sample_name":          "kt1",
+        "sample_long_name":     "KT1",
+        "sample_directory":     "Sample_KT1",
+        "sample_num":           1,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [0.45, "m"],
+        "ph":                   6.86,
+        "toc":                  [15.76, "mg/l"],
+        "ton":                  [1.32349203333, "mg/l"],
+        "top":                  [12.7027027027, "µg/l"],
+        "sulfate":              [4.84208915835, "mg/l"],
+        "oxygen":               [7.77, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [0.3, "Celsius"],
+        "filtered_volume":      [0.85, "ml"],
+        "cell_counts":          [6799800, "cells/ml"],
+        "co2":                  [522.4, "µM"],
+        "ch4":                  [6382.2, "µM"],
+        "feII":                 [0.361256971348, "µM"],
+        "feIII":                [13.2360280965, "µM"],
+        "fe_total":             [13.5972850679, "µM"],
+        "suva":                 [3.36294416244, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt2",
+        "sample_long_name":     "KT2",
+        "sample_directory":     "Sample_KT2",
+        "sample_num":           2,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [0.75, "m"],
+        "ph":                   6.86,
+        "toc":                  [16.5966666667, "mg/l"],
+        "ton":                  [1.37963203333, "mg/l"],
+        "top":                  [13.7837837838, "µg/l"],
+        "sulfate":              [4.24152941775, "mg/l"],
+        "oxygen":               [3.7, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [1.1, "Celsius"],
+        "filtered_volume":      [1, "ml"],
+        "cell_counts":          [7810845, "cells/ml"],
+        "co2":                  [555.1, "µM"],
+        "ch4":                  [8136.2, "µM"],
+        "feII":                 [0.250593824692, "µM"],
+        "feIII":                [16.7584559491, "µM"],
+        "fe_total":             [17.0090497738, "µM"],
+        "suva":                 [3.26571600723, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt3",
+        "sample_long_name":     "KT3",
+        "sample_directory":     "Sample_KT3",
+        "sample_num":           3,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [1.05, "m"],
+        "ph":                   6.78,
+        "toc":                  [17.9966666667, "mg/l"],
+        "ton":                  [1.41107043333, "mg/l"],
+        "top":                  [19.4594594595, "µg/l"],
+        "sulfate":              [3.46671455475, "mg/l"],
+        "oxygen":               [0.3, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [2.2, "Celsius"],
+        "filtered_volume":      [0.95, "ml"],
+        "cell_counts":          [10637445, "cells/ml"],
+        "co2":                  [609.6, "µM"],
+        "ch4":                  [10869.3, "µM"],
+        "feII":                 [0.322711840478, "µM"],
+        "feIII":                [25.6772881595, "µM"],
+        "fe_total":             [26, "µM"],
+        "suva":                 [3.37840340804, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt4",
+        "sample_long_name":     "KT4",
+        "sample_directory":     "Sample_KT4",
+        "sample_num":           4,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [1.35, "m"],
+        "ph":                   6.8,
+        "toc":                  [18.9766666667, "mg/l"],
+        "ton":                  [1.49191203333, "mg/l"],
+        "top":                  [22.7027027027, "µg/l"],
+        "sulfate":              [3.3095126286, "mg/l"],
+        "oxygen":               [0.29, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [2.4, "Celsius"],
+        "filtered_volume":      [1, "ml"],
+        "cell_counts":          [11641455, "cells/ml"],
+        "co2":                  [621.7, "µM"],
+        "ch4":                  [13175.6, "µM"],
+        "feII":                 [0.288477837103, "µM"],
+        "feIII":                [35.4038298552, "µM"],
+        "fe_total":             [35.6923076923, "µM"],
+        "suva":                 [3.23028280344, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt5",
+        "sample_long_name":     "KT5",
+        "sample_directory":     "Sample_KT5",
+        "sample_num":           5,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [1.95, "m"],
+        "ph":                   6.86,
+        "toc":                  [19.2666666667, "mg/l"],
+        "ton":                  [1.54580643333, "mg/l"],
+        "top":                  [26.2162162162, "µg/l"],
+        "sulfate":              [3.1367232412, "mg/l"],
+        "oxygen":               [0.09, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [3.7, "Celsius"],
+        "filtered_volume":      [1, "ml"],
+        "cell_counts":          [12540150, "cells/ml"],
+        "co2":                  [683, "µM"],
+        "ch4":                  [15375.8, "µM"],
+        "feII":                 [-0.149697139502, "µM"],
+        "feIII":                [38.9506021169, "µM"],
+        "fe_total":             [38.8009049774, "µM"],
+        "suva":                 [3.45155709343, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt7",
+        "sample_long_name":     "KT7",
+        "sample_directory":     "Sample_KT7",
+        "sample_num":           6,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [2.95, "m"],
+        "ph":                   6.72,
+        "toc":                  [25.1966666667, "mg/l"],
+        "ton":                  [3.10649843333, "mg/l"],
+        "top":                  [90.5405405405, "µg/l"],
+        "sulfate":              [1.71753775275, "mg/l"],
+        "oxygen":               [0.14, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [4.1, "Celsius"],
+        "filtered_volume":      [1, "ml"],
+        "cell_counts":          [14013510, "cells/ml"],
+        "co2":                  [897.8, "µM"],
+        "ch4":                  [47234.3, "µM"],
+        "feII":                 [-0.133991389956, "µM"],
+        "feIII":                [100.446208585, "µM"],
+        "fe_total":             [100.312217195, "µM"],
+        "suva":                 [4.12356131763, "mg/l*m"]
+    },
+
+    {
+        "sample_name":          "kt8",
+        "sample_long_name":     "KT8",
+        "sample_directory":     "Sample_KT8",
+        "sample_num":           7,
+
+        "forward_reads":        "fwd.fastq.gz",
+        "reverse_reads":        "rev.fastq.gz",
+        "forward_md5":          null,
+        "reverse_md5":          null,
+        "forward_read_count":   0,
+        "reverse_read_count":   0,
+
+        "organism":             "aquatic metagenome",
+        "env_biome":            "freshwater lake",
+        "env_feature":          "lake water",
+        "env_material":         "water",
+        "design_description":   "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+        "biosample":            "SAMNXXXXXXXX",
+
+        "depth":                [3.25, "m"],
+        "ph":                   6.69,
+        "toc":                  [26.5466666667, "mg/l"],
+        "ton":                  [3.57807443333, "mg/l"],
+        "top":                  [110.540540541, "µg/l"],
+        "sulfate":              [1.51955743875, "mg/l"],
+        "oxygen":               [0.21, "mg/l"],
+        "conductance":          [null, "µS/cm"],
+        "temperature":          [4, "Celsius"],
+        "filtered_volume":      [1, "ml"],
+        "cell_counts":          [14222565, "cells/ml"],
+        "co2":                  [951.7, "µM"],
+        "ch4":                  [52811.7, "µM"],
+        "feII":                 [0.121049250299, "µM"],
+        "feIII":                [108.10971998, "µM"],
+        "fe_total":             [108.230769231, "µM"],
+        "suva":                 [3.36012054244, "mg/l*m"]
+    }
+    ]
+}

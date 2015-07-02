@@ -47,9 +47,9 @@ for s in samples:  print "Mono-assembly:",      s, bool(s.assembly.results)
 for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v.results)) for k,v in p.assemblies.items()])
 for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
-for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.results)
-for p,n,a in ((p,n,a) for n,a in p.assemblies.items() for p in projects):
-                   print "Binning %s %i:"%(p,n), bool(v.results.binner.results)
+for s,a,m in ((s,a,m) for s in samples for a,m in s.mappers.items()): print "Map %s to %s:"%(s,a), bool(m)
+for p,n,a in ((p,n,a) for p in projects for n,a in p.assemblies.items()):
+                   print "Binning %s %i:"%(p,n), bool(a.results.binner)
 for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.results)
 
 ################################# Search logs ##################################
@@ -175,7 +175,6 @@ for s in tqdm(samples):
     s.report.generate()
 for p in projects:
     for a in p.assemblies.values():
-        print "Plots for project '%s', assembly '%s'" % (p.name, a)
+        print "Report for project '%s', assembly '%s'" % (proj.name, a)
         a.report.generate()
-
 ############################### Copy Reports ##################################

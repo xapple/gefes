@@ -48,6 +48,8 @@ class Mapper(object):
     def __repr__(self): return '<%s object of %s on %s>' % \
                         (self.__class__.__name__, self.sample, self.assembly)
 
+    def __nonzero__(self): return bool(self.p.coverage)
+
     def __init__(self, sample, assembly, result_dir):
         # Save attributes #
         self.sample = sample

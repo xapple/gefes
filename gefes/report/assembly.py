@@ -86,7 +86,7 @@ class AssemblyTemplate(Template):
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)
     def contigs_len_dist(self):
         caption = "Assembly length distribution"
-        graph = self.aggregate.assembly.results.contigs_fasta.graphs.length_dist(x_log=True, y_log=True)
+        graph = self.assembly.results.contigs_fasta.graphs.length_dist(x_log=True, y_log=True)
         label = "contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def contigs_total_bp(self): return split_thousands(sum(self.assembly.results.contigs_fasta.lengths))

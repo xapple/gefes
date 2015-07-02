@@ -137,3 +137,6 @@ proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True
 for s in tqdm(samples):
     print "Report on sample '%s'" % s.name
     s.report.generate()
+for a in tqdm(proj.assemblies.values()):
+    print "Report for project '%s', assembly '%s'" % (proj.name, a)
+    a.report.generate()

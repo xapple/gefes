@@ -183,6 +183,7 @@ class SampleTemplate(Template):
         graph = self.sample.assembly.results.contigs_fasta.length_dist
         label = "sample_contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
+    def sample_contigs_total_bp(self): return split_thousands(sum(self.sample.assembly.results.contigs_fasta.lengths))
 
     # Mono Mapping #
     def sample_mapper_version(self):   return self.sample.mono_mapper.long_name
