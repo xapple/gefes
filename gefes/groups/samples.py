@@ -106,8 +106,8 @@ class Sample(object):
             self.fwd_path.must_exist()
             self.rev_path.must_exist()
         # For speed let's update the sequence count cache if available #
-        if self.info['forward_read_count'] is not None: self.pair.fwd.count = self.info['forward_read_count']
-        if self.info['reverse_read_count'] is not None: self.pair.rev.count = self.info['reverse_read_count']
+        if self.info.get('forward_read_count') is not None: self.pair.fwd.count = self.info['forward_read_count']
+        if self.info.get('reverse_read_count') is not None: self.pair.rev.count = self.info['reverse_read_count']
         # Automatic paths #
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Maybe we have an Illumina report XML #
@@ -164,8 +164,8 @@ class Sample(object):
 
     #------------------------------ Special cases ---------------------------#
     def merge_lanes(self, remove_orig=False):
-        """We got a run that had several lanes in the same sample directory.
-        We want to cat all these to files called fwd.fastq.gz and rev.fastq.gz"""
+        """We got a few runs that had several lanes in the same sample directory.
+        We want to `cat all these to files called fwd.fastq.gz and rev.fastq.gz"""
         # Find all lanes #
         fwd_match = lambda f: f.endswith('R1_001.fastq.gz')
         rev_match = lambda f: f.endswith('R2_001.fastq.gz')

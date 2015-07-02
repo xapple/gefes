@@ -177,4 +177,3 @@ for p in projects:
     for a in p.assemblies.values():
         print "Report for project '%s', assembly '%s'" % (proj.name, a)
         a.report.generate()
-############################### Copy Reports ##################################

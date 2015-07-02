@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 """
-A script to contain the procedure for running the test sample.
+A script to contain the procedure for running the alinen project.
 """
 
 # Built-in modules #
@@ -9,7 +9,11 @@ A script to contain the procedure for running the test sample.
 # Internal modules #
 import gefes
 
-# Constants #
+# Third party modules #
+from tqdm import tqdm
+
+#################################### Load #####################################
+# One project #
 proj = gefes.projects['alinen'].load()
 samples = proj.samples
 for s in samples: s.load()
@@ -25,19 +29,13 @@ for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results
 for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
 for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
 for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
-for s in samples: print "Solo-assembly:",      s, bool(s.assembly.results)
-for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for s in samples: print "Map to co-assembly:", s, bool(s.mapper.results)
-
-# Project #
-
-# Logs #
-for s in samples: print "Logs:", s, ','.join(s.p.logs_dir.flat_directories)
-print "Logs:", proj, '\n'.join(proj.p.logs_dir.flat_directories)
-
-# Report #
-for s in samples: s.report.generate()
-proj.report.generate()
+for s in samples: print "Mono-assembly:",      s, bool(s.assembly.results)
+for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
+for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.p.coverage)
+print                   "Merged assembly:",  proj, bool(proj.merged.results)
+for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
+for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.results)
+print                   "Merged binning:", bool(proj.merged.results.binner.results)
 
 ################################ Preprocessing ################################
 # Manual #
@@ -61,13 +59,13 @@ for s in samples: s.runner.run_slurm(time='04:00:00')
 for s in samples: print s, s.kraken.run()
 
 ############################### Solo-Assembly #################################
-for s in proj.samples: s.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small')
+for s in proj.samples:
+    s.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small')
 
 ################################ Solo-Mapping #################################
 for s in samples: print s, s.mono_mapper.run()
 
 ############################### Solo-Prokka #################################
-from tqdm import tqdm
 all_contigs = [c for s in proj.samples for c in s.contigs]
 for c in tqdm(all_contigs): c.annotation.run()
 
