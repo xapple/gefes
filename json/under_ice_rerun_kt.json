@@ -52,10 +52,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "318171f4834cf06049826225c22b9aa2",
+        "reverse_md5":          "c988129eec03c2cc4d047bb610347f24",
+        "forward_read_count":   24099741,
+        "reverse_read_count":   24099741,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -92,10 +92,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "a9d2dc7e4792d06420644734e4b42630",
+        "reverse_md5":          "e30a85a3f83d4ee1b87d16fb23897556",
+        "forward_read_count":   25131709,
+        "reverse_read_count":   25131709,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -132,10 +132,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "82a2d3b363ed5c78101fdd96d8cd360a",
+        "reverse_md5":          "592f0b9322373b09995f66291928b1f0",
+        "forward_read_count":   25333059,
+        "reverse_read_count":   25333059,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -172,10 +172,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "ed866a931f11e7d19540321eab158507",
+        "reverse_md5":          "7febe95bea2f13b95a0bfa370c692d0c",
+        "forward_read_count":   23643065,
+        "reverse_read_count":   23643065,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -212,10 +212,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "a0cf5996f52d9fd7f9ef37a04a725196",
+        "reverse_md5":          "a8bbf5740c6e14d1e77e62a16b44e135",
+        "forward_read_count":   23126069,
+        "reverse_read_count":   23126069,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -252,10 +252,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "f471246e7f946d08bd763fa512f56cd0",
+        "reverse_md5":          "f53576a0f5f399716c5c8514371b0d59",
+        "forward_read_count":   21665592,
+        "reverse_read_count":   21665592,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
@@ -292,10 +292,10 @@
 
         "forward_reads":        "fwd.fastq.gz",
         "reverse_reads":        "rev.fastq.gz",
-        "forward_md5":          null,
-        "reverse_md5":          null,
-        "forward_read_count":   0,
-        "reverse_read_count":   0,
+        "forward_md5":          "b913c39657ba36175b85b4e43343eb9b",
+        "reverse_md5":          "a7057c9bdb2f5bbc70b817dcd445f5bb",
+        "forward_read_count":   24804911,
+        "reverse_read_count":   24804911,
 
         "organism":             "aquatic metagenome",
         "env_biome":            "freshwater lake",
