@@ -35,7 +35,11 @@
 
     "bioproject":           "PRJNAXXXXXX",
 
-    "gefes_settings": {},
+    "gefes_settings": {
+        "quality_checker": {
+            "object": {"source": "gefes.preprocess.sickle", "name": "Sickle"}
+        }
+    },
 
     "samples_base_dir":     "~/GEFES/raw/projects/under_ice_rerun/",
     "samples": [

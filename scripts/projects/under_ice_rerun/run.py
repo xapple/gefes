@@ -35,8 +35,9 @@ for s in tqdm(kt.samples): s.merge_lanes(remove_orig=True)
 ################################## Meta-data ##################################
 # Special merging #
 # Print number of sequences #
-for s in samples: print s.pair.fwd.count
-for s in samples: print s.pair.rev.count
+for s in samples:
+    s.pair.fwd.__cache__.pop('count')
+    print s.pair.fwd.count
 
 # Print MD5 checksums #
 for s in samples: print s.pair.fwd.md5
@@ -69,14 +70,8 @@ for s in samples:
 
 ################################ Preprocessing ################################
 # Clean #
-for s in bt:
-    print "Cleaning sample '%s'" % s.name
-    s.quality_checker.run()
-for s in lb:
-    print "Cleaning sample '%s'" % s.name
-    s.quality_checker.run()
-for s in kt:
-    print "Cleaning sample '%s'" % s.name
+for s in tqdm(samples):
+    print "Starting cleaning of sample '%s'" % s.name
     s.quality_checker.run()
 
 ################################## FASTQC #####################################
