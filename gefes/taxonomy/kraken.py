@@ -34,6 +34,7 @@ class Kraken(object):
     /summary.tsv
     """
 
+    def __nonzero__(self): return bool(self.p.summary)
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.source)
 
     def __init__(self, source, base_dir=None):

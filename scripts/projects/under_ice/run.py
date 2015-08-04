@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 """
-A script to contain the procedure for running the soda evaluation project.
+A script to contain the procedure for running the under_ice project.
 """
 
 # Built-in modules #
@@ -39,12 +39,12 @@ for s in samples: print s.pair.rev.md5
 ################################ Status report ################################
 # How far did we run things #
 for s in samples:  print "Raw:",                s, bool(s.pair)
-for s in samples:  print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
+for s in samples:  print "First QC:",           s, bool(s.pair.fwd.fastqc)
 for s in samples:  print "Cleaned:",            s, bool(s.quality_checker.results)
-for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
-for s in samples:  print "Initial taxa:",       s, bool(s.kraken.results)
-for s in samples:  print "Mono-assembly:",      s, bool(s.assembly.results)
-for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v.results)) for k,v in p.assemblies.items()])
+for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc)
+for s in samples:  print "Initial taxa:",       s, bool(s.kraken)
+for s in samples:  print "Mono-assembly:",      s, bool(s.assembly)
+for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v)) for k,v in p.assemblies.items()])
 for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
 for s,a,m in ((s,a,m) for s in samples for a,m in s.mappers.items()): print "Map %s to %s:"%(s,a), bool(m)

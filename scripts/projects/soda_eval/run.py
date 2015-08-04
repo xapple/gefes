@@ -34,12 +34,12 @@ for s in samples: print s.pair.rev.md5
 ################################ Status report ################################
 # How far did we run things #
 for s in samples: print "Raw:",                s, bool(s.pair)
-for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc.results)
+for s in samples: print "First QC:",           s, bool(s.pair.fwd.fastqc)
 for s in samples: print "Cleaned:",            s, bool(s.quality_checker.results)
-for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc.results)
-for s in samples: print "Initial taxa:",       s, bool(s.kraken.results)
-for s in samples: print "Mono-assembly:",      s, bool(s.assembly.results)
-for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v.results)
+for s in samples: print "Second QC:",          s, bool(s.clean.fwd.fastqc)
+for s in samples: print "Initial taxa:",       s, bool(s.kraken)
+for s in samples: print "Mono-assembly:",      s, bool(s.assembly)
+for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 print                   "Merged assembly:", proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
