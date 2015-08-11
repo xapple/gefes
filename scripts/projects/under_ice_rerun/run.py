@@ -2,15 +2,21 @@
 
 """
 A script to contain the procedure for running the under_ice rerun project.
+
+ipython -i ~/repos/gefes/scripts/projects/under_ice_rerun/run.py
 """
 
 # Built-in modules #
+import os
 
 # Internal modules #
 import gefes
 
 # Third party modules #
 from tqdm import tqdm
+
+# Constants #
+user = os.environ.get('USER')
 
 #################################### Load #####################################
 # Three projects #
@@ -96,26 +102,28 @@ for s in samples:
     s.singletons.link_from(s.singletons.path.replace(old, new))
 
 ############################### Co-Assemblies #################################
-params = dict(machines=24, cores=24*24, time='12:00:00', partition='small')
+params = dict(machines=42, cores=42*24, time='36:00:00', partition='large')
 for proj in projects: proj.runner.run_slurm(steps=['assembly_51.run'], job_name=proj.name+'_ray_51', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_61.run'], job_name=proj.name+'_ray_61', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_71.run'], job_name=proj.name+'_ray_71', **params)
 for proj in projects: proj.runner.run_slurm(steps=['assembly_81.run'], job_name=proj.name+'_ray_81', **params)
 
 ############################### Solo-Assemblies ###############################
-params = dict(steps=['assembly.run'], machines=8, cores=8*24, time='12:00:00', partition='small')
+params = dict(steps=['assembly.run'], machines=12, cores=12*24, time='12:00:00', partition='small')
 for s in samples: s.runner.run_slurm(job_name = s.name+'_ray', **params)
 
 ########################## Link from Sisu to Taito ############################
-old = "/homeappl/home/alice/"
-new = "/wrk/bob/"
+old = "/homeappl/home/eiler/"
+new = "/wrk/lsinclai/"
 for p in projects:
     print "rsync -av --progress %s %s" % (p.p.assembly_dir.path.replace(old, new), p.p.assembly_dir)
 for s in samples:
     print "rsync -av --progress %s %s" % (s.p.assembly_dir.path.replace(old, new), s.p.assembly_dir)
 
 ############################### Merged-Assembly ###############################
-for p in projects: p.merged.run(cpus=4)
+bt.merged.run(cpus=4)
+lb.merged.run(cpus=4)
+kt.merged.run(cpus=4)
 
 ################################ All Mappings #################################
 params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',

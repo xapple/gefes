@@ -2,6 +2,8 @@
 
 """
 A script to contain the procedure for running the under_ice project.
+
+ipython -i ~/repos/gefes/scripts/projects/under_ice/run.py
 """
 
 # Built-in modules #

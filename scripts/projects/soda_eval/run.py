@@ -2,6 +2,8 @@
 
 """
 A script to contain the procedure for running the soda evaluation project.
+
+ipython -i ~/repos/gefes/scripts/projects/soda_eval/run.py
 """
 
 # Built-in modules #

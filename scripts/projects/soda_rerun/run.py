@@ -2,6 +2,8 @@
 
 """
 A script to contain the procedure for running the soda rerun project.
+
+ipython -i ~/repos/gefes/scripts/projects/soda_rerun/run.py
 """
 
 # Built-in modules #
