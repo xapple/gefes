@@ -14,10 +14,10 @@ import sh
 ###############################################################################
 class Prokka(object):
     """Will run the Prokka software on one single contig.
-    Expects version 1.10"""
+    Expects version 1.11"""
 
     short_name = 'prokka'
-    long_name  = 'Prokka v1.10'
+    long_name  = 'Prokka v1.11'
     executable = 'prokka'
     url        = 'http://www.vicbioinformatics.com/software.prokka.shtml'
     dependencies = ['parallel']
@@ -61,6 +61,7 @@ class Prokka(object):
                   '--addgene',
                   '--quiet',
                   '--force',
+                  '--center', 'XXX',
                   self.contig.fasta)
 
     @property_cached
