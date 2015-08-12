@@ -44,7 +44,7 @@ class Prodigal(object):
         sh.prodigal('-i', self.contig.fasta,
                     '-o', self.p.gbk,
                     '-a', self.p.faa,
-                    '--mode', 'meta')
+                    '-p', 'meta')
 
     @property_cached
     def results(self):
