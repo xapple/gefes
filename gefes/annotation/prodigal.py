@@ -42,9 +42,9 @@ class Prodigal(object):
         if cpus is None: cpus = num_processors
         # Run it #
         sh.prodigal('-i', self.contig.fasta,
-                   '-o', self.p.gbk,
-                   '-a', self.p.faa,
-                   '-p', 'anon')
+                    '-o', self.p.gbk,
+                    '-a', self.p.faa,
+                    '--mode', 'meta')
 
     @property_cached
     def results(self):
