@@ -129,6 +129,14 @@ proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=proj.na
 proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=proj.name+'_bin_81', **params)
 proj.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=proj.name+'_bin_04', **params)
 
+################################## Prokka #####################################
+print "Prokka for project '%s', assembly '%s'" % (proj.name, proj.merged)
+for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
+
+################################## Prodigal #####################################
+print "Prokka for project '%s', assembly '%s'" % (proj.name, proj.merged)
+for c in tqdm(proj.merged.results.contigs): c.proteins.run()
+
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name

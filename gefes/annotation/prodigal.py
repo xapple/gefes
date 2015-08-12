@@ -41,10 +41,10 @@ class Prodigal(object):
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Run it #
-        sh.prokka('-i', self.contig.fasta,
-                  '-o', self.p.gbk,
-                  '-a', self.p.faa,
-                  '-p', 'anon')
+        sh.prodigal('-i', self.contig.fasta,
+                   '-o', self.p.gbk,
+                   '-a', self.p.faa,
+                   '-p', 'anon')
 
     @property_cached
     def results(self):
