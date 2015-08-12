@@ -61,7 +61,7 @@ class Prokka(object):
                   '--addgene',
                   '--quiet',
                   '--force',
-                  '--center', 'XXX',
+                  '--centre', 'XXX',
                   self.contig.fasta)
 
     @property_cached

@@ -5,6 +5,7 @@ from __future__ import division
 
 # Internal modules #
 from gefes.annotation.prokka import Prokka
+from gefes.annotation.prodigal import Prodigal
 from gefes.taxonomy.phylosift import Phylosift
 
 # First party modules #
@@ -72,7 +73,7 @@ class Contig(object):
     @property_cached
     def proteins(self):
         """The predicted proteins this contig contains."""
-        pass
+        return Prodigal(self, self.p.annotation_dir)
 
     @property_cached
     def ribosomal_proteins(self):
