@@ -40,14 +40,16 @@ class Checkm(object):
         self.result_dir = result_dir
         self.p = AutoPaths(self.result_dir, self.all_paths)
 
-    def run(self):
+    def run(self, cpus=None):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
         # Link the bin's fasta file #
         self.bin.fasta.link_to(self.p.fasta)
         # Run the pipeline #
         print "Launching CheckM on bin '%s'..." % self.bin.name; sys.stdout.flush()
         sh.checkm('lineage_wf',
                   '-x', 'fasta',
-                  '-t', num_processors,
+                  '-t', cpus,
                   self.result_dir,
                   self.p.output_dir,
                   _out=self.p.stdout.path,

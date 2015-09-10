@@ -3,11 +3,9 @@ from __future__ import division
 
 # Built-in modules #
 import os, socket
-from collections import OrderedDict
 
 # Internal modules #
-from gefes.assemble.contig import Contig
-from gefes.binning.concoct import Concoct
+from gefes.assemble        import AssemblyResults
 from gefes.report.assembly import AssemblyReport
 
 # First party modules #
@@ -24,7 +22,7 @@ import sh
 class Ray(object):
     """Will run the co-assembly of several samples by calling the Ray assembler.
     Expects version 2.3.1
-    We remove the contigs below the length cutoff threshold."""
+    We remove all the contigs below the length cutoff threshold."""
 
     short_name = 'ray'
     long_name  = 'Ray assembler v2.3.1'
@@ -146,31 +144,8 @@ class Ray(object):
         return results
 
 ###############################################################################
-class RayResults(object):
+class RayResults(AssemblyResults):
 
-    def __nonzero__(self): return bool(self.contigs_fasta)
     def __init__(self, ray):
-        self.ray = ray
+        self.parent, self.ray = ray, ray
         self.contigs_fasta = FASTA(self.ray.p.filtered)
-
-    @property_cached
-    def contigs(self):
-        """All the contigs produced returned as a list of our Contig custom objects."""
-        return [Contig(self.ray, record, num=i) for i,record in enumerate(self.contigs_fasta)]
-
-    @property_cached
-    def contig_id_to_contig(self):
-        """A dictionary with contig names as keys and contig objects as values."""
-        return {c.name: c for c in self.contigs}
-
-    @property_cached
-    def mappings(self):
-        """Map each of the samples used in the assembly back to this assembly.
-        TODO: This should be updated to use a directory in the assembly results directory
-        and to remove the attributes from the Sample objects."""
-        return OrderedDict([(s.name, getattr(s, "mapper_%i" % self.ray.kmer_size)) for s in self.ray.samples])
-
-    @property_cached
-    def binner(self):
-        """Put the contigs of this assembly into bins."""
-        return Concoct(self.ray.samples, self.ray, self.ray.p.bins_dir)

@@ -49,7 +49,6 @@ class Sample(object):
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
     def __iter__(self): return iter(self.children)
     def __len__(self): return self.count
-    def __getitem__(self, key): return self.samples[key]
 
     def __init__(self, project, fwd_path=None, rev_path=None, out_dir=None, info=None, num=None, name=None):
         # Required parameters #

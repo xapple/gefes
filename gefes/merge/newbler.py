@@ -4,8 +4,7 @@ from collections import OrderedDict
 
 # Internal modules #
 from gefes.merge import Merger
-from gefes.assemble.contig import Contig
-from gefes.binning.concoct import Concoct
+from gefes.assemble        import AssemblyResults
 from gefes.report.assembly import AssemblyReport
 
 # First party modules #
@@ -114,29 +113,13 @@ class Newbler(Merger):
         return results
 
 ###############################################################################
-class NewblerResults(object):
+class NewblerResults(AssemblyResults):
 
-    def __nonzero__(self): return bool(self.contigs_fasta)
     def __init__(self, newbler):
-        self.newbler = newbler
+        self.parent, self.newbler = newbler, newbler
         self.contigs_fasta = FASTA(self.newbler.p.filtered)
-
-    @property_cached
-    def contigs(self):
-        """All the contigs produced returned as a list of our Contig custom objects."""
-        return [Contig(self.newbler, record, num=i) for i,record in enumerate(self.contigs_fasta)]
-
-    @property_cached
-    def contig_id_to_contig(self):
-        """A dictionary with contig names as keys and contig objects as values."""
-        return {c.name: c for c in self.contigs}
 
     @property_cached
     def mappings(self):
         """Map each of the samples used in the assembly back to this assembly."""
-        return OrderedDict([(s.name, getattr(s, "mapper_merged")) for s in self.newbler.samples])
-
-    @property_cached
-    def binner(self):
-        """Put the contigs of this assembly into bins."""
-        return Concoct(self.newbler.samples, self.newbler, self.newbler.p.bins_dir)
+        return OrderedDict([(s.name, s.mapper_merged) for s in self.newbler.samples])
