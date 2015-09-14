@@ -226,17 +226,25 @@ class SampleTemplate(Template):
     # Co-Mapping #
     def mapper_version(self):   return self.sample.mapper.long_name
     @property_pickled
-    def map_filter_count(self): return split_thousands(self.sample.mapper.results.filtered_count)
+    def map_filter_count(self):
+        if not self.sample.mapper: return 0
+        return split_thousands(self.sample.mapper.results.filtered_count)
     @property_pickled
-    def did_map(self):          return "%.2f%%" % (self.sample.mapper.results.fraction_mapped * 100)
+    def did_map(self):
+        if not self.sample.mapper: return 0
+        return "%.2f%%" % (self.sample.mapper.results.fraction_mapped * 100)
     @property_pickled
-    def didnt_map(self):        return "%.2f%%" % (self.sample.mapper.results.fraction_unmapped * 100)
+    def didnt_map(self):
+        if not self.sample.mapper: return 0
+        return "%.2f%%" % (self.sample.mapper.results.fraction_unmapped * 100)
     def mean_coverage(self):
+        if not self.sample.mapper: return "<*Not computed yet*>"
         caption = "Co-mapping mean coverage distribution"
         graph = self.sample.mapper.results.mean_coverage_graph
         label = "mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def percent_covered(self):
+        if not self.sample.mapper: return "<*Not computed yet*>"
         caption = "Co-mapping percent covered distribution"
         graph = self.sample.mapper.results.percent_covered_graph
         label = "percent_covered"
