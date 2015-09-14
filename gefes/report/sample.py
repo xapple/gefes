@@ -180,28 +180,41 @@ class SampleTemplate(Template):
     def sample_assembler_version(self): return self.sample.assembly.long_name
     def sample_kmer_size(self):         return self.sample.assembly.kmer_size
     def sample_contig_cutoff(self):     return self.sample.assembly.length_cutoff
-    def sample_count_contigs(self):     return split_thousands(self.sample.assembly.results.contigs_fasta.count)
+    def sample_count_contigs(self):
+        if not self.sample.assembly: return 0
+        return split_thousands(self.sample.assembly.results.contigs_fasta.count)
     def sample_contigs_len_dist(self):
+        if not self.sample.assembly: return "<*Not computed yet*>"
         caption = "Mono-assembly length distribution"
         graph = self.sample.assembly.results.contigs_fasta.length_dist
         label = "sample_contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
-    def sample_contigs_total_bp(self): return split_thousands(sum(self.sample.assembly.results.contigs_fasta.lengths))
+    def sample_contigs_total_bp(self):
+        if not self.sample.assembly: return 0
+        return split_thousands(sum(self.sample.assembly.results.contigs_fasta.lengths))
 
     # Mono Mapping #
     def sample_mapper_version(self):   return self.sample.mono_mapper.long_name
     @property_pickled
-    def sample_map_filter_count(self): return split_thousands(self.sample.mono_mapper.results.filtered_count)
+    def sample_map_filter_count(self):
+        if not self.sample.mono_mapper: return 0
+        return split_thousands(self.sample.mono_mapper.results.filtered_count)
     @property_pickled
-    def sample_did_map(self):          return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
+    def sample_did_map(self):
+        if not self.sample.mono_mapper: return 0
+        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_mapped * 100)
     @property_pickled
-    def sample_didnt_map(self):        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)
+    def sample_didnt_map(self):
+        if not self.sample.mono_mapper: return 0
+        return "%.2f%%" % (self.sample.mono_mapper.results.fraction_unmapped * 100)
     def sample_mean_coverage(self):
+        if not self.sample.mono_mapper: return "<*Not computed yet*>"
         caption = "Mono-mapping mean coverage distribution"
         graph = self.sample.mono_mapper.results.mean_coverage_graph
         label = "sample_mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def samples_percent_covered(self):
+        if not self.sample.mono_mapper: return "<*Not computed yet*>"
         caption = "Mono-mapping percent covered distribution"
         graph = self.sample.mono_mapper.results.percent_covered_graph
         label = "samples_percent_covered"
