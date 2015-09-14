@@ -62,8 +62,8 @@ for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
 for s,a,m in ((s,a,m) for s in samples for a,m in s.mappers.items()): print "Map %s to %s:"%(s,a), bool(m)
 for p,n,a in ((p,n,a) for p in projects for n,a in p.assemblies.items()):
-                   print "Binning %s %i:"%(p,n), bool(a.results.binner)
-for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.results)
+                   print "Binning %s %i:"%(p,n), bool(a.results.binner.p.clustering)
+for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.p.clustering)
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -158,6 +158,7 @@ for c in proj.assembly.results.contigs: c.taxonomy.run()
 ################################## CheckM #####################################
 params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
 proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)
+for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
 
 ################################## Plots ######################################
 for s in tqdm(samples):

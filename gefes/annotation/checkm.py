@@ -73,7 +73,7 @@ class CheckmResults(object):
 
     @property_cached
     def statistics(self):
-        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field actually has a space in it, be carefull when parsing. Use this rule: more than one space is necessary to split."""
+        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field actually has a space in it, be careful when parsing. Use this rule: more than one space is necessary to split."""
         keys = OrderedDict((
             ("bin_id", str),
             ("lineage", str),

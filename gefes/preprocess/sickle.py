@@ -19,7 +19,6 @@ class Sickle(QualityChecker):
     The 'singletons' file contains reads that passed the filter in either
     the forward or reverse direction, but not the other.
     Expects version 1.33
-    You can't chose the window size, it's always 10% of read length.
     """
 
     short_name = 'sickle'
@@ -31,6 +30,11 @@ class Sickle(QualityChecker):
     threshold   = 20 # This is a PHRED score threshold
     min_length  = 50 # Minimum number of remaining base pairs
     discard_N   = True
+
+    @property
+    def window_size(self):
+        """You can't chose the window size, it's always 10 percent of read length."""
+        return len(self.source.fwd.first) * 0.1
 
     def run(self):
         # Check version #

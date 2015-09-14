@@ -48,8 +48,8 @@ for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.p.coverage)
 print                   "Merged assembly:",  proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
-for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.results)
-print                   "Merged binning:", bool(proj.merged.results.binner.results)
+for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.p.clustering)
+print                   "Merged binning:", bool(proj.merged.results.binner.p.clustering)
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -145,3 +145,6 @@ for s in tqdm(samples):
     s.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 for a in proj.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+
+################################# Reports #####################################
+

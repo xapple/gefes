@@ -51,8 +51,8 @@ for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
 for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
 for s,a,m in ((s,a,m) for s in samples for a,m in s.mappers.items()): print "Map %s to %s:"%(s,a), bool(m)
 for p,n,a in ((p,n,a) for p in projects for n,a in p.assemblies.items()):
-                   print "Binning %s %i:"%(p,n), bool(a.results.binner)
-for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.results)
+                   print "Binning %s %i:"%(p,n), bool(a.results.binner.p.clustering)
+for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.p.clustering)
 
 ################################# Search logs ##################################
 from plumbing.common import tail

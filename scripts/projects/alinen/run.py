@@ -34,40 +34,28 @@ for k,v in proj.assemblies.items(): print "Co-assembly %i:"%k, proj, bool(v)
 for s in samples: print "Mono-mapping:",       s, bool(s.mono_mapper.p.coverage)
 print                   "Merged assembly:",  proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
-for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.results)
-print                   "Merged binning:", bool(proj.merged.results.binner.results)
+for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.p.clustering)
+print                   "Merged binning:", bool(proj.merged.results.binner.p.clustering)
+for b in proj.merged.results.binner.bins: print "Merged bin '%s' CheckM:" % b, bool(b.evaluation.p.stdout)
 
 ################################ Preprocessing ################################
-# Manual #
-for s in samples:
-    s.load()
-    s.pair.fwd.fastqc.run()
-    s.pair.rev.fastqc.run()
+# Clean #
+for s in tqdm(samples):
+    print "Starting cleaning of sample '%s'" % s.name
     s.quality_checker.run()
-    s.clean.fwd.fastqc.run()
-    s.clean.rev.fastqc.run()
-    s.clean.fwd.graphs.length_dist.plot()
-    s.clean.rev.graphs.length_dist.plot()
-    s.pair.fwd.avg_quality
-    s.pair.rev.avg_quality
-    s.report.generate()
 
-# By SLURM #
-for s in samples: s.runner.run_slurm(time='04:00:00')
+################################## FASTQC #####################################
+for s in tqdm(samples):
+    print "FastQC on sample '%s'" % s.name
+    s.pair.fwd.fastqc.run(cpus=4)
+    s.pair.rev.fastqc.run(cpus=4)
+    s.clean.fwd.fastqc.run(cpus=4)
+    s.clean.rev.fastqc.run(cpus=4)
 
-################################### Kraken ####################################
-for s in samples: print s, s.kraken.run()
-
-############################### Solo-Assembly #################################
-for s in proj.samples:
-    s.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small')
-
-################################ Solo-Mapping #################################
-for s in samples: print s, s.mono_mapper.run()
-
-############################### Solo-Prokka #################################
-all_contigs = [c for s in proj.samples for c in s.contigs]
-for c in tqdm(all_contigs): c.annotation.run()
+################################## Kraken #####################################
+for s in tqdm(samples):
+    print "Kraken on sample '%s'" % s.name
+    s.kraken.run(cpus=4)
 
 ################################# Co-Assembly #################################
 # On Milou #
@@ -79,6 +67,23 @@ proj.runner.run_slurm(steps=['assembly.run'], machines=42, cores=42*24, time='36
 # On Halvan #
 proj.runner.run_slurm(steps=['assembly.run'], time='10-00:00:00', project="b2011035",
                       job_name="alinen_ray", cluster='halvan', partition='halvan', cores=64)
+
+############################### Solo-Assembly #################################
+for s in proj.samples:
+    s.runner.run_slurm(steps=['assembly.run'], machines=3, cores=3*24, time='12:00:00', partition='small')
+
+########################## Link from Sisu to Taito ############################
+old = "/homeappl/home/eiler/"
+new = "/wrk/lsinclai/"
+print "rsync -av --progress %s %s" % (proj.p.assembly_dir.path.replace(old, new), proj.p.assembly_dir)
+for s in samples: print "rsync -av --progress %s %s" % (s.p.assembly_dir.path.replace(old, new), s.p.assembly_dir)
+
+################################ Solo-Mapping #################################
+for s in samples: print s, s.mono_mapper.run()
+
+############################### Solo-Prokka #################################
+all_contigs = [c for s in proj.samples for c in s.contigs]
+for c in tqdm(all_contigs): c.annotation.run()
 
 ################################# Co-Mapping ##################################
 for s in samples: s.mapper.run()
