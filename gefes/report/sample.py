@@ -157,16 +157,19 @@ class SampleTemplate(Template):
     # Rough taxonomic prediction #
     def kraken_version(self): return self.sample.kraken.long_name
     def kraken_domain_table(self):
+        if not self.sample.kraken: return "<*Not computed yet*>"
         table = self.sample.kraken.results.at_domain_level
         table = OrderedDict((('Domain',table.keys()), ('Percentage',table.values())))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Domain level breakdown predicted by Kraken."
     def kraken_phylum_table(self):
+        if not self.sample.kraken: return "<*Not computed yet*>"
         table = self.sample.kraken.results.at_phylum_level
         table = OrderedDict((('Phylum',table.keys()), ('Percentage',table.values())))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
         return table + "\n\n   : The Phylum level distribution predicted by Kraken."
     def kraken_species_table(self):
+        if not self.sample.kraken: return "<*Not computed yet*>"
         table = self.sample.kraken.results.at_species_level
         table = OrderedDict((('Species',table.keys()[0:10]), ('Percentage',table.values()[0:10])))
         table = tabulate(table, headers="keys", numalign="right", tablefmt="pipe")
