@@ -193,4 +193,5 @@ class Sample(object):
     @property
     def contigs(self):
         """Convenience shortcut. The contigs of the mono-assembly"""
+        if not self.assembly: return []
         return self.assembly.results.contigs
