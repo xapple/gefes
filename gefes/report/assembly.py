@@ -49,6 +49,12 @@ class AssemblyReport(Document):
         self.make_latex()
         self.make_pdf()
 
+    @property
+    def export_base(self):
+        """Where should we copy stuff for sharing the report."""
+        self.uppmax_proj = self.assembly.samples[0].get('uppmax_project_id', 'b2014083')
+        return self.uppmax_proj + '/GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.name + '.pdf'
+
 ###############################################################################
 class AssemblyTemplate(Template):
     """All the parameters to be rendered in the markdown template"""

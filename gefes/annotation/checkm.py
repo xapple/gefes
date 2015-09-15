@@ -1,7 +1,7 @@
 # Built-in modules #
 
 # Internal modules #
-import sys
+import sys, re
 from collections import OrderedDict
 
 # First party modules #
@@ -21,7 +21,7 @@ class Checkm(object):
     short_name = 'checkm'
     long_name  = 'CheckM v0.9.7'
     executable = 'checkm'
-    url        = 'https://github.com/Ecogenomics/CheckM/wiki'
+    url        = 'https://github.com/Ecogenomics/CheckM'
     dependencies = ['hmmer', 'prodigal', 'pplacer']
 
     all_paths = """
@@ -52,6 +52,7 @@ class Checkm(object):
                   '-t', cpus,
                   self.result_dir,
                   self.p.output_dir,
+                  #'--tab_table', # See https://github.com/Ecogenomics/CheckM/issues/29
                   _out=self.p.stdout.path,
                   _err=self.p.stderr.path)
         # Check that it worked #
@@ -73,17 +74,17 @@ class CheckmResults(object):
 
     @property_cached
     def statistics(self):
-        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field actually has a space in it, be careful when parsing. Use this rule: more than one space is necessary to split."""
-        keys = OrderedDict((
-            ("bin_id", str),
-            ("lineage", str),
-            ("genomes", int),
-            ("markers", int),
+        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field values actually have a spaces in it, be careful when parsing. Use this rule: more than one space is necessary to split."""
+        columns = OrderedDict((
+            ("bin_id",      str),
+            ("lineage",     str),
+            ("genomes",     int),
+            ("markers",     int),
             ("marker_sets", int),
             ("0", int), ("1", int), ("2", int), ("3", int), ("4", int), ("5+", int),
-            ("completeness", float),
+            ("completeness",  float),
             ("contamination", float),
             ("heterogeneity", float)))
-        values = list(self.checkm.p.stdout)[3].split()
-        return {k: keys[k](values[i]) for i,k in enumerate(keys)}
-        #TODO the id in the lineage has a space in it !!!
+        values = re.split(r'\s{2,}', list(self.checkm.p.stdout)[3])
+        values = [v for v in values if v]
+        return {k: columns[k](values[i]) for i,k in enumerate(keys)}
