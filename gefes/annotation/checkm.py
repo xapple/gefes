@@ -52,7 +52,7 @@ class Checkm(object):
                   '-t', cpus,
                   self.result_dir,
                   self.p.output_dir,
-                  #'--tab_table', # See https://github.com/Ecogenomics/CheckM/issues/29
+                  #'--tab_table', # See https://github.com/Ecogenomics/CheckM/issues/29
                   _out=self.p.stdout.path,
                   _err=self.p.stderr.path)
         # Check that it worked #
