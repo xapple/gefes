@@ -140,7 +140,7 @@ class SampleTemplate(Template):
         return str(DualFigure(*params))
     def singletons_len_dist(self):
         caption = "Singletons length distribution"
-        graph = self.sample.clean.rev.length_dist
+        graph = self.sample.clean.singletons.length_dist
         label = "singletons_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
 

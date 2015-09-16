@@ -34,7 +34,7 @@ class Sickle(QualityChecker):
     @property
     def window_size(self):
         """You can't chose the window size, it's always 10 percent of read length."""
-        return len(self.source.fwd.first) * 0.1
+        return round(len(self.source.fwd.first) * 0.1)
 
     def run(self):
         # Check version #

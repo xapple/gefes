@@ -129,8 +129,9 @@ proj.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=proj.na
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name
-    s.clean.fwd.graphs.length_dist.plot(x_log=True, y_log=True)
-    s.clean.rev.graphs.length_dist.plot(x_log=True, y_log=True)
+    s.clean.fwd.graphs.length_dist.plot(x_log=False, y_log=True)
+    s.clean.rev.graphs.length_dist.plot(x_log=False, y_log=True)
+    s.singletons.graphs.length_dist.plot(x_log=False, y_log=True)
     s.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 for a in proj.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)

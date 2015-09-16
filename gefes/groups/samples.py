@@ -182,16 +182,16 @@ class Sample(object):
     #-------------------------------- Shortcuts -----------------------------#
     @property
     def count(self):
-        """Convenience shortcut. The number of sequences of the raw pair"""
+        """Convenience shortcut. The number of sequences of the raw pair."""
         return self.pair.count
 
     @property
     def singletons(self):
-        """Convenience shortcut. The singletons of the quality check"""
+        """Convenience shortcut. The singletons of the quality check."""
         return self.quality_checker.singletons
 
     @property
     def contigs(self):
-        """Convenience shortcut. The contigs of the mono-assembly"""
+        """Convenience shortcut. The contigs of the mono-assembly."""
         if not self.assembly: return []
         return self.assembly.results.contigs

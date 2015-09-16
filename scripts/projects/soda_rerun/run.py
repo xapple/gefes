@@ -140,8 +140,9 @@ for c in tqdm(proj.merged.results.contigs): c.proteins.run()
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name
-    s.clean.fwd.graphs.length_dist.plot(x_log=True, y_log=True)
-    s.clean.rev.graphs.length_dist.plot(x_log=True, y_log=True)
+    s.clean.fwd.graphs.length_dist.plot(x_log=False, y_log=True)
+    s.clean.rev.graphs.length_dist.plot(x_log=False, y_log=True)
+    s.singletons.graphs.length_dist.plot(x_log=False, y_log=True)
     s.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 for a in proj.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
@@ -150,4 +151,5 @@ proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True
 for s in tqdm(samples):
     print "Report on sample '%s'" % s.name
     s.report.generate()
+    s.report.web_export
 proj.merged.report.generate()
