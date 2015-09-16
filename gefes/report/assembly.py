@@ -9,7 +9,7 @@ from collections import OrderedDict
 import gefes
 
 # First party modules #
-from plumbing.autopaths import DirectoryPath
+from plumbing.autopaths import DirectoryPath, FilePath
 from plumbing.common    import split_thousands, pretty_now
 from plumbing.cache     import property_pickled
 from pymarktex          import Document, Template, HeaderTemplate, FooterTemplate
@@ -20,6 +20,7 @@ from tabulate import tabulate
 
 # Constants #
 ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
+home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
 class AssemblyReport(Document):
@@ -49,17 +50,10 @@ class AssemblyReport(Document):
         self.make_latex()
         self.make_pdf()
 
-    @property
-    def export_base(self):
-        """Where should we copy stuff for sharing the report."""
-        self.uppmax_proj = self.sample.info.get('uppmax_project_id', 'b2014083')
-        return self.uppmax_proj + '/GEFES/' + self.sample.project.name + '/' + self.sample.name + '.pdf'
-
-    @property
-    def export_base(self):
-        """Where should we copy stuff for sharing the report."""
-        self.uppmax_proj = self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083')
-        return self.uppmax_proj + '/GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf'
+    uppmax_proj  = property(lambda self: self.sample.info.get('uppmax_project_id', 'b2014083'))
+    export_base  = property(lambda self: 'GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf')
+    web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))
+    url          = property(lambda self: "https://export.uppmax.uu.se/" + self.uppmax_proj +'/' +self.export_base)
 
 ###############################################################################
 class AssemblyTemplate(Template):
