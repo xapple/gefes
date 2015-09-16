@@ -87,4 +87,4 @@ class CheckmResults(object):
             ("heterogeneity", float)))
         values = re.split(r'\s{2,}', list(self.checkm.p.stdout)[3])
         values = [v for v in values if v]
-        return {k: columns[k](values[i]) for i,k in enumerate(keys)}
+        return {k: columns[k](values[i]) for i,k in enumerate(columns)}
