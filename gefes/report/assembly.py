@@ -52,8 +52,14 @@ class AssemblyReport(Document):
     @property
     def export_base(self):
         """Where should we copy stuff for sharing the report."""
-        self.uppmax_proj = self.assembly.samples[0].get('uppmax_project_id', 'b2014083')
-        return self.uppmax_proj + '/GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.name + '.pdf'
+        self.uppmax_proj = self.sample.info.get('uppmax_project_id', 'b2014083')
+        return self.uppmax_proj + '/GEFES/' + self.sample.project.name + '/' + self.sample.name + '.pdf'
+
+    @property
+    def export_base(self):
+        """Where should we copy stuff for sharing the report."""
+        self.uppmax_proj = self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083')
+        return self.uppmax_proj + '/GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf'
 
 ###############################################################################
 class AssemblyTemplate(Template):
