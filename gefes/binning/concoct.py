@@ -1,11 +1,11 @@
 # Built-in modules #
-import sys, types
+import sys
 from collections import defaultdict
 
 # Internal modules #
 from gefes.binning import graphs
 from gefes.binning.bin import Bin
-from gefes.evaluation.checkm import make_checkm_graphs
+from gefes.annotation.checkm import make_checkm_graphs
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
