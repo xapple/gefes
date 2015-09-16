@@ -104,7 +104,7 @@ class AssemblyTemplate(Template):
         info = OrderedDict((('Name',      lambda s: "**" + s.name + "**"),
                             ('Details',   lambda s: s.long_name),
                             ('Reads',     lambda s: split_thousands(len(s.clean))),
-                            ('Did map',   lambda s: "%.3f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100))))
+                            ('Did map',   lambda s: "%.1f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100))))
         table = [[i+1] + [f(self.assembly[i]) for f in info.values()] for i in range(len(self.assembly))]
         table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary information for mapping of all samples."

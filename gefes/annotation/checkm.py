@@ -8,9 +8,11 @@ from collections import OrderedDict
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
+from plumbing.graphs import Graph
 
 # Third party modules #
 import sh
+from matplotlib import pyplot
 
 ###############################################################################
 class Checkm(object):
@@ -88,3 +90,34 @@ class CheckmResults(object):
         values = re.split(r'\s{2,}', list(self.checkm.p.stdout)[3])
         values = [v for v in values if v]
         return {k: columns[k](values[i]) for i,k in enumerate(columns)}
+
+###############################################################################
+def make_checkm_graphs(concot):
+    """Will return an object with as attributes all the CheckM graphs.
+    All graphs summarizing the results from the evaluation procedure.
+    One graph for every statistic, later included in the assembly report."""
+    # All the stats we want #
+    names = ["genomes", "markers", "marker_sets",
+             "completeness", "contamination", "heterogeneity"]
+    # Make a dummy object #
+    CheckmGraphs = type('CheckmGraphs', (), {})
+    eval_graphs  = CheckmGraphs()
+    # Main loop #
+    for name in names:
+        graph = CheckmSummaryGraph(concot, short_name=name)
+        eval_graphs.__dict__[name] = graph
+    return eval_graphs
+
+class CheckmSummaryGraph(Graph):
+    def plot(self, bins=250):
+        counts = [b.evaluation.results.statistics.get(self.short_name) for b in self.parent.bins]
+        fig = pyplot.figure()
+        pyplot.hist(counts, bins=bins, color='gray')
+        axes = pyplot.gca()
+        axes.set_title("Distribution over all bins for the '%s' metric" % self.short_name)
+        axes.set_xlabel(self.short_name)
+        axes.set_ylabel('Number of bins with this much %s' % self.short_name)
+        axes.xaxis.grid(False)
+        self.save_plot(fig, axes, sep=('x'))
+        pyplot.close(fig)
+        return self

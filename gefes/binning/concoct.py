@@ -5,17 +5,16 @@ from collections import defaultdict
 # Internal modules #
 from gefes.binning import graphs
 from gefes.binning.bin import Bin
+from gefes.evaluation.checkm import make_checkm_graphs
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 from plumbing.csv_tables import TSVTable
-from plumbing.graphs import Graph
 
 # Third party modules #
 import pandas, sh
 from tqdm import tqdm
-from matplotlib import pyplot
 
 ###############################################################################
 class Concoct(object):
@@ -131,30 +130,5 @@ class ConcoctResults(object):
     #-------------------------------------------------------------------------#
     @property_cached
     def eval_graphs(self):
-        """All graphs summarizing the results from the evaluation (checkm)
-        procedure. One graph for every statistic, later included in the assembly report."""
-        names = ["genomes",
-                 "markers",
-                 "marker_sets",
-                 "completeness",
-                 "contamination",
-                 "heterogeneity"]
-        class EvalGraphs(object): pass
-        result = EvalGraphs()
-        for name in names:
-            graph = Graph(self, short_name=name)
-            def plot(s, bins=250):
-                counts = [b.evaluation.results.statistics.get(name) for b in s.parent.bins]
-                fig = pyplot.figure()
-                pyplot.hist(counts, bins=bins, color='gray')
-                axes = pyplot.gca()
-                axes.set_title("Distribution over all bins for the '%s' metric" % name)
-                axes.set_xlabel(name)
-                axes.set_ylabel('Number of bins with this many %s' % name)
-                axes.xaxis.grid(False)
-                s.save_plot(fig, axes, sep=('x'))
-                pyplot.close(fig)
-                return s
-            graph.plot = types.MethodType(plot, graph)
-            setattr(result, name, graph)
-        return result
+        """An object with all the checkm graphs as attributes."""
+        return make_checkm_graphs(self)

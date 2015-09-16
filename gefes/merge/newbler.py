@@ -30,7 +30,7 @@ class Newbler(Merger):
     You can only obtain the software via a registration form."""
 
     short_name = 'newbler'
-    long_name  = 'Newbler in Roche GS De Novo Assembler software v2.9'
+    long_name  = 'Newbler from Roche GS De Novo Assembler software v2.9'
     executable = 'runAssembly'
     url        = ''
     dependencies = []
