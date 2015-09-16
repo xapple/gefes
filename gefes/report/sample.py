@@ -37,8 +37,6 @@ class SampleReport(Document):
         # Where should we cache stuff #
         self.cache_dir = DirectoryPath(self.base_dir + 'cached/')
         self.cache_dir.create(safe=True)
-        # Usefull for exporting the project #
-        self.uppmax_proj = self.sample.info.get('uppmax_project_id', 'b2014083')
 
     def generate(self):
         # Dynamic templates #
