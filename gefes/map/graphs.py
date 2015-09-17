@@ -14,8 +14,9 @@ __all__ = ['MeanCoverage', 'PercentCovered']
 class MeanCoverage(Graph):
     """mean_coverage"""
     short_name = 'mean_coverage'
+    sep = ('x')
 
-    def plot(self, x_log=False, y_log=True):
+    def plot(self, **kwargs):
         # Data #
         counts = self.parent.coverage_mean.values()
         # Plot #
@@ -27,18 +28,16 @@ class MeanCoverage(Graph):
         axes.set_title(title)
         axes.set_xlabel('Mean coverage of a contig')
         axes.set_ylabel('Number of contigs with this much mean coverage')
-        axes.xaxis.grid(False)
-        # Add logarithm to axes #
-        if x_log: axes.set_xscale('symlog')
-        if y_log: axes.set_yscale('symlog')
         # Save it #
-        self.save_plot(fig, axes, sep=('x'))
+        self.save_plot(fig, axes, **kwargs)
+        pyplot.close(fig)
 
 class PercentCovered(Graph):
     """percent_covered"""
     short_name = 'percent_covered'
+    sep = ('x')
 
-    def plot(self, x_log=False, y_log=True):
+    def plot(self, **kwargs):
         # Data #
         counts = self.parent.covered_fraction.values()
         # Plot #
@@ -50,10 +49,6 @@ class PercentCovered(Graph):
         axes.set_title(title)
         axes.set_xlabel('Percentage covered of a contig')
         axes.set_ylabel('Number of contigs with this much percent covered')
-        axes.xaxis.grid(False)
-        # Add logarithm to axes #
-        if x_log: axes.set_xscale('symlog')
-        if y_log: axes.set_yscale('symlog')
         # Save it #
-        self.save_plot(fig, axes, sep=('x'))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)

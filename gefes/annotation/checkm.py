@@ -111,7 +111,9 @@ def make_checkm_graphs(concot):
 
 class CheckmSummaryGraph(Graph):
     x_grid = True
-    def plot(self, bins=250):
+    sep    = ('x')
+
+    def plot(self, bins=250, **kwargs):
         counts = [b.evaluation.results.statistics.get(self.short_name) for b in self.parent.bins]
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color='gray')
@@ -120,6 +122,6 @@ class CheckmSummaryGraph(Graph):
         axes.set_xlabel(self.short_name)
         axes.set_ylabel('Number of bins with this much %s' % self.short_name)
         axes.xaxis.grid(False)
-        self.save_plot(fig, axes, sep=('x'))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
         return self

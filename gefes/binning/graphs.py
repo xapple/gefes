@@ -13,8 +13,9 @@ __all__ = ['BinContigDistribution', 'BinNucleotideDistribution', 'BinGenesPredic
 class BinContigDistribution(Graph):
     """bins_contig_dist"""
     short_name = 'bins_contig_dist'
+    sep = ('y')
 
-    def plot(self, x_log=False, y_log=False, bins=250):
+    def plot(self, bins=250, **kwargs):
         # Data #
         counts = map(len, self.parent.bin_id_to_contig_ids.values())
         # Plot #
@@ -31,7 +32,7 @@ class BinContigDistribution(Graph):
         if x_log: axes.set_xscale('symlog')
         if y_log: axes.set_yscale('symlog')
         # Save it #
-        self.save_plot(fig, axes, sep=('y'))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
         # For convenience #
         return self
@@ -40,8 +41,10 @@ class BinContigDistribution(Graph):
 class BinNucleotideDistribution(Graph):
     """bins_nucleotide_dist"""
     short_name = 'bins_nucleotide_dist'
+    sep = ('y')
+    y_scale = 'symlog'
 
-    def plot(self, x_log=False, y_log=True, bins=250):
+    def plot(self, bins=250, **kwargs):
         # Data #
         counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
         # Plot #
@@ -53,12 +56,8 @@ class BinNucleotideDistribution(Graph):
         axes.set_title(title)
         axes.set_xlabel('Number of nucleotides in a bin')
         axes.set_ylabel('Number of bins with that many nucleotides in them')
-        axes.xaxis.grid(False)
-        # Add logarithm to axes #
-        if x_log: axes.set_xscale('symlog')
-        if y_log: axes.set_yscale('symlog')
         # Save it #
-        self.save_plot(fig, axes, sep=('y'))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
         # For convenience #
         return self
@@ -67,8 +66,10 @@ class BinNucleotideDistribution(Graph):
 class BinGenesPredictedDist(Graph):
     """bins_genes_predicted_dist"""
     short_name = 'bins_genes_predicted_dist'
+    sep = ('y')
+    y_scale = 'symlog'
 
-    def plot(self, x_log=False, y_log=True, bins=250):
+    def plot(self, bins=250, **kwargs):
         # Data #
         counts = [b.evaluation.results[''] for b in self.parent.bins]
         # Plot #
@@ -80,12 +81,8 @@ class BinGenesPredictedDist(Graph):
         axes.set_title(title)
         axes.set_xlabel('Number of nucleotides in a bin')
         axes.set_ylabel('Number of bins with that many nucleotides in them')
-        axes.xaxis.grid(False)
-        # Add logarithm to axes #
-        if x_log: axes.set_xscale('symlog')
-        if y_log: axes.set_yscale('symlog')
         # Save it #
-        self.save_plot(fig, axes, sep=('y'))
+        self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
         # For convenience #
         return self
