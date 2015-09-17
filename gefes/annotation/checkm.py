@@ -106,7 +106,7 @@ def make_checkm_graphs(concot):
     for name in names:
         graph = CheckmSummaryGraph(concot, short_name=name)
         eval_graphs.__dict__[name] = graph
-        eval_graphs.graphs        += graph
+        eval_graphs.graphs        += [graph]
     return eval_graphs
 
 class CheckmSummaryGraph(Graph):
