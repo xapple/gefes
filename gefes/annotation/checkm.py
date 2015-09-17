@@ -93,22 +93,24 @@ class CheckmResults(object):
 
 ###############################################################################
 def make_checkm_graphs(concot):
-    """Will return an object with as attributes all the CheckM graphs.
+    """Will return an object with, as attributes, all the CheckM graphs.
     All graphs summarizing the results from the evaluation procedure.
     One graph for every statistic, later included in the assembly report."""
     # All the stats we want #
     names = ["genomes", "markers", "marker_sets",
              "completeness", "contamination", "heterogeneity"]
     # Make a dummy object #
-    CheckmGraphs = type('CheckmGraphs', (), {})
+    CheckmGraphs = type('CheckmGraphs', (), {"graphs":[]})
     eval_graphs  = CheckmGraphs()
     # Main loop #
     for name in names:
         graph = CheckmSummaryGraph(concot, short_name=name)
         eval_graphs.__dict__[name] = graph
+        eval_graphs.graphs        += graph
     return eval_graphs
 
 class CheckmSummaryGraph(Graph):
+    x_grid = True
     def plot(self, bins=250):
         counts = [b.evaluation.results.statistics.get(self.short_name) for b in self.parent.bins]
         fig = pyplot.figure()

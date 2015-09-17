@@ -135,6 +135,7 @@ for s in tqdm(samples):
     s.assembly.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 for a in proj.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
 proj.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+for g in proj.merged.results.binner.results.eval_graphs.graphs: g.plot(x_grid = True)
 
 ################################## Report #####################################
 for s in tqdm(samples):
