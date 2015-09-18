@@ -134,7 +134,7 @@ class CheckmGraphCCH(Graph):
         x = [b.evaluation.results.statistics['contamination'] for b in self.parent.bins]
         y = [b.evaluation.results.statistics['completeness'] for b in self.parent.bins]
         colors = [b.evaluation.results.statistics['heterogeneity'] for b in self.parent.bins]
-        # Do the plotting #
+        # Do the plotting #
         color_map = pyplot.cm.get_cmap('RdYlBu')
         fig = pyplot.figure()
         pyplot.scatter(x, y, c=colors, cmap=color_map)
