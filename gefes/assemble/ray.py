@@ -93,6 +93,10 @@ class Ray(object):
         if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
     @property
+    def short_description(self):
+        return "Ray with kmer %i " % self.kmer_size
+
+    @property
     def description(self):
         return "Ray with kmer %i and %i bp cutoff" % (self.kmer_size, self.length_cutoff)
 

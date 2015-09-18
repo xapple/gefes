@@ -69,7 +69,7 @@ class AssemblyTemplate(Template):
         self.aggregate = self.assembly.samples[0].project
 
     # Assembly #
-    def assembly_title(self):    return self.assembly.description
+    def assembly_title(self):    return self.assembly.short_description
     def count_samples(self):     return len(self.assembly.samples)
     def assembler_version(self): return self.assembly.long_name
     def kmer_size(self):         return self.assembly.kmer_size
@@ -129,9 +129,12 @@ class AssemblyTemplate(Template):
         if not all(b.evaluation for b in self.assembly.results.binner.results.bins): return "<*Not computed yet*>"
         graph = getattr(self.assembly.results.binner.results.eval_graphs, name)()
         return str(ScaledFigure(graph.path, "CheckMs '%s' metric" % name, "bins_eval_%s_graph" % name))
-    def bins_eval_genomes_graph(self):       return self.bins_eval_graphs('genomes')
     def bins_eval_markers_graph(self):       return self.bins_eval_graphs('markers')
     def bins_eval_marker_sets_graph(self):   return self.bins_eval_graphs('marker_sets')
     def bins_eval_completeness_graph(self):  return self.bins_eval_graphs('completeness')
     def bins_eval_contamination_graph(self): return self.bins_eval_graphs('contamination')
     def bins_eval_heterogeneity_graph(self): return self.bins_eval_graphs('heterogeneity')
+    def bins_eval_cch_graph(self):
+        caption = "Contamination versus completeness with heterogeneity"
+        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_log=True)
+        return str(ScaledFigure(graph.path, caption, "bins_eval_cch_graph"))

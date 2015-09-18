@@ -5,7 +5,7 @@ from collections import defaultdict
 # Internal modules #
 from gefes.binning import graphs
 from gefes.binning.bin import Bin
-from gefes.annotation.checkm import make_checkm_graphs
+from gefes.annotation.checkm import make_checkm_graphs, CheckmGraphCCH
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -132,3 +132,7 @@ class ConcoctResults(object):
     def eval_graphs(self):
         """An object with all the checkm graphs as attributes."""
         return make_checkm_graphs(self)
+
+    @property_cached
+    def eval_cch_graph(self):
+        return CheckmGraphCCH(self)

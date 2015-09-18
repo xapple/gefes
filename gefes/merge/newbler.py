@@ -97,6 +97,10 @@ class Newbler(Merger):
         if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
     @property
+    def short_description(self):
+        return "Newbler"
+
+    @property
     def description(self):
         return "Newbler merging %i assemblies (%s)" \
             % (len(self.assemblies), self.kmer_size)

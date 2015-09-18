@@ -96,13 +96,12 @@ def make_checkm_graphs(concot):
     """Will return an object with, as attributes, all the CheckM graphs.
     All graphs summarizing the results from the evaluation procedure.
     One graph for every statistic, later included in the assembly report."""
-    # All the stats we want #
-    names = ["genomes", "markers", "marker_sets",
-             "completeness", "contamination", "heterogeneity"]
     # Make a dummy object #
     CheckmGraphs = type('CheckmGraphs', (), {"graphs":[]})
     eval_graphs  = CheckmGraphs()
     # Main loop #
+    names = ["genomes", "markers", "marker_sets",
+             "completeness", "contamination", "heterogeneity"]
     for name in names:
         graph = CheckmSummaryGraph(concot, short_name=name)
         eval_graphs.__dict__[name] = graph
@@ -110,9 +109,8 @@ def make_checkm_graphs(concot):
     return eval_graphs
 
 class CheckmSummaryGraph(Graph):
-    x_grid = True
+    y_grid = True
     sep    = ('x')
-
     def plot(self, bins=250, **kwargs):
         counts = [b.evaluation.results.statistics.get(self.short_name) for b in self.parent.bins]
         fig = pyplot.figure()
@@ -121,7 +119,28 @@ class CheckmSummaryGraph(Graph):
         axes.set_title("Distribution over all bins for the '%s' metric" % self.short_name)
         axes.set_xlabel(self.short_name)
         axes.set_ylabel('Number of bins with this much %s' % self.short_name)
-        axes.xaxis.grid(False)
         self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
-        return self
+
+###############################################################################
+class CheckmGraphCCH(Graph):
+    """Plot with contamination, completeness and heterogeneity all
+    in one graph (with heterogeneity as a color scale)."""
+    x_grid = True
+    y_grid = True
+
+    def plot(self, **kwargs):
+        # Create values #
+        x = [b.evaluation.results.statistics['contamination'] for b in self.parent.bins]
+        y = [b.evaluation.results.statistics['completeness'] for b in self.parent.bins]
+        colors = [b.evaluation.results.statistics['heterogeneity'] for b in self.parent.bins]
+        # Do the plotting #
+        color_map = pyplot.cm.get_cmap('RdYlBu')
+        fig = pyplot.figure()
+        pyplot.scatter(x, y, c=colors, cmap=color_map)
+        axes = pyplot.gca()
+        axes.set_title("Contamination versus completeness with heterogeneity")
+        axes.set_xlabel("Contamination")
+        axes.set_ylabel("Completeness")
+        self.save_plot(fig, axes, **kwargs)
+        pyplot.close(fig)
