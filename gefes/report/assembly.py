@@ -136,5 +136,5 @@ class AssemblyTemplate(Template):
     def bins_eval_heterogeneity_graph(self): return self.bins_eval_graphs('heterogeneity')
     def bins_eval_cch_graph(self):
         caption = "Contamination versus completeness with heterogeneity"
-        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_eval_cch_graph()
         return str(ScaledFigure(graph.path, caption, "bins_eval_cch_graph"))
