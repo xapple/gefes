@@ -133,17 +133,18 @@ class CheckmGraphCCH(Graph):
 
     def plot(self, **kwargs):
         # Create values #
-        x = [b.evaluation.results.statistics['contamination'] for b in self.parent.bins]
-        y = [b.evaluation.results.statistics['completeness'] for b in self.parent.bins]
+        x      = [b.evaluation.results.statistics['contamination'] for b in self.parent.bins]
+        y      = [b.evaluation.results.statistics['completeness']  for b in self.parent.bins]
         colors = [b.evaluation.results.statistics['heterogeneity'] for b in self.parent.bins]
         # Do the plotting #
-        color_map = pyplot.cm.get_cmap('RdYlBu')
-        fig = pyplot.figure()
+        color_map       = pyplot.cm.get_cmap('RdYlBu')
+        fig             = pyplot.figure()
         path_collection = pyplot.scatter(x, y, c=colors, cmap=color_map)
-        pyplot.colorbar(path_collection)
-        axes = pyplot.gca()
+        color_bar       = pyplot.colorbar(path_collection)
+        axes            = pyplot.gca()
         axes.set_title("Contamination versus completeness with heterogeneity")
         axes.set_xlabel("Contamination")
         axes.set_ylabel("Completeness")
+        color_bar.ax.set_ylabel('Heterogeneity', rotation=90)
         self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)
