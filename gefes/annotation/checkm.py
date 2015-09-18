@@ -126,6 +126,7 @@ class CheckmSummaryGraph(Graph):
 class CheckmGraphCCH(Graph):
     """Plot with contamination, completeness and heterogeneity all
     in one graph (with heterogeneity as a color scale)."""
+    short_name = "eval_cch_graph"
     x_grid = True
     y_grid = True
 
