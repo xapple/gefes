@@ -129,6 +129,7 @@ class CheckmGraphCCH(Graph):
     short_name = "eval_cch_graph"
     x_grid = True
     y_grid = True
+    x_scale = "symlog"
 
     def plot(self, **kwargs):
         # Create values #
@@ -138,7 +139,8 @@ class CheckmGraphCCH(Graph):
         # Do the plotting #
         color_map = pyplot.cm.get_cmap('RdYlBu')
         fig = pyplot.figure()
-        pyplot.scatter(x, y, c=colors, cmap=color_map)
+        path_collection = pyplot.scatter(x, y, c=colors, cmap=color_map)
+        pyplot.colorbar(path_collection)
         axes = pyplot.gca()
         axes.set_title("Contamination versus completeness with heterogeneity")
         axes.set_xlabel("Contamination")
