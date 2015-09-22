@@ -16,6 +16,7 @@ from pymarktex          import Document, Template, HeaderTemplate, FooterTemplat
 from pymarktex.figures  import ScaledFigure
 
 # Third party modules #
+import pandas
 from tabulate import tabulate
 
 # Constants #
@@ -138,3 +139,14 @@ class AssemblyTemplate(Template):
         caption = "Contamination versus completeness with heterogeneity"
         graph = self.assembly.results.binner.results.eval_cch_graph()
         return str(ScaledFigure(graph.path, caption, "bins_eval_cch_graph"))
+    def bins_quality_table(self):
+        """Sorted by completeness, report those that are >60%% complete and
+        that have a contamination <10%."""
+        stats = ['completeness', 'contamination', 'heterogeneity']
+        bins  = self.assembly.results.binner.results.bins
+        frame = pandas.DataFrame((b.evaluation.results.statistics for b in bins), columns=stats)
+        frame = frame.loc[frame['completeness']>60,:]
+        frame = frame.loc[frame['contamination']<10,:]
+        frame = frame.sort("completeness", ascending=False)
+        table = tabulate(frame, headers=['ID']+stats, numalign="right", tablefmt="pipe")
+        return table + "\n\n   : Summary information for mapping of all samples."

@@ -76,7 +76,8 @@ class CheckmResults(object):
 
     @property_cached
     def statistics(self):
-        """The various statistics produced by checkm in a dictionary. There is small technicality. The 'lineage' field values actually have a spaces in it, be careful when parsing. Use this rule: more than one space is necessary to split."""
+        """The various statistics produced by checkm in a dictionary. There is a small technicality. The 'lineage' field values actually have a spaces in it, be careful when parsing. Use this rule: more than one space is necessary to split.
+            See https://github.com/Ecogenomics/CheckM/issues/29"""
         columns = OrderedDict((
             ("bin_id",      str),
             ("lineage",     str),
@@ -142,6 +143,7 @@ class CheckmGraphCCH(Graph):
         path_collection = pyplot.scatter(x, y, c=colors, cmap=color_map)
         color_bar       = pyplot.colorbar(path_collection)
         axes            = pyplot.gca()
+        axes.set_xlim(-1, axes.get_xlim()[1])
         axes.set_title("Contamination versus completeness with heterogeneity")
         axes.set_xlabel("Contamination")
         axes.set_ylabel("Completeness")

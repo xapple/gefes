@@ -154,3 +154,4 @@ for s in tqdm(samples):
     s.report.generate()
     s.report.web_export
 proj.merged.report.generate()
+proj.merged.report.web_export()
