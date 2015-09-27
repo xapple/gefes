@@ -49,19 +49,22 @@ class Prokka(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self, cpus=None):
+        """There is a subtle bug that can appear here when the fasta sequence
+        header names are longer than a few characters.
+        See https://github.com/tseemann/prokka/issues/135"""
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Run it #
         sh.prokka('--outdir', self.p.output,
                   '--cpus', cpus,
-                  '--locustag', 'prokka',
+                  '--locustag', 'L',
+                  '--center', 'C'
                   '--compliant',
                   '--usegenus',
                   '--metagenome',
                   '--addgene',
                   '--quiet',
                   '--force',
-                  '--centre', 'XXX',
                   self.contig.fasta)
 
     @property_cached

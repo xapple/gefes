@@ -5,14 +5,23 @@
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
+from plumbing.slurm import num_processors
 
 # Third party modules #
+import sh
 
 ###############################################################################
 class Phylophlan(object):
-    """Use Phylophlan at http://example.com
-    to predict taxonomy on bins.
-    """
+    """Use Phylophlan to predict the taxonomy of bins.
+    - Changelog stops at May 2013
+    - It requires usearch v5 to be in the path as `usearch` T_T
+    - You have to manually change line 28 of the script T_T"""
+
+    short_name = 'phylophlan'
+    long_name  = 'PhyloPhlAn v0.99'
+    executable = 'phylophlan.py'
+    url        = 'https://bitbucket.org/nsegata/phylophlan/'
+    dependencies = ['muscle', 'usearch', 'FastTree']
 
     all_paths = """
     /lorem.fasta
@@ -28,8 +37,12 @@ class Phylophlan(object):
         self.base_dir = self.result_dir + 'phylophlan/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def run(self):
-        pass
+    def run(self, cpus=None):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
+        # Call the executable #
+        command = sh.Command(self.executable)
+        command('a', '--nproc', cpus)
 
     @property_cached
     def results(self):

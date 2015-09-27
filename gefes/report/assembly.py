@@ -148,5 +148,5 @@ class AssemblyTemplate(Template):
         frame = frame.loc[frame['completeness']>60,:]
         frame = frame.loc[frame['contamination']<10,:]
         frame = frame.sort("completeness", ascending=False)
-        table = tabulate(frame, headers=['ID']+stats, numalign="right", tablefmt="pipe")
+        table = tabulate(frame, headers=['Bin#']+stats, numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary information for mapping of all samples."
