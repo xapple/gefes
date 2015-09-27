@@ -58,7 +58,7 @@ class Prokka(object):
         sh.prokka('--outdir', self.p.output,
                   '--cpus', cpus,
                   '--locustag', 'L',
-                  '--center', 'C',
+                  '--centre', 'C',
                   '--compliant',
                   '--usegenus',
                   '--metagenome',
