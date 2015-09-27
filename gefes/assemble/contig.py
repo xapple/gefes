@@ -72,7 +72,7 @@ class Contig(object):
 
     @property_cached
     def proteins(self):
-        """The predicted proteins this contig contains."""
+        """The predicted proteins that this contig contains."""
         return Prodigal(self, self.p.annotation_dir)
 
     @property_cached

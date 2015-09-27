@@ -24,18 +24,18 @@ class Prokka(object):
 
     all_paths= """
     /output/
-    /output/prokka_*.txt
-    /output/prokka_*.ecn
-    /output/prokka_*.err
-    /output/prokka_*.faa
-    /output/prokka_*.ffn
-    /output/prokka_*.fna
-    /output/prokka_*.fsa
-    /output/prokka_*.gbf
-    /output/prokka_*.gff
-    /output/prokka_*.log
-    /output/prokka_*.sqn
-    /output/prokka_*.tbl
+    /output/L_*.txt
+    /output/L_*.ecn
+    /output/L_*.err
+    /output/L_*.faa
+    /output/L_*.ffn
+    /output/L_*.fna
+    /output/L_*.fsa
+    /output/L_*.gbf
+    /output/L_*.gff
+    /output/L_*.log
+    /output/L_*.sqn
+    /output/L_*.tbl
     """
 
     def __nonzero__(self): return not self.p.output_dir.empty

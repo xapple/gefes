@@ -24,10 +24,11 @@ class Prodigal(object):
 
     all_paths= """
     /output/coords.gbk
+    /output/proteins.fna
     /output/translated.faa
     """
 
-    def __nonzero__(self): pass
+    def __nonzero__(self): return bool(self.p.proteins)
 
     def __init__(self, contig, result_dir):
         # Save Attributes #
@@ -37,12 +38,10 @@ class Prodigal(object):
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
-    def run(self, cpus=None):
-        # Variable threads #
-        if cpus is None: cpus = num_processors
-        # Run it #
+    def run(self):
         sh.prodigal('-i', self.contig.fasta,
                     '-o', self.p.gbk,
+                    '-d', self.p.fna,
                     '-a', self.p.faa,
                     '-p', 'meta')
 
