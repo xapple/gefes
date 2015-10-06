@@ -4,7 +4,7 @@ import os
 # Internal modules #
 
 # First party modules #
-from plumbing.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths, DirectoryPath
 from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
 
@@ -44,8 +44,9 @@ class Phylophlan(object):
         if cpus is None: cpus = num_processors
         # Crazy fixed input and output directories #
         current_dir = os.getcwd()
-        self.base_dir.create(safe=True)
-        os.chdir(self.base_dir)
+        working_dir = DirectoryPath(self.base_dir)
+        working_dir.create(safe=True)
+        os.chdir(working_dir)
         self.p.proj_faa.link_from(self.bin.faa)
         # Call the executable #
         command = sh.Command("phylophlan.py")
