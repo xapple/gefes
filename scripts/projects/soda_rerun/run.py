@@ -51,7 +51,7 @@ for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map
 for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.p.clustering)
 print                   "Merged binning:", bool(proj.merged.results.binner.p.clustering)
 print "Prodigal:", all(c.proteins.p.faa.exists for c in proj.merged.results.contigs)
-print "Phylophlan:", pass
+print "Phylophlan:", 'TODO'
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -141,6 +141,7 @@ for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
 for c in tqdm(proj.merged.results.contigs): c.proteins.run()
 
 ################################ Phylophlan ###################################
+for c in tqdm(proj.merged.results.binner.results.bin): c.proteins.run()
 
 
 ################################ Phylosift ####################################
