@@ -152,6 +152,13 @@ for a in p.assemblies.values():
     print "Prokka for project '%s', assembly '%s'" % (p.name, a)
     for c in tqdm(a.results.contigs): c.annotation.run()
 
+################################## Prodigal ###################################
+for c in tqdm(bt.merged.results.contigs): c.proteins.run()
+for c in tqdm(lb.merged.results.contigs): c.proteins.run()
+for c in tqdm(kt.merged.results.contigs): c.proteins.run()
+
+################################## Prokka #####################################
+
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
 

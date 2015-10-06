@@ -1,9 +1,9 @@
 # Built-in modules #
 
 # Internal modules #
-from gefes.annotation.prokka import Prokka
-from gefes.annotation.cogs   import SingleCOGs
-from gefes.annotation.checkm import Checkm
+from gefes.taxonomy.phylophlan import Phylophlan
+from gefes.annotation.cogs     import SingleCOGs
+from gefes.annotation.checkm   import Checkm
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -19,6 +19,8 @@ class Bin(object):
 
     all_paths = """
     /contigs.fasta
+    /proteins.faa
+    /taxonomy/
     /annotation/
     /evaluation/
     """
@@ -61,9 +63,20 @@ class Bin(object):
         return fasta
 
     @property_cached
-    def annotation(self):
-        """The results from annotation the bin."""
-        return Prokka(self, self.p.annotation_dir)
+    def faa(self):
+        """A fasta file containing only the predicted proteins
+        from all contigs in this bin."""
+        faa = FASTA(self.p.faa)
+        if not faa.exists:
+            with faa as handle:
+                for contig in self.contigs:
+                    handle.add(contig.proteins.results.faa)
+        return faa
+
+    @property_cached
+    def taxonomy(self):
+        """The results from running Phylophlan."""
+        return Phylophlan(self, self.p.taxonomy_dir)
 
     @property_cached
     def single_cogs(self):

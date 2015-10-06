@@ -50,6 +50,7 @@ print                   "Merged assembly:",  proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
 for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.p.clustering)
 print                   "Merged binning:", bool(proj.merged.results.binner.p.clustering)
+print "Prodigal:", all(c.proteins for c in proj.merged.results.contigs)
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -129,13 +130,7 @@ proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=proj.na
 proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=proj.name+'_bin_81', **params)
 proj.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=proj.name+'_bin_04', **params)
 
-################################## Prokka #####################################
-print "Prokka for project '%s', assembly '%s'" % (proj.name, proj.merged)
-for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
 
-################################## Prodigal ###################################
-print "Prodigal for project '%s', assembly '%s'" % (proj.name, proj.merged)
-for c in tqdm(proj.merged.results.contigs): c.proteins.run()
 
 ################################## CheckM #####################################
 params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
@@ -143,11 +138,17 @@ steps=['merged.results.binner.results.run_all_bin_eval']
 proj.runner.run_slurm(steps=steps, job_name="checkm_merged", **params)
 for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
 
+################################## Prodigal ###################################
+for c in tqdm(proj.merged.results.contigs): c.proteins.run()
+
 ################################ Phylophlan ###################################
 
 
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
+
+################################## Prokka #####################################
+for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
 
 ################################## Plots ######################################
 for s in tqdm(samples):

@@ -1,4 +1,5 @@
 # Built-in modules #
+import os
 
 # Internal modules #
 
@@ -15,7 +16,7 @@ class Phylophlan(object):
     """Use Phylophlan to predict the taxonomy of bins.
     - Changelog stops at May 2013
     - It requires usearch v5 to be in the path as `usearch` T_T
-    - You have to manually change line 28 of the script T_T"""
+    - You have to manually change line 28 of the script after installation :("""
 
     short_name = 'phylophlan'
     long_name  = 'PhyloPhlAn v0.99'
@@ -24,7 +25,8 @@ class Phylophlan(object):
     dependencies = ['muscle', 'usearch', 'FastTree']
 
     all_paths = """
-    /lorem.fasta
+    /input/proj.faa
+    /output/proj/
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.bin)
@@ -34,15 +36,21 @@ class Phylophlan(object):
         self.bin = bin
         self.result_dir = result_dir
         # Auto paths #
-        self.base_dir = self.result_dir + 'phylophlan/'
+        self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def run(self, cpus=None):
         # Variable threads #
         if cpus is None: cpus = num_processors
+        # Crazy fixed input and output directories #
+        current_dir = os.getcwd()
+        os.chdir(self.base_dir)
+        self.bin.
         # Call the executable #
-        command = sh.Command(self.executable)
-        command('a', '--nproc', cpus)
+        command = sh.Command("phylophlan.py")
+        command('--nproc', cpus, 'proj')
+        # Restore #
+        os.chdir(current_dir)
 
     @property_cached
     def results(self):

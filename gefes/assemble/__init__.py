@@ -16,6 +16,7 @@ class AssemblyResults(object):
     """Inherit from this."""
 
     def __nonzero__(self): return bool(self.contigs_fasta)
+    def __iter__(self): return iter(self.contigs)
     def __init__(self, parent):
         self.parent = parent
         self.contigs_fasta = FASTA(self.parent.p.filtered)

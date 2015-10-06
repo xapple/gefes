@@ -67,7 +67,7 @@ class Contig(object):
 
     @property_cached
     def annotation(self):
-        """The annotation that can be made on this contig"""
+        """The annotation that can be made on this contig."""
         return Prokka(self, self.p.annotation_dir)
 
     @property_cached
