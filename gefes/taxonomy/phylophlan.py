@@ -44,6 +44,7 @@ class Phylophlan(object):
         if cpus is None: cpus = num_processors
         # Crazy fixed input and output directories #
         current_dir = os.getcwd()
+        self.base_dir.create(safe=True)
         os.chdir(self.base_dir)
         self.p.proj_faa.link_from(self.bin.faa)
         # Call the executable #
