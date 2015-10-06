@@ -49,7 +49,7 @@ class Phylophlan(object):
         # Call the executable #
         command = sh.Command("phylophlan.py")
         command('--nproc', cpus, 'proj')
-        # Restore #
+        # Restore #
         os.chdir(current_dir)
 
     @property_cached
