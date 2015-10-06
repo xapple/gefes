@@ -50,7 +50,8 @@ print                   "Merged assembly:",  proj, bool(proj.merged.results)
 for s,a,m in ((s,a,m) for a,m in s.mappers.items() for s in samples): print "Map %s to %s:"%(s,a), bool(m.p.coverage)
 for k,v in proj.assemblies.items(): print "Binning %i:"%k, proj, bool(v.results.binner.p.clustering)
 print                   "Merged binning:", bool(proj.merged.results.binner.p.clustering)
-print "Prodigal:", all(c.proteins for c in proj.merged.results.contigs)
+print "Prodigal:", all(c.proteins.p.faa.exists for c in proj.merged.results.contigs)
+print "Phylophlan:", pass
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -129,8 +130,6 @@ proj.runner.run_slurm(steps=['assembly_61.results.binner.run'], job_name=proj.na
 proj.runner.run_slurm(steps=['assembly_71.results.binner.run'], job_name=proj.name+'_bin_71', **params)
 proj.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=proj.name+'_bin_81', **params)
 proj.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=proj.name+'_bin_04', **params)
-
-
 
 ################################## CheckM #####################################
 params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')

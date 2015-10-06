@@ -42,10 +42,10 @@ class Phylophlan(object):
     def run(self, cpus=None):
         # Variable threads #
         if cpus is None: cpus = num_processors
-        # Crazy fixed input and output directories #
+        # Crazy fixed input and output directories #
         current_dir = os.getcwd()
         os.chdir(self.base_dir)
-        self.bin.
+        self.p.proj_faa.link_from(self.bin.faa)
         # Call the executable #
         command = sh.Command("phylophlan.py")
         command('--nproc', cpus, 'proj')
