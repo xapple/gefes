@@ -18,7 +18,7 @@ It was developed by Lucas Sinclair (<lucas.sinclair@me.com>) while working in th
 
 ## Context:
 
-As you know almost all microbes living in natural environments can't be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
+As you know almost none of the microbes living in natural environments can be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
 
 It's quite different from when you are able to isolate a bacterium and grow it such as E. Coli. In that case, your DNA reads are coming from random locations of the E. Coli chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.
 
@@ -193,6 +193,8 @@ A special thanks to all those who helped create this pipeline and make it as gre
 * Ino De Bruijn ([@inodb](https://github.com/inodb))
 * Moritz Buck ([@moritzbuck](https://github.com/moritzbuck))
 * Umer Zeeshan Ijaz ([@umerijaz](https://github.com/umerijaz))
+
+In particular, this piece of software was developed through funding from the Swedish Foundation for Strategic Research.
 
 ## Flowchart
 Below is drawn the flowchart describing the data processing along all the steps of GEFES:

@@ -141,12 +141,19 @@ class AssemblyTemplate(Template):
         return str(ScaledFigure(graph.path, caption, "bins_eval_cch_graph"))
     def bins_quality_table(self):
         """Sorted by completeness, report those that are >60%% complete and
-        that have a contamination <10%."""
-        stats = ['completeness', 'contamination', 'heterogeneity']
+        that have a contamination <10%. To this add several other numbers:
+        * The number of proteins found
+        * The average coverage (across all samples)
+        * The best taxonomic hit"""
+        info = OrderedDict((('#',       lambda b: "**" + b.name + "**"),
+                            ('Compl.',  lambda b: b.evaluation.results.statistics['completeness']),
+                            ('Conta.',  lambda b: b.evaluation.results.statistics['contamination']),
+                            ('Heter.',  lambda b: b.evaluation.results.statistics['heterogeneity']),
+                            ('Prots.',  lambda b: len(b.faa))))
         bins  = self.assembly.results.binner.results.bins
-        frame = pandas.DataFrame((b.evaluation.results.statistics for b in bins), columns=stats)
-        frame = frame.loc[frame['completeness']>60,:]
-        frame = frame.loc[frame['contamination']<10,:]
-        frame = frame.sort("completeness", ascending=False)
-        table = tabulate(frame, headers=['Bin#']+stats, numalign="right", tablefmt="pipe")
-        return table + "\n\n   : Summary information for mapping of all samples."
+        frame = pandas.DataFrame(((f(b) for f in info.values()) for b in bins), columns=info.keys())
+        frame = frame.loc[frame['Compl.']>60,:]
+        frame = frame.loc[frame['Conta.']<10,:]
+        frame = frame.sort("Compl.", ascending=False)
+        table = tabulate(frame, headers=frame.columns, numalign="right", tablefmt="pipe")
+        return table + "\n\n   : Summary table for the best bins in this assembly."
