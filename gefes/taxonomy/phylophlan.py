@@ -4,9 +4,10 @@ import os
 # Internal modules #
 
 # First party modules #
-from plumbing.autopaths import AutoPaths, DirectoryPath
-from plumbing.cache import property_cached
-from plumbing.slurm import num_processors
+from plumbing.autopaths import AutoPaths, DirectoryPath, FilePath
+from plumbing.cache     import property_cached
+from plumbing.slurm     import num_processors
+from plumbing.common    import which
 
 # Third party modules #
 import sh
@@ -15,7 +16,7 @@ import sh
 class Phylophlan(object):
     """Use Phylophlan to predict the taxonomy of bins.
     - Changelog stops at May 2013
-    - It requires usearch v5 to be in the PATH as `usearch` T_T
+    - It requires usearch version 5 to be in the PATH as `usearch` T_T
     - You have to manually change line 28 of the script after installation :'(
     - Has a different behavior if no TTY is attached to its STDIN :x"""
 
@@ -26,6 +27,7 @@ class Phylophlan(object):
     dependencies = ['muscle', 'usearch', 'FastTree']
 
     all_paths = """
+    /data/
     /input/proj.faa
     /output/proj/
     """
@@ -44,11 +46,13 @@ class Phylophlan(object):
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Crazy fixed input and output directories #
-        current_dir = os.getcwd()
         working_dir = DirectoryPath(self.base_dir)
         working_dir.create(safe=True)
-        os.chdir(working_dir)
+        program_dir = FilePath(which(self.executable)).directory
         self.p.proj_faa.link_from(self.bin.faa)
+        self.p.data_dir.link_from(program_dir + 'data/')
+        current_dir = os.getcwd()
+        os.chdir(working_dir)
         # Call the executable #
         command = sh.Command("phylophlan.py")
         command('--nproc', cpus, 'proj', _tty_in=True)
