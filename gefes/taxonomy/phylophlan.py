@@ -50,7 +50,7 @@ class Phylophlan(object):
         working_dir.create(safe=True)
         program_dir = FilePath(which(self.executable)).directory
         self.p.proj_faa.link_from(self.bin.faa)
-        self.p.data_dir.link_from(program_dir + 'data/')
+        self.p.data_dir.link_from(program_dir + 'data/', safe=True)
         current_dir = os.getcwd()
         os.chdir(working_dir)
         # Call the executable #
