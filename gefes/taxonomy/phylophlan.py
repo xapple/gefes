@@ -28,7 +28,7 @@ class Phylophlan(object):
 
     all_paths = """
     /data/
-    /input/proj.faa
+    /input/proj/proj.faa
     /output/proj/
     """
 
