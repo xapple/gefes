@@ -15,8 +15,9 @@ import sh
 class Phylophlan(object):
     """Use Phylophlan to predict the taxonomy of bins.
     - Changelog stops at May 2013
-    - It requires usearch v5 to be in the path as `usearch` T_T
-    - You have to manually change line 28 of the script after installation :("""
+    - It requires usearch v5 to be in the PATH as `usearch` T_T
+    - You have to manually change line 28 of the script after installation :'(
+    - Has a different behavior if no TTY is attached to its STDIN :x"""
 
     short_name = 'phylophlan'
     long_name  = 'PhyloPhlAn v0.99'
@@ -50,7 +51,7 @@ class Phylophlan(object):
         self.p.proj_faa.link_from(self.bin.faa)
         # Call the executable #
         command = sh.Command("phylophlan.py")
-        command('--nproc', cpus, 'proj')
+        command('--nproc', cpus, 'proj', _tty_in=True)
         # Restore #
         os.chdir(current_dir)
 
