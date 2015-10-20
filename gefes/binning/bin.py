@@ -98,4 +98,4 @@ class Bin(object):
         frame = self.binner.coverage_matrix.apply(lambda r: r*contig_name_to_length(r), axis=1)
         frame = frame.loc[self.contig_ids]
         nucleotides = frame.sum().sum()
-        return nucleotides / sum(map(len, self.contig))
+        return nucleotides / sum(map(len, self.contigs))
