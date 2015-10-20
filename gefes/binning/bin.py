@@ -90,5 +90,5 @@ class Bin(object):
 
     @property_cached
     def average_coverage(self):
-        """Lorem."""
+        """."""
         pass

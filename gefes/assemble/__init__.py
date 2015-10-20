@@ -46,6 +46,7 @@ class AssemblyResults(object):
 
     @property_cached
     def mappings_per_sample(self):
-        """Put the contigs of this assembly into bins."""
-        frame = pandas.DataFrame({s.name: s.mappers[self.parent].results.raw_mapped for s in self.parent.samples})
+        """Lorem."""
+        get_counts = lambda s: s.mappers[self.parent].results.raw_contig_counts
+        frame = pandas.DataFrame({s.name: get_counts(s) for s in self.parent.samples})
         return frame

@@ -124,27 +124,27 @@ class MapperResults(object):
 
     @property_cached
     def filtered_count(self):
-        """The number of reads after removing duplicates"""
+        """The number of reads that we tried to map after removing duplicates."""
         return int(sh.samtools('view', '-c', self.p.map_smds_bam))
 
     @property_cached
     def raw_mapped(self):
-        """The raw count of sequences that mapped."""
+        """The raw count of sequences that successfully mapped."""
         return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam))
 
     @property_cached
     def fraction_mapped(self):
-        """The fraction of reads that mapped back to the contigs of the assembly"""
+        """The fraction of reads that mapped back to the contigs of the assembly."""
         return self.raw_mapped / self.filtered_count
 
     @property_cached
     def raw_unmapped(self):
-        """The raw count of sequences that mapped."""
+        """The raw count of sequences that didn't mapped."""
         return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam))
 
     @property_cached
     def fraction_unmapped(self):
-        """The fraction of reads that did not mapped back to the contigs of the assembly"""
+        """The fraction of reads that did not mapped back to the contigs of the assembly."""
         return self.raw_unmapped / self.filtered_count
 
     @property_pickled
@@ -180,6 +180,15 @@ class MapperResults(object):
     def covered_fraction(self):
         """The mean coverage in every contig. Dict with contig names as keys"""
         return {contig.name: self.statistics[contig.name]['percent_covered'] for contig in self.assembly.results.contigs}
+
+    @property_cached
+    def raw_contig_counts(self):
+        """The raw number of reads that mapped in every contig. Dict with contig names as keys"""
+        result = {}
+        for line in sh.samtools('idxstats', self.p.map_smds_bam):
+            target_name, target_length, count_mapped, count_unmapped = line.strip('\n').split()
+            result[target_name] = count_mapped
+        return result
 
     @property_cached
     def graphs(self):
