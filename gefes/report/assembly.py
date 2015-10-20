@@ -139,21 +139,24 @@ class AssemblyTemplate(Template):
         caption = "Contamination versus completeness with heterogeneity"
         graph = self.assembly.results.binner.results.eval_cch_graph()
         return str(ScaledFigure(graph.path, caption, "bins_eval_cch_graph"))
+
+    # Quality bins #
     def bins_quality_table(self):
         """Sorted by completeness, report those that are >60%% complete and
         that have a contamination <10%. To this add several other numbers:
         * The number of proteins found
         * The average coverage (across all samples)
         * The best taxonomic hit"""
-        info = OrderedDict((('#',       lambda b: "**" + b.name + "**"),
-                            ('Compl.',  lambda b: b.evaluation.results.statistics['completeness']),
-                            ('Conta.',  lambda b: b.evaluation.results.statistics['contamination']),
-                            ('Heter.',  lambda b: b.evaluation.results.statistics['heterogeneity']),
-                            ('Prots.',  lambda b: len(b.faa))))
-        bins  = self.assembly.results.binner.results.bins
-        frame = pandas.DataFrame(((f(b) for f in info.values()) for b in bins), columns=info.keys())
-        frame = frame.loc[frame['Compl.']>60,:]
-        frame = frame.loc[frame['Conta.']<10,:]
+        info = OrderedDict((('#',         lambda b: "**" + b.name + "**"),
+                            ('Compl.',    lambda b: b.evaluation.results.statistics['completeness']),
+                            ('Conta.',    lambda b: b.evaluation.results.statistics['contamination']),
+                            ('Heter.',    lambda b: b.evaluation.results.statistics['heterogeneity']),
+                            ('Prots.',    lambda b: len(b.faa)),
+                            ('Avg. cov.', lambda b: b.average_coverage)))
+        good_bins  = self.assembly.results.binner.results.good_bins
+        frame = pandas.DataFrame(((f(b) for f in info.values()) for b in good_bins), columns=info.keys())
         frame = frame.sort("Compl.", ascending=False)
         table = tabulate(frame, headers=frame.columns, numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary table for the best bins in this assembly."
+    def percent_mapped_to_good_bins(self): pass
+    def count_good_bins(self):             pass

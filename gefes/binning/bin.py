@@ -1,3 +1,6 @@
+# Futures #
+from __future__ import division
+
 # Built-in modules #
 
 # Internal modules #
@@ -90,5 +93,9 @@ class Bin(object):
 
     @property_cached
     def average_coverage(self):
-        """."""
-        pass
+        """The average of coverage of this bin across all samples"""
+        contig_name_to_length = lambda r: len(self.assembly.results.contig_id_to_contig[r.name])
+        frame = self.binner.coverage_matrix.apply(lambda r: r*contig_name_to_length(r), axis=1)
+        frame = frame.loc[self.contig_ids]
+        nucleotides = frame.sum().sum()
+        return nucleotides / sum(map(len, self.contig))

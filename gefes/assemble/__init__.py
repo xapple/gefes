@@ -46,7 +46,8 @@ class AssemblyResults(object):
 
     @property_cached
     def mappings_per_sample(self):
-        """Lorem."""
+        """A dataframe with columns as samples as rows as contig names.
+        Values are mapped read counts."""
         get_counts = lambda s: s.mappers[self.parent].results.raw_contig_counts
         frame = pandas.DataFrame({s.name: get_counts(s) for s in self.parent.samples})
         return frame
