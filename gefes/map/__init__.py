@@ -128,14 +128,24 @@ class MapperResults(object):
         return int(sh.samtools('view', '-c', self.p.map_smds_bam))
 
     @property_cached
+    def raw_mapped(self):
+        """The raw count of sequences that mapped."""
+        return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam))
+
+    @property_cached
     def fraction_mapped(self):
         """The fraction of reads that mapped back to the contigs of the assembly"""
-        return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam)) / self.filtered_count
+        return self.raw_mapped / self.filtered_count
+
+    @property_cached
+    def raw_unmapped(self):
+        """The raw count of sequences that mapped."""
+        return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam))
 
     @property_cached
     def fraction_unmapped(self):
         """The fraction of reads that did not mapped back to the contigs of the assembly"""
-        return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam)) / self.filtered_count
+        return self.raw_unmapped / self.filtered_count
 
     @property_pickled
     def statistics(self):

@@ -87,3 +87,8 @@ class Bin(object):
     def evaluation(self):
         """The results from evaluating the bin completeness and other metrics."""
         return Checkm(self, self.p.evaluation_dir)
+
+    @property_cached
+    def average_coverage(self):
+        """Lorem."""
+        pass
