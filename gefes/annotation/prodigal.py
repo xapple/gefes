@@ -14,7 +14,8 @@ import sh
 class Prodigal(object):
     """Will run the Prodigal software on one single contig.
     Expects version  2.6.2
-    Good read at https://github.com/hyattpd/prodigal/wiki/Advice-by-Input-Type"""
+    Good read at https://github.com/hyattpd/prodigal/wiki/Advice-by-Input-Type
+    - Adds an illegal protein letter (a star) to the end of every sequence."""
 
     short_name = 'prodigal'
     long_name  = 'Prodigal v2.6.2'
@@ -47,7 +48,10 @@ class Prodigal(object):
                 '-p', 'meta')
 
     def run(self):
+        # Call the command #
         sh.prodigal(*self.command_args)
+        # Remove the trailing stars #
+        self.results.faa.remove_trailing_stars()
 
     @property_cached
     def results(self):

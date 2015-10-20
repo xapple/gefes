@@ -16,9 +16,10 @@ import sh
 class Phylophlan(object):
     """Use Phylophlan to predict the taxonomy of bins.
     - Changelog stops at May 2013
-    - It requires usearch version 5 to be in the PATH as `usearch` T_T
+    - It requires usearch 5 to be in the PATH as `usearch` but doesn't check T_T
     - You have to manually change line 28 of the script after installation :'(
-    - Has a different behavior if no TTY is attached to its STDIN :x"""
+    - Cannot specify input and output directories... these are fixed I kid you not.
+    - Strangely changes behavior if no TTY is attached to its STDIN :x"""
 
     short_name = 'phylophlan'
     long_name  = 'PhyloPhlAn v0.99'
@@ -30,6 +31,8 @@ class Phylophlan(object):
     /data/
     /input/proj/proj.faa
     /output/proj/
+    /stdout.txt
+    /stderr.txt
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.bin)
@@ -55,7 +58,10 @@ class Phylophlan(object):
         os.chdir(working_dir)
         # Call the executable #
         command = sh.Command("phylophlan.py")
-        command('--nproc', cpus, 'proj', _tty_in=True)
+        command('--nproc', cpus, 'proj',
+                _tty_in = True,
+                _stdout = self.p.stderr.path,
+                _stderr = self.p.stdout.path)
         # Restore #
         os.chdir(current_dir)
 
