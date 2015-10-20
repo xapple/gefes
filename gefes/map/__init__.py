@@ -183,10 +183,13 @@ class MapperResults(object):
 
     @property_cached
     def raw_contig_counts(self):
-        """The raw number of reads that mapped in every contig. Dict with contig names as keys"""
+        """The raw number of reads that mapped in every contig. Dict with contig names as keys.
+        NB: Unmapped reads that have a mate mapped are assigned to the same chromosome.
+        Unmapped reads with no mate or an unmapped mate are assigned to chrom `*`."""
         result = {}
         for line in sh.samtools('idxstats', self.p.map_smds_bam):
             target_name, target_length, count_mapped, count_unmapped = line.strip('\n').split()
+            if target_name == '*': continue
             result[target_name] = count_mapped
         return result
 
