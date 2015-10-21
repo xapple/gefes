@@ -169,7 +169,6 @@ class MapperResults(object):
         """The fraction of reads that mapped back to the contigs of the assembly."""
         return self.raw_mapped / self.filtered_count
 
-
     @property_cached
     def fraction_unmapped(self):
         """The fraction of reads that did not mapped back to the contigs of the assembly."""

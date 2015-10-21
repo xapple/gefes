@@ -33,6 +33,11 @@ class AssemblyResults(object):
         return {c.name: c for c in self.contigs}
 
     @property_cached
+    def total_bp(self):
+        """The total amount of base pairs generated in this assembly."""
+        return sum(self.contigs_fasta.lengths)
+
+    @property_cached
     def mappings(self):
         """Map each of the samples used in the assembly back to this assembly.
         TODO: This should be updated to use a directory in the assembly results directory

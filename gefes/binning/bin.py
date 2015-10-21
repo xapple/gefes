@@ -99,4 +99,4 @@ class Bin(object):
         frame = frame.loc[self.contig_ids]
         frame = frame.apply(lambda r: r*contig_name_to_length(r), axis=1)
         nucleotides = frame.sum().sum()
-        return nucleotides / sum(map(len, self.contigs))
+        return nucleotides / self.assembly.results.total_bp

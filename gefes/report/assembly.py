@@ -96,7 +96,7 @@ class AssemblyTemplate(Template):
         graph = self.assembly.results.contigs_fasta.graphs.length_dist(x_log=True, y_log=True)
         label = "contigs_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
-    def contigs_total_bp(self): return split_thousands(sum(self.assembly.results.contigs_fasta.lengths))
+    def contigs_total_bp(self): return split_thousands(self.assembly.results.total_bp)
 
     # Mapping #
     def mapping_version(self): return self.assembly.results.mappings.values()[0].long_name
@@ -154,7 +154,7 @@ class AssemblyTemplate(Template):
                             ('Prots.',    lambda b: len(b.faa)),
                             ('Avg. cov.', lambda b: b.average_coverage)))
         good_bins = self.assembly.results.binner.results.good_bins
-        frame = pandas.DataFrame(((f(b) for f in info.values()) for b in good_bins), columns=info.keys())
+        frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.sort("Compl.", ascending=False)
         table = tabulate(frame, headers='keys', numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary table for the best bins in this assembly."
