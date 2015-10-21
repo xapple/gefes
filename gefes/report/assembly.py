@@ -162,7 +162,7 @@ class AssemblyTemplate(Template):
         frame = self.assembly.results.mappings_per_sample
         good_bins = self.assembly.results.binner.results.good_bins
         frame = frame.loc[sum((b.contig_ids for b in good_bins), [])]
-        total_reads = sum(m.results.filtered_count for m in self.assembly.mappings.values())
+        total_reads = sum(m.results.filtered_count for m in self.assembly.results.mappings.values())
         mapped_reads = frame.sum().sum()
         return mapped_reads / total_reads
     def count_good_bins(self): len(self.assembly.results.binner.results.good_bins)
