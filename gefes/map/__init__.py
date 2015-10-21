@@ -3,6 +3,7 @@ from __future__ import division
 
 # Built-in modules #
 import sys, os
+import cStringIO as StringIO
 
 # Internal modules #
 import gefes
@@ -123,24 +124,51 @@ class MapperResults(object):
         self.p = mapper.p
 
     @property_cached
+    def mapping_stats(self):
+        """The raw number of reads that mapped in every contig. Dict with contig names as keys.
+        NB: Unmapped reads that have a mate mapped are assigned to the same chromosome.
+        Unmapped reads with no mate or an unmapped mate are assigned to chrom `*`."""
+        # Get text output from samtools #
+        result = sh.samtools('idxstats', self.p.map_smds_bam)
+        result = StringIO.StringIO(result.stdout)
+        # Parse result #
+        names = ['length', 'mapped', 'unmapped']
+        frame = pandas.read_csv(result, sep='\t', index_col=0, names=names)
+        frame = frame.drop('length', axis=1)
+        return frame
+
+    @property_cached
+    def raw_contig_counts(self):
+        """The raw number of reads that mapped in every contig.
+        #TODO check that this is the number of mapped reads and not the number
+        of mapping alignments!"""
+        frame = self.mapping_stats.drop('*')
+        frame = frame['mapped']
+        return dict(frame)
+
+    @property_cached
     def filtered_count(self):
-        """The number of reads that we tried to map after removing duplicates."""
-        return int(sh.samtools('view', '-c', self.p.map_smds_bam))
+        """The number of reads that we tried to map after removing duplicates.
+        Same as: return int(sh.samtools('view', '-c', self.p.map_smds_bam))"""
+        return self.mapping_stats.sum().sum()
 
     @property_cached
     def raw_mapped(self):
-        """The raw count of sequences that successfully mapped."""
-        return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam))
+        """The raw count of sequences that successfully mapped.
+        Same as: return int(sh.samtools('view', '-c', '-F', '4', self.p.map_smds_bam))"""
+        return self.mapping_stats['mapped'].sum()
+
+    @property_cached
+    def raw_unmapped(self):
+        """The raw count of sequences that didn't mapped.
+        Same as: return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam))"""
+        return self.mapping_stats['unmapped'].sum()
 
     @property_cached
     def fraction_mapped(self):
         """The fraction of reads that mapped back to the contigs of the assembly."""
         return self.raw_mapped / self.filtered_count
 
-    @property_cached
-    def raw_unmapped(self):
-        """The raw count of sequences that didn't mapped."""
-        return int(sh.samtools('view', '-c', '-f', '4', self.p.map_smds_bam))
 
     @property_cached
     def fraction_unmapped(self):
@@ -180,18 +208,6 @@ class MapperResults(object):
     def covered_fraction(self):
         """The mean coverage in every contig. Dict with contig names as keys"""
         return {contig.name: self.statistics[contig.name]['percent_covered'] for contig in self.assembly.results.contigs}
-
-    @property_cached
-    def raw_contig_counts(self):
-        """The raw number of reads that mapped in every contig. Dict with contig names as keys.
-        NB: Unmapped reads that have a mate mapped are assigned to the same chromosome.
-        Unmapped reads with no mate or an unmapped mate are assigned to chrom `*`."""
-        result = {}
-        for line in sh.samtools('idxstats', self.p.map_smds_bam):
-            target_name, target_length, count_mapped, count_unmapped = line.strip('\n').split()
-            if target_name == '*': continue
-            result[target_name] = count_mapped
-        return result
 
     @property_cached
     def graphs(self):
