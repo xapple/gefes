@@ -29,11 +29,11 @@ class Prodigal(object):
     /output/translated.faa
     """
 
-    def __nonzero__(self): return bool(self.p.proteins)
+    def __nonzero__(self): return self.p.proteins.exists
 
     def __init__(self, contig, result_dir):
         # Save Attributes #
-        self.contig = contig
+        self.contig, self.parent = contig, contig
         self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
@@ -62,7 +62,7 @@ class Prodigal(object):
 ###############################################################################
 class ProdigalResults(object):
 
-    def __nonzero__(self): return bool(self.prodigal.p.proteins)
+    def __nonzero__(self): return self.prodigal.p.proteins.exists
     def __iter__(self): return iter(self.faa)
 
     def __init__(self, prodigal):
