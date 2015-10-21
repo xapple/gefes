@@ -95,7 +95,8 @@ class Bin(object):
     def average_coverage(self):
         """The average of coverage of this bin across all samples"""
         contig_name_to_length = lambda r: len(self.assembly.results.contig_id_to_contig[r.name])
-        frame = self.binner.coverage_matrix.apply(lambda r: r*contig_name_to_length(r), axis=1)
+        frame = self.binner.coverage_matrix
         frame = frame.loc[self.contig_ids]
+        frame = frame.apply(lambda r: r*contig_name_to_length(r), axis=1)
         nucleotides = frame.sum().sum()
         return nucleotides / sum(map(len, self.contigs))

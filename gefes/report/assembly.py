@@ -153,10 +153,16 @@ class AssemblyTemplate(Template):
                             ('Heter.',    lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',    lambda b: len(b.faa)),
                             ('Avg. cov.', lambda b: b.average_coverage)))
-        good_bins  = self.assembly.results.binner.results.good_bins
+        good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(((f(b) for f in info.values()) for b in good_bins), columns=info.keys())
         frame = frame.sort("Compl.", ascending=False)
         table = tabulate(frame, headers=frame.columns, numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary table for the best bins in this assembly."
-    def percent_mapped_to_good_bins(self): pass
-    def count_good_bins(self):             pass
+    def percent_mapped_to_good_bins(self):
+        frame = self.assembly.results.mappings_per_sample
+        good_bins = self.assembly.results.binner.results.good_bins
+        frame = frame.loc[sum((b.contig_ids for b in good_bins), [])]
+        total_reads = sum(m.results.filtered_count for m in self.assembly.mappings.values())
+        mapped_reads = frame.sum().sum()
+        return mapped_reads / total_reads
+    def count_good_bins(self): len(self.assembly.results.binner.results.good_bins)

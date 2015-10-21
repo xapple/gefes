@@ -115,7 +115,7 @@ class ConcoctResults(object):
         return [Bin(self.concoct, c_ids, num=b_id) for b_id, c_ids in self.bin_id_to_contig_ids.items()]
 
     @property_cached
-    def quality_bins(self):
+    def good_bins(self):
         """Return only the bins which are more than 60% complete and less than 10% contamination."""
         return [b for b in self.bins if b.evaluation.results.statistics['completeness']  > 60 and \
                                         b.evaluation.results.statistics['contamination'] < 10 ]
