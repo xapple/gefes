@@ -20,13 +20,14 @@ class RefGenome(object):
     def __init__(self, source):
         self.source    = source
         self.file_name = os.path.basename(source)
-        self.accession = os.path.splitext(source)[0]
+        self.accession = os.path.splitext(self.file_name)[0]
         self.name      = os.path.basename(os.path.dirname(source))
 
     @property_cached
     def fasta(self):
         fasta = FASTA(genome_dir + self.name + "/genome.fasta")
         if fasta.exists: return fasta
+        if not os.path.exists(genome_dir + self.name): os.makedirs(genome_dir + self.name)
         with ftputil.FTPHost("ftp.ncbi.nlm.nih.gov", "anonymous") as ftp: ftp.download(self.source, fasta)
         return fasta
 
