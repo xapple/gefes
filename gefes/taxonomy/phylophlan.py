@@ -40,21 +40,22 @@ class Phylophlan(object):
 
     all_paths = """
     /data/
-    /input/proj/proj.faa
+    /input/proj/
     /output/proj/
     /output/proj/imputed_conf_low_conf.txt
+    /output/proj/imputed_conf_high-conf.txt
+    /output/proj/imputed_conf_low_conf.txt
+    /output/proj/incomplete_conf_high-conf.txt
     /output/proj/proj.tree.int.nwk
-    /output/proj/proj.tree.nwk
-    /output/proj/proj.tree.reroot.xml
     /stdout.txt
     /stderr.txt
     """
 
-    def __repr__(self): return '<%s object on bin %s>' % (self.__class__.__name__, self.bin)
+    def __repr__(self): return '<%s object on binner %s>' % (self.__class__.__name__, self.binner)
 
-    def __init__(self, bin, result_dir):
+    def __init__(self, binner, result_dir):
         # Save attributes #
-        self.bin = bin
+        self.binner, self.parent = binner, binner
         self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
@@ -63,12 +64,14 @@ class Phylophlan(object):
     def run(self, cpus=None):
         # Variable threads #
         if cpus is None: cpus = num_processors
+        # Where is the executable #
+        program_dir = FilePath(which(self.executable)).directory
+        self.p.data_dir.link_from(program_dir + 'data/', safe=True)
         # Crazy fixed input and output directories #
         base_dir = DirectoryPath(self.base_dir)
         base_dir.create(safe=True)
-        program_dir = FilePath(which(self.executable)).directory
-        self.p.proj_faa.link_from(self.bin.faa)
-        self.p.data_dir.link_from(program_dir + 'data/', safe=True)
+        for b in self.binner.good_bins: b.faa.link_to(self.p.input_dir + b.faa.filename)
+        # Change directory #
         current_dir = os.getcwd()
         os.chdir(base_dir)
         # Call the executable #
@@ -78,7 +81,6 @@ class Phylophlan(object):
                 '--nproc', cpus,
                 'proj', # Name of the input directory
                 _tty_in = True, # Without it changes behavior
-                _ok_code=[0,1], # Often crashes with an AttributeError
                 _out = self.p.stderr.path,
                 _err = self.p.stdout.path)
         # Restore #
