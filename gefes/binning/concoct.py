@@ -6,6 +6,7 @@ from collections import defaultdict
 from gefes.binning import graphs
 from gefes.binning.bin import Bin
 from gefes.annotation.checkm import make_checkm_graphs, CheckmGraphCCH
+from gefes.taxonomy.phylophlan import Phylophlan
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -34,6 +35,7 @@ class Concoct(object):
     /coverage.tsv
     /bins/
     /graphs/
+    /taxonomy/
     """
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.assembly)
@@ -119,6 +121,11 @@ class ConcoctResults(object):
         """Return only the bins which are more than 60% complete and less than 10% contamination."""
         return [b for b in self.bins if b.evaluation.results.statistics['completeness']  > 60 and \
                                         b.evaluation.results.statistics['contamination'] < 10 ]
+
+    @property_cached
+    def taxonomy(self):
+        """The results from running Phylophlan."""
+        return Phylophlan(self, self.p.taxonomy_dir)
 
     @property_cached
     def graphs(self):

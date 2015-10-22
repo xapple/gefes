@@ -4,7 +4,6 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from gefes.taxonomy.phylophlan import Phylophlan
 from gefes.annotation.cogs     import SingleCOGs
 from gefes.annotation.checkm   import Checkm
 from gefes.running.bin_runner  import BinRunner
@@ -25,7 +24,6 @@ class Bin(object):
     all_paths = """
     /contigs.fasta
     /proteins.faa
-    /taxonomy/
     /annotation/
     /evaluation/
     """
@@ -86,11 +84,6 @@ class Bin(object):
             temp.close()
             temp.move(faa)
         return faa
-
-    @property_cached
-    def taxonomy(self):
-        """The results from running Phylophlan."""
-        return Phylophlan(self, self.p.taxonomy_dir)
 
     @property_cached
     def single_cogs(self):
