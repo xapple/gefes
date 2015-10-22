@@ -11,6 +11,7 @@ from gefes.annotation.checkm   import Checkm
 # First party modules #
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
+from plumbing.tmpstuff import new_temp_path
 from fasta import FASTA
 
 # Third party modules #
@@ -66,14 +67,21 @@ class Bin(object):
         return fasta
 
     @property_cached
+    def evaluation(self):
+        """The results from evaluating the bin completeness and other metrics."""
+        return Checkm(self, self.p.evaluation_dir)
+
+    @property_cached
     def faa(self):
         """A fasta file containing only the predicted proteins
-        from all contigs in this bin."""
+        from all contigs in this bin (through prodigal)."""
         faa = FASTA(self.p.faa)
         if not faa.exists:
-            with faa as handle:
-                for contig in self.contigs:
-                    handle.add(contig.proteins.results.faa)
+            temp = FASTA(new_temp_path())
+            temp.create()
+            for contig in self.contigs: temp.add(contig.proteins.results.faa)
+            temp.close()
+            temp.move(faa)
         return faa
 
     @property_cached
@@ -85,11 +93,6 @@ class Bin(object):
     def single_cogs(self):
         """The results from finding single copy COGs in the bin."""
         return SingleCOGs(self, self.p.annotation_dir)
-
-    @property_cached
-    def evaluation(self):
-        """The results from evaluating the bin completeness and other metrics."""
-        return Checkm(self, self.p.evaluation_dir)
 
     @property_cached
     def average_coverage(self):

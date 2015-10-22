@@ -35,7 +35,7 @@ class Phylophlan(object):
     /stderr.txt
     """
 
-    def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.bin)
+    def __repr__(self): return '<%s object on bin %s>' % (self.__class__.__name__, self.bin)
 
     def __init__(self, bin, result_dir):
         # Save attributes #
@@ -60,8 +60,8 @@ class Phylophlan(object):
         command = sh.Command("phylophlan.py")
         command('--nproc', cpus, 'proj',
                 _tty_in = True,
-                _stdout = self.p.stderr.path,
-                _stderr = self.p.stdout.path)
+                _out = self.p.stderr.path,
+                _err = self.p.stdout.path)
         # Restore #
         os.chdir(current_dir)
 
