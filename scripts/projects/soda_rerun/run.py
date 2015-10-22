@@ -142,7 +142,7 @@ for c in tqdm(proj.merged.results.contigs): c.proteins.run()
 
 ################################ Phylophlan ###################################
 for b in tqdm(proj.merged.results.binner.results.bins): b.faa
-for b in tqdm(proj.merged.results.binner.results.bin): b.
+for b in tqdm(proj.merged.results.binner.results.good_bins): b.taxonomy.run(cpus=4)
 
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()

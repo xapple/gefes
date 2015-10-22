@@ -14,23 +14,38 @@ import sh
 
 ###############################################################################
 class Phylophlan(object):
-    """Use Phylophlan to predict the taxonomy of bins.
+    """Use Phylophlan to predict the taxonomy of bins. But beware:
     - Changelog stops at May 2013
+    - Three versions available: Latest official release, latest tag or latest commit.
     - It requires usearch 5 to be in the PATH as `usearch` but doesn't check T_T
     - You have to manually change line 28 of the script after installation :'(
     - Cannot specify input and output directories... these are fixed I kid you not.
-    - Strangely changes behavior if no TTY is attached to its STDIN :x"""
+    - Strangely changes behavior if no TTY is attached to its STDIN :x
+    - AttributeError in some cases when too few proteins inputed ?"""
 
     short_name = 'phylophlan'
-    long_name  = 'PhyloPhlAn v0.99'
+    long_name  = 'PhyloPhlAn v1.1'
     executable = 'phylophlan.py'
     url        = 'https://bitbucket.org/nsegata/phylophlan/'
     dependencies = ['muscle', 'usearch', 'FastTree']
+
+    install_script = """
+        cd ~/programs/
+        hg clone https://bitbucket.org/nsegata/phylophlan
+        sed -i "s/usearch/usearch5/g" $HOME/programs/phylophlan/phylophlan.py
+        escaped_home=${HOME//\//\\\/}
+        sed -i "s/taxcuration\/')/$escaped_home\/programs\/phylophlan\/taxcuration\/')/g" $HOME/programs/phylophlan/phylophlan.py"""
+
+    bash_rc = ["""export PATH="$HOME/programs/phylophlan":$PATH"""]
 
     all_paths = """
     /data/
     /input/proj/proj.faa
     /output/proj/
+    /output/proj/imputed_conf_low_conf.txt
+    /output/proj/proj.tree.int.nwk
+    /output/proj/proj.tree.nwk
+    /output/proj/proj.tree.reroot.xml
     /stdout.txt
     /stderr.txt
     """
@@ -49,17 +64,21 @@ class Phylophlan(object):
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Crazy fixed input and output directories #
-        working_dir = DirectoryPath(self.base_dir)
-        working_dir.create(safe=True)
+        base_dir = DirectoryPath(self.base_dir)
+        base_dir.create(safe=True)
         program_dir = FilePath(which(self.executable)).directory
         self.p.proj_faa.link_from(self.bin.faa)
         self.p.data_dir.link_from(program_dir + 'data/', safe=True)
         current_dir = os.getcwd()
-        os.chdir(working_dir)
+        os.chdir(base_dir)
         # Call the executable #
         command = sh.Command("phylophlan.py")
-        command('--nproc', cpus, 'proj',
-                _tty_in = True,
+        command('-i', # Integrates into the existing tree of life
+                '-t', # Predicts taxonomy
+                '--nproc', cpus,
+                'proj', # Name of the input directory
+                _tty_in = True, # Without it changes behavior
+                _ok_code=[0,1], # Often crashes with an AttributeError
                 _out = self.p.stderr.path,
                 _err = self.p.stdout.path)
         # Restore #
