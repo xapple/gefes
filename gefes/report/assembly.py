@@ -152,9 +152,10 @@ class AssemblyTemplate(Template):
                             ('Conta.',    lambda b: b.evaluation.results.statistics['contamination']),
                             ('Heter.',    lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',    lambda b: len(b.faa)),
-                            ('Avg. cov.', lambda b: b.average_coverage)))
+                            ('Avg. cov.', lambda b: "%.2f" % b.average_coverage)))
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
+        frame = frame.set_index('#')
         frame = frame.sort("Compl.", ascending=False)
         table = tabulate(frame, headers='keys', numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary table for the best bins in this assembly."

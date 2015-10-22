@@ -14,7 +14,7 @@ hostname = platform.node()
 ###############################################################################
 class AggregateRunner(Runner):
     """Will run stuff on an aggregate"""
-    modules = [gefes, plumbing]
+    modules      = [gefes, plumbing]
     default_time = '7-00:00:00'
 
     default_steps = [

@@ -16,7 +16,7 @@ hostname = platform.node()
 ###############################################################################
 class SampleRunner(Runner):
     """Will run stuff on a sample"""
-    modules = [gefes, plumbing]
+    modules      = [gefes, plumbing]
     default_time = '2-00:00:00'
 
     default_steps = [
@@ -29,7 +29,7 @@ class SampleRunner(Runner):
         {'clean.rev.graphs.length_dist.plot':       {'x_log': True, 'y_log': True}},
         {'clean.fwd.kraken.run':                    {}},
         {'clean.rev.kraken.run':                    {}},
-        #{'assembly.run':                           {}},
+        {'assembly.run':                            {}},
         {'report.generate':                         {}},
     ]
 
@@ -53,12 +53,10 @@ class SampleRunner(Runner):
         return params
 
     def command(self, steps):
-        command =  ["steps = %s" % steps]
-        command += ["s_name = '%s'" % self.parent.name]
-        command += ["p_name = '%s'" % self.parent.project.name]
-        command += ["project = [p for p in gefes.projects if p.name==p_name][0]"]
-        command += ["project.load()"]
-        command += ["sample  = [s for s in project        if s.name==s_name][0]"]
-        command += ["sample.load()"]
+        command =  ["steps   = %s"   % steps]
+        command += ["p_name  = '%s'" % self.parent.project.name]
+        command += ["s_name  = '%s'" % self.parent.name]
+        command += ["project = gefes.projects[p_name].load()"]
+        command += ["sample  = [s for s in project if s.name==s_name][0]".load()]
         command += ["sample.runner.run(steps)"]
         return command

@@ -7,6 +7,7 @@ from __future__ import division
 from gefes.taxonomy.phylophlan import Phylophlan
 from gefes.annotation.cogs     import SingleCOGs
 from gefes.annotation.checkm   import Checkm
+from gefes.running.bin_runner  import BinRunner
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -50,6 +51,8 @@ class Bin(object):
         # Auto paths #
         self.base_dir = self.result_dir + self.name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Runner #
+        self.runner = BinRunner(self)
 
     @property_cached
     def contigs(self):
