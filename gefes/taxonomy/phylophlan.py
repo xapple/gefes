@@ -2,7 +2,7 @@
 import os
 
 # Internal modules #
-from gefes.taxonomy.assignments import Assignemnt
+from gefes.taxonomy.assignments import Assignment
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, DirectoryPath, FilePath
@@ -119,7 +119,7 @@ class PhylophlanResults(object):
         lines = (line for f in files for line in f)
         def line_to_entry(line):
             bin_id, assignment = line.split('\t')
-            return (bin_id, Assignemnt(assignment))
+            return (bin_id, Assignment(assignment))
         return dict(line_to_entry(line) for line in lines)
 
     @property
