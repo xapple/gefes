@@ -12,7 +12,7 @@ import gefes
 from plumbing.autopaths import DirectoryPath, FilePath
 from plumbing.common    import split_thousands, pretty_now
 from plumbing.cache     import property_pickled
-from pymarktex          import Document, Template, HeaderTemplate, FooterTemplate
+from pymarktex          import Document, Template
 from pymarktex.figures  import ScaledFigure
 
 # Third party modules #
@@ -43,9 +43,6 @@ class AssemblyReport(Document):
         # Dynamic templates #
         self.main = AssemblyTemplate(self)
         self.markdown = unicode(self.main)
-        # Header and footer #
-        self.header = HeaderTemplate()
-        self.footer = FooterTemplate()
         # Render to latex #
         self.make_body()
         self.make_latex()
@@ -165,5 +162,13 @@ class AssemblyTemplate(Template):
         frame = frame.loc[sum((b.contig_ids for b in good_bins), [])]
         total_reads = sum(m.results.filtered_count for m in self.assembly.results.mappings.values())
         mapped_reads = frame.sum().sum()
-        return mapped_reads / total_reads
-    def count_good_bins(self): len(self.assembly.results.binner.results.good_bins)
+        return "%.3f%%" % 100 * (mapped_reads / total_reads)
+    def good_bins_count_contigs(self): return split_thousands(sum(map(len, self.assembly.results.binner.results.good_bins)))
+
+    # Contig ordination graph #
+    def contig_ordination_graph(self):
+        caption = "Bin total nucleotide size distribution"
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
+        label = "bins_nucleotide_dist"
+        return str(ScaledFigure(graph.path, caption, label))
+

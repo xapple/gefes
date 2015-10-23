@@ -12,7 +12,7 @@ import gefes
 from plumbing.autopaths import DirectoryPath, FilePath
 from plumbing.common import split_thousands, pretty_now
 from plumbing.cache import property_pickled
-from pymarktex import Document, Template, HeaderTemplate, FooterTemplate
+from pymarktex import Document, Template
 from pymarktex.figures import ScaledFigure, DualFigure
 
 # Third party modules #
@@ -42,9 +42,6 @@ class SampleReport(Document):
         # Dynamic templates #
         self.main = SampleTemplate(self)
         self.markdown = unicode(self.main)
-        # Header and footer #
-        self.header = HeaderTemplate()
-        self.footer = FooterTemplate()
         # Render to latex #
         self.make_body()
         self.make_latex()

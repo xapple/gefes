@@ -94,7 +94,7 @@ class ConcoctResults(object):
     def __len__(self):     return len(self.bin_id_to_contig_ids)
 
     def __init__(self, concoct):
-        self.concoct = concoct
+        self.concoct, self.parent = concoct, concoct
         self.p = concoct.p
 
     @property_cached
@@ -125,7 +125,7 @@ class ConcoctResults(object):
     @property_cached
     def taxonomy(self):
         """The results from running Phylophlan."""
-        return Phylophlan(self, self.p.taxonomy_dir)
+        return Phylophlan(self.concoct, self.p.taxonomy_dir)
 
     @property_cached
     def graphs(self):
