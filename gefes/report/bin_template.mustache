@@ -1,0 +1,38 @@
+Bin "{{bin_short_name}}"
+========================
+
+General Information
+-------------------
+This bin is named "{{bin_name}}". It is part of the binning results from "{{binner_version}}" in the assembly "{{assembly_long_name}}" in the project "{{project_long_name}}" along with {{project_other_samples}} other bins. It is made up of {{bin_count_contigs}} different contigs.
+
+-------
+
+Processing
+----------
+This report (and all the analysis) was generated using the GEFES project at:
+
+> <{{project_url}}>
+
+Version `{{project_version}}` of the pipeline was used. The exact git hash of the latest commit was:
+
+    {{git_hash}}
+
+also more simply referred to by its shortened tag `{{git_tag}}`.
+
+This document was generated at `{{now}}`.
+
+A brief overview of what happens to the data can be viewed online here:
+
+> <https://github.com/limno/gefes/blob/{{git_branch}}/documentation/flowchart.pdf?raw=true>
+
+The results and all the files generated for this bin can be found at:
+
+    {{results_directory}}
+
+-------
+
+Annotation
+----------
+Taking the {{sample_count_contigs}} contigs generated in the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software. This procedure predicts the presence of {{sample_count_proteins}} proteins. When possible, each protein is assigned a function. The most common functions are shown in the table below:
+
+{{sample_functions_table}}
