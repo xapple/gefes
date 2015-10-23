@@ -2,7 +2,7 @@
 import os
 
 # Internal modules #
-from genes.taxonomy.assignments import Assignemnt
+from gefes.taxonomy.assignments import Assignemnt
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, DirectoryPath, FilePath
@@ -129,7 +129,7 @@ class PhylophlanResults(object):
     @property
     def tree_ete(self):
         """The tree as an object in python memory from ETE2"""
-        return self.parse_tree_ete(self.tree)
+        return ete2.Tree(self.tree)
 
     @property
     def pruned_tree(self):
