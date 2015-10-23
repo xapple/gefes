@@ -8,10 +8,13 @@ from gefes.taxonomy.assignments import Assignment
 from plumbing.autopaths import AutoPaths, DirectoryPath, FilePath
 from plumbing.cache     import property_cached
 from plumbing.slurm     import num_processors
-from plumbing.common    import which
+from plumbing.common    import which, SuppressAllOutput
 
 # Third party modules #
-import sh, ete2
+import sh
+
+# Prints warnings #
+with SuppressAllOutput(): import ete2
 
 ###############################################################################
 class Phylophlan(object):
