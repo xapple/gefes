@@ -66,14 +66,22 @@ class Contig(object):
         return fasta
 
     @property_cached
-    def annotation(self):
-        """The annotation that can be made on this contig."""
-        return Prokka(self, self.p.annotation_dir)
-
-    @property_cached
     def proteins(self):
         """The predicted proteins that this contig contains."""
         return Prodigal(self, self.p.annotation_dir)
+
+    @property_cached
+    def bin(self):
+        """The bin to which this contig was later assigned."""
+        cid_to_bid = self.assembly.results.binner.results.contig_id_to_bin_id
+        bid_to_bin = self.assembly.results.binner.results.bin_id_to_bin
+        return bid_to_bin[cid_to_bid[self.name]]
+
+    @property_cached
+    def annotation(self):
+        """The annotation that can be made on this contig."""
+        pass
+        return Prokka(self, self.p.annotation_dir)
 
     @property_cached
     def ribosomal_proteins(self):
@@ -83,6 +91,7 @@ class Contig(object):
     @property_cached
     def taxonomy(self):
         """The predicted taxonomic information associated with this contig."""
+        pass
         return Phylosift(self, self.p.taxonomy_dir)
 
     #-------------------------------------------------------------------------#
@@ -93,6 +102,7 @@ class Contig(object):
     #-------------------------------------------------------------------------#
     def get_nuc_freq(self, windowsize=4):
         """Returns frequency of nucleotides in this contig with length windowsize"""
+        pass
         freqs = {}
         allowed_nucs = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
         is_nuc = lambda x: x in allowed_nucs

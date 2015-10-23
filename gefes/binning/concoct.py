@@ -117,6 +117,11 @@ class ConcoctResults(object):
         return [Bin(self.concoct, c_ids, num=b_id) for b_id, c_ids in self.bin_id_to_contig_ids.items()]
 
     @property_cached
+    def bin_id_to_bin(self):
+        """A dictionary of bin ids to Bin objects."""
+        return {b.name: b for b in self.bins}
+
+    @property_cached
     def good_bins(self):
         """Return only the bins which are more than 60% complete and less than 10% contamination."""
         return [b for b in self.bins if b.evaluation.results.statistics['completeness']  > 60 and \

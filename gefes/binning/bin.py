@@ -87,9 +87,9 @@ class Bin(object):
         return faa
 
     @property_cached
-    def single_cogs(self):
-        """The results from finding single copy COGs in the bin."""
-        return SingleCOGs(self, self.p.annotation_dir)
+    def assignment(self):
+        """The imputed assignment by Phylophlan."""
+        return self.binner.results.taxonomy.results.assignments[self.name]
 
     @property_cached
     def average_coverage(self):
@@ -100,3 +100,9 @@ class Bin(object):
         frame = frame.apply(lambda r: r*contig_name_to_length(r), axis=1)
         nucleotides = frame.sum().sum()
         return nucleotides / self.assembly.results.total_bp
+
+    @property_cached
+    def single_cogs(self):
+        """The results from finding single copy COGs in the bin."""
+        pass
+        return SingleCOGs(self, self.p.annotation_dir)

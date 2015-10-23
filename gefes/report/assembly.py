@@ -144,12 +144,13 @@ class AssemblyTemplate(Template):
         * The number of proteins found
         * The average coverage (across all samples)
         * The best taxonomic hit"""
-        info = OrderedDict((('#',         lambda b: "**" + b.name + "**"),
-                            ('Compl.',    lambda b: b.evaluation.results.statistics['completeness']),
-                            ('Conta.',    lambda b: b.evaluation.results.statistics['contamination']),
-                            ('Heter.',    lambda b: b.evaluation.results.statistics['heterogeneity']),
-                            ('Prots.',    lambda b: len(b.faa)),
-                            ('Avg. cov.', lambda b: "%.2f" % b.average_coverage)))
+        info = OrderedDict((('#',          lambda b: "**" + b.name + "**"),
+                            ('Compl.',     lambda b: b.evaluation.results.statistics['completeness']),
+                            ('Conta.',     lambda b: b.evaluation.results.statistics['contamination']),
+                            ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
+                            ('Prots.',     lambda b: len(b.faa)),
+                            ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage)),
+                            ('Assignment', lambda b: b.binner.results.taxonomy. ge_coverage)))
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')
