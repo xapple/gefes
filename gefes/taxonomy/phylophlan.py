@@ -28,7 +28,8 @@ class Phylophlan(object):
     - AttributeError in some cases when too few proteins inputed ?
     - You'd better create a directory named 'output' or it will crash (OSError)
     - All protein IDs have to be unique.
-    - You have to remove the output directory before rerunning the pool."""
+    - You have to remove the output directory before rerunning the pool.
+    - The "low_conf" file has an underscore but not "medium-conf" and "high-conf"."""
 
     short_name   = 'phylophlan'
     long_name    = 'PhyloPhlAn v1.1'
@@ -118,7 +119,7 @@ class PhylophlanResults(object):
 
     @property_cached
     def assignments(self):
-        files = (self.p.low, self.p.high, self.medium)
+        files = self.p.proj_dir.glob('*.txt')
         lines = (line for f in files for line in f)
         def line_to_entry(line):
             bin_id, assignment = line.split('\t')
