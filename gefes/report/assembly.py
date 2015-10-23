@@ -149,8 +149,8 @@ class AssemblyTemplate(Template):
                             ('Conta.',     lambda b: b.evaluation.results.statistics['contamination']),
                             ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',     lambda b: len(b.faa)),
-                            ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage)),
-                            ('Assignment', lambda b: str(b.assignment)))
+                            ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage),
+                            ('Assignment', lambda b: str(b.assignment))))
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')
