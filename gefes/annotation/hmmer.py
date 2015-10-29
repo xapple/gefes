@@ -52,7 +52,7 @@ class Hmmer(object):
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Run it #
-        sh.hmmer('--cpu', cpus, *self.command_args)
+        sh.hmmsearch('--cpu', cpus, *self.command_args)
 
     @property_cached
     def results(self):
