@@ -83,7 +83,7 @@ class Bin(object):
             temp.create()
             for contig in self.contigs: temp.add(contig.proteins.results.faa)
             temp.close()
-            temp.move(faa)
+            temp.move_to(faa)
         return faa
 
     @property_cached

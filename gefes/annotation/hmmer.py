@@ -29,11 +29,13 @@ class Hmmer(object):
 
     def __nonzero__(self): return bool(self.hmmer.p.hits)
 
-    def __init__(self, proteins, result_dir, database='pfam'):
+    def __init__(self, proteins, result_dir, database='pfam', e_value=10**-5):
         # Save Attributes #
         self.proteins   = proteins
         self.result_dir = result_dir
         self.database   = database
+        # Thresholds #
+        self.e_value = 10**-5
         # Auto detect database #
         if self.database == 'pfam': self.database = pfam.hmm_db
         # Auto paths #
