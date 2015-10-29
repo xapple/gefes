@@ -7,7 +7,7 @@ A script that searches for specific pfams in a specific project.
 
 # Modules #
 import os, sh, gefes
-from gefes.annotations.hmmer import Hmmer
+from gefes.annotation.hmmer import Hmmer
 from seqsearch.databases.pfam import pfam
 from plumbing.tmpstuff import TmpFile
 
