@@ -23,7 +23,8 @@ class Hmmer(object):
     dependencies = []
 
     all_paths= """
-    /results.txt
+    /seq_hits.txt
+    /dom_hits.txt
     """
 
     def __nonzero__(self): return self.p.proteins.exists
@@ -41,12 +42,16 @@ class Hmmer(object):
 
     @property
     def command_args(self):
-        return ('-o', self.p.results,
+            return (
+                '-o', '/dev/null',
+                '--tblout',    self.p.seq_hits, # parseable table of per-sequence hits
+                '--domtblout', self.p.dom_hits, # parseable table of per-domain hits
                 '--notextw', # unlimited ASCII text output line width
                 '--acc',     # prefer accessions over names in output
                 '--seed', 1, # set RNG seed to <n>
                 self.database,
-                self.proteins)
+                self.proteins
+            )
 
     def run(self, cpus=None):
         # Variable threads #
