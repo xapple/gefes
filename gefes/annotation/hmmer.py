@@ -48,7 +48,7 @@ class Hmmer(object):
                 '--acc',     # prefer accessions over names in output
                 '--seed', 1, # set RNG seed to <n>
                 self.database,
-                self.proteins
+                self.proteins,
             )
 
     def run(self, cpus=None):
