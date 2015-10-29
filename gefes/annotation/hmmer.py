@@ -23,7 +23,7 @@ class Hmmer(object):
     dependencies = []
 
     all_paths= """
-    /lorem
+    /results.txt
     """
 
     def __nonzero__(self): return self.p.proteins.exists
@@ -41,7 +41,7 @@ class Hmmer(object):
 
     @property
     def command_args(self):
-        return ('-o', self.p.gbk,
+        return ('-o', self.p.results,
                 '--notextw', # unlimited ASCII text output line width
                 '--acc',     # prefer accessions over names in output
                 '--seed', 1, # set RNG seed to <n>
