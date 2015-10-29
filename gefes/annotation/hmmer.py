@@ -46,16 +46,17 @@ class Hmmer(object):
     def command_args(self):
             return (
                 '-o', '/dev/null',
-                '--tblout',    self.p.seq_hits, # parseable table of per-sequence hits
-                '--notextw', # unlimited ASCII text output line width
-                '--acc',     # prefer accessions over names in output
-                '--seed', 1, # set RNG seed to <n>
+                '--tblout', self.p.hits, # parseable table of per-sequence hits
+                '--notextw',        # unlimited ASCII text output line width
+                '--acc',            # prefer accessions over names in output
+                '--seed', 1,        # set RNG seed to <n>
+                '-E', self.e_value, # report only sequences <= this e-value
                 self.database,
                 self.proteins,
             )
 
     def run(self, cpus=None):
-        # Check if FASTA is empty #
+        # Check if FASTA is not empty #
         if self.proteins.count_bytes == 0:
             warnings.warn("Hmmer search on a file with no proteins", RuntimeWarning)
             return False

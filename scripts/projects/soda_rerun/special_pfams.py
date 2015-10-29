@@ -6,29 +6,29 @@ A script that searches for specific pfams in a specific project.
 """
 
 # Modules #
-import os, sh, gefes
+import os, gefes
 from gefes.annotation.hmmer import Hmmer
-from seqsearch.databases.pfam import pfam
+from seqsearch.databases.pfam import SpecificFamily
 from plumbing.tmpstuff import new_temp_path
-from plumbing.autopaths import DirectoryPath, FilePath
+from plumbing.autopaths import DirectoryPath, AutoPaths
 from tqdm import tqdm
 from fasta import FASTA
 
 # Constants #
 home = os.environ['HOME'] + '/'
+base_dir = home + 'test/special_pfams/'
 
 ###############################################################################
 print "Loading."
 proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
 for s in samples: s.load()
+bins = proj.merged.results.binner.results.bins
+faa = FASTA(base_dir + 'all_proteins.faa')
 
 ###############################################################################
-print "Regrouping bins."
-base_dir    = home + 'test/special_pfams/'
-bins        = proj.merged.results.binner.results.bins
-faa         = FASTA(base_dir + 'all_proteins.faa')
 if not faa.exists:
+    print "Regrouping bins."
     temp = FASTA(new_temp_path())
     temp.create()
     for b in tqdm(bins): temp.add(b.faa)
@@ -37,21 +37,23 @@ if not faa.exists:
 
 ###############################################################################
 class CustomPfamSearch(object):
-    def __init__(self, f):
-        self.f = f
-        self.dir = DirectoryPath(base_dir + f + '/')
-        self.dir.create(safe=True)
+    """When you are interested in having an HMM 'database' with only
+    one specific Pfam in it."""
+
+    all_paths = """
+    /model.hmm
+    """
+
+    def __init__(self, fam_name):
+        # Attributes #
+        self.fam_name = fam_name
+        self.pfam = SpecificFamily(self.fam_name)
+        # Directory #
+        self.base_dir = DirectoryPath(base_dir + self.fam_name + '/')
+        self.p        = AutoPaths(self.base_dir, self.all_paths)
 
     @property
-    def hmm_db(self):
-        hmm_db = FilePath(self.dir + 'db.hmm')
-        if not hmm_db.exists:
-            print sh.hmmfetch('-o', hmm_db, pfam.hmm_db, f)
-            assert hmm_db
-        return hmm_db
-
-    @property
-    def search(self): return Hmmer(faa, self.dir, self.hmm_db)
+    def search(self): return Hmmer(faa, self.dir, self.pfam.hmm_db)
 
     @property
     def search_results(self):
