@@ -18,13 +18,13 @@ from fasta import FASTA
 home = os.environ['HOME'] + '/'
 
 ###############################################################################
-print "Loading"
+print "Loading."
 proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
 for s in samples: s.load()
 
 ###############################################################################
-print "Regrouping bins"
+print "Regrouping bins."
 base_dir    = home + 'test/special_pfams/'
 bins        = proj.merged.results.binner.results.bins
 faa         = FASTA(base_dir + 'all_proteins.faa')
@@ -55,7 +55,9 @@ class CustomPfamSearch(object):
 
     @property
     def search_results(self):
-        if not self.search: self.search.run(cpus=4)
+        if not self.search:
+            print "Running search."
+            self.search.run(cpus=4)
         return self.search.results
 
     @property
@@ -63,7 +65,10 @@ class CustomPfamSearch(object):
 
 ###############################################################################
 families = ('PF00151.15', 'PF00150.14', 'PF12876.3', 'PF00128.20')
-searches = [CustomPfamSearch(f) for f in families]
+f = families[0]
+
+searches = [CustomPfamSearch(x) for x in families]
+s = searches[0]
 
 ###############################################################################
 #for s in searches:

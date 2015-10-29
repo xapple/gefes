@@ -27,7 +27,7 @@ class Hmmer(object):
     /seq_hits.txt
     """
 
-    def __nonzero__(self): return bool(self.hmmer.p.hits)
+    def __nonzero__(self): return bool(self.p.hits)
 
     def __init__(self, proteins, result_dir, database='pfam', e_value=10**-5):
         # Save Attributes #
