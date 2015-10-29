@@ -45,7 +45,6 @@ class Hmmer(object):
             return (
                 '-o', '/dev/null',
                 '--tblout',    self.p.seq_hits, # parseable table of per-sequence hits
-                '--domtblout', self.p.dom_hits, # parseable table of per-domain hits
                 '--notextw', # unlimited ASCII text output line width
                 '--acc',     # prefer accessions over names in output
                 '--seed', 1, # set RNG seed to <n>
