@@ -24,7 +24,6 @@ class Hmmer(object):
 
     all_paths= """
     /seq_hits.txt
-    /dom_hits.txt
     """
 
     def __nonzero__(self): return self.p.proteins.exists
