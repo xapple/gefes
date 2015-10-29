@@ -11,6 +11,7 @@ from gefes.annotation.hmmer import Hmmer
 from seqsearch.databases.pfam import pfam
 from plumbing.tmpstuff import TmpFile
 from plumbing.autopaths import DirectoryPath, FilePath
+from tqdm import tqdm
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -29,10 +30,10 @@ fam_file = TmpFile.from_string('\n'.join(families))
 sh.hmmfetch('-o', small_db, '-f', pfam.hmm_db, fam_file)
 assert small_db
 
-#print "Directories"
-#dirs     = [DirectoryPath(c.base_dir + 'special_pfams/')                               for c in good_contigs]
+print "Directories"
+dirs = [DirectoryPath(c.base_dir + 'special_pfams/') for c in good_contigs]
 #for d in dirs: d.create(safe=True)
-#
-#print "Searching"
-#searches = [Hmmer(c.proteins.results.faa, c.base_dir + 'special_pfams/', small_db) for c in good_contigs]
-#for s in searches: pass#
+
+print "Searching"
+searches = [Hmmer(c.proteins.results.faa, c.base_dir + 'special_pfams/', small_db) for c in good_contigs]
+for s in tqdm(searches): s.run(cpus=4)

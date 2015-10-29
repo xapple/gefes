@@ -1,4 +1,5 @@
 # Built-in modules #
+import warnings
 
 # Internal modules #
 
@@ -26,7 +27,7 @@ class Hmmer(object):
     /seq_hits.txt
     """
 
-    def __nonzero__(self): return self.p.proteins.exists
+    def __nonzero__(self): return bool(self.hmmer.p.hits)
 
     def __init__(self, proteins, result_dir, database='pfam'):
         # Save Attributes #
@@ -52,6 +53,10 @@ class Hmmer(object):
             )
 
     def run(self, cpus=None):
+        # Check if FASTA is empty #
+        if self.proteins.count_bytes == 0:
+            warnings.warn("Hmmer search on a file with no proteins", RuntimeWarning)
+            return False
         # Variable threads #
         if cpus is None: cpus = num_processors
         # Run it #
@@ -66,8 +71,10 @@ class Hmmer(object):
 ###############################################################################
 class HmmerResults(object):
 
-    def __nonzero__(self): return self.hmmer.p.proteins.exists
-    def __iter__(self): return iter(self.faa)
+    def __nonzero__(self): return bool(self.hmmer.p.hits)
 
     def __init__(self, hmmer):
+        self.hmmer = hmmer
+
+    def hits(self, hmmer):
         self.hmmer = hmmer
