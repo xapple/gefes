@@ -13,7 +13,7 @@ import sh
 
 ###############################################################################
 class Hmmer(object):
-    """Takes care of running Hmmer"""
+    """Takes care of running Hmmer."""
 
     short_name = 'hmmer'
     long_name  = 'HMMER 3.1b2 (February 2015)'
@@ -42,7 +42,7 @@ class Hmmer(object):
     @property
     def command_args(self):
         return ('-o', self.p.gbk,
-                '--notextw', # unlimit ASCII text output line width
+                '--notextw', # unlimited ASCII text output line width
                 '--acc',     # prefer accessions over names in output
                 '--seed', 1, # set RNG seed to <n>
                 self.database,
