@@ -10,7 +10,7 @@ import os, sh, gefes
 from gefes.annotation.hmmer import Hmmer
 from seqsearch.databases.pfam import pfam
 from plumbing.tmpstuff import TmpFile
-from plumbing.autopaths import Directory, FilePath
+from plumbing.autopaths import DirectoryPath, FilePath
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -30,7 +30,7 @@ sh.hmmfetch('-o', small_db, '-f', pfam.hmm_db, fam_file)
 assert small_db
 
 #print "Directories"
-#dirs     = [Directory(c.base_dir + 'special_pfams/')                               for c in good_contigs]
+#dirs     = [DirectoryPath(c.base_dir + 'special_pfams/')                               for c in good_contigs]
 #for d in dirs: d.create(safe=True)
 #
 #print "Searching"
