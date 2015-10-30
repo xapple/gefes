@@ -17,9 +17,10 @@ from fasta import FASTA, AlignedFASTA
 # Constants #
 home = os.environ['HOME'] + '/'
 base_dir = home + 'test/pfams_for_report/'
+os.makedirs(base_dir)
 
 ###############################################################################
-print "Loading."
+print "-> Loading."
 proj = gefes.projects['soda_rerun'].load()
 samples = proj.samples
 for s in samples: s.load()
@@ -28,7 +29,7 @@ faa = FASTA(base_dir + 'all_proteins.faa')
 
 ###############################################################################
 if not faa.exists:
-    print "Regrouping bins."
+    print "-> Regrouping bins."
     temp = FASTA(new_temp_path())
     temp.create()
     for b in tqdm(bins): temp.add(b.faa)
@@ -65,7 +66,7 @@ class CustomPfamSearch(object):
     @property
     def results(self):
         if not self.search:
-            print "Running search."
+            print "-> Running search."
             self.search.run(cpus=4)
         return self.search.results
 
@@ -78,7 +79,7 @@ class CustomPfamSearch(object):
         an annotation as well as the pfam reference proteins."""
         fasta = FASTA(self.p.fasta)
         if not fasta:
-            print "Making combined fasta."
+            print "-> Making combined fasta with hits and related."
             temp = FASTA(new_temp_path())
             temp.create()
             for hit in self.hits:
@@ -99,7 +100,7 @@ class CustomPfamSearch(object):
         """The fasta file aligned with muscle."""
         alignment = AlignedFASTA(self.p.muscle)
         if not alignment:
-            print "Making alignment."
+            print "-> Making alignment."
             self.fasta.align(alignment)
         return alignment
 
@@ -108,7 +109,7 @@ class CustomPfamSearch(object):
         """The fasta filtered with muscle."""
         filtered = AlignedFASTA(self.p.aln)
         if not filtered:
-            print "Making filtered."
+            print "-> Making filtered."
             self.alignment.gblocks(filtered, seq_type='prot')
         return filtered
 
@@ -117,6 +118,7 @@ class CustomPfamSearch(object):
         """The path to the tree built with RAxML."""
         tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
         if not tree.exists:
+            print "-> Making slow tree."
             self.alignment.build_tree_raxml(new_path    = self.p.tree_raxml_dir,
                                             seq_type    = 'prot',
                                             num_threads = 4,
@@ -129,7 +131,7 @@ class CustomPfamSearch(object):
         """The path to the tree built with FastTree."""
         tree = FilePath(self.p.fast_tree)
         if not tree.exists:
-            print "Making tree."
+            print "-> Making fast tree."
             self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
         return tree
@@ -139,7 +141,7 @@ class CustomPfamSearch(object):
         """The nodes as text, one name per line."""
         leaf_names = FilePath(self.p.leaf_names)
         if not leaf_names:
-            print "Making leaf names."
+            print "-> Making leaf names."
             leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
         return leaf_names
 
