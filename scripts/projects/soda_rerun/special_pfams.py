@@ -47,7 +47,7 @@ class CustomPfamSearch(object):
     /combined.muscle
     /combined.aln
     /tree_raxml/
-    /tree_fast/
+    /fast_tree.tree
     """
 
     def __init__(self, fam_name):
@@ -117,9 +117,9 @@ class CustomPfamSearch(object):
     @property
     def tree_fast(self):
         """The path to the tree built with FastTree."""
-        tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
+        tree = FilePath(self.p.fasttree)
         if not tree.exists:
-            self.alignment.build_tree_fast(new_path    = self.p.tree_fast_dir,
+            self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
         return tree
 
