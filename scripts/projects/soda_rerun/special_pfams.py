@@ -121,7 +121,7 @@ class CustomPfamSearch(object):
     @property
     def tree_fast(self):
         """The path to the tree built with FastTree."""
-        tree = FilePath(self.p.fasttree)
+        tree = FilePath(self.p.fast_tree)
         if not tree.exists:
             self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
