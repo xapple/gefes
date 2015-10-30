@@ -159,7 +159,7 @@ class CustomPfamSearch(object):
         if not leaf_names:
             assert self.filtered
             print "-> Making full leaf names."
-            leaf_names.writelines(seq.id + '\n' for seq in self.fasta)
+            leaf_names.writelines(seq.description + '\n' for seq in self.fasta)
         return leaf_names
 
 ###############################################################################
