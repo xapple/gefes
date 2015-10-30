@@ -44,8 +44,10 @@ class CustomPfamSearch(object):
     /model.hmm
     /seq_hits.txt
     /combined.fasta
-    /aligned.fasta
-    /tree/
+    /combined.muscle
+    /combined.aln
+    /tree_raxml/
+    /tree_fast/
     """
 
     def __init__(self, fam_name):
@@ -93,20 +95,32 @@ class CustomPfamSearch(object):
     @property
     def alignment(self):
         """The fasta file aligned with muscle."""
-        muscle = AlignedFASTA(self.p.aligned)
-        if not muscle: self.fasta.align(muscle)
-        return muscle
+        alignment = AlignedFASTA(self.p.aln)
+        if not alignment:
+            muscle = AlignedFASTA(self.p.muscle)
+            self.fasta.align(muscle)
+            muscle.gblocks(self.p.aln, seq_type='prot')
+        return alignment
 
     @property
-    def tree(self):
+    def tree_raxml(self):
         """The path to the tree built with RAxML."""
         tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
         if not tree.exists:
-            self.alignment.build_tree(new_path    = self.p.tree_dir,
-                                      seq_type    = 'prot',
-                                      num_threads = 4,
-                                      free_cores  = 0,
-                                      keep_dir    = True)
+            self.alignment.build_tree_raxml(new_path    = self.p.tree_raxml_dir,
+                                            seq_type    = 'prot',
+                                            num_threads = 4,
+                                            free_cores  = 0,
+                                            keep_dir    = True)
+        return tree
+
+    @property
+    def tree_fast(self):
+        """The path to the tree built with FastTree."""
+        tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
+        if not tree.exists:
+            self.alignment.build_tree_fast(new_path    = self.p.tree_fast_dir,
+                                           seq_type    = 'prot')
         return tree
 
 ###############################################################################
