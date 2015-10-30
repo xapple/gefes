@@ -160,5 +160,5 @@ s = searches[0]
 
 ###############################################################################
 for s in searches: print s.fam_name + ': ' + str(len(list(s.hits))) + ' hits'
-for s in searches: print s.tree_fast
-for s in searches: print s.leaf_names
+#for s in searches: print s.tree_fast
+#for s in searches: print s.leaf_names
