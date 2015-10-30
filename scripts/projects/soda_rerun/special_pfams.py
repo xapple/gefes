@@ -16,8 +16,8 @@ from fasta import FASTA, AlignedFASTA
 
 # Constants #
 home = os.environ['HOME'] + '/'
-base_dir = home + 'test/pfams_for_report/'
-os.makedirs(base_dir)
+base_dir = DirectoryPath(home + 'test/pfams_for_report/')
+base_dir.create(safe=True)
 
 ###############################################################################
 print "-> Loading."
