@@ -44,6 +44,8 @@ class CustomPfamSearch(object):
     /model.hmm
     /seq_hits.txt
     /combined.fasta
+    /aligned.fasta
+    /tree/
     """
 
     def __init__(self, fam_name):
@@ -90,21 +92,19 @@ class CustomPfamSearch(object):
 
     @property
     def alignment(self):
-        """The fasta file aligned with muscle"""
-        muscle    = AlignedFASTA(self.p.muscle)
-        alignment = AlignedFASTA(self.p.aln)
-        if not alignment:
-            self.fasta.align(muscle)
-        return alignment
+        """The fasta file aligned with muscle."""
+        muscle = AlignedFASTA(self.p.aligned)
+        if not muscle: self.fasta.align(muscle)
+        return muscle
 
     @property
     def tree(self):
-        """The path to the tree built with raxml"""
+        """The path to the tree built with RAxML."""
         tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
         if not tree.exists:
             self.alignment.build_tree(new_path    = self.p.tree_dir,
-                                      seq_type    = self.analysis.seq_type,
-                                      num_threads = self.analysis.num_threads,
+                                      seq_type    = 'prot',
+                                      num_threads = 4,
                                       free_cores  = 0,
                                       keep_dir    = True)
         return tree
