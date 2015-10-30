@@ -42,6 +42,7 @@ class CustomPfamSearch(object):
 
     all_paths = """
     /model.hmm
+    /seq_hits.txt
     """
 
     def __init__(self, fam_name):
@@ -53,10 +54,10 @@ class CustomPfamSearch(object):
         self.p        = AutoPaths(self.base_dir, self.all_paths)
 
     @property
-    def search(self): return Hmmer(faa, self.dir, self.pfam.hmm_db)
+    def search(self): return Hmmer(faa, self.base_dir, self.pfam.hmm_db)
 
     @property
-    def search_results(self):
+    def results(self):
         if not self.search:
             print "Running search."
             self.search.run(cpus=4)
