@@ -50,6 +50,7 @@ class CustomPfamSearch(object):
     /tree_raxml/
     /fast_tree.tree
     /leaf_names.txt
+    /full_leaf.txt
     """
 
     def __init__(self, fam_name):
@@ -151,6 +152,16 @@ class CustomPfamSearch(object):
             leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
         return leaf_names
 
+    @property
+    def full_leaf_names(self):
+        """The nodes as text, one name per line."""
+        leaf_names = FilePath(self.p.full_leaf)
+        if not leaf_names:
+            assert self.filtered
+            print "-> Making full leaf names."
+            leaf_names.writelines(seq.id + '\n' for seq in self.fasta)
+        return leaf_names
+
 ###############################################################################
 families = ('PF00151.15', 'PF00150.14', 'PF12876.3', 'PF00128.20')
 f = families[0]
@@ -162,3 +173,4 @@ s = searches[0]
 for s in searches: print s.fam_name + ': ' + str(len(list(s.hits))) + ' hits'
 #for s in searches: print s.tree_fast
 #for s in searches: print s.leaf_names
+#for s in searches: print s.full_leaf_names
