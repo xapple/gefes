@@ -9,6 +9,11 @@ from plumbing.cache import property_cached
 from plumbing.slurm import num_processors
 from seqsearch.databases.pfam import pfam
 
+# Warnings #
+warnings.simplefilter("ignore", "Bio.SearchIO")
+warnings.simplefilter("ignore", "BiopythonWarning")
+from Bio import SearchIO
+
 # Third party modules #
 import sh
 
@@ -78,6 +83,8 @@ class HmmerResults(object):
 
     def __init__(self, hmmer):
         self.hmmer = hmmer
+        self.p     = hmmer.p
 
-    def hits(self, hmmer):
-        self.hmmer = hmmer
+    @property
+    def hits(self):
+        return SearchIO.read(self.p.hits, 'hmmer3-tab')

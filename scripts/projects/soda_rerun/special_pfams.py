@@ -64,7 +64,36 @@ class CustomPfamSearch(object):
         return self.search.results
 
     @property
-    def tree(self): return Hmmer(faa, self.dir, self.hmm_db)
+    def fasta(self):
+        """The fasta file containing the preficted proteins that recieved
+        an annotation."""
+        fasta = FASTA(self.p.fasta)
+        if not fasta:
+            fasta.create()
+            for gene in self.filtered_genes: fasta.add_str(str(gene), name=gene.name)
+            fasta.close()
+        return fasta
+
+    @property
+    def alignment(self):
+        """The fasta file aligned with muscle and filtered with gblocks"""
+        muscle    = AlignedFASTA(self.p.muscle)
+        alignment = AlignedFASTA(self.p.aln)
+        if not alignment:
+            self.fasta.align(muscle)
+        return alignment
+
+    @property
+    def tree(self):
+        """The path to the tree built with raxml"""
+        tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
+        if not tree.exists:
+            self.alignment.build_tree(new_path    = self.p.tree_dir,
+                                      seq_type    = self.analysis.seq_type,
+                                      num_threads = self.analysis.num_threads,
+                                      free_cores  = 0,
+                                      keep_dir    = True)
+        return tree
 
 ###############################################################################
 families = ('PF00151.15', 'PF00150.14', 'PF12876.3', 'PF00128.20')
