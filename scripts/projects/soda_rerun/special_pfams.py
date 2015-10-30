@@ -10,9 +10,9 @@ import os, gefes
 from gefes.annotation.hmmer import Hmmer
 from seqsearch.databases.pfam import SpecificFamily
 from plumbing.tmpstuff import new_temp_path
-from plumbing.autopaths import DirectoryPath, AutoPaths
+from plumbing.autopaths import DirectoryPath, FilePath, AutoPaths
 from tqdm import tqdm
-from fasta import FASTA
+from fasta import FASTA, AlignedFASTA
 
 # Constants #
 home = os.environ['HOME'] + '/'
@@ -68,7 +68,7 @@ class CustomPfamSearch(object):
 
     @property
     def fasta(self):
-        """The fasta file containing the preficted proteins that recieved
+        """The fasta file containing the predicted proteins that received
         an annotation."""
         fasta = FASTA(self.p.fasta)
         if not fasta:
@@ -79,7 +79,7 @@ class CustomPfamSearch(object):
 
     @property
     def alignment(self):
-        """The fasta file aligned with muscle and filtered with gblocks"""
+        """The fasta file aligned with muscle"""
         muscle    = AlignedFASTA(self.p.muscle)
         alignment = AlignedFASTA(self.p.aln)
         if not alignment:
