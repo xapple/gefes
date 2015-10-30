@@ -95,12 +95,16 @@ class CustomPfamSearch(object):
     @property
     def alignment(self):
         """The fasta file aligned with muscle."""
-        alignment = AlignedFASTA(self.p.aln)
-        if not alignment:
-            muscle = AlignedFASTA(self.p.muscle)
-            self.fasta.align(muscle)
-            muscle.gblocks(self.p.aln, seq_type='prot')
+        alignment = AlignedFASTA(self.p.muscle)
+        if not alignment: self.fasta.align(alignment)
         return alignment
+
+    @property
+    def filtered(self):
+        """The fasta filtered with muscle."""
+        filtered = AlignedFASTA(self.p.aln)
+        if not filtered: self.alignment.gblocks(filtered, seq_type='prot')
+        return filtered
 
     @property
     def tree_raxml(self):
