@@ -78,6 +78,7 @@ class CustomPfamSearch(object):
         an annotation as well as the pfam reference proteins."""
         fasta = FASTA(self.p.fasta)
         if not fasta:
+            print "Making combined fasta."
             temp = FASTA(new_temp_path())
             temp.create()
             for hit in self.hits:
@@ -97,14 +98,18 @@ class CustomPfamSearch(object):
     def alignment(self):
         """The fasta file aligned with muscle."""
         alignment = AlignedFASTA(self.p.muscle)
-        if not alignment: self.fasta.align(alignment)
+        if not alignment:
+            print "Making alignment."
+            self.fasta.align(alignment)
         return alignment
 
     @property
     def filtered(self):
         """The fasta filtered with muscle."""
         filtered = AlignedFASTA(self.p.aln)
-        if not filtered: self.alignment.gblocks(filtered, seq_type='prot')
+        if not filtered:
+            print "Making filtered."
+            self.alignment.gblocks(filtered, seq_type='prot')
         return filtered
 
     @property
@@ -124,6 +129,7 @@ class CustomPfamSearch(object):
         """The path to the tree built with FastTree."""
         tree = FilePath(self.p.fast_tree)
         if not tree.exists:
+            print "Making tree."
             self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
         return tree
@@ -132,7 +138,9 @@ class CustomPfamSearch(object):
     def leaf_names(self):
         """The nodes as text, one name per line."""
         leaf_names = FilePath(self.p.leaf_names)
-        if not leaf_names: leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
+        if not leaf_names:
+            print "Making leaf names."
+            leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
         return leaf_names
 
 ###############################################################################
@@ -144,3 +152,5 @@ s = searches[0]
 
 ###############################################################################
 for s in searches: print s.fam_name + ': ' + str(len(list(s.hits))) + ' hits'
+#for s in searches: print s.tree_fast
+#for s in searches: print s.leaf_names
