@@ -64,6 +64,9 @@ class CustomPfamSearch(object):
         return self.search.results
 
     @property
+    def hits(self): return self.search.hits
+
+    @property
     def fasta(self):
         """The fasta file containing the preficted proteins that recieved
         an annotation."""
