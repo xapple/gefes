@@ -48,6 +48,7 @@ class CustomPfamSearch(object):
     /combined.aln
     /tree_raxml/
     /fast_tree.tree
+    /leaf_names.txt
     """
 
     def __init__(self, fam_name):
@@ -126,6 +127,13 @@ class CustomPfamSearch(object):
             self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
         return tree
+
+    @property
+    def leaf_names(self):
+        """The nodes as text, one name per line."""
+        leaf_names = FilePath(self.p.leaf_names)
+        if not leaf_names: leaf_names.writelines(seq.id for seq in self.filtered)
+        return leaf_names
 
 ###############################################################################
 families = ('PF00151.15', 'PF00150.14', 'PF12876.3', 'PF00128.20')
