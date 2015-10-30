@@ -69,11 +69,17 @@ class CustomPfamSearch(object):
     @property
     def fasta(self):
         """The fasta file containing the predicted proteins that received
-        an annotation."""
+        an annotation as well as the pfam reference proteins."""
         fasta = FASTA(self.p.fasta)
         if not fasta:
             fasta.create()
-            for gene in self.filtered_genes: fasta.add_str(str(gene), name=gene.name)
+            for hit in self.hits:
+                c_id, p_id = hit.id.split('_')
+                c = proj.merged.results.contig_id_to_contig[c_id]
+                seq = c.proteins.results.faa.get_id(p_id)
+                fasta.add_seq(seq)
+            for seq in self.pfam.subsampled:
+                fasta.add_seq(seq)
             fasta.close()
         return fasta
 
@@ -106,6 +112,4 @@ searches = [CustomPfamSearch(x) for x in families]
 s = searches[0]
 
 ###############################################################################
-#for s in searches:
-#    print "Doing the job for family '%s'" % s.f
-#    s.run()
+for s in searches: print s.fam_name + ': ' + str(len(list(s.hits))) + ' hits'
