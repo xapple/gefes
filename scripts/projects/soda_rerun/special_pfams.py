@@ -73,17 +73,19 @@ class CustomPfamSearch(object):
         an annotation as well as the pfam reference proteins."""
         fasta = FASTA(self.p.combined)
         if not fasta:
-            fasta.create()
+            temp = FASTA(new_temp_path())
+            temp.create()
             for hit in self.hits:
                 c_id, p_id = hit.id.split('_')
                 c = proj.merged.results.contig_id_to_contig[c_id]
                 seq = c.proteins.results.faa.get_id(p_id)
-                fasta.add_seq(seq)
-                fasta.flush()
+                temp.add_seq(seq)
+                temp.flush()
             for seq in self.pfam.subsampled:
-                fasta.add_seq(seq)
-                fasta.flush()
-            fasta.close()
+                temp.add_seq(seq)
+                temp.flush()
+            temp.close()
+            temp.move_to(fasta)
         return fasta
 
     @property
