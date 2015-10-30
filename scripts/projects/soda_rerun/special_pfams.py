@@ -78,7 +78,7 @@ class CustomPfamSearch(object):
             for hit in self.hits:
                 c_id, p_id = hit.id.split('_')
                 c = proj.merged.results.contig_id_to_contig[c_id]
-                seq = c.proteins.results.faa.get_id(p_id)
+                seq = c.proteins.results.faa.get_id(hit.id)
                 temp.add_seq(seq)
                 temp.flush()
             for seq in self.pfam.subsampled:
