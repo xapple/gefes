@@ -75,7 +75,7 @@ class CustomPfamSearch(object):
     def fasta(self):
         """The fasta file containing the predicted proteins that received
         an annotation as well as the pfam reference proteins."""
-        fasta = FASTA(self.p.combined)
+        fasta = FASTA(self.p.fasta)
         if not fasta:
             temp = FASTA(new_temp_path())
             temp.create()
