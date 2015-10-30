@@ -10,8 +10,8 @@ from plumbing.slurm import num_processors
 from seqsearch.databases.pfam import pfam
 
 # Warnings #
-warnings.simplefilter("ignore", "Bio.SearchIO")
-warnings.simplefilter("ignore", "BiopythonWarning")
+warnings.filterwarnings("ignore", "Bio.SearchIO")
+warnings.filterwarnings("ignore", "BiopythonWarning")
 from Bio import SearchIO
 
 # Third party modules #
