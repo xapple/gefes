@@ -43,6 +43,7 @@ class CustomPfamSearch(object):
     all_paths = """
     /model.hmm
     /seq_hits.txt
+    /combined.fasta
     """
 
     def __init__(self, fam_name):
@@ -70,7 +71,7 @@ class CustomPfamSearch(object):
     def fasta(self):
         """The fasta file containing the predicted proteins that received
         an annotation as well as the pfam reference proteins."""
-        fasta = FASTA(self.p.fasta)
+        fasta = FASTA(self.p.combined)
         if not fasta:
             fasta.create()
             for hit in self.hits:
