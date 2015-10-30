@@ -16,7 +16,7 @@ from fasta import FASTA, AlignedFASTA
 
 # Constants #
 home = os.environ['HOME'] + '/'
-base_dir = home + 'test/special_pfams/'
+base_dir = home + 'test/pfams_for_report/'
 
 ###############################################################################
 print "Loading."
