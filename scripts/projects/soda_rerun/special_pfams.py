@@ -64,7 +64,7 @@ class CustomPfamSearch(object):
         return self.search.results
 
     @property
-    def hits(self): return self.search.hits
+    def hits(self): return self.results.hits
 
     @property
     def fasta(self):
