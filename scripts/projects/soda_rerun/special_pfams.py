@@ -79,8 +79,10 @@ class CustomPfamSearch(object):
                 c = proj.merged.results.contig_id_to_contig[c_id]
                 seq = c.proteins.results.faa.get_id(p_id)
                 fasta.add_seq(seq)
+                fasta.flush()
             for seq in self.pfam.subsampled:
                 fasta.add_seq(seq)
+                fasta.flush()
             fasta.close()
         return fasta
 
