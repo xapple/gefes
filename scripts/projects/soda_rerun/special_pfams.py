@@ -132,7 +132,7 @@ class CustomPfamSearch(object):
     def leaf_names(self):
         """The nodes as text, one name per line."""
         leaf_names = FilePath(self.p.leaf_names)
-        if not leaf_names: leaf_names.writelines(seq.id for seq in self.filtered)
+        if not leaf_names: leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
         return leaf_names
 
 ###############################################################################
