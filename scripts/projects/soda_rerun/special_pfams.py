@@ -79,6 +79,7 @@ class CustomPfamSearch(object):
         an annotation as well as the pfam reference proteins."""
         fasta = FASTA(self.p.fasta)
         if not fasta:
+            assert self.hits
             print "-> Making combined fasta with hits and related."
             temp = FASTA(new_temp_path())
             temp.create()
@@ -100,6 +101,7 @@ class CustomPfamSearch(object):
         """The fasta file aligned with muscle."""
         alignment = AlignedFASTA(self.p.muscle)
         if not alignment:
+            assert self.fasta
             print "-> Making alignment."
             self.fasta.align(alignment)
         return alignment
@@ -109,6 +111,7 @@ class CustomPfamSearch(object):
         """The fasta filtered with muscle."""
         filtered = AlignedFASTA(self.p.aln)
         if not filtered:
+            assert self.alignment
             print "-> Making filtered."
             self.alignment.gblocks(filtered, seq_type='prot')
         return filtered
@@ -118,8 +121,9 @@ class CustomPfamSearch(object):
         """The path to the tree built with RAxML."""
         tree = FilePath(self.p.tree_dir + 'RAxML_bestTree.tree')
         if not tree.exists:
+            assert self.filtered
             print "-> Making slow tree."
-            self.alignment.build_tree_raxml(new_path    = self.p.tree_raxml_dir,
+            self.filtered.build_tree_raxml(new_path    = self.p.tree_raxml_dir,
                                             seq_type    = 'prot',
                                             num_threads = 4,
                                             free_cores  = 0,
@@ -131,8 +135,9 @@ class CustomPfamSearch(object):
         """The path to the tree built with FastTree."""
         tree = FilePath(self.p.fast_tree)
         if not tree.exists:
+            assert self.filtered
             print "-> Making fast tree."
-            self.alignment.build_tree_fast(new_path    = self.p.fast_tree,
+            self.filtered.build_tree_fast(new_path    = self.p.fast_tree,
                                            seq_type    = 'prot')
         return tree
 
@@ -141,6 +146,7 @@ class CustomPfamSearch(object):
         """The nodes as text, one name per line."""
         leaf_names = FilePath(self.p.leaf_names)
         if not leaf_names:
+            assert self.filtered
             print "-> Making leaf names."
             leaf_names.writelines(seq.id + '\n' for seq in self.filtered)
         return leaf_names
@@ -154,5 +160,5 @@ s = searches[0]
 
 ###############################################################################
 for s in searches: print s.fam_name + ': ' + str(len(list(s.hits))) + ' hits'
-#for s in searches: print s.tree_fast
-#for s in searches: print s.leaf_names
+for s in searches: print s.tree_fast
+for s in searches: print s.leaf_names
