@@ -21,7 +21,7 @@ class Projects(Collection):
 ###############################################################################
 class Project(Aggregate):
     """A project containing several samples. You can describe your
-    projects in the a JSON placed in the repository."""
+    projects in the JSON file placed in the repository root."""
 
     make_json_links = False
 
