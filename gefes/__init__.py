@@ -27,7 +27,7 @@ matplotlib.use('Agg', warn=False)
 from gefes.groups.projects import Project, Projects
 
 # Constants #
-url = 'http://github.com/limno/gefes/'
+url = 'http://github.com/xapple/gefes/'
 home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
@@ -44,5 +44,5 @@ json_paths.remove(repos_dir + 'json/defaults.json')
 # Create the project objects #
 projects = [Project(j, project_dir) for j in json_paths]
 
-# Convenience objects with indexing #
+# Convenience object with indexing #
 projects = Projects(projects)
