@@ -2,9 +2,9 @@
 
 The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**​nvironmental **S**​equencing.
 
-This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we could like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
+This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-It was developed by Lucas Sinclair (<lucas.sinclair@me.com>) while working in the Limnology department at the Evolution Biology Center of Uppsala University. The code has an MIT license and everyone is welcome to use, modify or extend the pipeline.
+This source code is propriety of Envonautics Ltd. (http://www.envonautics.com)
 
 ## Warnings:
 
@@ -26,7 +26,7 @@ What we have as starting data in our case is more messy. Every DNA read is poten
 
 How do we put the reads together to make genomes ? How are we going to figure out which short sequence was coming from which species ? This is what `gefes` is supposed to help with.
 
-Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualization in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via the SLURM queuing system).
+Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualizations in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via the SLURM queuing system).
 
 ## Overview:
 
@@ -105,8 +105,8 @@ These lines go into your ``.bash_profile``:
 
 Relaunch your shell and type these commands to get the right version of python:
 
-    $ pyenv install 2.7.8
-    $ pyenv global 2.7.8
+    $ pyenv install 2.7.11
+    $ pyenv global 2.7.11
     $ pyenv rehash
 
 #### Step 4: Install all required python packages
@@ -141,16 +141,17 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
 `gefes` makes use of many third party programs which need to be installed and accessible from your ``$PATH``. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones only when `gefes` complains about a missing executable. These dependencies each have specific installation procedures and include:
 
  * [NCBI BLAST](http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi) version 2.2.28+ providing ``blastn`` and ``blastp``
- * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
- * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
  * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) version 2.2.4 providing ``bowtie2`` and ``bowtie2-build``
  * [bedtools](http://bedtools.readthedocs.org/en/latest/) version 2.15.0 providing ``genomeCoverageBed``
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
- * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in the python package index)
  * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.10 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
  * [LaTeX](https://www.tug.org/texlive/) version `TeX Live 2014` providing ``xelatex``.
 
-These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system.
+These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system. Then there are a few that are bundeled with the repository or are obtained with `pip`:
+
+ * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
+ * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)
+ * [concoct](https://github.com/BinPro/CONCOCT) version 0.4.0 providing ``concoct`` (included in the python package index)
 
 #### Step 6: Make a working directory with the raw data linked
 `gefes` will generate results in a directory named `views` in a directory named `GEFES` in your home folder. You can change this by editing the code of course.
