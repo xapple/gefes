@@ -13,7 +13,7 @@ module_dir = os.path.dirname(self.__file__)
 # The module is a git repository #
 from plumbing.git import GitRepo
 repos_dir = os.path.abspath(module_dir + '/../') + '/'
-git_repo = GitRepo(repos_dir)
+git_repo = GitRepo(repos_dir, empty=True)
 
 # Dependencies #
 from plumbing import dependencies

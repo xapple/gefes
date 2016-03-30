@@ -120,10 +120,7 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install decorator
     $ pip install shell_command
     $ pip install threadpool
-    $ pip install patsy
     $ pip install scipy
-    $ pip install statsmodels
-    $ pip install scikit-learn
     $ pip install pysam
     $ pip install concoct
 
@@ -187,15 +184,6 @@ Or something like this:
 
 ##### - "pip install matplotlib" missing freetype:
 If you are on OS X you can simply fix this error by typing `$ brew install freetype`
-
-## Acknowledgments
-A special thanks to all those who helped create this pipeline and make it as great as it is:
-
-* Ino De Bruijn ([@inodb](https://github.com/inodb))
-* Moritz Buck ([@moritzbuck](https://github.com/moritzbuck))
-* Umer Zeeshan Ijaz ([@umerijaz](https://github.com/umerijaz))
-
-In particular, this piece of software was developed through funding from the Swedish Foundation for Strategic Research.
 
 ## Flowchart
 Below is drawn the flowchart describing the data processing along all the steps of GEFES:

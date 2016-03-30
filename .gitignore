@@ -9,3 +9,6 @@
 .#*
 ._*
 gefes.egg-info/
+
+# IDE things #
+.idea
