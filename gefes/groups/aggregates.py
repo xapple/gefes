@@ -10,13 +10,16 @@ from gefes.assemble.ray             import Ray
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
 from gefes.merge.newbler            import Newbler
+from gefes.groups.status            import ProjectStatus
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
 
 ###############################################################################
 class Aggregate(object):
-    """A arbitrary aggregate of several samples."""
+    """A arbitrary aggregate of several samples.
+    Typically, a `Project` object will inherit from this
+    and extent the load() method."""
 
     all_paths = """
     /logs/
@@ -67,6 +70,8 @@ class Aggregate(object):
         self.runner = AggregateRunner(self)
         # Report #
         self.report = AggregateReport(self)
+        # Status #
+        self.status = ProjectStatus(self)
         # For convenience #
         return self
 

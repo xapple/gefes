@@ -24,9 +24,9 @@ home = os.environ['HOME'] + '/'
 
 ###############################################################################
 class Sample(object):
-    """Consists of either two FASTA or two FASTQ files.
+    """Consists of either two FASTA files or two FASTQ files.
     It's a bunch of paired sequences all coming from the same particular
-    IRL lab sample. Might or might not corresponds to an Illumina MID."""
+    IRL lab sample. Might or might not correspond to an Illumina MID."""
 
     raw_files_must_exist = True
 

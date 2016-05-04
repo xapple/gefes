@@ -30,8 +30,7 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 # Don't run it #
-import sys
-sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+raise Exception("Copy paste the commands you want in ipython, don't run this script.")
 
 ############################## Special Merging ################################
 for s in tqdm(bt.samples): s.merge_lanes(remove_orig=True)

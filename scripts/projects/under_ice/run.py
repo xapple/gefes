@@ -26,8 +26,7 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 # Don't run it #
-import sys
-sys.exit("Copy paste the commands you want in ipython, don't run this script.")
+raise Exception("Copy paste the commands you want in ipython, don't run this script.")
 
 ################################## Meta-data ##################################
 # Print number of sequences #
@@ -54,7 +53,7 @@ for p,n,a in ((p,n,a) for p in projects for n,a in p.assemblies.items()):
                    print "Binning %s %i:"%(p,n), bool(a.results.binner.p.clustering)
 for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.p.clustering)
 
-################################# Search logs ##################################
+################################# Search logs #################################
 from plumbing.common import tail
 from plumbing.autopaths import FilePath
 for s in samples:

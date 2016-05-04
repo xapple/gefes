@@ -4,8 +4,8 @@ import re, os, glob
 # Internal modules #
 from gefes.groups.aggregates import Aggregate
 from gefes.groups.collection import Collection
-from gefes.groups.samples import Sample
-from gefes.common import join_paired_filepaths
+from gefes.groups.samples    import Sample
+from gefes.common            import join_paired_filepaths
 
 # First party modules #
 from plumbing.autopaths import FilePath, AutoPaths
@@ -74,5 +74,5 @@ class Project(Aggregate):
             self.samples = [Sample(self, info=info) for info in self.info['samples']]
         # The samples of a project are it's children in a way #
         self.children = self.samples
-        # Call the mother function #
+        # Call the parent function #
         return Aggregate.load(self)
