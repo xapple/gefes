@@ -3,7 +3,7 @@ import sys, os
 from collections import OrderedDict
 
 # Internal modules #
-from gefes.merge import Merger
+from gefes.merged import Merger
 from gefes.assemble        import AssemblyResults
 from gefes.report.assembly import AssemblyReport
 
@@ -119,6 +119,8 @@ class Newbler(Merger):
 
 ###############################################################################
 class NewblerResults(AssemblyResults):
+
+    def __nonzero__(self): return bool(self.parent.p.filtered_contigs)
 
     def __init__(self, newbler):
         self.parent, self.newbler = newbler, newbler

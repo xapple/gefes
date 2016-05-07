@@ -4,7 +4,7 @@ The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-This source code is propriety of Envonautics Ltd. (http://www.envonautics.com)
+This source code is propriety of Lucas Sinclair, co-founder of Envonautics Ltd. (http://www.envonautics.com)
 
 ## Warnings:
 
@@ -44,25 +44,11 @@ Starting from the raw reads there are about eight distinct processing steps in `
 Unfortunately, no other detailed documentation has been written yet but the code is clean and commented. In addition, these two descriptive files might help you figure out what is going on:
 
 * [Flowchart of data processing](/../master/documentation/flowchart.pdf?raw=true "Flowchart")
-* [Tentative UML diagram of objects compositionn](/../master/documentation/diagram.pdf?raw=true "Diagram")
+* [Tentative UML diagram of objects composition](/../master/documentation/diagram.pdf?raw=true "Diagram")
 
 ## Installing
 
-No automated installation has been developed for the `gefes` package yet. Ultimately you will be able to install it by following this procedure:
-
-~~~
-To install `gefes` onto your machine, use the python package manager:
-
-    $ pip install gefes
-
-You might be installing this onto a computer server which you don't own and thus don't have sufficient privileges. In that case you can install everything in your home directory like this:
-
-    $ pip install --user gefes
-
-If this still doesn't work, you might be missing the `pip` program on your system or the correct version of Python (any version `2.7.x`). You can get both of these things by using this little project: https://github.com/yyuu/pyenv
-~~~
-
-In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.
+No automated installation has been developed for the `gefes` package yet. In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.
 
 #### Step 1: Cloning the repository
 Here you will download a copy of the code from github and place it in your home directory.
@@ -70,7 +56,7 @@ Here you will download a copy of the code from github and place it in your home 
     $ cd ~
     $ mkdir repos
     $ cd repos
-    $ git clone git@github.com:limno/gefes.git
+    $ git clone git@github.com:xapple/gefes.git
 
 #### Step 2A: Modify your python search path
 Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to the module you just downloaded. When you type `import gefes` python will know where to look !
@@ -123,14 +109,15 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install scipy
     $ pip install pysam
     $ pip install concoct
+    $ pip install tabulate
 
-It also uses several first party python libraries that we have developed and use in several projects. You can get them by running these commands:
+It also uses several first-party python libraries that we have developed and use in several projects. You can get them by running these commands:
 
     $ pip install plumbing
     $ pip install fasta
     $ pip install pymarktex
 
-Don't forget to rehash the executable links at the end if you are using pyenv like we do:
+Don't forget to rehash the executable links at the end if you are using `pyenv` like we do:
 
     $ pyenv rehash
 
@@ -144,7 +131,7 @@ Don't forget to rehash the executable links at the end if you are using pyenv li
  * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.10 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
  * [LaTeX](https://www.tug.org/texlive/) version `TeX Live 2014` providing ``xelatex``.
 
-These can take some time to install and unfortunately we can't package them with our project ! Hopefully, some of them are already installed on your server or can be accessed via a module system. Then there are a few that are bundeled with the repository or are obtained with `pip`:
+These can take some time to install and unfortunately we can't package them with our project! Hopefully, some of them are already installed on your server or can be accessed via a module system. Then, there are a few that are bundled within this repository or are obtained with `pip`:
 
  * [Ray](http://sourceforge.net/projects/denovoassembler/) version 2.3.1 providing ``ray231`` (included in repository)
  * [Picard Tools](http://broadinstitute.github.io/picard/) version 1.101 providing ``MarkDuplicates.jar`` (included in repository)

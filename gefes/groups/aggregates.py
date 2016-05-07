@@ -9,8 +9,8 @@ import gefes
 from gefes.assemble.ray             import Ray
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
-from gefes.merge.newbler            import Newbler
-from gefes.groups.status            import ProjectStatus
+from gefes.merged.newbler           import Newbler
+from gefes.status.projects          import ProjectStatus
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -49,7 +49,7 @@ class Aggregate(object):
 
     def load(self):
         """A delayed kind of __init__ that is not called right away to avoid
-        crowding the RAM of the python interpreter when you just import gefes"""
+        crowding the RAM of the python interpreter when you just import gefes."""
         # Load #
         self.loaded = True
         # Automatic paths #

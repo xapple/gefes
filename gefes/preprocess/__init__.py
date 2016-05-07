@@ -21,6 +21,7 @@ class QualityChecker(object):
 
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.source)
     def __len__(self): return len(self.pair)
+    def __nonzero__(self): return bool(self.dest)
 
     def __init__(self, result_dir, source, dest=None, singletons=None):
         # Basic #
