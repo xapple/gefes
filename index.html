@@ -1,0 +1,138 @@
+<h2 id="gefes-version-0.1.5">gefes version 0.1.5</h2>
+<p>The acronym <code>gefes</code> stands for <strong>G</strong>​enome <strong>E</strong>​xtraction <strong>F</strong>​rom <strong>E</strong>​nvironmental <strong>S</strong>​equencing.</p>
+<p>This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.</p>
+<p>This source code is propriety of Lucas Sinclair, co-founder of Envonautics Ltd. (http://www.envonautics.com)</p>
+<h2 id="warnings">Warnings:</h2>
+<ul>
+<li><p>First of all, this is still very much work in progress. We are not yet at a stage where full metabolic predictions can be made.</p></li>
+<li><p>Secondly, of course these kind of approaches are not entirely revolutionary. Other labs on the globe have been doing things like this for a two or three years. But the main reason we are replicating these efforts in a way is to acquire our own setup that we are able to control. Other labs do make their tools available, but if you manage to install them on your computer you end up with something that was tailored for their type of data and that you can't change. Moreover, you don't really understand how it works. With our own setup we have a flexibility that lets us try new ideas and implement them in the code very quickly.</p></li>
+<li><p>Thirdly, you also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like <code>gefes</code> to direct your laboratory assays which will truly confirm if a given process is taking place.</p></li>
+<li><p>Finally, the <code>gefes</code> project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the <code>gefes</code> project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.</p></li>
+</ul>
+<h2 id="context">Context:</h2>
+<p>As you know almost none of the microbes living in natural environments can be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.</p>
+<p>It's quite different from when you are able to isolate a bacterium and grow it such as E. Coli. In that case, your DNA reads are coming from random locations of the E. Coli chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.</p>
+<p>What we have as starting data in our case is more messy. Every DNA read is potentially coming from a different species. Plus, the fragments are really short and only span a fraction of a typical microbial gene.</p>
+<p>How do we put the reads together to make genomes ? How are we going to figure out which short sequence was coming from which species ? This is what <code>gefes</code> is supposed to help with.</p>
+<p>Many objects common to any analysis such as a &quot;FASTQ file pair&quot;, a &quot;Sample&quot;, a &quot;Aggregate of Samples&quot;, a &quot;Sequence quality checker&quot;, an &quot;Assembly&quot;, a &quot;Read mapper&quot;, a &quot;Contig binner&quot;, etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualizations in <code>matplotlib</code> and other things such as the ability to automatically distribute the computation on a network of computers (via the SLURM queuing system).</p>
+<h2 id="overview">Overview:</h2>
+<p>Starting from the raw reads there are about eight distinct processing steps in <code>gefes</code>:</p>
+<ol style="list-style-type: decimal">
+<li>Clean</li>
+<li>Co-Assemble</li>
+<li>Map</li>
+<li>Bin contigs together</li>
+<li>Validate</li>
+<li>Assign taxonomy</li>
+<li>Annotate</li>
+<li>Predict metabolism</li>
+</ol>
+<p>Unfortunately, no other detailed documentation has been written yet but the code is clean and commented. In addition, these two descriptive files might help you figure out what is going on:</p>
+<ul>
+<li><a href="/../master/documentation/flowchart.pdf?raw=true" title="Flowchart">Flowchart of data processing</a></li>
+<li><a href="/../master/documentation/diagram.pdf?raw=true" title="Diagram">Tentative UML diagram of objects composition</a></li>
+</ul>
+<h2 id="installing">Installing</h2>
+<p>No automated installation has been developed for the <code>gefes</code> package yet. In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.</p>
+<h4 id="step-1-cloning-the-repository">Step 1: Cloning the repository</h4>
+<p>Here you will download a copy of the code from github and place it in your home directory.</p>
+<pre><code>$ cd ~
+$ mkdir repos
+$ cd repos
+$ git clone git@github.com:xapple/gefes.git</code></pre>
+<h4 id="step-2a-modify-your-python-search-path">Step 2A: Modify your python search path</h4>
+<p>Here you will edit your <code>.bashrc</code> or <code>.bash_profile</code> to add a reference to the module you just downloaded. When you type <code>import gefes</code> python will know where to look !</p>
+<pre><code>$ vim ~/.bash_profile
+export PYTHONPATH=&quot;$HOME/repos/gefes/&quot;:$PYTHONPATH</code></pre>
+<h4 id="step-2b-modify-your-binary-search-path">Step 2B: Modify your binary search path</h4>
+<p>There are some dependencies that are not too large and can be bundled as binaries with this module. To avoid the hassle of downloading and compiling these requirements, we have added a bunch of them in the repository. Add them to your <code>$PATH</code>.</p>
+<pre><code>$ vim ~/.bash_profile
+export PATH=&quot;$HOME/repos/gefes/bin/linux/:$PATH&quot;
+export PATH=&quot;$HOME/repos/gefes/bin/linux/mcl/:$PATH&quot;</code></pre>
+<h4 id="step-3-install-your-own-version-of-python">Step 3: Install your own version of python</h4>
+<p>Your system probably comes with a version of python installed. But the variations from system to system are too great to rely on any available setup. We strongly recommand to just install our own in the home directory. Also, we will then be able to install modules without administrator privileges. You can skip this step if you are confident enough about what you are doing.</p>
+<p>For this we will be using this excellent project: https://github.com/yyuu/pyenv</p>
+<p>To install it you may use this sister project: https://github.com/yyuu/pyenv-installer</p>
+<p>Basically you just need to type this command:</p>
+<pre><code>$ curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash</code></pre>
+<p>These lines go into your <code>.bash_profile</code>:</p>
+<pre><code>$ vim ~/.bash_profile
+export PYENV_ROOT=&quot;$HOME/.pyenv&quot;
+export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;
+eval &quot;$(pyenv init -)&quot;</code></pre>
+<p>Relaunch your shell and type these commands to get the right version of python:</p>
+<pre><code>$ pyenv install 2.7.11
+$ pyenv global 2.7.11
+$ pyenv rehash</code></pre>
+<h4 id="step-4-install-all-required-python-packages">Step 4: Install all required python packages</h4>
+<p><code>gefes</code> uses many third party python libraries. You can get them by running these commands:</p>
+<pre><code>$ pip install matplotlib
+$ pip install pandas
+$ pip install biopython
+$ pip install sh
+$ pip install tqdm
+$ pip install decorator
+$ pip install shell_command
+$ pip install threadpool
+$ pip install scipy
+$ pip install pysam
+$ pip install concoct
+$ pip install tabulate</code></pre>
+<p>It also uses several first-party python libraries that we have developed and use in several projects. You can get them by running these commands:</p>
+<pre><code>$ pip install plumbing
+$ pip install fasta
+$ pip install pymarktex</code></pre>
+<p>Don't forget to rehash the executable links at the end if you are using <code>pyenv</code> like we do:</p>
+<pre><code>$ pyenv rehash</code></pre>
+<h4 id="step-5-obtaining-extra-dependencies">Step 5: Obtaining extra dependencies</h4>
+<p><code>gefes</code> makes use of many third party programs which need to be installed and accessible from your <code>$PATH</code>. Depending on what parts of the pipeline you are planning to run, you might not need them all. You can try and install the missing ones only when <code>gefes</code> complains about a missing executable. These dependencies each have specific installation procedures and include:</p>
+<ul>
+<li><a href="http://blast.be-md.ncbi.nlm.nih.gov/Blast.cgi">NCBI BLAST</a> version 2.2.28+ providing <code>blastn</code> and <code>blastp</code></li>
+<li><a href="http://bowtie-bio.sourceforge.net/bowtie2/index.shtml">bowtie2</a> version 2.2.4 providing <code>bowtie2</code> and <code>bowtie2-build</code></li>
+<li><a href="http://bedtools.readthedocs.org/en/latest/">bedtools</a> version 2.15.0 providing <code>genomeCoverageBed</code></li>
+<li><a href="http://samtools.sourceforge.net">samtools</a> version 0.1.19 providing <code>samtools</code></li>
+<li><a href="http://www.vicbioinformatics.com/software.prokka.shtml">prokka</a> version 1.10 providing <code>prokka</code> (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)</li>
+<li><a href="https://www.tug.org/texlive/">LaTeX</a> version <code>TeX Live 2014</code> providing <code>xelatex</code>.</li>
+</ul>
+<p>These can take some time to install and unfortunately we can't package them with our project! Hopefully, some of them are already installed on your server or can be accessed via a module system. Then, there are a few that are bundled within this repository or are obtained with <code>pip</code>:</p>
+<ul>
+<li><a href="http://sourceforge.net/projects/denovoassembler/">Ray</a> version 2.3.1 providing <code>ray231</code> (included in repository)</li>
+<li><a href="http://broadinstitute.github.io/picard/">Picard Tools</a> version 1.101 providing <code>MarkDuplicates.jar</code> (included in repository)</li>
+<li><a href="https://github.com/BinPro/CONCOCT">concoct</a> version 0.4.0 providing <code>concoct</code> (included in the python package index)</li>
+</ul>
+<h4 id="step-6-make-a-working-directory-with-the-raw-data-linked">Step 6: Make a working directory with the raw data linked</h4>
+<p><code>gefes</code> will generate results in a directory named <code>views</code> in a directory named <code>GEFES</code> in your home folder. You can change this by editing the code of course.</p>
+<pre><code>$ cd ~
+$ mkdir GEFES
+$ cd GEFES
+$ mkdir views</code></pre>
+<h4 id="step-7-make-a-json-file-describing-your-project">Step 7: Make a JSON file describing your project</h4>
+<p><code>gefes</code> will create <code>Project</code> objects with associated <code>Sample</code> objects based on a user inputted JSON files. Look at the <code>json</code> directory at the root of the repository and make your own. You have to tell <code>gefes</code> where to look for your raw reads.</p>
+<h4 id="step-8-troubleshooting">Step 8: Troubleshooting</h4>
+<p>You might run into difficulties at some of the steps above -- if that is the case check this section for a solution.</p>
+<h5 id="pip-install-scipy-missing-blas">- &quot;pip install scipy&quot; missing BLAS:</h5>
+<p>When you install scipy, you might need these two dependencies before hand if they are not on your system: http://stackoverflow.com/questions/7496547/python-scipy-needs-blas</p>
+<h5 id="git-version-too-old">- git version too old:</h5>
+<p>If your git version is too old you can follow these steps: http://blog.justin.kelly.org.au/install-git-in-your-home-directory-how-to/</p>
+<h5 id="compiling-ray">- Compiling Ray:</h5>
+<p>To compile Ray on a compute cluster you might have to do something this:</p>
+<pre><code>$ module swap PrgEnv-intel PrgEnv-gnu
+$ make -j24 MPI_IO=y MPICXX=CC MAXKMERLENGTH=91</code></pre>
+<p>Or something like this:</p>
+<pre><code>$ module load openmpi/1.4.5
+$ module load pgi
+$ make -j16 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91</code></pre>
+<h5 id="pip-install-matplotlib-missing-freetype">- &quot;pip install matplotlib&quot; missing freetype:</h5>
+<p>If you are on OS X you can simply fix this error by typing <code>$ brew install freetype</code></p>
+<h2 id="flowchart">Flowchart</h2>
+<p>Below is drawn the flowchart describing the data processing along all the steps of GEFES:</p>
+<div class="figure">
+<img src="/../master/documentation/flowchart.png?raw=true" title="Flowchart" alt="Flowchart" />
+<p class="caption">Flowchart</p>
+</div>
+<h2 id="diagram">Diagram</h2>
+<p>Below is presented a tentative UML diagram detailing not the inheritance of the classes but the use of the composition design pattern between the objects created.</p>
+<div class="figure">
+<img src="/../master/documentation/diagram.png?raw=true" title="Diagram" alt="Diagram" />
+<p class="caption">Diagram</p>
+</div>
