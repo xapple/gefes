@@ -4,7 +4,7 @@ The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-This source code is propriety of Lucas Sinclair, co-founder of Envonautics Ltd. (http://www.envonautics.com)
+This source code is propriety of Lucas Sinclair, co-founder of Envonautics Ltd. (https://www.envonautics.com)
 
 ## Warnings:
 

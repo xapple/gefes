@@ -85,11 +85,13 @@ class SampleTemplate(Template):
     # Process info #
     def project_url(self):       return gefes.url
     def project_version(self):   return gefes.__version__
-    def git_hash(self):          return gefes.git_repo.hash
-    def git_tag(self):           return gefes.git_repo.tag
-    def git_branch(self):        return gefes.git_repo.branch
     def now(self):               return pretty_now()
     def results_directory(self): return ssh_header + self.sample.base_dir
+    def git(self):
+        if not gefes.git_repo: return False
+        return {'git_hash':   gefes.git_repo.hash,
+                'git_tag':    gefes.git_repo.tag,
+                'git_branch': gefes.git_repo.branch}
 
     # Raw data #
     def fwd_size(self):        return             str(self.sample.pair.fwd.size)

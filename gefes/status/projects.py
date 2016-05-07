@@ -148,7 +148,7 @@ class ProjectStatus(object):
 
     @property
     def binning(self):
-        title    = "The binning of all the contigs"
+        title    = "The binning of all the contigs in each assembly"
         func     = lambda a: bool(a) and bool(a.results.binner.p.clustering)
         items    = [(n,a) for n,a in self.proj.assemblies.items()]
         outcome  = all(func(a) for n,a in items)
@@ -170,5 +170,5 @@ class ProjectStatus(object):
         func     = lambda b: bool(b.evaluation.p.stdout)
         items    = [b for b in self.proj.merged.results.binner.results.bins] if self.proj.merged else []
         outcome  = all(func(s) for s in items) if items else False
-        detail   = ((str(b), func(b)) for b in items)
+        detail   = (("Bin number %i"%b, func(b)) for b in items)
         return title, detail, outcome
