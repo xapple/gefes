@@ -2,17 +2,18 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket
+import os, socket, shutil
 from collections import OrderedDict
 
 # Internal modules #
 import gefes
+from gefes.report import ReportTemplate
 
 # First party modules #
 from plumbing.autopaths import DirectoryPath, FilePath
 from plumbing.common    import split_thousands, pretty_now
 from plumbing.cache     import property_pickled
-from pymarktex          import Document, Template
+from pymarktex          import Document
 from pymarktex.figures  import ScaledFigure
 
 # Third party modules #
@@ -32,6 +33,7 @@ class AssemblyReport(Document):
     def __init__(self, assembly):
         # The parent #
         self.assembly, self.parent = assembly, assembly
+        self.aggregate = self.assembly.samples[0].project
         # The output #
         self.base_dir    = self.assembly.p.report_dir
         self.output_path = self.assembly.p.report_pdf
@@ -47,14 +49,17 @@ class AssemblyReport(Document):
         self.make_body()
         self.make_latex()
         self.make_pdf()
+        # Copy to reports directory #
+        shutil.copy(self.output_path, self.copy_base)
 
+    copy_base = property(lambda self: gefes.reports_dir + self.aggregate.name + '/' + self.sample.name + '.pdf')
     uppmax_proj  = property(lambda self: self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083'))
     export_base  = property(lambda self: 'GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf')
     web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))
     url          = property(lambda self: "https://export.uppmax.uu.se/" + self.uppmax_proj +'/' +self.export_base)
 
 ###############################################################################
-class AssemblyTemplate(Template):
+class AssemblyTemplate(ReportTemplate):
     """All the parameters to be rendered in the markdown template"""
     delimiters = (u'{{', u'}}')
 
@@ -64,7 +69,7 @@ class AssemblyTemplate(Template):
         self.assembly = self.parent.assembly
         self.cache_dir = self.parent.cache_dir
         # Other #
-        self.aggregate = self.assembly.samples[0].project
+        self.aggregate = self.parent.aggregate
 
     # Assembly #
     def assembly_title(self):    return self.assembly.short_description
@@ -78,12 +83,6 @@ class AssemblyTemplate(Template):
     def aggregate_long_name(self):  return self.aggregate.long_name
 
     # Process info #
-    def project_url(self):       return gefes.url
-    def project_version(self):   return gefes.__version__
-    def git_hash(self):          return gefes.git_repo.hash
-    def git_tag(self):           return gefes.git_repo.tag
-    def git_branch(self):        return gefes.git_repo.branch
-    def now(self):               return pretty_now()
     def results_directory(self): return ssh_header + self.aggregate.base_dir
 
     # Contigs #
@@ -99,15 +98,22 @@ class AssemblyTemplate(Template):
     def mapping_version(self): return self.assembly.results.mappings.values()[0].long_name
     @property_pickled
     def mapping_table(self):
-        info = OrderedDict((('Name',      lambda s: "**" + s.name + "**"),
-                            ('Details',   lambda s: s.long_name),
-                            ('Reads',     lambda s: split_thousands(len(s.clean))),
-                            ('Did map',   lambda s: "%.1f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100))))
-        table = [[i+1] + [f(self.assembly[i]) for f in info.values()] for i in range(len(self.assembly))]
+        info = OrderedDict((
+             ('Name',      lambda s: "**" + s.name + "**"),
+             ('Details',   lambda s: s.long_name),
+             ('Reads',     lambda s: split_thousands(len(s.clean))),
+             ('Did map',   lambda s: "%.1f%%" % (s.mappers[self.assembly].results.fraction_mapped * 100) if s.mappers[self.assembly] else "<*Not computed yet*>")
+        ))
+        row = lambda i: [f(self.assembly[i]) for f in info.values()]
+        table = [[i+1] + row(i) for i in range(len(self.assembly))]
         table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary information for mapping of all samples."
 
     # Binning #
+    def binning(self):
+        if not self.assembly.results.binner: return False
+        params = ('binning_version', 'count_bins', 'bins_contig_dist', 'bins_nucleotide_dist')
+        return {p:getattr(self, p) for p in params}
     def binning_version(self): return self.assembly.results.binner.long_name
     def count_bins(self):      return split_thousands(len(self.assembly.results.binner.results))
     def bins_contig_dist(self):
@@ -122,11 +128,21 @@ class AssemblyTemplate(Template):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Evaluation #
+    def evaluation(self):
+        if not self.assembly.results.binner: return False
+        if not all(b.evaluation for b in self.assembly.results.binner.results.bins): return False
+        params = ('bin_eval_version', 'bins_eval_graphs', 'bins_eval_markers_graph',
+                  'bins_eval_marker_sets_graph', 'bins_eval_completeness_graph',
+                  'bins_eval_contamination_graph', 'bins_eval_heterogeneity_graph',
+                  'bins_eval_cch_graph', 'bins_quality_table', 'percent_mapped_to_good_bins',
+                  'good_bins_count_contigs')
+        return {p:getattr(self, p) for p in params}
+
     def bin_eval_version(self): return self.assembly.results.binner.results.bins[0].evaluation.long_name
     def bins_eval_graphs(self, name):
-        if not all(b.evaluation for b in self.assembly.results.binner.results.bins): return "<*Not computed yet*>"
         graph = getattr(self.assembly.results.binner.results.eval_graphs, name)()
         return str(ScaledFigure(graph.path, "CheckMs '%s' metric" % name, "bins_eval_%s_graph" % name))
+
     def bins_eval_markers_graph(self):       return self.bins_eval_graphs('markers')
     def bins_eval_marker_sets_graph(self):   return self.bins_eval_graphs('marker_sets')
     def bins_eval_completeness_graph(self):  return self.bins_eval_graphs('completeness')
@@ -164,9 +180,14 @@ class AssemblyTemplate(Template):
         total_reads = sum(m.results.filtered_count for m in self.assembly.results.mappings.values())
         mapped_reads = frame.sum().sum()
         return "%.3f%%" % 100 * (mapped_reads / total_reads)
-    def good_bins_count_contigs(self): return split_thousands(sum(map(len, self.assembly.results.binner.results.good_bins)))
+    def good_bins_count_contigs(self):
+        return split_thousands(sum(map(len, self.assembly.results.binner.results.good_bins)))
 
-    # Contig ordination graph #
+    # Visualization #
+    def visualization(self):
+        if not self.assembly.results.binner: return False
+        params = ('binning_version', 'count_bin', 'bins_contig_dist', 'bins_nucleotide_dist')
+        return {p:getattr(self, p) for p in params}
     def contig_ordination_graph(self):
         caption = "Bin total nucleotide size distribution"
         graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)

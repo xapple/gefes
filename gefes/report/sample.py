@@ -2,11 +2,12 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json, socket
+import os, json, socket, shutil
 from collections import Counter, OrderedDict
 
 # Internal modules #
 import gefes
+from gefes.report import ReportTemplate
 
 # First party modules #
 from plumbing.autopaths import DirectoryPath, FilePath
@@ -46,14 +47,17 @@ class SampleReport(Document):
         self.make_body()
         self.make_latex()
         self.make_pdf()
+        # Copy to reports directory #
+        shutil.copy(self.output_path, self.copy_base)
 
+    copy_base    = property(lambda self: gefes.reports_dir + self.sample.project.name + '/' + self.sample.name + '.pdf')
     uppmax_proj  = property(lambda self: self.sample.info.get('uppmax_project_id', 'b2014083'))
     export_base  = property(lambda self: 'GEFES/' + self.sample.project.name + '/' + self.sample.name + '.pdf')
     web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))
     url          = property(lambda self: "https://export.uppmax.uu.se/" + self.uppmax_proj + '/' + self.export_base)
 
 ###############################################################################
-class SampleTemplate(Template):
+class SampleTemplate(ReportTemplate):
     """All the parameters to be rendered in the markdown template"""
     delimiters = (u'{{', u'}}')
 
@@ -71,10 +75,9 @@ class SampleTemplate(Template):
     def project_long_name(self):     return self.project.long_name
     def project_other_samples(self): return len(self.project) - 1
 
-    # Information dictionary #
     def json_url(self):
         json_location = os.path.relpath(self.project.json_path, start=gefes.git_repo)
-        return gefes.url + ("tree/%s/" % gefes.git_repo.branch) + json_location
+        return gefes.url + "tree/master/" + json_location
     def information(self):
         info = self.sample.info.copy()
         info.pop("contacts")
@@ -83,15 +86,7 @@ class SampleTemplate(Template):
         return info
 
     # Process info #
-    def project_url(self):       return gefes.url
-    def project_version(self):   return gefes.__version__
-    def now(self):               return pretty_now()
     def results_directory(self): return ssh_header + self.sample.base_dir
-    def git(self):
-        if not gefes.git_repo: return False
-        return {'git_hash':   gefes.git_repo.hash,
-                'git_tag':    gefes.git_repo.tag,
-                'git_branch': gefes.git_repo.branch}
 
     # Raw data #
     def fwd_size(self):        return             str(self.sample.pair.fwd.size)
@@ -139,7 +134,7 @@ class SampleTemplate(Template):
         return str(DualFigure(*params))
     def singletons_len_dist(self):
         caption = "Singletons length distribution"
-        graph = self.sample.clean.singletons.length_dist
+        graph = self.sample.singletons.length_dist
         label = "singletons_len_dist"
         return str(ScaledFigure(graph.path, caption, label))
 

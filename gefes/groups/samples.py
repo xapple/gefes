@@ -114,9 +114,9 @@ class Sample(object):
         if self.pair.format == 'fastq':
             self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
             self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
-        # Cleaned pairs if it's a FASTA: we can't clean it #
+        # Cleaned pairs: if it's a FASTA we can't clean it #
         if self.pair.format == 'fasta': self.clean = self.pair
-        # Cleaned pairs if it's a FASTQ #
+        # Cleaned pairs: if it's a FASTQ #
         if self.pair.format == 'fastq': self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
         # Initial taxonomic predictions #
         self.kraken = Kraken(self.clean, self.p.kraken_dir)

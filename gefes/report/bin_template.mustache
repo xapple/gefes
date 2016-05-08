@@ -9,24 +9,21 @@ This bin is named "{{bin_name}}". It is part of the binning results from "{{binn
 
 Processing
 ----------
-This report (and all the analysis) was generated using the GEFES project at:
+* This report (and all the analysis) was generated using the GEFES project at: <http://xapple.github.io/gefes/>
 
-> <http://xapple.github.io/gefes/>
+* Version `{{project_version}}` of the pipeline was used.
 
-A brief overview of what happens to the data can be viewed online there.
+* This document was generated at `{{now}}`.
 
-Version `{{project_version}}` of the pipeline was used. The exact git hash of the latest commit was:
-
-    {{git_hash}}
-
-also more simply referred to by its shortened tag `{{git_tag}}`.
-
-This document was generated at `{{now}}`.
-
-The results and all the files generated for this bin can be found at:
+* The results and all the files generated for this sample can be found at:
 
     {{results_directory}}
 
+{{#git}}
+* The exact git hash of the latest commit was: {{git_hash}}
+
+* Also more simply referred to by its shortened tag `{{git_tag}}`.
+{{/git}}
 -------
 
 Annotation

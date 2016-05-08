@@ -33,7 +33,8 @@ home = os.environ.get('HOME', '~') + '/'
 ###############################################################################
 # Output directory #
 view_dir = home + 'GEFES/views/'
-project_dir = view_dir + "projects/"
+project_dir = view_dir + 'projects/'
+reports_dir = home + 'GEFES/reports/'
 
 # Load all projects by parsing the project json files #
 json_paths = glob.glob(repos_dir + 'json/*.json')

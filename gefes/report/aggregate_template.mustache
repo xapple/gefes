@@ -11,50 +11,19 @@ This aggregate has the code `{{aggregate_short_name}}` and is named "{{aggregate
 
 Processing
 ----------
-This report (and all the analysis) was generated using the GEFES project at:
+* This report (and all the analysis) was generated using the GEFES project at: <http://xapple.github.io/gefes/>
 
-> <{{project_url}}>
+* Version `{{project_version}}` of the pipeline was used.
 
-Version `{{project_version}}` of the pipeline was used. The exact git hash of the latest commit was:
+* This document was generated at `{{now}}`.
 
-    {{git_hash}}
-
-also more simply referred to by its shortened tag `{{git_tag}}`.
-
-This document was generated at `{{now}}`.
-
-A brief overview of what happens to the data can be viewed online here:
-
-> <https://github.com/xapple/gefes/blob/{{git_branch}}/documentation/flowchart.pdf?raw=true>
-
-The results and all the files generated for this aggregate can be found at:
+* The results and all the files generated for this sample can be found at:
 
     {{results_directory}}
 
+{{#git}}
+* The exact git hash of the latest commit was: {{git_hash}}
+
+* Also more simply referred to by its shortened tag `{{git_tag}}`.
+{{/git}}
 -------
-
-Co-Assembly
------------
-The first step is to take all reads from all samples in this aggregate and input them into an assembly algorithm. For this we use the "{{assembler_version}}" software with a kmer size of {{kmer_size}} and a contig length cutoff of {{contig_cutoff}} base pairs.
-
-This results in the production of {{count_contigs}} contigs, of which the length distribution can be seen in figure \ref{contigs_len_dist}:
-
-{{contigs_len_dist}}
-
-We can know take every read of every map and attempt to map them back to the set of contigs we created, such that we compute, for every contig, a mean coverage in every sample. Applying PCA analysis to this matrix we can
-
-
--------
-
-Binning
--------
-The next step is to determine which of the {{count_contigs}} contigs are likely to belong together and are part of the same population. For this we use the "{{binning_version}}" software. This produces exactly {{count_bins}} different bins. Each bin containing varying number of contigs, we can plot a distribution as seen in figure \ref{bins_size_dist}:
-
-{{bins_size_dist}}
-
-Of course, it is more interesting to look, not at the contig count, but at the total amount of nucleotides in a given bin in terms of base pair counts. This distribution can be seen in figure \ref{bins_nucleotide_dist}:
-
-{{bins_nucleotide_dist}}
-
-For further investigation please refer to the individual report of every bin.
-
