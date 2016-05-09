@@ -52,7 +52,7 @@ class AssemblyReport(Document):
         # Copy to reports directory #
         shutil.copy(self.output_path, self.copy_base)
 
-    copy_base = property(lambda self: gefes.reports_dir + self.aggregate.name + '/' + self.sample.name + '.pdf')
+    copy_base = property(lambda self: gefes.reports_dir + self.aggregate.name + '/' + self.assembly.name + '.pdf')
     uppmax_proj  = property(lambda self: self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083'))
     export_base  = property(lambda self: 'GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf')
     web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))

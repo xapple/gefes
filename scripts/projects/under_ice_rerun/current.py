@@ -5,7 +5,7 @@ A script to run small snippets of code on the under ice rerun project.
 """
 
 # Modules #
-import gefes
+import gefes, shutil
 
 # Three projects #
 bt = gefes.projects['under_ice_rerun_bt'].load()
@@ -18,4 +18,4 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 ###############################################################################
-for p in projects: p.status.print_short()
+for p in projects: p.merged.report.generate()

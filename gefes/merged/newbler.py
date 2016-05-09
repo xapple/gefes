@@ -64,6 +64,8 @@ class Newbler(Merger):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Report #
         self.report = AssemblyReport(self)
+        # Name #
+        self.name = self.short_name + '_' + str(len(self.assemblies))
 
     def run(self, cpus=None, verbose=True):
         # Variable threads #

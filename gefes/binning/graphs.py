@@ -28,9 +28,6 @@ class BinContigDistribution(Graph):
         axes.set_xlabel('Number of contigs in a bin')
         axes.set_ylabel('Number of bins with that many contigs in them')
         axes.xaxis.grid(False)
-        # Add logarithm to axes #
-        if x_log: axes.set_xscale('symlog')
-        if y_log: axes.set_yscale('symlog')
         # Save it #
         self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)

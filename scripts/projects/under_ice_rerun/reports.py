@@ -5,7 +5,7 @@ A script to generate all the reports of the under_ice_rerun project.
 """
 
 # Modules #
-import gefes
+import gefes, shutil
 from tqdm import tqdm
 
 # Three projects #
@@ -33,4 +33,7 @@ for a,p in tqdm(assemblies):
 # Merged #
 for p in projects: p.merged.report.generate()
 
-###############################################################################
+# Copy all #
+assemblies = [(a,p) for p in projects for a in p.assemblies.values()]
+for a,p in assemblies: shutil.copy(a.report.output_path, a.report.copy_base)
+for s in samples:      shutil.copy(s.report.output_path, s.report.copy_base)

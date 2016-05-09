@@ -60,6 +60,8 @@ class Ray(object):
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Report #
         self.report = AssemblyReport(self)
+        # Name #
+        self.name = self.short_name + '_' + str(self.kmer_size)
 
     def run(self):
         # Check samples #
