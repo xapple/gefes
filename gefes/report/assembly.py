@@ -156,7 +156,7 @@ class AssemblyTemplate(ReportTemplate):
     # Quality bins #
     def bins_quality_table(self):
         """Sorted by completeness, report those that are >60%% complete and
-        that have a contamination <10%. To this add several other numbers:
+        that have a contamination <10%. To this, add several other numbers:
         * The number of proteins found
         * The average coverage (across all samples)
         * The best taxonomic hit"""

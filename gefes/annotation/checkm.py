@@ -76,8 +76,11 @@ class CheckmResults(object):
 
     @property_cached
     def statistics(self):
-        """The various statistics produced by checkm in a dictionary. There is a small technicality. The 'lineage' field values actually have a spaces in it, be careful when parsing. Use this rule: more than one space is necessary to split.
-            See https://github.com/Ecogenomics/CheckM/issues/29"""
+        """The various statistics produced by checkm in a dictionary.
+        There is a small technicality. The 'lineage' field values actually
+        have a spaces in it, be careful when parsing. Use this rule:
+        more than one space is necessary to split.
+        See https://github.com/Ecogenomics/CheckM/issues/29"""
         columns = OrderedDict((
             ("bin_id",      str),
             ("lineage",     str),
@@ -109,9 +112,10 @@ def make_checkm_graphs(concot):
         eval_graphs.graphs        += [graph]
     return eval_graphs
 
+###############################################################################
 class CheckmSummaryGraph(Graph):
     y_grid = True
-    sep    = ('x')
+    sep    = 'x'
     def plot(self, bins=250, **kwargs):
         counts = [b.evaluation.results.statistics.get(self.short_name) for b in self.parent.bins]
         fig = pyplot.figure()
