@@ -22,7 +22,7 @@ class ProjectStatus(object):
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
              'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings',
-             'binning', 'merged_binning', 'check_m']
+             'binning', 'merged_binning', 'check_m', 'prodigal', 'phylophlan']
 
     def print_long(self):  print self.status(details=True)
     def print_short(self): print self.status(details=False)
@@ -166,9 +166,31 @@ class ProjectStatus(object):
 
     @property
     def check_m(self):
-        title    = "The CheckM run on every merged-assembly bin"
-        func     = lambda b: bool(b.evaluation.p.stdout)
-        items    = [b for b in self.proj.merged.results.binner.results.bins] if self.proj.merged else []
-        outcome  = all(func(s) for s in items) if items else False
-        detail   = (("Bin number %i"%b, func(b)) for b in items)
+        title = "The CheckM run on every merged-assembly bin"
+        func  = lambda b: bool(b.evaluation)
+        if self.proj.merged and self.proj.merged.results.binner:
+            items = [b for b in self.proj.merged.results.binner.results.bins]
+        else: items = []
+        outcome     = all(func(s) for s in items) if items else False
+        detail      = (("Bin number %i"%b, func(b)) for b in items)
+        return title, detail, outcome
+
+    @property
+    def prodigal(self):
+        title   = "The determination of the location and number of proteins (prodigal)"
+        func    = lambda c: bool(c.proteins)
+        items   = self.proj.merged.results.contigs if self.proj.merged else []
+        outcome = all(func(s) for s in items) if items else False
+        detail  = (("Bin number %i" % b, func(b)) for b in items)
+        return title, detail, outcome
+
+    @property
+    def phylophlan(self):
+        title = "The determination of the taxonomy of each bin (phylophlan)"
+        func  = lambda br: bool(br.taxonomy)
+        if self.proj.merged and self.proj.merged.results.binner:
+            items = [self.proj.merged.results.binner.results]
+        else: items = []
+        outcome     = all(func(s) for s in items) if items else False
+        detail      = (("Bin number %i" % b, func(b)) for b in items)
         return title, detail, outcome

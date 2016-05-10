@@ -52,8 +52,15 @@ class Phylophlan(object):
     /output/proj/
     /stdout.txt
     /stderr.txt
+    /output/proj/imputed_conf_low_conf.txt
+    /output/proj/imputed_conf_high-conf.txt
+    /output/proj/imputed_conf_medium-conf.txt
+    /output/proj/incomplete_conf_high-conf.txt
+    /output/proj/proj.tree.int.nwk
+    /output/pruned_tree.nwk
     """
 
+    def __nonzero__(self): return bool(self.p.low)
     def __repr__(self): return '<%s object on binner %s>' % (self.__class__.__name__, self.binner)
 
     def __init__(self, binner, result_dir):
@@ -76,8 +83,9 @@ class Phylophlan(object):
         base_dir.create(safe=True)
         for b in self.binner.results.good_bins: b.faa.link_to(self.p.input_dir + "bin_" + b.name + '.faa')
         # Crazy fixed output directory #
-        self.p.output_dir.remove(safe=True)
-        self.p.output_dir.create(safe=True)
+        output_dir = DirectoryPath(base_dir + 'output/')
+        output_dir.remove()
+        output_dir.create()
         # Change directory #
         current_dir = os.getcwd()
         os.chdir(base_dir)
@@ -87,7 +95,7 @@ class Phylophlan(object):
                 '-t', # Predicts taxonomy
                 '--nproc', cpus,
                 'proj', # Name of the input directory
-                _tty_in = True, # Without it changes behavior
+                _tty_in = True, # Without, it changes behavior
                 _out = self.p.stderr.path,
                 _err = self.p.stdout.path)
         # Restore #
@@ -102,20 +110,11 @@ class Phylophlan(object):
 ###############################################################################
 class PhylophlanResults(object):
 
-    all_paths = """
-    /output/proj/imputed_conf_low_conf.txt
-    /output/proj/imputed_conf_high-conf.txt
-    /output/proj/imputed_conf_medium-conf.txt
-    /output/proj/incomplete_conf_high-conf.txt
-    /output/proj/proj.tree.int.nwk
-    /output/pruned_tree.nwk
-    """
-
-    def __nonzero__(self): return bool(self.p)
+    def __nonzero__(self): return bool(self.p.low) or bool(self.p.high) or bool(self.p.medium)
     def __init__(self, phylophlan):
         self.phylophlan = phylophlan
         self.binner = phylophlan.parent
-        self.p = AutoPaths(self.phylophlan.base_dir, self.all_paths)
+        self.p = self.phylophlan.p
 
     @property_cached
     def assignments(self):

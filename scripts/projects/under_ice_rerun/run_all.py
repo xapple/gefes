@@ -49,20 +49,7 @@ for s in samples: print s.pair.fwd.md5
 for s in samples: print s.pair.rev.md5
 
 ################################ Status report ################################
-# How far did we run things #
-for s in samples:  print "Raw:",                s, bool(s.pair)
-for s in samples:  print "First QC:",           s, bool(s.pair.fwd.fastqc)
-for s in samples:  print "Cleaned:",            s, bool(s.quality_checker.results)
-for s in samples:  print "Second QC:",          s, bool(s.clean.fwd.fastqc)
-for s in samples:  print "Initial taxa:",       s, bool(s.kraken)
-for s in samples:  print "Mono-assembly:",      s, bool(s.assembly)
-for p in projects: print '\n'.join(["Co-assembly %i: %s %s" % (k, p, bool(v)) for k,v in p.assemblies.items()])
-for s in samples:  print "Mono-mapping:",       s, bool(s.mono_mapper.results)
-for p in projects: print "Merged assembly:",    p, bool(p.merged.results)
-for s,a,m in ((s,a,m) for s in samples for a,m in s.mappers.items()): print "Map %s to %s:"%(s,a), bool(m)
-for p,n,a in ((p,n,a) for p in projects for n,a in p.assemblies.items()):
-                   print "Binning %s %i:"%(p,n), bool(a.results.binner.p.clustering)
-for p in projects: print "Merged binning:",     p, bool(p.merged.results.binner.p.clustering)
+for p in projects: print p.status.print_short()
 
 ################################# Search logs ##################################
 from plumbing.common import tail
@@ -137,7 +124,7 @@ params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   job_name=s.name + "_mono_map",  **params)
 
-################################# Binnings ####################################
+################################# Binning #####################################
 params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
               threads=12, mem_per_cpu=5300, constraint='hsw')
 for p in projects: p.runner.run_slurm(steps=['assembly_51.results.binner.run'], job_name=p.name+'_bin_51', **params)
@@ -146,25 +133,34 @@ for p in projects: p.runner.run_slurm(steps=['assembly_71.results.binner.run'], 
 for p in projects: p.runner.run_slurm(steps=['assembly_81.results.binner.run'], job_name=p.name+'_bin_81', **params)
 for p in projects: p.runner.run_slurm(steps=['merged.results.binner.run'],      job_name=p.name+'_bin_04', **params)
 
-################################## Prokka #####################################
-for a in p.assemblies.values():
-    print "Prokka for project '%s', assembly '%s'" % (p.name, a)
-    for c in tqdm(a.results.contigs): c.annotation.run()
+################################## CheckM #####################################
+params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
+proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)
+for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
 
 ################################## Prodigal ###################################
 for c in tqdm(bt.merged.results.contigs): c.proteins.run()
 for c in tqdm(lb.merged.results.contigs): c.proteins.run()
 for c in tqdm(kt.merged.results.contigs): c.proteins.run()
 
-################################## Prokka #####################################
+################################ Phylophlan ###################################
+for b in tqdm(bt.merged.results.binner.results.bins): b.faa
+bt.merged.results.binner.results.taxonomy.run(cpus=12)
+for b in tqdm(lb.merged.results.binner.results.bins): b.faa
+lb.merged.results.binner.results.taxonomy.run(cpus=12)
+for b in tqdm(kt.merged.results.binner.results.bins): b.faa
+kt.merged.results.binner.results.taxonomy.run(cpus=12)
+
+################################ Pfam ####################################
+for c in tqdm(proj.merged.results.binner.results.good_contigs): c.pfams.run(cpus=4)
 
 ################################ Phylosift ####################################
 for c in proj.assembly.results.contigs: c.taxonomy.run()
 
-################################## CheckM #####################################
-params = dict(machines=1, cores=1, memory=124000, time='1-00:00:00', partition='serial', constraint='hsw')
-proj.runner.run_slurm(steps=['merged.results.binner.results.run_all_bin_eval'], job_name="checkm_merged", **params)
-for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
+################################## Prokka #####################################
+for a in p.assemblies.values():
+    print "Prokka for project '%s', assembly '%s'" % (p.name, a)
+    for c in tqdm(a.results.contigs): c.annotation.run()
 
 ################################## Plots ######################################
 for s in tqdm(samples):
