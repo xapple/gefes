@@ -33,7 +33,7 @@ class HmmQuery(object):
     def __nonzero__(self): return bool(self.out_path)
     def __repr__(self): return '<%s object on %s>' % (self.__class__.__name__, self.query)
 
-    def __init__(self, query_path,
+    def __init__(self, query_path,                    # The input sequences
                  db_path      = pfam.hmm_db,          # The database to search
                  seq_type     = 'prot' or 'nucl',     # The seq type of the query_path file
                  e_value      = 0.001,                # The search threshold
@@ -85,7 +85,8 @@ class HmmQuery(object):
         assert self.db.exists
         # Check if query is not empty #
         if self.query.count_bytes == 0:
-            warnings.warn("Hmm search on a file with no sequences", RuntimeWarning)
+            message = "Hmm search on a file with no sequences. File at '%s'"
+            warnings.warn(message % self.query, RuntimeWarning)
             return False
         # Do it #
         sh.Command(self.command[0])(['--cpu', str(cpus)] + self.command[1:])
@@ -95,21 +96,3 @@ class HmmQuery(object):
         if not self.out_path:
             raise Exception("You can't access results from HMMER before running the algorithm.")
         return SearchIO.read(self.out_path, 'hmmer3-tab')
-
-#    @property_cached
-#    def results(self):
-#        results = HmmResults(self)
-#        if not results: raise Exception("You can't access results from HMMER before running the algorithm.")
-#        return results
-#
-################################################################################
-#class HmmResults(object):
-#
-#    def __nonzero__(self): return bool(self.hmm.out_path)
-#
-#    def __init__(self, hmm):
-#        self.hmm = hmm
-#
-#    @property
-#    def hits(self):
-#        return SearchIO.read(self.hmm.out_path, 'hmmer3-tab')

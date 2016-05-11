@@ -26,6 +26,7 @@ class Bin(object):
     /contigs.fasta
     /proteins.faa
     /annotation/
+    /evaluation/
     /pfam/hits.hmmout
     """
 
