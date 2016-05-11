@@ -22,7 +22,7 @@ class ProjectStatus(object):
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
              'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings',
-             'binning', 'merged_binning', 'check_m', 'phylophlan']
+             'binning', 'merged_binning', 'check_m', 'phylophlan', 'pfams']
 
     steps_disabled = ['prodigal']
 
@@ -171,9 +171,9 @@ class ProjectStatus(object):
         title = "The CheckM run on every merged-assembly bin"
         func  = lambda b: bool(b.evaluation)
         if self.proj.merged and self.proj.merged.results.binner:
-            items = [b for b in self.proj.merged.results.binner.results.bins]
+            items = self.proj.merged.results.binner.results.bins
         else: items = []
-        outcome     = all(func(s) for s in items) if items else False
+        outcome     = all(func(b) for b in items) if items else False
         detail      = (("Bin number %s" % b, func(b)) for b in items)
         return title, detail, outcome
 
@@ -195,4 +195,15 @@ class ProjectStatus(object):
         else: items = []
         outcome     = all(func(s) for s in items) if items else False
         detail      = ((str(br), func(br)) for br in items)
+        return title, detail, outcome
+
+    @property
+    def pfams(self):
+        title = "The hmmsearch of all predicted proteins against all of pfam."
+        func  = lambda b: bool(b.pfam)
+        if self.proj.merged and self.proj.merged.results.binner:
+            items = self.proj.merged.results.binner.results.bins
+        else: items = []
+        outcome     = all(func(b) for b in items) if items else False
+        detail      = (("Bin number %s" % b, func(b)) for b in items)
         return title, detail, outcome

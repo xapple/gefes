@@ -6,12 +6,13 @@ from __future__ import division
 # Internal modules #
 from gefes.annotation.cogs     import SingleCOGs
 from gefes.annotation.checkm   import Checkm
+from gefes.annotation.hmmer    import HmmQuery
 from gefes.running.bin_runner  import BinRunner
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
-from plumbing.cache import property_cached
-from plumbing.tmpstuff import new_temp_path
+from plumbing.cache     import property_cached
+from plumbing.tmpstuff  import new_temp_path
 from fasta import FASTA
 
 # Third party modules #
@@ -25,7 +26,7 @@ class Bin(object):
     /contigs.fasta
     /proteins.faa
     /annotation/
-    /evaluation/
+    /pfam/hits.hmmout
     """
 
     def __str__(self): return self.name
@@ -86,6 +87,11 @@ class Bin(object):
             temp.close()
             temp.move_to(faa)
         return faa
+
+    @property_cached
+    def pfams(self):
+        """Use the faa file with the pfams database and hmmsearch."""
+        return HmmQuery(self.faa, 'pfam', out_path=self.p.hmmout)
 
     @property_cached
     def assignment(self):

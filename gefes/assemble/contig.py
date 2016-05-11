@@ -6,7 +6,7 @@ from __future__ import division
 # Internal modules #
 from gefes.annotation.prokka import Prokka
 from gefes.annotation.prodigal import Prodigal
-from gefes.annotation.hmmer import Hmmer
+from gefes.annotation.hmmer import HmmQuery
 from gefes.taxonomy.phylosift import Phylosift
 
 # First party modules #
@@ -81,8 +81,8 @@ class Contig(object):
 
     @property_cached
     def pfams(self):
-        """What pfams did we find in the proteins of this contig?"""
-        return Hmmer(self.proteins.results.faa, 'pfam', out_path=self.p.hmmout)
+        """Use the faa file with the pfams database and hmmsearch."""
+        return HmmQuery(self.proteins.results.faa, 'pfam', out_path=self.p.hmmout)
 
     @property_cached
     def annotation(self):

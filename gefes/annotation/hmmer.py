@@ -9,8 +9,7 @@ from seqsearch.databases.pfam import pfam
 
 # First party modules #
 from fasta import FASTA
-from plumbing.cache import property_cached
-from plumbing.autopaths import AutoPaths, FilePath
+from plumbing.autopaths import FilePath
 
 # Third party modules #
 import sh
@@ -43,22 +42,17 @@ class HmmQuery(object):
                  executable   = None,                 # If you want a specific binary give the path
                  cpus         = None):                # The number of threads to use
         # Save attributes #
-        self.query        = FASTA(query_path)
-        self.db           = FilePath(db_path)
-        self.params       = params if params else {}
-        self.e_value      = e_value
-        # Sequence type #
-        if hasattr(db_path, 'seq_type'): self.seq_type = db_path.seq_type
-        else:                            self.seq_type = seq_type
-        # Executable #
+        self.query      = FASTA(query_path)
+        self.db         = FilePath(db_path)
+        self.params     = params if params else {}
+        self.e_value    = e_value
+        self.seq_type   = seq_type
         self.executable = FilePath(executable)
         # Cores to use #
         if cpus is None: self.cpus = min(multiprocessing.cpu_count(), 32)
         else:            self.cpus = cpus
         # Auto detect database short name #
-        if db_path == 'pfam':
-            self.db = pfam.hmm_db
-            self.seq_type = pfam.hmm_db.seq_type
+        if db_path == 'pfam': self.db = pfam.hmm_db
         # Output #
         if out_path is None:         self.out_path = FilePath(self.query.prefix_path + '.hmmout')
         elif out_path.endswith('/'): self.out_path = FilePath(out_path + self.query.prefix + '.hmmout')
@@ -94,27 +88,28 @@ class HmmQuery(object):
             warnings.warn("Hmm search on a file with no sequences", RuntimeWarning)
             return False
         # Do it #
-        return sh.Command(self.command[0])(self.command[1:] + ['--cpu', str(cpus)])
+        sh.Command(self.command[0])(['--cpu', str(cpus)] + self.command[1:])
 
     @property
     def hits(self):
-        assert self.out_path
+        if not self.out_path:
+            raise Exception("You can't access results from HMMER before running the algorithm.")
         return SearchIO.read(self.out_path, 'hmmer3-tab')
 
-    @property_cached
-    def results(self):
-        results = HmmResults(self)
-        if not results: raise Exception("You can't access results from HMMER before running the algorithm.")
-        return results
-
-###############################################################################
-class HmmResults(object):
-
-    def __nonzero__(self): return bool(self.hmm.out_path)
-
-    def __init__(self, hmm):
-        self.hmm = hmm
-
-    @property
-    def hits(self):
-        return SearchIO.read(self.hmm.out_path, 'hmmer3-tab')
+#    @property_cached
+#    def results(self):
+#        results = HmmResults(self)
+#        if not results: raise Exception("You can't access results from HMMER before running the algorithm.")
+#        return results
+#
+################################################################################
+#class HmmResults(object):
+#
+#    def __nonzero__(self): return bool(self.hmm.out_path)
+#
+#    def __init__(self, hmm):
+#        self.hmm = hmm
+#
+#    @property
+#    def hits(self):
+#        return SearchIO.read(self.hmm.out_path, 'hmmer3-tab')
