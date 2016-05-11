@@ -168,7 +168,7 @@ class AssemblyTemplate(ReportTemplate):
                             ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',     lambda b: len(b.faa)),
                             ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage),
-                            ('Assignment', lambda b: str(b.assignment))))
+                            ('Assignment', lambda b: str(b.assignment)))) # TODO: make this line work
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')

@@ -56,11 +56,6 @@ class Phylophlan(object):
     /output/
     /stdout.txt
     /stderr.txt
-    /output/proj/imputed_conf_low_conf.txt
-    /output/proj/imputed_conf_high-conf.txt
-    /output/proj/imputed_conf_medium-conf.txt
-    /output/proj/incomplete_conf_high-conf.txt
-    /output/proj/proj.tree.int.nwk
     /output/pruned_tree.nwk
     """
 
@@ -122,6 +117,13 @@ class Phylophlan(object):
 ###############################################################################
 class PhylophlanResults(object):
 
+    example_paths = """
+    /output/proj/imputed_conf_low_conf.txt
+    /output/proj/imputed_conf_high-conf.txt
+    /output/proj/imputed_conf_medium-conf.txt
+    /output/proj/incomplete_conf_high-conf.txt
+    /output/proj/proj.tree.int.nwk"""
+
     def __nonzero__(self):
         path = self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt'
         return FilePath(path).exists
@@ -132,6 +134,8 @@ class PhylophlanResults(object):
         self.base_dir   = self.phylophlan.base_dir
         self.proj_code  = self.phylophlan.proj_code
         self.p          = self.phylophlan.p
+        # The results directory #
+        self.results_dir = DirectoryPath(self.base_dir + 'output/' + self.proj_code + '/')
 
     @property_cached
     def files(self):
@@ -142,17 +146,19 @@ class PhylophlanResults(object):
                  self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_medium-conf.txt',
                  self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_low-conf.txt']
         files = map(FilePath, files)
-        files = [f for f in file if f.exists]
+        files = [f for f in files if f.exists]
         return files
 
     @property_cached
     def assignments(self):
-        files = self.p.proj_dir.glob('*.txt')
-        lines = (line for f in self.files for line in f)
-        def line_to_entry(line):
+        files = self.results_dir.glob('*.txt')
+        lines = (line for f in files for line in f)
+        print "Print files:", files
+        print "Print lines:", lines
+        def line_to_kv(line):
             bin_id, assignment = line.split('\t')
             return bin_id, Assignment(assignment)
-        return dict(line_to_entry(line) for line in lines)
+        return dict(map(line_to_kv, lines))
 
     @property
     def tree(self):

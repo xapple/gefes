@@ -4,6 +4,8 @@
 A script to run small snippets of code on the under ice rerun project.
 """
 
+import names
+
 # Modules #
 import gefes, shutil
 

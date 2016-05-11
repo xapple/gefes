@@ -36,7 +36,7 @@ class Contig(object):
     /contig.fasta
     /annotation/
     /taxonomy/
-    /pfam/
+    /pfam/hits.hmmout
     """
 
     def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
@@ -82,7 +82,7 @@ class Contig(object):
     @property_cached
     def pfams(self):
         """What pfams did we find in the proteins of this contig?"""
-        return Hmmer(self.proteins.results.faa, self.p.pfam_dir)
+        return Hmmer(self.proteins.results.faa, 'pfam', out_path=self.p.hmmout)
 
     @property_cached
     def annotation(self):

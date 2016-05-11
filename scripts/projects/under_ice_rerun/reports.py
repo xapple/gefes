@@ -19,6 +19,9 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 ###############################################################################
+# Merged #
+for p in projects: print p.merged.report.generate()
+
 # Samples #
 print "Generating reports for %i samples" % len(samples)
 for s in tqdm(samples):
@@ -29,9 +32,6 @@ assemblies = [(a,p) for p in projects for a in p.assemblies.values()]
 for a,p in tqdm(assemblies):
     print "Report for project '%s', assembly '%s'" % (p.name, a)
     a.report.generate()
-
-# Merged #
-for p in projects: print p.merged.report.generate()
 
 # Copy all #
 assemblies = [(a,p) for p in projects for a in p.assemblies.values()]
