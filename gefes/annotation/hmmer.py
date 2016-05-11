@@ -5,7 +5,8 @@ from __future__ import division
 import warnings, multiprocessing
 
 # Internal modules #
-from seqsearch.databases.pfam import pfam
+from seqsearch.databases.pfam    import pfam
+from seqsearch.databases.tigrfam import tigrfam
 
 # First party modules #
 from fasta import FASTA
@@ -52,7 +53,8 @@ class HmmQuery(object):
         if cpus is None: self.cpus = min(multiprocessing.cpu_count(), 32)
         else:            self.cpus = cpus
         # Auto detect database short name #
-        if db_path == 'pfam': self.db = pfam.hmm_db
+        if db_path == 'pfam':    self.db = pfam.hmm_db
+        if db_path == 'tigrfam': self.db = tigrfam.hmm_db
         # Output #
         if out_path is None:         self.out_path = FilePath(self.query.prefix_path + '.hmmout')
         elif out_path.endswith('/'): self.out_path = FilePath(out_path + self.query.prefix + '.hmmout')

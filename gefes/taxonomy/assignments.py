@@ -45,14 +45,14 @@ class Assignment(object):
 
     def __init__(self, string, separator='.'):
         # Save attributes #
-        self.string    = string
+        self.string    = string.strip('\n')
         self.separator = separator
         if separator is '.': self.re_sep = '\.'
         else:                self.re_sep = re.escape(separator)
         # Parse #
         self.taxa = [self.parse_level(l) for l in levels]
         # Lowest taxonomy information #
-        self.lowest_taxon = [t for t in self.taxa if t][-1]
+        self.lowest_taxon = [t for t in self.taxa if t and t != '?'][-1]
 
     def parse_level(self, level):
         found = re.findall(level.identifier +"__([^%s]+)" % self.re_sep, self.string)

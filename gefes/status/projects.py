@@ -22,7 +22,8 @@ class ProjectStatus(object):
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
              'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings',
-             'binning', 'merged_binning', 'check_m', 'phylophlan', 'pfams']
+             'binning', 'merged_binning', 'check_m', 'phylophlan', 'pfams',
+             'tigrfams']
 
     steps_disabled = ['prodigal']
 
@@ -200,7 +201,18 @@ class ProjectStatus(object):
     @property
     def pfams(self):
         title = "The hmmsearch of all predicted proteins against all of pfam."
-        func  = lambda b: bool(b.pfam)
+        func  = lambda b: bool(b.pfams)
+        if self.proj.merged and self.proj.merged.results.binner:
+            items = self.proj.merged.results.binner.results.bins
+        else: items = []
+        outcome     = all(func(b) for b in items) if items else False
+        detail      = (("Bin number %s" % b, func(b)) for b in items)
+        return title, detail, outcome
+
+    @property
+    def tigrfams(self):
+        title = "The hmmsearch of all predicted proteins against all of tigrfam."
+        func  = lambda b: bool(b.tigrfams)
         if self.proj.merged and self.proj.merged.results.binner:
             items = self.proj.merged.results.binner.results.bins
         else: items = []

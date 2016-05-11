@@ -168,7 +168,7 @@ class AssemblyTemplate(ReportTemplate):
                             ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',     lambda b: len(b.faa)),
                             ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage),
-                            ('Assignment', lambda b: str(b.assignment)))) # TODO: make this line work
+                            ('Assignment', lambda b: str(b.assignment.lowest_taxon.term))))
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')
@@ -188,7 +188,7 @@ class AssemblyTemplate(ReportTemplate):
     # Visualization #
     def visualization(self):
         if not self.assembly.results.binner: return False
-        params = ('binning_version', 'count_bin', 'bins_contig_dist', 'bins_nucleotide_dist')
+        params = ('contig_ordination_graph')
         return {p:getattr(self, p) for p in params}
     def contig_ordination_graph(self):
         caption = "Bin total nucleotide size distribution"

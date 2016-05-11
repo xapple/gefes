@@ -60,8 +60,8 @@ class BinTemplate(Template):
         self.cache_dir  = self.parent.cache_dir
 
     # General information #
-    def bin_short_name(self):     return self.sample.name
-    def bin_long_name(self):      return self.sample.long_name
+    def bin_short_name(self):         return self.sample.name
+    def bin_long_name(self):          return self.sample.long_name
     def assembly_short_name(self):    return self.project.name
     def assembly_long_name(self):     return self.project.long_name
     def assembly_other_samples(self): return len(self.project) - 1

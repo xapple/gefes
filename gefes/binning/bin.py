@@ -28,6 +28,7 @@ class Bin(object):
     /annotation/
     /evaluation/
     /pfam/hits.hmmout
+    /tigrfam/hits.hmmout
     """
 
     def __str__(self): return self.name
@@ -92,12 +93,17 @@ class Bin(object):
     @property_cached
     def pfams(self):
         """Use the faa file with the pfams database and hmmsearch."""
-        return HmmQuery(self.faa, 'pfam', out_path=self.p.hmmout)
+        return HmmQuery(self.faa, 'pfam', out_path=self.p.pfam_hits)
+
+    @property_cached
+    def tigrfams(self):
+        """Use the faa file with the tigrfams database and hmmsearch."""
+        return HmmQuery(self.faa, 'tigrfam', out_path=self.p.tigrfam_hits)
 
     @property_cached
     def assignment(self):
         """The imputed assignment by Phylophlan."""
-        return self.binner.results.taxonomy.results.assignments[self.name]
+        return self.binner.results.taxonomy.results.assignments['bin_' + self.name]
 
     @property_cached
     def average_coverage(self):
