@@ -37,7 +37,7 @@ class Bowtie(Mapper):
                         '-1', self.sample.clean.fwd,
                         '-2', self.sample.clean.rev,
                         '-S', self.p.map_sam]
-        # We have to tell bowtie2 if they we have FASTA files instead of FASTQ #
+        # We have to tell Bowtie2 if they we have FASTA files instead of FASTQ #
         if self.sample.clean.format == 'fasta': self.options += ['-f']
         # Do the mapping #
         if verbose: print "Launching Bowtie on sample '%s' with %i cores" % (self.sample.name, cpus)

@@ -10,16 +10,19 @@ import gefes
 from gefes.map import graphs
 
 # First party modules #
-from plumbing.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths, FilePath
 from plumbing.cache import property_cached, property_pickled
 
 # Third party modules #
 import sh, pandas
 
+# Constants #
+home = os.environ.get('HOME', '~') + '/'
+
 ###############################################################################
 class Mapper(object):
     """Maps reads from a Sample object back to an Assembly object.
-    SAMtools is used to index and sort the result (v0.1.19).
+    SAMtools is used to index and sort the result (v1.3).
     PCR Duplicates are subsequently removed using MarkDuplicates (v1.101).
     BEDTools is then used to determine coverage (v2.15.0).
 
@@ -78,7 +81,7 @@ class Mapper(object):
         if verbose: print "Launching samtools view..."; sys.stdout.flush()
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam, '-@', cpus)
         if verbose: print "Launching samtools sort..."; sys.stdout.flush()
-        sh.samtools('sort', self.p.map_bam, self.p.map_s_bam.prefix_path, '-@', cpus)
+        sh.samtools('sort', self.p.map_bam, '-o', self.p.map_s_bam, '--threads', cpus)
         if verbose: print "Launching samtools index..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_s_bam)
         # Remove PCR duplicates #
@@ -86,7 +89,7 @@ class Mapper(object):
         self.remove_duplicates(cpus=cpus)
         # Sort and index bam without duplicates #
         if verbose: print "Launching Samtools sort again..."; sys.stdout.flush()
-        sh.samtools('sort', self.p.map_smd_bam, self.p.map_smds_bam.prefix_path, '-@', cpus)
+        sh.samtools('sort', self.p.map_smd_bam, '-o', self.p.map_smds_bam, '--threads', cpus)
         if verbose: print "Launching Samtools index again..."; sys.stdout.flush()
         sh.samtools('index', self.p.map_smds_bam)
         # Compute coverage #
@@ -96,16 +99,22 @@ class Mapper(object):
         os.remove(self.p.map_sam)
         os.remove(self.p.map_bam)
         os.remove(self.p.map_smd_bam)
+        # Message #
+        if verbose: print "Done for sample %s." % self.sample
 
     def remove_duplicates(self, cpus=1):
         """Remove PCR duplicates with MarkDuplicates."""
+        # Find the jar file #
+        current_module = FilePath(gefes.repos_dir + 'bin/MarkDuplicates.jar')
+        absolute_path  = FilePath(home + 'repos/gefes/bin/MarkDuplicates.jar')
+        path = current_module if current_module.exists else absolute_path
         # Estimate size #
-        mem_size = "5"
+        mem_size = "20"
         # Run the command #
         sh.java('-Xmx%sg' % mem_size,
                 '-XX:ParallelGCThreads=%s' % cpus,
                 '-XX:+CMSClassUnloadingEnabled',
-                '-jar', gefes.repos_dir + 'bin/MarkDuplicates.jar',
+                '-jar', path,
                 'INPUT=%s' % self.p.map_s_bam,
                 'OUTPUT=%s' % self.p.map_smd_bam,
                 'METRICS_FILE=%s' % self.p.map_smd_metrics,

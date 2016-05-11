@@ -120,9 +120,20 @@ for s in samples: s.runner.run_slurm(steps=[{'mapper_71.run':{'cpus':6}}],     j
 for s in samples: s.runner.run_slurm(steps=[{'mapper_81.run':{'cpus':6}}],     job_name=s.name + "_co_81_map", **params)
 for s in samples: s.runner.run_slurm(steps=[{'mapper_merged.run':{'cpus':6}}], job_name=s.name + "_merge_map", **params)
 
+# Or on the login node:
+for s in tqdm(samples):
+    s.mapper.run(cpus=12)
+    print s, "Done"
+
+################################ Mono Mappings #################################
 params = dict(machines=1, cores=1, time='3-00:00:00', partition='serial',
               threads=6, mem_per_cpu=5300, constraint='hsw')
 for s in samples: s.runner.run_slurm(steps=[{'mono_mapper.run':{'cpus':6}}],   job_name=s.name + "_mono_map",  **params)
+
+# Or on the login node:
+for s in tqdm(samples):
+    s.mono_mapper.run(cpus=12)
+    print s, "Done"
 
 ################################# Binning #####################################
 params = dict(machines=1, cores=1, time='7-00:00:00', partition='longrun',
@@ -142,14 +153,17 @@ for b in tqdm(proj.merged.results.binner.results.bins): b.evaluation.run(cpus=4)
 for c in tqdm(bt.merged.results.contigs): c.proteins.run()
 for c in tqdm(lb.merged.results.contigs): c.proteins.run()
 for c in tqdm(kt.merged.results.contigs): c.proteins.run()
+for c in tqdm(bt.merged.results.contigs): c.proteins.results.faa.remove_trailing_stars()
+for c in tqdm(lb.merged.results.contigs): c.proteins.results.faa.remove_trailing_stars()
+for c in tqdm(kt.merged.results.contigs): c.proteins.results.faa.remove_trailing_stars()
 
 ################################ Phylophlan ###################################
 for b in tqdm(bt.merged.results.binner.results.bins): b.faa
-bt.merged.results.binner.results.taxonomy.run(cpus=12)
+bt.merged.results.binner.results.taxonomy.run(cpus=32)
 for b in tqdm(lb.merged.results.binner.results.bins): b.faa
-lb.merged.results.binner.results.taxonomy.run(cpus=12)
+lb.merged.results.binner.results.taxonomy.run(cpus=32)
 for b in tqdm(kt.merged.results.binner.results.bins): b.faa
-kt.merged.results.binner.results.taxonomy.run(cpus=12)
+kt.merged.results.binner.results.taxonomy.run(cpus=32)
 
 ################################ Pfam ####################################
 for c in tqdm(proj.merged.results.binner.results.good_contigs): c.pfams.run(cpus=4)

@@ -13,7 +13,7 @@ ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class ReportTemplate(Template):
-    """Things that are common to most reports in GEFES"""
+    """Things that are common to most reports in GEFES."""
 
     # Process info #
     def project_url(self):       return gefes.url

@@ -223,7 +223,7 @@ class SampleTemplate(ReportTemplate):
     # Co Assembly #
     def count_contigs(self):    return split_thousands(self.sample.project.assembly.results.contigs_fasta.count)
 
-    # Co-Mapping #
+    # Co-Mapping # TODO: replace with merged-mapping ?
     def mapper_version(self):   return self.sample.mapper.long_name
     @property_pickled
     def map_filter_count(self):

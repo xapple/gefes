@@ -22,7 +22,9 @@ class ProjectStatus(object):
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
              'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings',
-             'binning', 'merged_binning', 'check_m', 'prodigal', 'phylophlan']
+             'binning', 'merged_binning', 'check_m', 'phylophlan']
+
+    steps_disabled = ['prodigal']
 
     def print_long(self):  print self.status(details=True)
     def print_short(self): print self.status(details=False)
@@ -140,7 +142,7 @@ class ProjectStatus(object):
     @property
     def mappings(self):
         title    = "The mappings of each sample to different assemblies"
-        func     = lambda a: bool(m.p.coverage)
+        func     = lambda m: bool(m.p.coverage)
         items    = [(s,a,m) for s in self.samples for a,m in s.mappers.items()]
         outcome  = all(func(m) for s,a,m in items)
         detail   = (("Map %s to %s:"%(s,a), func(m)) for s,a,m in items)
@@ -172,7 +174,7 @@ class ProjectStatus(object):
             items = [b for b in self.proj.merged.results.binner.results.bins]
         else: items = []
         outcome     = all(func(s) for s in items) if items else False
-        detail      = (("Bin number %i"%b, func(b)) for b in items)
+        detail      = (("Bin number %s" % b, func(b)) for b in items)
         return title, detail, outcome
 
     @property
@@ -181,7 +183,7 @@ class ProjectStatus(object):
         func    = lambda c: bool(c.proteins)
         items   = self.proj.merged.results.contigs if self.proj.merged else []
         outcome = all(func(s) for s in items) if items else False
-        detail  = (("Bin number %i" % b, func(b)) for b in items)
+        detail  = "Detail disabled for contigs"
         return title, detail, outcome
 
     @property
@@ -192,5 +194,5 @@ class ProjectStatus(object):
             items = [self.proj.merged.results.binner.results]
         else: items = []
         outcome     = all(func(s) for s in items) if items else False
-        detail      = (("Bin number %i" % b, func(b)) for b in items)
+        detail      = ((str(br), func(br)) for br in items)
         return title, detail, outcome
