@@ -31,7 +31,7 @@ for a,p in tqdm(assemblies):
     a.report.generate()
 
 # Merged #
-for p in projects: p.merged.report.generate()
+for p in projects: print p.merged.report.generate()
 
 # Copy all #
 assemblies = [(a,p) for p in projects for a in p.assemblies.values()]

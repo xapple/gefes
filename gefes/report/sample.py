@@ -49,6 +49,8 @@ class SampleReport(Document):
         self.make_pdf()
         # Copy to reports directory #
         shutil.copy(self.output_path, self.copy_base)
+        # Return #
+        return self.output_path
 
     copy_base    = property(lambda self: gefes.reports_dir + self.sample.project.name + '/' + self.sample.name + '.pdf')
     uppmax_proj  = property(lambda self: self.sample.info.get('uppmax_project_id', 'b2014083'))

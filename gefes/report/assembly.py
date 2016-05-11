@@ -51,6 +51,8 @@ class AssemblyReport(Document):
         self.make_pdf()
         # Copy to reports directory #
         shutil.copy(self.output_path, self.copy_base)
+        # Return #
+        return self.output_path
 
     copy_base = property(lambda self: gefes.reports_dir + self.aggregate.name + '/' + self.assembly.name + '.pdf')
     uppmax_proj  = property(lambda self: self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083'))

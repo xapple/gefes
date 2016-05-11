@@ -16,8 +16,8 @@ repos_dir = os.path.abspath(module_dir + '/../') + '/'
 git_repo = GitRepo(repos_dir, empty=True)
 
 # Dependencies #
-from plumbing import dependencies
-dependencies.check_setup_py(module_dir + 'setup.py')
+#from plumbing import dependencies
+#dependencies.check_setup_py(module_dir + 'setup.py')
 
 # No need for an X display #
 import matplotlib
@@ -27,12 +27,12 @@ matplotlib.use('Agg', warn=False)
 from gefes.groups.projects import Project, Projects
 
 # Constants #
-url = 'http://github.com/xapple/gefes/'
+url  = 'http://github.com/xapple/gefes/'
 home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
-# Output directory #
-view_dir = home + 'GEFES/views/'
+# Output directories #
+view_dir    = home + 'GEFES/views/'
 project_dir = view_dir + 'projects/'
 reports_dir = home + 'GEFES/reports/'
 
