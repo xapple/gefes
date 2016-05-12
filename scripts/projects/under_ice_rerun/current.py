@@ -20,4 +20,6 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 ###############################################################################
-for p in projects: p.merged.report.generate()
+for p in projects:
+    p.merged.report.generate()
+    break

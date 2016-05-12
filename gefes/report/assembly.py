@@ -89,10 +89,10 @@ class AssemblyTemplate(ReportTemplate):
 
     # Contigs #
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)
-    def contigs_len_dist(self):
+    def contigs_len_hist(self):
         caption = "Assembly length distribution"
-        graph = self.assembly.results.contigs_fasta.graphs.length_dist(x_log=True, y_log=True)
-        label = "contigs_len_dist"
+        graph = self.assembly.results.contigs_fasta.graphs.length_hist(x_scale='log', y_scale='log', rerun=True)
+        label = "contigs_len_hist"
         return str(ScaledFigure(graph.path, caption, label))
     def contigs_total_bp(self): return split_thousands(self.assembly.results.total_bp)
 
@@ -120,12 +120,12 @@ class AssemblyTemplate(ReportTemplate):
     def count_bins(self):      return split_thousands(len(self.assembly.results.binner.results))
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_scale='symlog', rerun=True)
         label = "bins_contig_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def bins_nucleotide_dist(self):
         caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_scale='symlog', rerun=True)
         label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))
 
@@ -172,23 +172,24 @@ class AssemblyTemplate(ReportTemplate):
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')
-        frame = frame.sort("Compl.", ascending=False)
+        frame = frame.sort_values(by="Compl.", ascending=False)
         table = tabulate(frame, headers='keys', numalign="right", tablefmt="pipe")
         return table + "\n\n   : Summary table for the best bins in this assembly."
     def percent_mapped_to_good_bins(self):
-        frame = self.assembly.results.mappings_per_sample
-        good_bins = self.assembly.results.binner.results.good_bins
-        frame = frame.loc[sum((b.contig_ids for b in good_bins), [])]
-        total_reads = sum(m.results.filtered_count for m in self.assembly.results.mappings.values())
+        frame        = self.assembly.results.mappings_per_sample
+        good_bins    = self.assembly.results.binner.results.good_bins
+        frame        = frame.loc[sum((b.contig_ids for b in good_bins), [])]
+        total_reads  = sum(m.results.filtered_count for m in self.assembly.results.mappings.values())
         mapped_reads = frame.sum().sum()
-        return "%.3f%%" % 100 * (mapped_reads / total_reads)
+        return "%.3f%%" % (100.0 * (float(mapped_reads) / float(total_reads)))
     def good_bins_count_contigs(self):
         return split_thousands(sum(map(len, self.assembly.results.binner.results.good_bins)))
 
     # Visualization #
     def visualization(self):
+        return False
         if not self.assembly.results.binner: return False
-        params = ('contig_ordination_graph')
+        params = ('contig_ordination_graph',)
         return {p:getattr(self, p) for p in params}
     def contig_ordination_graph(self):
         caption = "Bin total nucleotide size distribution"

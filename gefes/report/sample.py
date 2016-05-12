@@ -187,9 +187,9 @@ class SampleTemplate(ReportTemplate):
         return split_thousands(self.sample.assembly.results.contigs_fasta.count)
     def sample_contigs_len_dist(self):
         if not self.sample.assembly: return "<*Not computed yet*>"
-        caption = "Mono-assembly length distribution"
-        graph = self.sample.assembly.results.contigs_fasta.length_dist
-        label = "sample_contigs_len_dist"
+        caption = "Mono-assembly length histogram"
+        graph = self.sample.assembly.results.contigs_fasta.length_hist
+        label = "sample_contigs_len_hist"
         return str(ScaledFigure(graph.path, caption, label))
     def sample_contigs_total_bp(self):
         if not self.sample.assembly: return 0
@@ -225,30 +225,30 @@ class SampleTemplate(ReportTemplate):
     # Co Assembly #
     def count_contigs(self):    return split_thousands(self.sample.project.assembly.results.contigs_fasta.count)
 
-    # Co-Mapping # TODO: replace with merged-mapping ?
-    def mapper_version(self):   return self.sample.mapper.long_name
+    # Merged-Mapping #
+    def merged_version(self):   return self.sample.project.merged.long_name
     @property_pickled
     def map_filter_count(self):
-        if not self.sample.mapper: return 0
-        return split_thousands(self.sample.mapper.results.filtered_count)
+        if not self.sample.mapper_merged: return 0
+        return split_thousands(self.sample.mapper_merged.results.filtered_count)
     @property_pickled
     def did_map(self):
-        if not self.sample.mapper: return 0
-        return "%.2f%%" % (self.sample.mapper.results.fraction_mapped * 100)
+        if not self.sample.mapper_merged: return 0
+        return "%.2f%%" % (self.sample.mapper_merged.results.fraction_mapped * 100)
     @property_pickled
     def didnt_map(self):
-        if not self.sample.mapper: return 0
-        return "%.2f%%" % (self.sample.mapper.results.fraction_unmapped * 100)
+        if not self.sample.mapper_merged: return 0
+        return "%.2f%%" % (self.sample.mapper_merged.results.fraction_unmapped * 100)
     def mean_coverage(self):
-        if not self.sample.mapper: return "<*Not computed yet*>"
+        if not self.sample.mapper_merged: return "<*Not computed yet*>"
         caption = "Co-mapping mean coverage distribution"
-        graph = self.sample.mapper.results.mean_coverage_graph
+        graph = self.sample.mapper_merged.results.mean_coverage_graph
         label = "mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def percent_covered(self):
-        if not self.sample.mapper: return "<*Not computed yet*>"
+        if not self.sample.mapper_merged: return "<*Not computed yet*>"
         caption = "Co-mapping percent covered distribution"
-        graph = self.sample.mapper.results.percent_covered_graph
+        graph = self.sample.mapper_merged.results.percent_covered_graph
         label = "percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 

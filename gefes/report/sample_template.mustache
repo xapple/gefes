@@ -109,9 +109,9 @@ Mono Assembly
 -------------
 Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by itself. For this we use the "{{sample_assembler_version}}" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
 
-This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in figure \ref{sample_contigs_len_dist}:
+This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in figure \ref{sample_contigs_len_hist}:
 
-{{sample_contigs_len_dist}}
+{{sample_contigs_len_hist}}
 
 The total amount of base pairs generated is {{sample_contigs_total_bp}}.
 
@@ -129,9 +129,9 @@ For every of the {{sample_count_contigs}} contigs, we can now compute a mean cov
 
 -------
 
-Co-Mapping
-----------
-We can also attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the co-assembly step using the "{{mapper_version}}" software. Again, we will remove the predicted PCR duplicates, leaving us with {{map_filter_count}} reads to map. Exactly {{did_map}} of the reads map back to the contigs generated in the co-assembly and {{didnt_map}} have no match.
+Merged-Mapping
+--------------
+We can also attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the merged-assembly step using the "{{merged_version}}" software. Again, we will remove the predicted PCR duplicates, leaving us with {{map_filter_count}} reads to map. Exactly {{did_map}} of the reads map back to the contigs generated in the co-assembly and {{didnt_map}} have no match.
 
 For every of the {{count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these two variables can be seen in figure \ref{mean_coverage} and \ref{percent_covered}:
 

@@ -4,6 +4,7 @@
 from plumbing.graphs import Graph
 
 # Third party modules #
+import numpy
 from matplotlib import pyplot
 
 # Constants #
@@ -11,13 +12,19 @@ __all__ = ['BinContigDistribution', 'BinNucleotideDistribution', 'BinGenesPredic
 
 ################################################################################
 class BinContigDistribution(Graph):
-    """bins_contig_dist"""
+    """Bin number of contigs distribution"""
     short_name = 'bins_contig_dist'
-    sep = ('y')
+    sep        = 'x'
+    y_scale    = 'symlog'
 
-    def plot(self, bins=250, **kwargs):
+    def plot(self, bins=80, **kwargs):
         # Data #
         counts = map(len, self.parent.bin_id_to_contig_ids.values())
+        # Linear bins in logarithmic space #
+        if 'log' in kwargs.get('x_scale', ''):
+            start, stop = numpy.log10(1), numpy.log10(max(counts))
+            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+            bins.insert(0, 0)
         # Plot #
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color='gray')
@@ -36,14 +43,19 @@ class BinContigDistribution(Graph):
 
 ################################################################################
 class BinNucleotideDistribution(Graph):
-    """bins_nucleotide_dist"""
+    """Bin total nucleotide size distribution"""
     short_name = 'bins_nucleotide_dist'
-    sep = ('y')
-    y_scale = 'symlog'
+    sep        = 'x'
+    y_scale    = 'symlog'
 
-    def plot(self, bins=250, **kwargs):
+    def plot(self, bins=80, **kwargs):
         # Data #
         counts = [sum(map(len, b.contigs)) for b in self.parent.bins]
+        # Linear bins in logarithmic space #
+        if 'log' in kwargs.get('x_scale', ''):
+            start, stop = numpy.log10(1), numpy.log10(max(counts))
+            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+            bins.insert(0, 0)
         # Plot #
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color='gray')
@@ -63,12 +75,17 @@ class BinNucleotideDistribution(Graph):
 class BinGenesPredictedDist(Graph):
     """bins_genes_predicted_dist"""
     short_name = 'bins_genes_predicted_dist'
-    sep = ('y')
-    y_scale = 'symlog'
+    sep        = 'x'
+    y_scale    = 'symlog'
 
-    def plot(self, bins=250, **kwargs):
+    def plot(self, bins=80, **kwargs):
         # Data #
         counts = [b.evaluation.results[''] for b in self.parent.bins]
+        # Linear bins in logarithmic space #
+        if 'log' in kwargs.get('x_scale', ''):
+            start, stop = numpy.log10(1), numpy.log10(max(counts))
+            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
+            bins.insert(0, 0)
         # Plot #
         fig = pyplot.figure()
         pyplot.hist(counts, bins=bins, color='gray')

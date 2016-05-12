@@ -30,7 +30,7 @@ def hmmsearch(bin): return bin.tigrfams.run(cpus=1)
 bins = kt.merged.results.binner.results.bins + \
        lb.merged.results.binner.results.bins + \
        bt.merged.results.binner.results.bins
-pool = Pool(processes=64)
+pool = Pool(processes=32)
 iterator = pool.imap(hmmsearch, bins, chunksize=1)
 i = 0
 for result in tqdm(iterator, total=len(bins)):

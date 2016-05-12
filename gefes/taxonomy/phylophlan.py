@@ -153,10 +153,8 @@ class PhylophlanResults(object):
     def assignments(self):
         files = self.results_dir.glob('*.txt')
         lines = (line for f in files for line in f)
-        print "Print files:", files
-        print "Print lines:", lines
         def line_to_kv(line):
-            bin_id, assignment = line.split('\t')
+            bin_id, assignment = line.split('\t')[0:2]
             return bin_id, Assignment(assignment)
         return dict(map(line_to_kv, lines))
 
