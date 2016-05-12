@@ -21,7 +21,9 @@ Here is a summary of all the information pertaining to this sample:
 
 Processing
 ----------
-* This report (and all the analysis) was generated using the GEFES project at: <http://xapple.github.io/gefes/>
+* This report (and all the analysis) was generated using the GEFES project at:
+
+    <http://xapple.github.io/gefes/>
 
 * Version `{{project_version}}` of the pipeline was used.
 
@@ -85,6 +87,7 @@ We can look again at the per base quality and the per sequence quality of the pa
 
 -------
 
+{{#kraken}}
 Rough taxonomic prediction
 --------------------------
 After cleaning the sequences, we can straight away apply the {{kraken_version}} tool to get a rough estimate of the taxonomic composition of the sample. When possible, this classifies each sequence at one of the following levels depending on the accuracy obtained: Domain, Kingdom, Phylum, Class, Order, Family, Genus, or Species. For instance, considering only the Domain level, the breakdown is the following:
@@ -104,6 +107,7 @@ The full breakdown is available in the file:
     {{kraken_summary_path}}
 
 -------
+{{/kraken}}
 
 Mono Assembly
 -------------

@@ -157,6 +157,11 @@ class SampleTemplate(ReportTemplate):
         return str(DualFigure(*params))
 
     # Rough taxonomic prediction #
+    def kraken(self):
+        if not self.sample.kraken: return False
+        params = ('kraken_version', 'kraken_domain_table', 'kraken_phylum_table',
+                  'kraken_species_table', 'kraken_summary_path')
+        return {p:getattr(self, p) for p in params}
     def kraken_version(self): return self.sample.kraken.long_name
     def kraken_domain_table(self):
         if not self.sample.kraken: return "<*Not computed yet*>"
@@ -185,10 +190,10 @@ class SampleTemplate(ReportTemplate):
     def sample_count_contigs(self):
         if not self.sample.assembly: return 0
         return split_thousands(self.sample.assembly.results.contigs_fasta.count)
-    def sample_contigs_len_dist(self):
+    def sample_contigs_len_hist(self):
         if not self.sample.assembly: return "<*Not computed yet*>"
         caption = "Mono-assembly length histogram"
-        graph = self.sample.assembly.results.contigs_fasta.length_hist
+        graph = self.sample.assembly.results.contigs_fasta.length_hist(rerun=True)
         label = "sample_contigs_len_hist"
         return str(ScaledFigure(graph.path, caption, label))
     def sample_contigs_total_bp(self):
