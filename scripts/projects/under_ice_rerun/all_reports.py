@@ -35,3 +35,15 @@ print "Generating reports for %i assemblies" % len(assemblies)
 for a,p in tqdm(assemblies):
     #print "Report for project '%s', assembly '%s'" % (p.name, a)
     a.report.generate()
+
+# Samples clean cache #
+if False:
+    for s in samples: s.report.cache_dir.remove()
+    for s in samples: s.report.cache_dir.create()
+
+# Sample clean graphs #
+for s in samples:
+    s.mono_mapper.results.graphs.mean_coverage.path.remove()
+    s.mono_mapper.results.graphs.percent_covered.path.remove()
+    s.mapper_merged.results.graphs.mean_coverage.path.remove()
+    s.mapper_merged.results.graphs.percent_covered.path.remove()

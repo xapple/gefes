@@ -19,6 +19,7 @@ from fasta.fastqc       import FastQC
 
 # Third party modules #
 from shell_command import shell_output
+
 # Constants #
 home = os.environ['HOME'] + '/'
 
@@ -32,7 +33,6 @@ class Sample(object):
 
     all_paths = """
     /logs/
-    /info.json
     /clean/fwd.fastq
     /clean/rev.fastq
     /clean/singletons.fastq

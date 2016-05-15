@@ -91,7 +91,7 @@ class AssemblyTemplate(ReportTemplate):
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)
     def contigs_len_hist(self):
         caption = "Assembly length distribution"
-        graph = self.assembly.results.contigs_fasta.graphs.length_hist(x_scale='log', y_scale='log', rerun=True)
+        graph = self.assembly.results.contigs_fasta.graphs.length_hist(x_scale='log', y_scale='log')
         label = "contigs_len_hist"
         return str(ScaledFigure(graph.path, caption, label))
     def contigs_total_bp(self): return split_thousands(self.assembly.results.total_bp)
@@ -120,12 +120,12 @@ class AssemblyTemplate(ReportTemplate):
     def count_bins(self):      return split_thousands(len(self.assembly.results.binner.results))
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_scale='symlog', rerun=True)
+        graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_scale='symlog')
         label = "bins_contig_dist"
         return str(ScaledFigure(graph.path, caption, label))
     def bins_nucleotide_dist(self):
         caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_scale='symlog', rerun=True)
+        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_scale='symlog')
         label = "bins_nucleotide_dist"
         return str(ScaledFigure(graph.path, caption, label))
 
@@ -168,7 +168,7 @@ class AssemblyTemplate(ReportTemplate):
                             ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',     lambda b: len(b.faa)),
                             ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage),
-                            ('Assignment', lambda b: str(b.assignment.lowest_taxon.term))))
+                            ('Assignment', lambda b: str(b.assignment.lowest_taxon))))
         good_bins = self.assembly.results.binner.results.good_bins
         frame = pandas.DataFrame(([f(b) for f in info.values()] for b in good_bins), columns=info.keys())
         frame = frame.set_index('#')

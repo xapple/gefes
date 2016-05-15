@@ -11,9 +11,9 @@ from gefes.report import ReportTemplate
 
 # First party modules #
 from plumbing.autopaths import DirectoryPath, FilePath
-from plumbing.common import split_thousands, pretty_now
+from plumbing.common import split_thousands
 from plumbing.cache import property_pickled
-from pymarktex import Document, Template
+from pymarktex import Document
 from pymarktex.figures import ScaledFigure, DualFigure
 
 # Third party modules #
@@ -66,9 +66,9 @@ class SampleTemplate(ReportTemplate):
     def __init__(self, report):
         # Attributes #
         self.report, self.parent = report, report
-        self.sample  = self.parent.sample
-        self.project = self.sample.project
-        self.cache_dir  = self.parent.cache_dir
+        self.sample    = self.parent.sample
+        self.project   = self.sample.project
+        self.cache_dir = self.parent.cache_dir
 
     # General information #
     def sample_short_name(self):     return self.sample.name
@@ -193,7 +193,7 @@ class SampleTemplate(ReportTemplate):
     def sample_contigs_len_hist(self):
         if not self.sample.assembly: return "<*Not computed yet*>"
         caption = "Mono-assembly length histogram"
-        graph = self.sample.assembly.results.contigs_fasta.length_hist(rerun=True)
+        graph = self.sample.assembly.results.contigs_fasta.graphs.length_hist()
         label = "sample_contigs_len_hist"
         return str(ScaledFigure(graph.path, caption, label))
     def sample_contigs_total_bp(self):
@@ -217,13 +217,13 @@ class SampleTemplate(ReportTemplate):
     def sample_mean_coverage(self):
         if not self.sample.mono_mapper: return "<*Not computed yet*>"
         caption = "Mono-mapping mean coverage distribution"
-        graph = self.sample.mono_mapper.results.mean_coverage_graph
+        graph = self.sample.mono_mapper.results.graphs.mean_coverage()
         label = "sample_mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def samples_percent_covered(self):
         if not self.sample.mono_mapper: return "<*Not computed yet*>"
         caption = "Mono-mapping percent covered distribution"
-        graph = self.sample.mono_mapper.results.percent_covered_graph
+        graph = self.sample.mono_mapper.results.graphs.percent_covered()
         label = "samples_percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
@@ -246,30 +246,32 @@ class SampleTemplate(ReportTemplate):
         return "%.2f%%" % (self.sample.mapper_merged.results.fraction_unmapped * 100)
     def mean_coverage(self):
         if not self.sample.mapper_merged: return "<*Not computed yet*>"
-        caption = "Co-mapping mean coverage distribution"
-        graph = self.sample.mapper_merged.results.mean_coverage_graph
+        caption = "Merged-mapping mean coverage distribution"
+        graph = self.sample.mapper_merged.results.graphs.mean_coverage()
         label = "mean_coverage"
         return str(ScaledFigure(graph.path, caption, label))
     def percent_covered(self):
         if not self.sample.mapper_merged: return "<*Not computed yet*>"
-        caption = "Co-mapping percent covered distribution"
-        graph = self.sample.mapper_merged.results.percent_covered_graph
+        caption = "Merged-mapping percent covered distribution"
+        graph = self.sample.mapper_merged.results.graphs.percent_covered()
         label = "percent_covered"
         return str(ScaledFigure(graph.path, caption, label))
 
     # Protein calling (annotation) #
+    def annotation(self):
+        if not self.sample.contigs: return False
+        if not self.sample.contigs[0].annotation: return False
+        params = ('annotation_version', 'sample_count_proteins', 'sample_functions_table')
+        return {p:getattr(self, p) for p in params}
     def annotation_version(self):
-        if not self.sample.contigs: return "<*Not computed yet*>"
         return self.sample.contigs[0].annotation.long_name
     @property_pickled
     def sample_count_proteins(self):
-        if not self.sample.contigs: return "<*Not computed yet*>"
         if not all(c.annotation for c in self.sample.contigs): return "<*Not computed yet*>"
         total = sum(map(len,(c.annotation.results.functions for c in self.sample.contigs)))
         return split_thousands(total)
     @property_pickled
     def sample_functions_table(self):
-        if not self.sample.contigs: return "<*Not computed yet*>"
         if not all(c.annotation for c in self.sample.contigs): return "<*Not computed yet*>"
         counts = Counter()
         for c in self.sample.contigs: counts.update(c.annotation.results.functions)

@@ -14,7 +14,7 @@ __all__ = ['BinContigDistribution', 'BinNucleotideDistribution', 'BinGenesPredic
 class BinContigDistribution(Graph):
     """Bin number of contigs distribution"""
     short_name = 'bins_contig_dist'
-    sep        = 'x'
+    sep        = 'y'
     y_scale    = 'symlog'
 
     def plot(self, bins=80, **kwargs):
@@ -45,7 +45,7 @@ class BinContigDistribution(Graph):
 class BinNucleotideDistribution(Graph):
     """Bin total nucleotide size distribution"""
     short_name = 'bins_nucleotide_dist'
-    sep        = 'x'
+    sep        = 'y'
     y_scale    = 'symlog'
 
     def plot(self, bins=80, **kwargs):
@@ -75,7 +75,7 @@ class BinNucleotideDistribution(Graph):
 class BinGenesPredictedDist(Graph):
     """bins_genes_predicted_dist"""
     short_name = 'bins_genes_predicted_dist'
-    sep        = 'x'
+    sep        = 'y'
     y_scale    = 'symlog'
 
     def plot(self, bins=80, **kwargs):

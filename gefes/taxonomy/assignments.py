@@ -35,6 +35,7 @@ levels = [Level('Life',    'l', 1),
 class Taxon(object):
     """Describes a taxonomic term at a given level."""
     def __repr__(self): return '<Taxon: "%s" at %s>' % (self.term, self.level)
+    def __str__(self): return '%s (%s)' % (self.term, self.level.identifier)
     def __eq__(self, other): return other == self.term
     def __nonzero__(self): return bool(self.term)
     def __init__(self, term, level):
@@ -57,7 +58,8 @@ class Assignment(object):
         # Parse #
         self.taxa = [self.parse_level(l) for l in levels]
         # Lowest taxonomy information #
-        self.lowest_taxon = [t for t in self.taxa if t and t.term != '?'][-1]
+        self.lowest_taxon = [t for t in self.taxa if t and t.term != '?']
+        self.lowest_taxon = self.lowest_taxon[-1] if self.lowest_taxon else self.taxa[0]
 
     def parse_level(self, level):
         found = re.findall(level.identifier +"__([^%s]+)" % self.re_sep, self.string)
