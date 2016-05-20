@@ -23,6 +23,9 @@ for s in samples: s.load()
 # Don't run it #
 raise Exception("Copy paste the commands you want in ipython, don't run this script.")
 
+################################ Status report ################################
+print proj.status.print_short()
+
 ############################## Special Merging ################################
 for s in tqdm(samples): s.merge_lanes()
 
@@ -141,7 +144,7 @@ for c in tqdm(proj.merged.results.contigs): c.proteins.run()
 
 ################################ Phylophlan ###################################
 for b in tqdm(proj.merged.results.binner.results.bins): b.faa
-for b in tqdm(proj.merged.results.binner.results.good_bins): b.taxonomy.run(cpus=4)
+proj.merged.results.binner.results.taxonomy.run(cpus=32)
 
 ################################ Phylosift ####################################
 for c in tqdm(proj.merged.results.binner.results.good_contigs): c.pfams.run(cpus=4)
