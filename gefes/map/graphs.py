@@ -17,8 +17,8 @@ class MeanCoverage(Graph):
     sep    = 'y'
     left   = 0.1
     title  = 'Distribution of mean coverages'
-    xlabel = 'Mean coverage of a contig'
-    ylabel = 'Number of contigs with this much mean coverage'
+    x_label = 'Mean coverage of a contig'
+    y_label = 'Number of contigs with this much mean coverage'
 
     def plot(self, **kwargs):
         # Data #
@@ -38,8 +38,8 @@ class PercentCovered(Graph):
     sep    = 'y'
     left   = 0.1
     title  = 'Distribution of percentages covered'
-    xlabel = 'Percentage covered of a contig'
-    ylabel = 'Number of contigs with this much percent covered'
+    x_label = 'Percentage covered of a contig'
+    y_label = 'Number of contigs with this much percent covered'
 
     def plot(self, **kwargs):
         # Data #
