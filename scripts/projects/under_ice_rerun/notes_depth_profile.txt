@@ -11,19 +11,3 @@ Using a set of single copy pfams genome equivalence will be estimated for each p
 Using the set of reference pfams and tigrfams the depth distribution of these genes indicative for specific traits (e.g. methanotrophy, sulfate reduction) will be visualized for the three systems.
 
 -------------------------
-
-1: Contigs.fasta
-
-2: Matrix of average coverage per contigs. Rows: Samples, Columns: Contigs, Values: average coverage.
-
-3: Matrix of HMM search results. Rows: proteins, Columns: Pfams, Values: bit scores.
--> From matrix 3, only take the top hit.
-
-4: Matrix of which contig had which protein. Rows: contigs. Columns: are the proteins. Values: presence of absence.
-
-5: Mulitpy M4xM2xM3: Samples x Pfams, Rows: are samples. Columns: Are Pfams (with their function) Values: Sums of average coverages.
--> Merge columns which have have the same Pfam by addition
-
-6: Select the columns that correspond to the single copy Pfams. Calculate average by row (sample). Normalize by row using this number.
-
-Pitfalls: coverage variation over contigs

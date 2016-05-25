@@ -4,6 +4,7 @@ from collections import OrderedDict
 # Internal modules #
 from gefes.assemble.contig import Contig
 from gefes.binning.concoct import Concoct
+from gefes.outputs.hit_profile import HitProfile
 
 # First party modules #
 from fasta import FASTA
@@ -20,6 +21,7 @@ class AssemblyResults(object):
     def __iter__(self): return iter(self.contigs)
     def __init__(self, parent):
         self.parent = parent
+        self.p      = parent.p
         self.contigs_fasta = FASTA(self.parent.p.filtered)
 
     @property_cached
@@ -56,3 +58,8 @@ class AssemblyResults(object):
         get_counts = lambda s: s.mappers[self.parent].results.raw_contig_counts
         frame = pandas.DataFrame({s.name: get_counts(s) for s in self.parent.samples})
         return frame
+
+    @property_cached
+    def hit_profile(self):
+        """Gather all the information to make a profile of the hits from a search."""
+        return HitProfile(self.parent, self.p.hit_profile_dir)

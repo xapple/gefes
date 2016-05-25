@@ -176,6 +176,9 @@ for a in p.assemblies.values():
     print "Prokka for project '%s', assembly '%s'" % (p.name, a)
     for c in tqdm(a.results.contigs): c.annotation.run()
 
+################################ Hit profile ##################################
+bt.merged.results.hit_profile
+
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name
