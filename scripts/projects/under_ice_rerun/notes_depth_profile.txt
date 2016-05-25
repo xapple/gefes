@@ -2,10 +2,28 @@
 
 # the goal is to show metabolic trait distribution along the depth profiles in the three studied systems
 
-As inputs we will use infomration on each contig - the genes each individual contig contains and the average coverage of each contig to estimate each individual genes distribution along the depth profile.
+As inputs we will use the genes each individual contig contains and the average coverage of each contig to estimate the individual genes distribution along the depth profile.
 
 Next annotation of individual genes using pfam and tigrfam databases with hmmer will be used. Genes will be grouped according to these annotations and coverages will be summed up to obtain coverages per pfam and tigrfam.
 
 Using a set of single copy pfams genome equivalence will be estimated for each pfam and tigrfam.
 
 Using the set of reference pfams and tigrfams the depth distribution of these genes indicative for specific traits (e.g. methanotrophy, sulfate reduction) will be visualized for the three systems.
+
+-------------------------
+
+1: Contigs.fasta
+
+2: Matrix of average coverage per contigs. Rows: Samples, Columns: Contigs, Values: average coverage.
+
+3: Matrix of HMM search results. Rows: proteins, Columns: Pfams, Values: bit scores.
+-> From matrix 3, only take the top hit.
+
+4: Matrix of which contig had which protein. Rows: contigs. Columns: are the proteins. Values: presence of absence.
+
+5: Mulitpy M4xM2xM3: Samples x Pfams, Rows: are samples. Columns: Are Pfams (with their function) Values: Sums of average coverages.
+-> Merge columns which have have the same Pfam by addition
+
+6: Select the columns that correspond to the single copy Pfams. Calculate average by row (sample). Normalize by row using this number.
+
+Pitfalls: coverage variation over contigs
