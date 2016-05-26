@@ -123,13 +123,13 @@ class ConcoctResults(object):
 
     @property_cached
     def good_bins(self):
-        """Return only the bins which are more than 60%% complete and less than 10%% contamination."""
+        """Return only the bins which are more than 60% complete and less than 10% contamination."""
         return [b for b in self.bins if b.evaluation.results.statistics['completeness']  > 60 and \
                                         b.evaluation.results.statistics['contamination'] < 10]
 
     @property_cached
     def good_contigs(self):
-        """Return only the bins which are more than 60%% complete and less than 10%% contamination."""
+        """Return only the bins which are more than 60% complete and less than 10% contamination."""
         return [c for b in self.good_bins for c in b.contigs]
 
     @property_cached

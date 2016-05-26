@@ -31,10 +31,11 @@ class Bin(object):
     /tigrfam/hits.hmmout
     """
 
-    def __str__(self): return self.name
-    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
-    def __len__(self): return len(self.contig_ids)
-    def __iter__(self): return iter(self.contigs)
+    def __str__(self):     return self.name
+    def __repr__(self):    return '<%s object "%s">' % (self.__class__.__name__, self.name)
+    def __len__(self):     return len(self.contig_ids)
+    def __iter__(self):    return iter(self.contigs)
+    def __nonzero__(self): return len(self.faa) > 0
 
     def __init__(self, binner, contig_ids, result_dir=None, num=None, name=None):
         """You have to specify one of either a `name` or a `num`."""

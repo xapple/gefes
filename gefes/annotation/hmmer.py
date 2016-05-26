@@ -13,7 +13,7 @@ from fasta import FASTA
 from plumbing.autopaths import FilePath
 
 # Third party modules #
-import sh
+import sh, pandas
 
 # Warnings #
 warnings.filterwarnings("ignore", "Bio.SearchIO")
@@ -66,9 +66,10 @@ class HmmQuery(object):
         if self.executable: cmd = [self.executable.path]
         else:               cmd = ["hmmsearch"]
         # Essentials #
-        cmd += ('-o',        '/dev/null',   # direct output to file <f>, not stdout
+        cmd += ('-o',        '/dev/null',   # direct output to file `f`, not stdout
                 '--tblout',  self.out_path, # parsable table of per-sequence hits
-                '--seed',    1,             # set RNG seed to <n>
+                '--seed',    1,             # set RNG seed to `n`
+                '-E',        self.e_value,  # report sequences <= this E-value threshold in output
                 '--notextw',                # unlimited ASCII text output line width
                 '--acc',                    # prefer accessions over names in output
                 self.db,
@@ -93,8 +94,32 @@ class HmmQuery(object):
         # Do it #
         sh.Command(self.command[0])(['--cpu', str(cpus)] + self.command[1:])
 
+    def test_biopython(self):
+        """Unfortunately biopython is unable to parse these file."""
+        formats = ['hmmer3-tab', 'blast-xml', 'phmmer3-domtab', 'exonerate-text', 'hmmer3-text', 'blast-text', 'hmmer2-text', 'exonerate-vulgar', 'exonerate-cigar', 'blast-tab', 'hmmsearch3-domtab', 'blat-psl', 'hmmscan3-domtab' ]
+        for fmt in formats:
+            try:
+                print SearchIO.read(self.out_path, fmt)
+                print "yes: ", fmt
+            except ValueError:
+                print "no: ", fmt
+
     @property
     def hits(self):
+        # Check #
         if not self.out_path:
             raise Exception("You can't access results from HMMER before running the algorithm.")
-        return SearchIO.read(self.out_path, 'hmmer3-tab')
+        # Column names #
+        fields = ['target_name', 'target_accession', 'query_name', 'query_accession',
+                  'e_value', 'score', 'bias', 'domain_e_value', 'domain_score',
+                  'domain_bias', 'exp', 'reg', 'clu', 'ov', 'env', 'dom', 'rep', 'inc']
+        # Parse #
+        load = lambda path: pandas.io.parsers.read_csv(path,
+                                                       comment          = "#",
+                                                       delim_whitespace = True,
+                                                       engine           = 'python',
+                                                       header           = None,
+                                                       index_col        = False,
+                                                       names            = fields)
+        # Result #
+        return load(self.out_path)
