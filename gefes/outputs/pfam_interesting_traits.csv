@@ -1,0 +1,379 @@
+# Sari procedure: I first looked for all pfams/tigrfams that had significantly different abundance among the depths. The depths were grouped together based on oxygen concentration so that the upper 5 were epilimnion, then 2 metalimnion samples followed by 6 hypolimnion samples. I compared these depths using R package metagenomeSeq. Then I took all the pfams/tigrfams that were significantly different and started looking for the ones that could be used as markers of various pathways. I took proteins from pathways in metacyc and looked for the corresponding pfam/tigrfam. When I found one that was only found in the pathway in question, in most cases I tested at least one of the most abundant proteins in the data that it actually is what the pram/tigrfam suggests it is. So the list should be used cautiously with other datasets.
+# Modified by Alexander Eiler on 26 May 2016
+PFAM,description,type,pathway
+PF00016,ribulose bisphosphate carboxylase/oxygenase,calvin_cycle,calvin_cycle
+PF00032,cytochrome bc1,Fe oxidation,Fe(II) oxidation
+PF00041,Fibronectin type III domain,carbon processing,Other carbohydrate active enzymes
+PF00044,glyceraldehyde 3-phosphate dehydrogenase 2,calvin_cycle,calvin_cycle
+PF00056,"lactate/malate dehydrogenase, NAD binding domain",Fermentation,L-lactate dehydrogenase
+PF00062,C-type lysozyme/alpha-lactalbumin family,carbon processing,Glycoside hydrolase
+PF00064,Neuraminidase,carbon processing,Glycoside hydrolase
+PF00101,ribulose bisphosphate carboxylase/oxygenase,calvin_cycle,calvin_cycle
+PF00115,aa3-type cytochrome oxidase,Fe oxidation,Fe(II) oxidation
+PF00116,aa3-type cytochrome oxidase,Fe oxidation,Fe(II) oxidation
+PF00120,glutamine synthetase,nitrate reduction,nitrate reduction (assimilatory)
+PF00121,triosephosphate isomerase,calvin_cycle,calvin_cycle
+PF00128,"Alpha amylase, catalytic domain",carbon processing,Glycoside hydrolase
+PF00141,Peroxidase,carbon processing,Phenolic compound degradation domains
+PF00142,"4Fe-4S iron sulfur cluster binding proteins, NifH/frxC family",nitrogen fixation,nitrogen fixation
+PF00144,Beta-lactamase,carbon processing,Other carbohydrate active enzymes
+PF00150,Cellulase (glycosyl hydrolase family 5),carbon processing,Glycoside hydrolase
+PF00162,phosphoglyserate kinase,calvin_cycle,calvin_cycle
+PF00182,Chitinase class I,carbon processing,Glycoside hydrolase
+PF00187,Chitin recognition protein,carbon processing,Carbohydrate binding module
+PF00206,Lyase,carbon processing,Other carbohydrate active enzymes
+PF00232,Glycosyl hydrolase family 1,carbon processing,Glycoside hydrolase
+PF00251,Glycosyl hydrolases family 32 N-terminal domain,carbon processing,Glycoside hydrolase
+PF00274,"fructose-bisphosphate aldolase / sedoheptulose-1,7-bisphosphate aldolase",calvin_cycle,calvin_cycle
+PF00295,Glycosyl hydrolases family 28,carbon processing,Glycoside hydrolase
+PF00316,"fructose-1,6-bisphosphatase class 1",calvin_cycle,calvin_cycle
+PF00331,Glycosyl hydrolase family 10,carbon processing,Glycoside hydrolase
+PF00332,Glycosyl hydrolases family 17,carbon processing,Glycoside hydrolase
+PF00404,Dockerin type I repeat,carbon processing,Other carbohydrate active enzymes
+PF00420,NADH:quinone oxidoreductase I,nitrate reduction,nitrate reduction VIII (dissimilatory)
+PF00423,Hemagglutinin-neuraminidase,carbon processing,Glycoside hydrolase
+PF00456,transketolase,calvin_cycle,calvin_cycle
+PF00457,Glycosyl hydrolases family 11,carbon processing,Glycoside hydrolase
+PF00464,Serine hydroxymethyltransferase,AA synthesis,glycine_serine
+PF00485,phosphoribulokinase,calvin_cycle,calvin_cycle
+PF00499,NADH:quinone oxidoreductase I,nitrate reduction,nitrate reduction VIII (dissimilatory)
+PF00510,aa3-type cytochrome oxidase,Fe oxidation,Fe(II) oxidation
+PF00534,Glycosyl transferases group 1,carbon processing,Other carbohydrate active enzymes
+PF00535,Glycosyl transferase family 2,carbon processing,Other carbohydrate active enzymes
+PF00553,Cellulose binding domain,carbon processing,Carbohydrate binding module
+PF00581,rhodanese 2599,sulfur oxidation,superpathway of sulfide oxidation (phototrophic sulfur bacteria)
+PF00652,Ricin-type beta-trefoil lectin domain,carbon processing,Carbohydrate binding module
+PF00686,Starch binding domain,carbon processing,Carbohydrate binding module
+PF00694,aconitase,rTCA,rtca_I
+PF00703,Glycosyl hydrolase family 2,carbon processing,Glycoside hydrolase
+PF00704,Glycosyl hydrolases family 18,carbon processing,Glycoside hydrolase
+PF00722,Glycosyl hydrolases family 16,carbon processing,Glycoside hydrolase
+PF00723,Glycosyl hydrolases family 15,carbon processing,Glycoside hydrolase
+PF00728,"Glycosyl hydrolase family 20, catalytic domain",carbon processing,Glycoside hydrolase
+PF00734,Fungal cellulose binding domain,carbon processing,Carbohydrate binding module
+PF00754,F5/8 type C domain,carbon processing,Carbohydrate binding module
+PF00759,Glycosyl hydrolase family 9,carbon processing,Glycoside hydrolase
+PF00763,"Tetrahydrofolate dehydrogenase/cyclohydrolase, catalytic domain",homoacetogenesis,homoacetogenesis
+PF00766,Electron transfer flavoprotein FAD-binding domain,syntrophy,Electron transfer flavoprotein-ubiquinone oxidoreductase
+PF00775,Dioxygenase,carbon processing,Phenolic compound degradation domains
+PF00795,assimilatory nitrite reductase,nitrate reduction,nitrate reduction V (assimilatory)
+PF00840,Glycosyl hydrolase family 7,carbon processing,Glycoside hydrolase
+PF00852,Glycosyltransferase family 10 (fucosyltransferase),carbon processing,Other carbohydrate active enzymes
+PF00871,acetate kinase,methanogenesis,methanogenesis_acetate
+PF00885,"6,7-dimethyl-8-ribityllumazine synthase",vitamin,viamin_riboflavin
+PF00925,GTP cyclohydrolase II,vitamin,viamin_riboflavin
+PF00926,"3,4-dihydroxy-2-butanone 4-phosphate synthase",vitamin,viamin_riboflavin
+PF00933,Glycosyl hydrolase family 3 N terminal domain,carbon processing,Glycoside hydrolase
+PF00942,Cellulose binding domain,carbon processing,Carbohydrate binding module
+PF00959,Phage lysozyme,carbon processing,Glycoside hydrolase
+PF00963,Cohesin domain,carbon processing,Other carbohydrate active enzymes
+PF01012,Electron transfer flavoprotein domain,syntrophy,Electron transfer flavoprotein-ubiquinone oxidoreductase
+PF01036,Bacteriorhodopsin-like protein,vitamin,viamin_retinal
+PF01055,Glycosyl hydrolases family 31,carbon processing,Glycoside hydrolase
+PF01074,Glycosyl hydrolases family 38 N-terminal domain,carbon processing,Glycoside hydrolase
+PF01077,assimilatory sulfite reductase/nitrite reductase (dissimilatory),sulfate reduction,sulfate reduction I (assimilatory)
+PF01078,dissimilatory sulfite reductase,sulfate reduction,sulfate reduction V (dissimilatory)
+PF01095,,carbon processing,Carbohydrate esterase
+PF01116,"fructose-bisphosphate aldolase / sedoheptulose-1,7-bisphosphate aldolase",calvin_cycle,calvin_cycle
+PF01120,Alpha-L-fucosidase,carbon processing,Glycoside hydrolase
+PF01174,SNO glutamine amidotransferase family,vitamin,viamin_pyridoxal
+PF01183,Glycosyl hydrolases family 25,carbon processing,Glycoside hydrolase
+PF01204,Trehalase,carbon processing,Glycoside hydrolase
+PF01206,TusA sulfur-carrier protein,sulfur oxidation,sulfur oxidation IV (intracellular sulfur)
+PF01229,Glycosyl hydrolases family 39,carbon processing,Glycoside hydrolase
+PF01268,Formate--tetrahydrofolate ligase,homoacetogenesis,homoacetogenesis
+PF01270,Glycosyl hydrolases family 8,carbon processing,Glycoside hydrolase
+PF01301,Glycosyl hydrolases family 35,carbon processing,Glycoside hydrolase
+PF01341,Glycosyl hydrolases family 6,carbon processing,Glycoside hydrolase
+PF01373,Glycosyl hydrolase family 14,carbon processing,Glycoside hydrolase
+PF01374,Glycosyl hydrolase family 46,carbon processing,Glycoside hydrolase
+PF01464,Transglycosylase SLT domain,carbon processing,Glycoside hydrolase
+PF01471,Putative peptidoglycan binding domain,carbon processing,Other carbohydrate active enzymes
+PF01493,"formylmethanofuran dehydrogenase, tungsten enzyme",methanogenesis,methanogenesis_co2
+PF01507,phosphoadenosine phosphosulfate reductase,sulfate reduction,sulfate reduction I (assimilatory)
+PF01510,N-acetylmuramoyl-L-alanine amidase,carbon processing,Other carbohydrate active enzymes
+PF01520,N-acetylmuramoyl-L-alanine amidase,carbon processing,Other carbohydrate active enzymes
+PF01522,Polysaccharide deacetylase,carbon processing,Carbohydrate esterase
+PF01532,Glycosyl hydrolase family 47,carbon processing,Glycoside hydrolase
+PF01568,formylmethanofuran dehydrogenase,methanogenesis,methanogenesis_co2
+PF01583,adenylylsulfate kinase,sulfate reduction,sulfate reduction I (assimilatory)
+PF01607,Chitin binding Peritrophin-A domain,carbon processing,Carbohydrate binding module
+PF01630,Hyaluronidase,carbon processing,Glycoside hydrolase
+PF01645,glutamate synthase,nitrate reduction,nitrate reduction V (assimilatory)
+PF01656,CbiA,vitamin,vitamin_B12
+PF01670,Glycosyl hydrolase family 12,carbon processing,Glycoside hydrolase
+PF01680,SOR/SNZ family,vitamin,viamin_pyridoxal
+PF01755,Glycosyltransferase family 25 (LPS biosynthesis protein),carbon processing,Other carbohydrate active enzymes
+PF01832,Mannosyl-glycoprotein endo-beta-N-acetylglucosaminidase,carbon processing,Glycoside hydrolase
+PF01833,IPT/TIG domain,carbon processing,Other carbohydrate active enzymes
+PF01872,RibD C-terminal domain,vitamin,viamin_riboflavin
+PF01888,CbiD,vitamin,vitamin_B12
+PF01890,CbiG C terminus,vitamin,vitamin_B12
+PF01891,CbiM,vitamin,vitamin_B12
+PF01903,CbiX,vitamin,vitamin_B12
+PF01913,formylmethanofuran:H4SPT formyltransferase,methanogenesis,methanogenesis_co2
+PF01915,Glycosyl hydrolase family 3 C terminal domain,carbon processing,Other carbohydrate active enzymes
+PF01946,Thi4 family,vitamin,vitamine_thiamine
+PF01955,CbiZ,vitamin,vitamin_B12
+PF01964,Radical SAM ThiC family,vitamin,vitamine_thiamine
+PF01982,Domain of unknown function DUF120,vitamin,viamin_riboflavin
+PF01993,F420-dependent methylene-H4MPT reductase,methanogenesis,methanogenesis_co2
+PF01996,F420-0:Gamma-glutamyl ligase,vitamin,viamin_riboflavin
+PF02007,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF02011,Glycosyl hydrolase family 48,carbon processing,Glycoside hydrolase
+PF02012,BNR/Asp-box repeat,carbon processing,Glycoside hydrolase
+PF02013,Cellulose or protein binding domain,carbon processing,Carbohydrate binding module
+PF02015,Glycosyl hydrolase family 45,carbon processing,Glycoside hydrolase
+PF02018,Carbohydrate binding domain,carbon processing,Carbohydrate binding module
+PF02027,RolB/RolC glucosidase family,carbon processing,Other carbohydrate active enzymes
+PF02055,O-Glycosyl hydrolase family 30,carbon processing,Glycoside hydrolase
+PF02056,Family 4 glycosyl hydrolase,carbon processing,Glycoside hydrolase
+PF02057,Glycosyl hydrolase family 59,carbon processing,Glycoside hydrolase
+PF02065,Melibiase,carbon processing,Glycoside hydrolase
+PF02156,Glycosyl hydrolase family 26,carbon processing,Glycoside hydrolase
+PF02219,methylene tetrahydrofolate reductase,wood_ljungdahl,wood_ljungdahl
+PF02240,Methyl-coenzyme M reductase operon protein G,methanogenesis,methanogenesis
+PF02241,Methyl-coenzyme M reductase operon protein B,methanogenesis,methanogenesis
+PF02249,Methyl-coenzyme M reductase operon protein A,methanogenesis,methanogenesis
+PF02278,"Polysaccharide lyase family 8, super-sandwich domain",carbon processing,Polysaccharide lyase
+PF02283,CobU,vitamin,vitamin_B12
+PF02289,methenyltetrahydrofolate cyclohydrolase,wood_ljungdahl,wood_ljungdahl
+PF02300,fumarate reductase,rTCA,rtca_I
+PF02313,fumarate reductase,rTCA,rtca_I
+PF02324,Glycosyl hydrolase family 70,carbon processing,Glycoside hydrolase
+PF02335,cytochrome c-552 Fe and ammonium oxidation,Fe oxidation,Fe(II) oxidation
+PF02361,CbiQ,vitamin,vitamin_B12
+PF02368,Bacterial Ig-like domain (group 2),carbon processing,Other carbohydrate active enzymes
+PF02369,Bacterial Ig-like domain (group 1),carbon processing,Other carbohydrate active enzymes
+PF02406,soluble methane monooxygenase,methanotrophy,methane oxidation to methanol I
+PF02424,ApbE family,vitamin,vitamine_thiamine
+PF02435,Levansucrase/Invertase,carbon processing,Glycoside hydrolase
+PF02446,4-alpha-glucanotransferase,carbon processing,Glycoside hydrolase
+PF02449,Beta-galactosidase,carbon processing,Glycoside hydrolase
+PF02461,ammonia monooxygenase,ammonia oxidation,ammonia oxidation I (aerobic)
+PF02492,CobW,vitamin,vitamin_B12
+PF02505,Methyl-coenzyme M reductase operon protein D,methanogenesis,methanogenesis
+PF02552,acetyl-CoA decarbonylase/synthase complex __ component,methanogenesis,methanogenesis_acetate
+PF02553,CbiN,vitamin,vitamin_B12
+PF02558,Ketopantoate reductase PanE/ApbA,vitamin,vitamine_thiamine
+PF02568,Thiamine biosynthesis protein (ThiI),vitamin,vitamine_thiamine
+PF02571,CbiJ,vitamin,vitamin_B12
+PF02578,Laccase,carbon processing,Phenolic compound degradation domains
+PF02579,Dinitrogenase iron-molybdenum cofactor,nitrogen fixation,nitrogen fixation
+PF02581,Thiamine monophosphate synthase/TENI,vitamin,vitamine_thiamine
+PF02585,unknown,carbon processing,Carbohydrate esterase
+PF02613,respiratory nitrate reductase,nitrate reduction,nitrate reduction I (denitrification)
+PF02615,Malate/L-lactate dehydrogenase,Fermentation,L-lactate dehydrogenase
+PF02632,BioY family,vitamin,vitamin_biotin
+PF02634,FdhD/NarQ family,syntrophy,membranebound FDH
+PF02635,DsrEFH hexamer,sulfur oxidation,sulfur oxidation IV (intracellular sulfur)
+PF02654,CobS,vitamin,vitamin_B12
+PF02663,formylmethanofuran dehydrogenase,methanogenesis,methanogenesis_co2
+PF02665,respiratory nitrate reductase,nitrate reduction, nitrate reduction I (denitrification)
+PF02691,VitK2_biosynth,vitamin,menaquinone (vitamin K2)
+PF02741,formylmethanofuran:H4SPT formyltransferase,methanogenesis,methanogenesis_co2
+PF02745,Methyl-coenzyme M reductase operon protein A,methanogenesis,methanogenesis
+PF02775,"Thiamine pyrophosphate enzyme, C-terminal TPP binding domain",vitamin,vitamine_thiamine
+PF02776,"Thiamine pyrophosphate enzyme, N-terminal TPP binding domain",vitamin,vitamine_thiamine
+PF02779,transketolase,calvin_cycle,calvin_cycle
+PF02780,transketolase,calvin_cycle,calvin_cycle
+PF02783,Methyl-coenzyme M reductase operon protein B,methanogenesis,methanogenesis
+PF02785,Biotin carboxylase C-terminal domain,vitamin,vitamin_biotin
+PF02788,ribulose bisphosphate carboxylase/oxygenase,calvin_cycle,calvin_cycle
+PF02806,"Alpha amylase, C-terminal all-beta domain",carbon processing,Other carbohydrate active enzymes
+PF02836,"Glycosyl hydrolases family 2, TIM barrel domain",carbon processing,Other carbohydrate active enzymes
+PF02837,"Glycosyl hydrolases family 2, sugar binding domain",carbon processing,Other carbohydrate active enzymes
+PF02838,"Glycosyl hydrolase family 20, domain 2",carbon processing,Other carbohydrate active enzymes
+PF02839,Carbohydrate binding domain,carbon processing,Carbohydrate binding module
+PF02866,malate dehydrogenase,rTCA,rtca_I
+PF02866,"lactate/malate dehydrogenase, alpha/beta C-terminal domain",Fermentation,L-lactate dehydrogenase
+PF02882,"Tetrahydrofolate dehydrogenase/cyclohydrolase, NAD(P)-binding domain",homoacetogenesis,homoacetogenesis
+PF02884,"Polysaccharide lyase family 8, C-terminal beta-sandwich domain",carbon processing,Other carbohydrate active enzymes
+PF02903,"Alpha amylase, N-terminal ig-like domain",carbon processing,Carbohydrate binding module
+PF02922,Carbohydrate-binding module 48 (Isoamylase N-terminal domain),carbon processing,Carbohydrate binding module
+PF02927,N-terminal ig-like domain of cellulase,carbon processing,Other carbohydrate active enzymes
+PF02929,Beta galactosidase small chain,carbon processing,Other carbohydrate active enzymes
+PF02964,"Methane monooxygenase, hydrolase gamma chain",methanotrophy,methane oxidation to methanol II
+PF02973,"Sialidase, N-terminal domain",carbon processing,Carbohydrate binding module
+PF03065,Glycosyl hydrolase family 57,carbon processing,Glycoside hydrolase
+PF03067,Chitin binding domain,carbon processing,Carbohydrate binding module
+PF03070,TENA/THI-4/PQQC family,vitamin,vitamine_thiamine
+PF03139,[FeFe]-nitrogenase complex,nitrogen fixation,nitrogen fixation II (flavodoxin)
+PF03173,Putative carbohydrate binding domain,carbon processing,Other carbohydrate active enzymes
+PF03174,Chitobiase/beta-hexosaminidase C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF03186,CobD_Cbib,vitamin,vitamin_B12
+PF03198,Glycolipid anchored surface protein (GAS1),carbon processing,Glycoside hydrolase
+PF03200,Mannosyl oligosaccharide glucosidase,carbon processing,Glycoside hydrolase
+PF03201,H2-forming methylene-H4MPT dehydrogenase,methanogenesis,methanogenesis_co2
+PF03206,Nitrogen fixation protein NifW,nitrogen fixation,nitrogen fixation
+PF03331,unkown,carbon processing,Carbohydrate esterase
+PF03370,Putative phosphatase regulatory subunit,carbon processing,Carbohydrate binding module
+PF03422,Carbohydrate binding module (family 6),carbon processing,Carbohydrate binding module
+PF03423,Carbohydrate binding domain (family 25),carbon processing,Carbohydrate binding module
+PF03424,Carbohydrate binding domain (family 17/28),carbon processing,Carbohydrate binding module
+PF03425,Carbohydrate binding domain (family 11),carbon processing,Carbohydrate binding module
+PF03426,Carbohydrate binding domain (family 15),carbon processing,Carbohydrate binding module
+PF03427,Carbohydrate binding domain (family 19),carbon processing,Carbohydrate binding module
+PF03443,Glycosyl hydrolase family 61,carbon processing,Glycoside hydrolase
+PF03460,assimilatory sulfite reductase/nitrite reductase (dissimilatory),sulfate reduction,sulfate reduction I (assimilatory)
+PF03461,dissimilatory sulfite reductase,sulfate reduction,sulfate reduction V (dissimilatory)
+PF03464,DsrK DsrC-disulfide reductase,sulfate reduction,sulfate reduction IV (dissimilatory)
+PF03465,dissimilatory sulfite reductase,sulfate reduction,sulfate reduction IV (dissimilatory)
+PF03466,dissimilatory sulfite reductase,sulfate reduction,sulfate reduction V (dissimilatory)
+PF03512,Glycosyl hydrolase family 52,carbon processing,Glycoside hydrolase
+PF03562,MltA specific insert domain,carbon processing,Glycoside hydrolase
+PF03598,acetyl-CoA decarbonylase/synthase complex _ subunit,methanogenesis,methanogenesis_acetate
+PF03599,acetyl-CoA decarbonylase/synthase complex __ component,methanogenesis,methanogenesis_acetate
+PF03632,Glycosyl hydrolase family 65 central catalytic domain,carbon processing,Glycoside hydrolase
+PF03633,"Glycosyl hydrolase family 65, C-terminal domain",carbon processing,Other carbohydrate active enzymes
+PF03636,"Glycosyl hydrolase family 65, N-terminal domain",carbon processing,Other carbohydrate active enzymes
+PF03639,Glycosyl hydrolase family 81,carbon processing,Glycoside hydrolase
+PF03644,Glycosyl hydrolase family 85,carbon processing,Glycoside hydrolase
+PF03648,Glycosyl hydrolase family 67 N-terminus,carbon processing,Other carbohydrate active enzymes
+PF03659,Glycosyl hydrolase family 71,carbon processing,Glycoside hydrolase
+PF03662,"Glycosyl hydrolase family 79, N-terminal domain",carbon processing,Glycoside hydrolase
+PF03663,Glycosyl hydrolase family 76,carbon processing,Glycoside hydrolase
+PF03664,Glycosyl hydrolase family 62,carbon processing,Glycoside hydrolase
+PF03714,Bacterial pullanase-associated domain,carbon processing,Carbohydrate binding module
+PF03718,Glycosyl hydrolase family 49,carbon processing,Glycoside hydrolase
+PF03737,Demethylmenaquinone methyltransferase,vitamin,menaquinone (vitamin K2)
+PF03740,Pyridoxal phosphate biosynthesis protein PdxJ,vitamin,viamin_pyridoxal
+PF03744,6-carboxyhexanoate--CoA ligase,vitamin,vitamin_biotin
+PF03892,periplasmic nitrate reductase,nitrate reduction,"nitrate reduction X (periplasmic, dissimilatory)"
+PF03927,periplasmic nitrate reductase,nitrate reduction,"nitrate reduction X (periplasmic, dissimilatory)"
+PF03951,"glutamine synthetase, type I",nitrate reduction,nitrate reduction VI (assimilatory)
+PF03971,isocitrate dehydrogenase,rTCA,rtca_I
+PF04077,DsrEFH hexamer,sulfur oxidation,sulfur oxidation IV (intracellular sulfur)
+PF04166,Pyridoxal phosphate biosynthetic protein PdxA,vitamin,viamin_pyridoxal
+PF04206,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF04207,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF04208,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF04210,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF04211,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF04216,Protein involved in formate dehydrogenase formation,syntrophy,FDH
+PF04319,NifZ domain,nitrogen fixation,nitrogen fixation
+PF04358,DsrC dimer,sulfur oxidation,sulfur oxidation IV (intracellular sulfur)
+PF04422,"Coenzyme F420 hydrogenase/dehydrogenase, beta subunit N-term",syntrophy,FDH
+PF04432,"Coenzyme F420 hydrogenase/dehydrogenase, beta subunit C terminus",syntrophy,FDH
+PF04609,Methyl-coenzyme M reductase operon protein C,methanogenesis,methanogenesis
+PF04616,Glycosyl hydrolases family 43,carbon processing,Glycoside hydrolase
+PF04744,ammonia monooxygenase,ammonia oxidation,ammonia oxidation I (aerobic)
+PF04744,particulate methane monooxygenase hydroxylase component,methanotrophy,methane oxidation to methanol II
+PF04853,Plant neutral invertase,carbon processing,Glycoside hydrolase
+PF04891,NifQ,nitrogen fixation,nitrogen fixation
+PF04896,particulate methane monooxygenase hydroxylase component,methanotrophy,methane oxidation to methanol II
+PF04898,glutamate synthase,nitrate reduction,nitrate reduction V (assimilatory)
+PF05071,NADH ubiquinone oxidoreductase subunit NDUFA12,syntrophy,FeS oxidoreductase
+PF05088,glutamate dehydrogenase (NADP+),nitrate reduction,nitrate reduction V (assimilatory)
+PF05089,Alpha-N-acetylglucosaminidase (NAGLU) tim-barrel domain,carbon processing,Glycoside hydrolase
+PF05187,Electron transfer flavoprotein-ubiquinone oxidoreductase,syntrophy,Electron transfer flavoprotein-ubiquinone oxidoreductase
+PF05270,Alpha-L-arabinofuranosidase B (ABFB),carbon processing,Carbohydrate binding module
+PF05345,Putative Ig domain,carbon processing,Other carbohydrate active enzymes
+PF05426,,carbon processing,Polysaccharide lyase
+PF05440,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF05448,,carbon processing,Carbohydrate esterase
+PF05573,nitrous oxide reductase,nitrate reduction, nitrate reduction I (denitrification)
+PF05592,Bacterial alpha-L-rhamnosidase,carbon processing,Glycoside hydrolase
+PF05683,fumarase,rTCA,rtca_I
+PF05838,Predicted lysozyme (DUF847),carbon processing,Glycoside hydrolase
+PF06026,ribose 5-phosphate isomerase,calvin_cycle,calvin_cycle
+PF06165,Glycosyltransferase family 36,carbon processing,Other carbohydrate active enzymes
+PF06202,"Amylo-alpha-1,6-glucosidase",carbon processing,Other carbohydrate active enzymes
+PF06204,Putative carbohydrate binding domain,carbon processing,Other carbohydrate active enzymes
+PF06205,Glycosyltransferase 36 associated family,carbon processing,Other carbohydrate active enzymes
+PF06213,CobT,vitamin,vitamin_B12
+PF06240,carbon monoxide dehydrogenase,wood_ljungdahl,wood_ljungdahl
+PF06283,Trehalose utilisation,carbon processing,Other carbohydrate active enzymes
+PF06434,aconitase,rTCA,rtca
+PF06483,Chitinase C,carbon processing,Other carbohydrate active enzymes
+PF06574,FAD synthetase,vitamin,viamin_riboflavin
+PF06955,Xyloglucan endo-transglycosylase (XET) C-terminus,carbon processing,Other carbohydrate active enzymes
+PF06964,Alpha-L-arabinofuranosidase C-terminus,carbon processing,Glycoside hydrolase
+PF06968,Biotin and Thiamin Synthesis associated domain,vitamin,vitamine_thiamine
+PF07155,"ECF-type riboflavin transporter, S component",vitamin,viamin_riboflavin
+PF07335,Fungal chitosanase,carbon processing,Glycoside hydrolase
+PF07456,Heptaprenyl diphosphate synthase component I,vitamin,menaquinone (vitamin K2)
+PF07470,Glycosyl Hydrolase Family 88,carbon processing,Glycoside hydrolase
+PF07477,Glycosyl hydrolase family 67 C-terminus,carbon processing,Other carbohydrate active enzymes
+PF07488,Glycosyl hydrolase family 67 middle domain,carbon processing,Glycoside hydrolase
+PF07492,Neutral trehalase Ca2+ binding domain,carbon processing,Other carbohydrate active enzymes
+PF07523,Bacterial Ig-like domain (group 3),carbon processing,Other carbohydrate active enzymes
+PF07532,Bacterial Ig-like domain (group 4),carbon processing,Other carbohydrate active enzymes
+PF07554,Uncharacterised Sugar-binding Domain,carbon processing,Other carbohydrate active enzymes
+PF07555,beta-N-acetylglucosaminidase,carbon processing,Other carbohydrate active enzymes
+PF07683,CobW C terminal,vitamin,vitamin_B12
+PF07745,Glycosyl hydrolase family 53,carbon processing,Glycoside hydrolase
+PF07748,Glycosyl hydrolases family 38 C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF07821,Alpha-amylase C-terminal beta-sheet domain,carbon processing,Other carbohydrate active enzymes
+PF07971,Glycosyl hydrolase family 92,carbon processing,Glycoside hydrolase
+PF07983,X8 domain,carbon processing,Carbohydrate binding module
+PF08124,"Polysaccharide lyase family 8, N terminal alpha-helical domain",carbon processing,Other carbohydrate active enzymes
+PF08244,Glycosyl hydrolases family 32 C terminal,carbon processing,Other carbohydrate active enzymes
+PF08306,Glycosyl hydrolase family 98,carbon processing,Glycoside hydrolase
+PF08307,Glycosyl hydrolase family 98 C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF08329,"Chitinase A, N-terminal domain",carbon processing,Other carbohydrate active enzymes
+PF08531,Alpha-L-rhamnosidase N-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF08532,Beta-galactosidase trimerisation domain,carbon processing,Other carbohydrate active enzymes
+PF08533,Beta-galactosidase C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF08543,Phosphomethylpyrimidine kinase,vitamin,vitamine_thiamine
+PF08546,Ketopantoate reductase PanE/ApbA C terminal,vitamin,vitamine_thiamine
+PF08673,"Phosphoserine phosphatase RsbU, N-terminal domain",AA synthesis,glycine_serine
+PF09087,"Cyclomaltodextrinase, N-terminal",carbon processing,Other carbohydrate active enzymes
+PF09136,"Glucodextranase, domain B",carbon processing,Other carbohydrate active enzymes
+PF09137,"Glucodextranase, domain N",carbon processing,Other carbohydrate active enzymes
+PF09163,"Formate dehydrogenase N, transmembrane",syntrophy,membranebound FDH
+PF09163,formate dehydrogenase N,nitrate reduction,nitrate reduction III (dissimilatory)
+PF09206,"Alpha-L-arabinofuranosidase B, catalytic",carbon processing,Glycoside hydrolase
+PF09212,Carbohydrate binding module 27,carbon processing,Carbohydrate binding module
+PF09242,flavocytochrome c sulfide dehydrogenase,sulfur oxidation,sulfide oxidation II (sulfide dehydrogenase)
+PF09261,"Alpha mannosidase, middle domain",carbon processing,Other carbohydrate active enzymes
+PF09472,methyl-H4MPT:coenzyme M methyltransferase,methanogenesis,methanogenesis_co2
+PF09478,Carbohydrate binding domain CBM49,carbon processing,Carbohydrate binding module
+PF09512,Thiamine-precursor transporter protein (ThiW),vitamin,vitamine_thiamine
+PF09515,Thiamine transporter protein (Thia_YuaJ),vitamin,vitamine_thiamine
+PF10120,Thiamine-phosphate synthase,vitamin,vitamine_thiamine
+PF10125,"NADH dehydrogenase I, subunit N related protein",syntrophy,membranebound H2ase
+PF10415,fumarase,rTCA,rtca_I
+PF10435,"Beta-galactosidase, domain 2",carbon processing,Other carbohydrate active enzymes
+PF10438,Cyclo-malto-dextrinase C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF10566,Glycoside hydrolase 97,carbon processing,Glycoside hydrolase
+PF10588,NADH-ubiquinone oxidoreductase-G iron-sulfur binding region,syntrophy,FeS oxidoreductase
+PF10589,NADH-ubiquinone oxidoreductase-F iron-sulfur binding region,syntrophy,FeS oxidoreductase
+PF10590,Pyridoxine 5'-phosphate oxidase C-terminal dimerisation region,vitamin,viamin_pyridoxal
+PF10633,"NPCBM-associated, NEW3 domain of alpha-galactosidase",carbon processing,Carbohydrate binding module
+PF10664,NADH:quinone oxidoreductase I,nitrate reduction,nitrate reduction VIII (dissimilatory)
+PF11390,NADH-dependant formate dehydrogenase delta subunit FdsD,syntrophy,NADH-linked FDH
+PF11760,CbiG N terminuas,vitamin,vitamin_B12
+PF11761,CbiG central region,vitamin,vitamin_B12
+PF11790,Glycosyl hydrolase catalytic core,carbon processing,Other carbohydrate active enzymes
+PF11791,aconitase,rTCA,rtca_I
+PF11909,NADH:quinone oxidoreductase I,nitrate reduction,nitrate reduction VIII (dissimilatory)
+PF11910,NADH:quinone oxidoreductase I,nitrate reduction,nitrate reduction VIII (dissimilatory)
+PF11975,Family 4 glycosyl hydrolase C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF12123,N-acetylmuramoyl-l-alanine amidase,carbon processing,Other carbohydrate active enzymes
+PF12225,methylene tetrahydrofolate reductase,wood_ljungdahl,wood_ljungdahl
+PF12437,"glutamine synthetase, type III",nitrate reduction,nitrate reduction VI (assimilatory)
+PF12466,glutamate dehydrogenase,nitrate reduction,nitrate reduction V (assimilatory)
+PF12555,Thiamine pyrophosphokinase C terminal,vitamin,vitamine_thiamine
+PF12708,Pectate lyase superfamily protein,carbon processing,Polysaccharide lyase
+PF12766,Pyridoxamine 5'-phosphate oxidase,vitamin,viamin_pyridoxal
+PF12822,Protein of unknown function (DUF3816),vitamin,viamin_riboflavin
+PF12876,Sugar-binding cellulase-like,carbon processing,Other carbohydrate active enzymes
+PF12899,Endo-alpha-N-acetylgalactosaminidase glycoside hydrolase,carbon processing,Glycoside hydrolase
+PF12900,Pyridoxamine 5'-phosphate oxidase,vitamin,viamin_pyridoxal
+PF12971,Alpha-N-acetylglucosaminidase (NAGLU) N-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF12972,Alpha-N-acetylglucosaminidase (NAGLU) C-terminal domain,carbon processing,Other carbohydrate active enzymes
+PF13004,Bacteroidetes-Associated Carbohydrate-binding Often N-terminal,carbon processing,Other carbohydrate active enzymes
+PF13292,1-deoxy-D-xylulose-5-phosphate synthase,vitamin,vitamine_thiamine
+PF13435,cytochrome c554,ammonia oxidation,ammonia oxidation IV (autotrophic ammonia oxidizers)
+PF13631,cytochrome bc1,Fe oxidation,Fe(II) oxidation
+PF13686,DsrEFH hexamer,sulfur oxidation,sulfur oxidation IV (intracellular sulfur)
+PF14100,particulate methane monooxygenase hydroxylase component,ammonia oxidation,ammonia oxidation I (aerobic)
+PF14100,particulate methane monooxygenase hydroxylase component,methanotrophy,methane oxidation to methanol II
+PF14453,ThiS-like ubiquitin,vitamin,vitamine_thiamine
+PF14710,respiratory nitrate reductase,nitrate reduction, nitrate reduction I (denitrification)
+PF14711,respiratory nitrate reductase,nitrate reduction, nitrate reduction I (denitrification)
+PF15461,"Beta-carotene 15,15'-dioxygenase",vitamin,viamin_retinal
+PF16114,ATP-citrate lyase,rTCA,rtca_I
+PF16582,Middle domain of thiamine pyrophosphate,vitamin,menaquinone (vitamin K2)
+PF16694,cytochrome P460,ammonia oxidation,ammonia oxidation (aerobic)

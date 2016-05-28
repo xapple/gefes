@@ -58,8 +58,8 @@
 			<integer>36477</integer>
 			<key>Points</key>
 			<array>
-				<string>{681.0007769158251, 1032.2464211548324}</string>
-				<string>{530.04312734573841, 1117.7535711995481}</string>
+				<string>{680.73580557938737, 1032.2444428877302}</string>
+				<string>{528.15896759656653, 1117.7558764602397}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -88,7 +88,7 @@
 			<array>
 				<dict>
 					<key>Bounds</key>
-					<string>{{457, 1118}, {120.5, 14}}</string>
+					<string>{{454.96063404918652, 1118}, {120.5, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -124,7 +124,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{457, 1132}, {120.5, 14}}</string>
+					<string>{{454.96063404918652, 1132}, {120.5, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -2619,8 +2619,8 @@
 			<integer>2903</integer>
 			<key>Points</key>
 			<array>
-				<string>{916.67540266693538, 622.92042143470326}</string>
-				<string>{1072.783176625451, 652.90386059307866}</string>
+				<string>{967.57963491227338, 622.86605506469596}</string>
+				<string>{1077.2243316965983, 631.65348620877444}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -2649,7 +2649,7 @@
 			<array>
 				<dict>
 					<key>Bounds</key>
-					<string>{{1048.75, 653}, {120.5, 14}}</string>
+					<string>{{1077.7228808895404, 629.29134429233272}, {120.5, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -2685,7 +2685,7 @@
 				</dict>
 				<dict>
 					<key>Bounds</key>
-					<string>{{1048.75, 667}, {120.5, 14}}</string>
+					<string>{{1077.7228808895404, 643.29134429233272}, {120.5, 14}}</string>
 					<key>Class</key>
 					<string>ShapedGraphic</string>
 					<key>FitText</key>
@@ -2714,7 +2714,7 @@
 {\colortbl;\red255\green255\blue255;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
 
-\f0\fs24 \cf0 - Depth profiles}</string>
+\f0\fs24 \cf0 - Hit profiles}</string>
 						<key>VerticalPad</key>
 						<integer>0</integer>
 					</dict>
@@ -7776,7 +7776,7 @@ Returns a tree}</string>
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2016-05-25 10:34:06 +0000</string>
+	<string>2016-05-26 17:43:56 +0000</string>
 	<key>Modifier</key>
 	<string>Lucas Sinclair</string>
 	<key>NotesVisible</key>
@@ -7864,15 +7864,15 @@ Returns a tree}</string>
 		<key>SidebarWidth</key>
 		<integer>0</integer>
 		<key>VisibleRegion</key>
-		<string>{{433, 192}, {1120, 732}}</string>
+		<string>{{33.333333333333336, 343.58974358974359}, {1435.8974358974358, 938.46153846153834}}</string>
 		<key>Zoom</key>
-		<real>1</real>
+		<real>0.78000000000000003</real>
 		<key>ZoomValues</key>
 		<array>
 			<array>
 				<string>Canvas 1</string>
-				<real>1</real>
-				<real>0.98000001907348633</real>
+				<real>0.78000000000000003</real>
+				<real>0.80000000000000004</real>
 			</array>
 		</array>
 	</dict>

@@ -12,6 +12,10 @@ import os
 # Internal modules #
 import gefes
 
+# First party modules #
+from plumbing.processes import prll_map
+from plumbing.timer     import Timer
+
 # Third party modules #
 from tqdm import tqdm
 
@@ -177,7 +181,8 @@ for a in p.assemblies.values():
     for c in tqdm(a.results.contigs): c.annotation.run()
 
 ################################ Hit profile ##################################
-bt.merged.results.hit_profile
+prll_map(lambda b: b.pfams.run(cpus=1), bins)
+with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
 
 ################################## Plots ######################################
 for s in tqdm(samples):

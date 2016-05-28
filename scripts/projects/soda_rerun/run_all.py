@@ -11,6 +11,11 @@ ipython -i ~/repos/gefes/scripts/projects/soda_rerun/run.py
 # Internal modules #
 import gefes
 
+# First party modules #
+from plumbing.processes import prll_map
+from plumbing.timer     import Timer
+from plumbing.cache     import LazyList
+
 # Third party modules #
 from tqdm import tqdm
 
@@ -154,6 +159,10 @@ for c in proj.assembly.results.contigs: c.taxonomy.run()
 
 ################################## Prokka #####################################
 for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
+
+################################ Hit profile ##################################
+prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)
+with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
 
 ################################## Plots ######################################
 for s in tqdm(samples):

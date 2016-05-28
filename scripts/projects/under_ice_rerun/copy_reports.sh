@@ -1,1 +1,1 @@
- /usr/local/Cellar/rsync/3.1.2/bin/rsync -avz --exclude soda_rerun warwick-node:/home/lucas/GEFES/reports/ ~/repos/ice_manuscript/data_analysis_shotgun/reports/
+/usr/local/Cellar/rsync/3.1.2/bin/rsync -avz --exclude soda_rerun warwick-node:/home/lucas/GEFES/reports/ ~/repos/ice_manuscript/data_analysis_shotgun/reports/
