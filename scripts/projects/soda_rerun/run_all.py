@@ -161,8 +161,8 @@ for c in proj.assembly.results.contigs: c.taxonomy.run()
 for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
 
 ################################ Hit profile ##################################
-prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)
-with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
+with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 1h00
+with Timer(): proj.merged.results.hit_profile.run()                      # 0h15
 
 ################################## Plots ######################################
 for s in tqdm(samples):
