@@ -107,7 +107,7 @@ class HitProfile(object):
         hmm = hmm.sort_values('e_value')
         hmm = hmm.drop_duplicates('target_name')
         # Drop small e-values #
-        hmm = hmm[hmm['e_value'] <= 0.001]
+        hmm = hmm[hmm['e_value'] <= 1e-10]
         # Build new dataframe #
         result = defaultdict(lambda: defaultdict(int))
         for index, row in hmm.iterrows():
