@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket, shutil
+import os, socket, shutil, inspect
 from collections import OrderedDict
 
 # Internal modules #
@@ -121,13 +121,11 @@ class AssemblyTemplate(ReportTemplate):
     def bins_contig_dist(self):
         caption = "Bin number of contigs distribution"
         graph = self.assembly.results.binner.results.graphs.bins_contig_dist(x_scale='symlog')
-        label = "bins_contig_dist"
-        return str(ScaledFigure(graph.path, caption, label))
+        return str(ScaledFigure(graph.path, caption, inspect.stack()[0][3]))
     def bins_nucleotide_dist(self):
         caption = "Bin total nucleotide size distribution"
         graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_scale='symlog')
-        label = "bins_nucleotide_dist"
-        return str(ScaledFigure(graph.path, caption, label))
+        return str(ScaledFigure(graph.path, caption, inspect.stack()[0][3]))
 
     # Evaluation #
     def evaluation(self):
@@ -187,13 +185,16 @@ class AssemblyTemplate(ReportTemplate):
 
     # Visualization #
     def visualization(self):
-        return False
         if not self.assembly.results.binner: return False
-        params = ('contig_ordination_graph',)
+        params = ('bin_genes_x_pfams', 'bin_bps_x_genes')
         return {p:getattr(self, p) for p in params}
-    def contig_ordination_graph(self):
-        caption = "Bin total nucleotide size distribution"
-        graph = self.assembly.results.binner.results.graphs.bins_nucleotide_dist(x_log=True)
-        label = "bins_nucleotide_dist"
-        return str(ScaledFigure(graph.path, caption, label))
+    def bin_genes_x_pfams(self):
+        caption = "Comparison of predicted number of genes against the number of predicted PFAMs"
+        graph = self.assembly.results.binner.results.graphs.bin_genes_x_pfams()
+        return str(ScaledFigure(graph.path, caption, inspect.stack()[0][3]))
+    def bin_bps_x_genes(self):
+        caption = "Comparison of cumulative length in base pairs against the number of predicted genes"
+        graph = self.assembly.results.binner.results.graphs.bin_bps_x_genes()
+        return str(ScaledFigure(graph.path, caption, inspect.stack()[0][3]))
+
 

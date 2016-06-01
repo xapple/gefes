@@ -7,6 +7,8 @@ A script to generate all the reports of the under_ice_rerun project.
 # Modules #
 import gefes
 from tqdm import tqdm
+from plumbing.processes import prll_map
+from plumbing.timer     import Timer
 
 # Three projects #
 bt = gefes.projects['under_ice_rerun_bt'].load()
@@ -23,6 +25,8 @@ projects = (bt, lb, kt)
 for p in projects:
     print "Generating report for merged assembly %s" % p
     print p.merged.report.generate()
+
+with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
 
 # Samples #
 print "Generating reports for %i samples" % len(samples)

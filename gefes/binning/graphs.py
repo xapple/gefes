@@ -4,11 +4,12 @@
 from plumbing.graphs import Graph
 
 # Third party modules #
-import numpy
+import numpy, scipy
 from matplotlib import pyplot
 
 # Constants #
-__all__ = ['BinContigDistribution', 'BinNucleotideDistribution', 'BinGenesPredictedDist']
+__all__ = ['BinContigDistribution', 'BinNucleotideDistribution', 'BinGenesOnPfams',
+           'BinBasesOnGenes']
 
 ################################################################################
 class BinContigDistribution(Graph):
@@ -72,29 +73,61 @@ class BinNucleotideDistribution(Graph):
         return self
 
 ################################################################################
-class BinGenesPredictedDist(Graph):
-    """bins_genes_predicted_dist"""
-    short_name = 'bins_genes_predicted_dist'
-    sep        = 'y'
-    y_scale    = 'symlog'
+class BinGenesOnPfams(Graph):
+    """bin_genes_x_pfams"""
 
-    def plot(self, bins=80, **kwargs):
+    short_name = 'bin_genes_x_pfams'
+    title      = 'Bins: predicted number of genes VS the number of predicted PFAMs'
+    x_label    = 'Number of predicted genes in bin'
+    y_label    = 'Number of distinct predicted PFAMs in bin'
+
+    def plot(self, **kwargs):
         # Data #
-        counts = [b.evaluation.results[''] for b in self.parent.bins]
-        # Linear bins in logarithmic space #
-        if 'log' in kwargs.get('x_scale', ''):
-            start, stop = numpy.log10(1), numpy.log10(max(counts))
-            bins = list(numpy.logspace(start=start, stop=stop, num=bins))
-            bins.insert(0, 0)
+        x      = [b.faa.count                 for b in self.parent.bad_bins]
+        y      = [len(b.pfams.distinct_pfams) for b in self.parent.bad_bins]
+        x_good = [b.faa.count                 for b in self.parent.good_bins]
+        y_good = [len(b.pfams.distinct_pfams) for b in self.parent.good_bins]
         # Plot #
         fig = pyplot.figure()
-        pyplot.hist(counts, bins=bins, color='gray')
+        pyplot.plot(x,      y,      color='gray', label='Other bins')
+        pyplot.plot(x_good, y_good, color='red',  label='Bins marked good')
+        # Regression #
+        slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x+x_good,y+y_good)
+        regress_y = intercept + slope * x
+        pyplot.plot(x, regress_y, 'k-', label='Linear regression R=%.2g' % r_value)
+        pyplot.legend()
         axes = pyplot.gca()
-        # Information #
-        title = 'Distribution of the total nucleotide count in the bins'
-        axes.set_title(title)
-        axes.set_xlabel('Number of nucleotides in a bin')
-        axes.set_ylabel('Number of bins with that many nucleotides in them')
+        # Save it #
+        self.save_plot(fig, axes, **kwargs)
+        pyplot.close(fig)
+        # For convenience #
+        return self
+
+################################################################################
+class BinBasesOnGenes(Graph):
+    """bin_bps_x_genes"""
+
+    short_name = 'bin_bps_x_genes'
+    title      = 'Bins: length in base pairs VS the number of predicted genes'
+    x_label    = 'Cumulative length in base pairs of all contigs in bin'
+    y_label    = 'Number of predicted genes in bin'
+
+    def plot(self, **kwargs):
+        # Data #
+        x      = [sum(map(len, b.contigs)) for b in self.parent.bad_bins]
+        y      = [b.faa.count              for b in self.parent.bad_bins]
+        x_good = [sum(map(len, b.contigs)) for b in self.parent.good_bins]
+        y_good = [b.faa.count              for b in self.parent.good_bins]
+        # Plot #
+        fig = pyplot.figure()
+        pyplot.plot(x,      y,      color='gray', label='Other bins')
+        pyplot.plot(x_good, y_good, color='red',  label='Bins marked good')
+        # Regression #
+        slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x+x_good,y+y_good)
+        regress_y = intercept + slope * x
+        pyplot.plot(x, regress_y, 'k-', label='Linear regression R=%.2g' % r_value)
+        pyplot.legend()
+        axes = pyplot.gca()
         # Save it #
         self.save_plot(fig, axes, **kwargs)
         pyplot.close(fig)

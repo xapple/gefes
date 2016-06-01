@@ -11,6 +11,7 @@ from seqsearch.databases.tigrfam import tigrfam
 # First party modules #
 from fasta import FASTA
 from plumbing.autopaths import FilePath
+from plumbing.cache     import property_cached
 
 # Third party modules #
 import sh, pandas
@@ -37,7 +38,7 @@ class HmmQuery(object):
     def __init__(self, query_path,                    # The input sequences
                  db_path      = pfam.hmm_db,          # The database to search
                  seq_type     = 'prot' or 'nucl',     # The seq type of the query_path file
-                 e_value      = 0.001,                # The search threshold
+                 e_value      = 1e-10,                # The search threshold
                  params       = None,                 # Add extra params for the command line
                  out_path     = None,                 # Where the results will be dropped
                  executable   = None,                 # If you want a specific binary give the path
@@ -104,8 +105,9 @@ class HmmQuery(object):
             except ValueError:
                 print "no: ", fmt
 
-    @property
+    @property_cached
     def hits(self):
+        """Here the target_name is the contig and the query_accession is the pfam"""
         # Check #
         if not self.out_path:
             raise Exception("You can't access results from HMMER before running the algorithm.")
@@ -123,3 +125,10 @@ class HmmQuery(object):
                                                        names            = fields)
         # Result #
         return load(self.out_path)
+
+    @property_cached
+    def distinct_pfams(self):
+        """The distinct PFAMS that were found in this search, in a set"""
+        pfams = self.hits[self.hits['e_value'] <= self.e_value]
+        pfams = set(row['query_accession'].split('.')[0] for i, row in pfams.iterrows())
+        return pfams

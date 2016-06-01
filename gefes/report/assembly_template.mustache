@@ -89,7 +89,14 @@ In total {{percent_mapped_to_good_bins}} of the original reads from all samples 
 {{#visualization}}
 Visualization
 -------------
-To better view the binning that was performed, one can plot every contig in an ordination plot, where contigs with similar coverage and nucleotide composition are placed closer together.
+To better view the binning that was performed, we can visualize a few of the properties of the bins. The first graph is a regression of all bins comparing their predicted number of genes against the number of predicted PFAMs.
 
-{{contig_ordination_graph}}
+{{bin_genes_x_pfams}}
+
+The second graph is a regression of all bins comparing their cumulative length in base pairs against the number of predicted genes.
+
+{{bin_bps_x_genes}}
+
+One can plot every contig in an ordination plot, where contigs with similar coverage and nucleotide composition are placed closer together.
+
 {{/visualization}}
