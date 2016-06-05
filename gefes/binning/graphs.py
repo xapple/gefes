@@ -80,6 +80,9 @@ class BinGenesOnPfams(Graph):
     title      = 'Bins: predicted number of genes VS the number of predicted PFAMs'
     x_label    = 'Number of predicted genes in bin'
     y_label    = 'Number of distinct predicted PFAMs in bin'
+    sep        = 'x'
+    y_grid     = True
+    left       = 0.1
 
     def plot(self, **kwargs):
         # Data #
@@ -89,11 +92,11 @@ class BinGenesOnPfams(Graph):
         y_good = [len(b.pfams.distinct_pfams) for b in self.parent.good_bins]
         # Plot #
         fig = pyplot.figure()
-        pyplot.plot(x,      y,      color='gray', label='Other bins')
-        pyplot.plot(x_good, y_good, color='red',  label='Bins marked good')
+        pyplot.plot(x,      y,      'bo', label='Other bins')
+        pyplot.plot(x_good, y_good, 'ro', label='Bins marked good')
         # Regression #
         slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x+x_good,y+y_good)
-        regress_y = intercept + slope * x
+        regress_y = intercept + slope * numpy.array(x)
         pyplot.plot(x, regress_y, 'k-', label='Linear regression R=%.2g' % r_value)
         pyplot.legend()
         axes = pyplot.gca()
@@ -111,6 +114,9 @@ class BinBasesOnGenes(Graph):
     title      = 'Bins: length in base pairs VS the number of predicted genes'
     x_label    = 'Cumulative length in base pairs of all contigs in bin'
     y_label    = 'Number of predicted genes in bin'
+    sep        = 'x'
+    y_grid     = True
+    left       = 0.1
 
     def plot(self, **kwargs):
         # Data #
@@ -120,11 +126,11 @@ class BinBasesOnGenes(Graph):
         y_good = [b.faa.count              for b in self.parent.good_bins]
         # Plot #
         fig = pyplot.figure()
-        pyplot.plot(x,      y,      color='gray', label='Other bins')
-        pyplot.plot(x_good, y_good, color='red',  label='Bins marked good')
+        pyplot.plot(x,      y,      'bo', label='Other bins')
+        pyplot.plot(x_good, y_good, 'ro',  label='Bins marked good')
         # Regression #
         slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x+x_good,y+y_good)
-        regress_y = intercept + slope * x
+        regress_y = intercept + slope * numpy.array(x)
         pyplot.plot(x, regress_y, 'k-', label='Linear regression R=%.2g' % r_value)
         pyplot.legend()
         axes = pyplot.gca()
