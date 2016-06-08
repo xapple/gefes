@@ -10,7 +10,6 @@ from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
-from gefes.ckan.ckan_sample      import CkanSample
 
 # First party modules #
 from plumbing.autopaths import AutoPaths, FilePath, DirectoryPath
@@ -160,11 +159,6 @@ class Sample(object):
                             (self.project.assembly_71, self.mapper_71),
                             (self.project.assembly_81, self.mapper_81),
                             (self.project.merged, self.mapper_merged)))
-
-    @property_cached
-    def ckan(self):
-        """Takes care of adding a sample to a distant CKAN server."""
-        return CkanSample(self)
 
     #------------------------------ Special cases ---------------------------#
     def merge_lanes(self, remove_orig=False):

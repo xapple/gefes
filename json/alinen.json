@@ -50,7 +50,7 @@
             "depth":                   [0, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05215996"
         },
 
         {
@@ -64,7 +64,7 @@
             "depth":                   [1, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05215997"
         },
 
         {
@@ -78,7 +78,7 @@
             "depth":                   [1.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05215998"
         },
 
         {
@@ -92,7 +92,7 @@
             "depth":                   [2, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05215999"
         },
 
         {
@@ -106,7 +106,7 @@
             "depth":                   [2.2, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216000"
         },
 
         {
@@ -120,7 +120,7 @@
             "depth":                   [2.4, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216001"
         },
 
         {
@@ -134,7 +134,7 @@
             "depth":                   [2.8, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216002"
         },
 
         {
@@ -148,7 +148,7 @@
             "depth":                   [3.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216003"
         },
 
         {
@@ -162,7 +162,7 @@
             "depth":                   [4, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216004"
         },
 
         {
@@ -176,7 +176,7 @@
             "depth":                   [4.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216005"
         },
 
         {
@@ -190,7 +190,7 @@
             "depth":                   [5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216006"
         },
 
         {
@@ -204,7 +204,7 @@
             "depth":                   [5.5, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216007"
         },
 
         {
@@ -218,7 +218,7 @@
             "depth":                   [6, "m"],
             "dna_after_purification":  [0, "ng/µl"],
 
-            "biosample":               "SAMNXXXXXXXX"
+            "biosample":               "SAMN05216008"
         }
     ]
 }

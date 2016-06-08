@@ -129,7 +129,7 @@ class ConcoctResults(object):
 
     @property_cached
     def bad_bins(self):
-        """Return all the bins that are not part of the good_bins. Still we don't want bins with no
+        """Return all the bins that are not part of the good_bins. Still, we don't want bins with no
         predicted proteins at all"""
         return [b for b in self.bins if b and b not in self.good_bins]
 
