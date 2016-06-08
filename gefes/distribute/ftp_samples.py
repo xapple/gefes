@@ -41,9 +41,9 @@ class SamplesToFTP(object):
             # Change to sub directory #
             self.ftp.chdir(self.sub_dir)
             # Upload #
-            if verbose: print "Uploading forward..."
+            if verbose: print "Uploading forward (%s)..." % sample.pair.fwd.size
             self.ftp.upload(sample.pair.fwd, self.base_name.format("forward"))
-            if verbose: print "Uploading reverse..."
+            if verbose: print "Uploading reverse (%s)..." % sample.pair.fwd.size
             self.ftp.upload(sample.pair.rev, self.base_name.format("reverse"))
             # Return #
             self.ftp.close()
