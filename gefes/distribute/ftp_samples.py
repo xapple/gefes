@@ -8,10 +8,10 @@ from tqdm import tqdm
 class SamplesToFTP(object):
     """Takes care of adding samples to a distant FTP server"""
 
-    address = "ftp-private.ncbi.nlm.nih.gov",
-    usrname = "subftp",
-    passwrd = "w4pYB9VQ",
-    dirctry = "/uploads/lucas.sinclair@me.com_Pm16RLfi",
+    address = "ftp-private.ncbi.nlm.nih.gov"
+    usrname = "subftp"
+    passwrd = "w4pYB9VQ"
+    dirctry = "/uploads/lucas.sinclair@me.com_Pm16RLfi"
     sub_dir = "PRJNA324769"
 
     def __init__(self, samples):
