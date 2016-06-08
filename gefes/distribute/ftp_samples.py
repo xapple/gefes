@@ -25,7 +25,7 @@ class SamplesToFTP(object):
         # Main loop #
         for sample in tqdm(self.samples):
             # Print #
-            if verbose: print sample.short_name + ' (' + sample.name + ')'
+            if verbose: print sample.name + ' (' + sample.long_name + ')'
             # Make names #
             self.base_name = sample.info['biosample'] + '_{}_reads.fastq.gz'
             # Test #
