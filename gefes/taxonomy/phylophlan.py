@@ -162,7 +162,7 @@ class PhylophlanResults(object):
 
     @property
     def tree(self):
-        return self.p.proj_tree
+        return self.base_dir + 'output/' + self.proj_code + '/' + self.proj_code + '.tree.int.nwk'
 
     @property
     def tree_ete(self):
@@ -177,6 +177,6 @@ class PhylophlanResults(object):
         of the bins."""
         # Prune it #
         tree   = self.tree_ete
-        pruned = tree.prune([b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
+        pruned = tree.prune(["bin_" + b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
         pruned.save(outfile=self.p.pruned_tree)
         return pruned

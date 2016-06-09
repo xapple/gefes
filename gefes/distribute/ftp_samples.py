@@ -22,6 +22,15 @@ class SamplesToFTP(object):
         # Connect #
         if verbose: print "Connecting to FTP server..."
         self.ftp = FTPHost(self.address, self.usrname, self.passwrd)
+        # Change to main directory #
+        if verbose: print "Changing directories..."
+        self.ftp.chdir(self.dirctry)
+        # Make directory #
+        if self.sub_dir not in self.ftp.listdir('.'):
+            if verbose: print "Making directories..."
+            self.ftp.mkdir(self.sub_dir)
+        # Change to sub directory #
+        self.ftp.chdir(self.sub_dir)
         # Main loop #
         for sample in tqdm(self.samples):
             # Print #
@@ -31,15 +40,6 @@ class SamplesToFTP(object):
             # Test #
             assert sample.pair.fwd.count_bytes > 36
             assert sample.pair.rev.count_bytes > 36
-            # Change to main directory #
-            if verbose: print "Changing directories..."
-            self.ftp.chdir(self.dirctry)
-            # Make directory #
-            if self.sub_dir not in self.ftp.listdir('.'):
-                if verbose: print "Making directories..."
-                self.ftp.mkdir(self.sub_dir)
-            # Change to sub directory #
-            self.ftp.chdir(self.sub_dir)
             # Upload #
             if verbose: print "Uploading forward (%s)..." % sample.pair.fwd.size
             self.ftp.upload(sample.pair.fwd, self.base_name.format("forward"))

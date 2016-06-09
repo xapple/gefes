@@ -27,7 +27,8 @@ class AssemblyResults(object):
 
     @property_cached
     def contigs(self):
-        """All the contigs produced returned as a list of our Contig custom objects."""
+        """All the contigs produced returned as a list of our Contig custom objects.
+        TODO: contig numbers and ids have an often of 1"""
         return [Contig(self.parent, record, num=i) for i,record in enumerate(self.contigs_fasta)]
 
     @property_cached

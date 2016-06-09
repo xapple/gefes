@@ -92,8 +92,8 @@ class TraitAnnotations(object):
         if verbose: print "Starting BLAST search."
         self.search.run()
         # Make the TSVs #
-        self.traits_x_contigs.to_csv(self.p.traits_x_bins.path, sep='\t', float_format='%.5g')
-        self.traits_x_bins.to_csv(self.p.traits_x_bins.path, sep='\t', float_format='%.5g')
+        self.traits_x_contigs.to_csv(self.p.traits_x_contigs.path, sep='\t', float_format='%.5g')
+        self.traits_x_bins.to_csv(   self.p.traits_x_bins.path,    sep='\t', float_format='%.5g')
         # Make the TSV #
         return self.p.traits_x_bins
 
@@ -123,6 +123,7 @@ class TraitAnnotations(object):
         for contig_name, row in self.traits_x_contigs.iterrows():
             bin_num = self.contig_to_bin[contig_name]
             for trait_name, e_value in row.iteritems():
+                if pandas.isnull(e_value): continue # Get rid of NaNs
                 result[trait_name][bin_num] = min(e_value, result[trait_name][bin_num])
         # Return #
         result = pandas.DataFrame(result)

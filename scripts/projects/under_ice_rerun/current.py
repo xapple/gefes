@@ -20,6 +20,4 @@ samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
 ###############################################################################
-for p in projects:
-    p.merged.report.generate()
-    break
+for proj in projects: proj.merged.results.trait_annotations.run()

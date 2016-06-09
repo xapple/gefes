@@ -17,6 +17,7 @@ from plumbing.processes import prll_map
 from plumbing.timer     import Timer
 
 # Third party modules #
+import sh
 from tqdm import tqdm
 
 # Constants #
@@ -186,6 +187,15 @@ with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
 
 ############################# Trait annotations ###############################
 for proj in projects: proj.merged.results.trait_annotations.run()
+
+contigs = set([c.name for c in [b for b in kt.merged.results.binner.results.good_bins if b.num == "25"][0]])
+df = kt.merged.results.trait_annotations.traits_x_contigs
+print df.loc[contigs & set(df.index)]
+def get_contig(c):
+    remote_path = kt.merged.results.contig_id_to_contig[c].fasta.absolute_path
+    local_path  = '/repos/ice_manuscript/data_analysis_shotgun/trait_annotations/contig_%s.fasta' % c
+    print 'rsync -avz --progress warwick-node:' + remote_path, local_path
+map(get_contig, ['contig03633', 'contig00503'])
 
 ################################## Plots ######################################
 for s in tqdm(samples):
