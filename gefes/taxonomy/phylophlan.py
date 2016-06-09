@@ -105,6 +105,8 @@ class Phylophlan(object):
                 _tty_in = True, # Without, it changes behavior
                 _out = self.p.stderr.path,
                 _err = self.p.stdout.path)
+        # Make tree pruned tree #
+        self.results.pruned_tree.save(outfile=self.p.pruned_tree)
         # Restore #
         os.chdir(current_dir)
 
@@ -174,9 +176,7 @@ class PhylophlanResults(object):
         of life and then pruning any node that is not connected to one
         of the bins."""
         # Prune it #
-        tree = self.tree_ete
-        tree = tree.prune([b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
-        # Save it #
-        out_path = self.p.pruned_tree
-        tree.save(outfile=out_path)
-        return out_path
+        tree   = self.tree_ete
+        pruned = tree.prune([b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
+        pruned.save(outfile=self.p.pruned_tree)
+        return pruned

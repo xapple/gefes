@@ -184,6 +184,9 @@ for a in p.assemblies.values():
 prll_map(lambda b: b.pfams.run(cpus=1), bins)
 with Timer(): prll_map(lambda p: p.merged.results.hit_profile.run(), projects)
 
+############################# Trait annotations ###############################
+for proj in projects: proj.merged.results.trait_annotations.run()
+
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name

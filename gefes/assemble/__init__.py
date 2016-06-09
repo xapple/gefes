@@ -4,7 +4,8 @@ from collections import OrderedDict
 # Internal modules #
 from gefes.assemble.contig import Contig
 from gefes.binning.concoct import Concoct
-from gefes.outputs.hit_profile import HitProfile
+from gefes.outputs.hit_profile       import HitProfile
+from gefes.outputs.trait_annotations import TraitAnnotations
 
 # First party modules #
 from fasta import FASTA
@@ -63,3 +64,8 @@ class AssemblyResults(object):
     def hit_profile(self):
         """Gather all the information to make a profile of the hits from a search."""
         return HitProfile(self.parent, self.p.hit_profile_dir)
+
+    @property_cached
+    def trait_annotations(self):
+        """Special zooming into a particular pathway."""
+        return TraitAnnotations(self.parent, self.p.traits_dir)

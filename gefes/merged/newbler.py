@@ -44,6 +44,7 @@ class Newbler(Merger):
     /bins/
     /report/report.pdf
     /hit_profile/
+    /traits/
     """
 
     def __repr__(self): return '<%s object kmer %s>' % (self.__class__.__name__, self.kmer_size)
