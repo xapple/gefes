@@ -163,12 +163,16 @@ for c in tqdm(lb.merged.results.contigs): c.proteins.results.faa.remove_trailing
 for c in tqdm(kt.merged.results.contigs): c.proteins.results.faa.remove_trailing_stars()
 
 ################################ Phylophlan ###################################
+# For each project #
 for b in tqdm(bt.merged.results.binner.results.bins): b.faa
 bt.merged.results.binner.results.taxonomy.run(cpus=32)
 for b in tqdm(lb.merged.results.binner.results.bins): b.faa
 lb.merged.results.binner.results.taxonomy.run(cpus=32)
 for b in tqdm(kt.merged.results.binner.results.bins): b.faa
 kt.merged.results.binner.results.taxonomy.run(cpus=32)
+
+# Combine Phylophlan tree #
+lump = Lump()
 
 ################################ Pfam ####################################
 for c in tqdm(proj.merged.results.binner.results.good_contigs): c.pfams.run(cpus=4)

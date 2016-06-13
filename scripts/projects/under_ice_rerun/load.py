@@ -11,6 +11,7 @@ import os
 
 # Internal modules #
 import gefes
+from gefes.groups.lump import Lump
 
 # First party modules #
 from plumbing.processes import prll_map
@@ -33,6 +34,9 @@ for s in lb.samples: s.load()
 for s in kt.samples: s.load()
 samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
+
+# Special lump #
+lump = Lump("ice_lump", projects)
 
 # The bins #
 bins = LazyList(lambda: kt.merged.results.binner.results.bins + \

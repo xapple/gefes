@@ -42,7 +42,7 @@ class Aggregate(object):
         self.name = name
         self.samples, self.children = samples, samples
         # Base directory #
-        if base_dir == None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
+        if base_dir is None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
         else: self.base_dir = base_dir
         # Delayed init #
         self.loaded = False
