@@ -172,7 +172,7 @@ for b in tqdm(kt.merged.results.binner.results.bins): b.faa
 kt.merged.results.binner.results.taxonomy.run(cpus=32)
 
 # Combine Phylophlan tree #
-lump = Lump()
+with Timer(): lump.run_phylophlan()
 
 ################################ Pfam ####################################
 for c in tqdm(proj.merged.results.binner.results.good_contigs): c.pfams.run(cpus=4)

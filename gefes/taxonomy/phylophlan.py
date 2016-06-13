@@ -65,7 +65,7 @@ class Phylophlan(object):
         path = self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt'
         return FilePath(path).exists
 
-    def __init__(self, binner, result_dir):
+    def __init__(self, binner, result_dir, proj_code=None):
         # Save attributes #
         self.binner, self.parent = binner, binner
         self.result_dir = result_dir
@@ -73,7 +73,8 @@ class Phylophlan(object):
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
         # Short project name #
-        self.proj_code = self.binner.samples[0].project.name
+        if proj_code is None: self.proj_code = self.binner.samples[0].project.name
+        else:                 self.proj_code = proj_code
 
     def run(self, cpus=None):
         # Variable threads #
@@ -139,17 +140,17 @@ class PhylophlanResults(object):
         # The results directory #
         self.results_dir = DirectoryPath(self.base_dir + 'output/' + self.proj_code + '/')
 
-    @property_cached
-    def files(self):
-        files = [self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt',
-                 self.base_dir + 'output/' + self.proj_code + '/imputed_conf_high-conf.txt',
-                 self.base_dir + 'output/' + self.proj_code + '/imputed_conf_medium-conf.txt',
-                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_high-conf.txt',
-                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_medium-conf.txt',
-                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_low-conf.txt']
-        files = map(FilePath, files)
-        files = [f for f in files if f.exists]
-        return files
+    #@property_cached
+    #def files(self):
+    #    files = [self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt',
+    #             self.base_dir + 'output/' + self.proj_code + '/imputed_conf_high-conf.txt',
+    #             self.base_dir + 'output/' + self.proj_code + '/imputed_conf_medium-conf.txt',
+    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_high-conf.txt',
+    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_medium-conf.txt',
+    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_low-conf.txt']
+    #    files = map(FilePath, files)
+    #    files = [f for f in files if f.exists]
+    #    return files
 
     @property_cached
     def assignments(self):
@@ -161,13 +162,14 @@ class PhylophlanResults(object):
         return dict(map(line_to_kv, lines))
 
     @property
-    def tree(self):
+    def tree_path(self):
+        """Where is the tree stored?"""
         return self.base_dir + 'output/' + self.proj_code + '/' + self.proj_code + '.tree.int.nwk'
 
     @property
     def tree_ete(self):
         """The tree as an object in python memory from ETE2."""
-        return ete2.Tree(self.tree)
+        return ete2.Tree(self.tree_path)
 
     @property
     def pruned_tree(self):
@@ -178,5 +180,4 @@ class PhylophlanResults(object):
         # Prune it #
         tree   = self.tree_ete
         pruned = tree.prune(["bin_" + b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
-        pruned.save(outfile=self.p.pruned_tree)
         return pruned

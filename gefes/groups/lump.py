@@ -44,9 +44,23 @@ class Lump(object):
         return [s for a in self.aggregates for s in a]
 
     #-------------------------------------------------------------------------#
-    @property_cached
-    def phylophlan(self): return Phylophlan(self, self.p.taxonomy_dir)
     def run_phylophlan(self, cpus=None):
         """Special method to run a combined PhyloPhlAn on all samples
-        of multiple projects."""
+        coming from multiple projects. We are going to cheat a lot below."""
         self.phylophlan.run(cpus=cpus)
+
+    @property_cached
+    def phylophlan(self): return Phylophlan(self, self.p.taxonomy_dir, self.name)
+
+    @property_cached
+    def good_bins(self):
+        # Patch the names #
+        for proj in self.aggregates:
+            for b in proj.merged.results.binner.results.good_bins:
+                b.name = proj.name + '_' + b.name
+        # Return #
+        return [b for proj in self.aggregates for b in proj.merged.results.binner.results.good_bins]
+
+    @property_cached
+    def results(self):
+        return type('FakeResults', (object,), {'good_bins': self.good_bins})
