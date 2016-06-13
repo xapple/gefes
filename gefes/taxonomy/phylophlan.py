@@ -1,5 +1,5 @@
 # Built-in modules #
-import os
+import os, multiprocessing
 
 # Internal modules #
 from gefes.taxonomy.assignments import Assignment
@@ -7,8 +7,8 @@ from gefes.taxonomy.assignments import Assignment
 # First party modules #
 from plumbing.autopaths import AutoPaths, DirectoryPath, FilePath
 from plumbing.cache     import property_cached
-from plumbing.slurm     import num_processors
 from plumbing.common    import which, SuppressAllOutput
+from fasta import FASTA
 
 # Third party modules #
 import sh
@@ -27,12 +27,15 @@ class Phylophlan(object):
     - Strangely changes behavior if no TTY is attached to its STDIN -.-
     - AttributeError in some cases when too few proteins inputted ?
     - You'd better create a directory named 'output' or it will crash (OSError)
-    - All protein IDs have to be unique.
+    - All protein IDs have to be unique. Doens't check, instead cryptic error.
     - You have to remove the contents of the output directory before rerunning the tool.
     - The "low_conf" file has an underscore but not "medium-conf" and "high-conf".
     - Outputs windows line ends mixed with unix line ends on STDOUT.
-    - Complains about '*' letter in FAA files.
-    - Because of crazy input scheme only one instance can run at the same time."""
+    - Complains about '*' letter in FAA files which are standard in prodigal.
+    - Because of crazy input scheme only one instance can run at the same time.
+
+    If you see an error such as 'assert vv not in prots2ups' it means your
+    sequence IDs are not unique."""
 
     short_name   = 'phylophlan'
     long_name    = 'PhyloPhlAn v1.1'
@@ -78,7 +81,7 @@ class Phylophlan(object):
 
     def run(self, cpus=None):
         # Variable threads #
-        if cpus is None: cpus = num_processors
+        if cpus is None: cpus = min(multiprocessing.cpu_count(), 32)
         # Where is the executable #
         program_dir = FilePath(which(self.executable)).directory
         # Link the data directory #
@@ -87,9 +90,14 @@ class Phylophlan(object):
         input_dir = DirectoryPath(self.p.input_dir + self.proj_code)
         input_dir.remove()
         input_dir.create()
-        # Link all input faa files #
+        # Copy all input faa files and patch the names #
         for b in self.binner.results.good_bins:
-            b.faa.link_to(input_dir + "bin_" + b.name + '.faa')
+            destination = FASTA(input_dir + "bin_" + b.name + '.faa')
+            b.faa.copy(destination)
+            destination.rename_with_prefix(b.binner.assembly.samples[0].name[0:2] + '_')
+        # Check that IDs are unique #
+        all_ids = [seq.id for fasta in input_dir.glob('.faa') for seq in FASTA(fasta)]
+        assert len(all_ids) == len(set(all_ids))
         # Crazy fixed output directory #
         output_dir = self.p.output_dir
         output_dir.remove()
