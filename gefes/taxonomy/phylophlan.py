@@ -86,10 +86,15 @@ class Phylophlan(object):
         program_dir = FilePath(which(self.executable)).directory
         # Link the data directory #
         self.p.data_dir.link_from(program_dir + 'data/', safe=True)
-        # Crazy fixed input directory #
+        # Remove everything #
+        proj_data_dir = DirectoryPath(self.p.data_dir + self.proj_code)
+        proj_data_dir.remove()
         input_dir = DirectoryPath(self.p.input_dir + self.proj_code)
         input_dir.remove()
         input_dir.create()
+        #output_dir = DirectoryPath(self.p.input_dir + self.proj_code)
+        #output_dir.remove()
+        #output_dir.create()
         # Copy all input faa files and patch the names #
         for b in self.binner.results.good_bins:
             destination = FASTA(input_dir + "bin_" + b.name + '.faa')
@@ -186,6 +191,8 @@ class PhylophlanResults(object):
         of life and then pruning any node that is not connected to one
         of the bins."""
         # Prune it #
-        tree   = self.tree_ete
-        pruned = tree.prune(["bin_" + b.name for b in self.binner.results.good_bins], preserve_branch_length=True)
+        pruned = self.tree_ete
+        names  = ["bin_" + b.name for b in self.binner.results.good_bins]
+        pruned.prune(map(str, names), preserve_branch_length=True)
+        pruned.write(outfile=self.p.pruned_tree)
         return pruned
