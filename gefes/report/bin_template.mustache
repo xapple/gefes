@@ -1,15 +1,17 @@
-Bin "{{bin_short_name}}"
+Bin "{{bin_name}}"
 ========================
 
 General Information
 -------------------
-This bin is named "{{bin_name}}". It is part of the binning results from "{{binner_version}}" in the assembly "{{assembly_long_name}}" in the project "{{project_long_name}}" along with {{project_other_samples}} other bins. It is made up of {{bin_count_contigs}} different contigs.
+This bin has number "{{bin_num}}". It is part of the binning results from "{{binner_version}}" in the assembly "{{assembly_name}}" in the project "{{project_name}}" along with {{binner_other_bins}} other bins. It is made up of {{bin_count_contigs}} different contigs. {{good_bin_sentence}}. It contains {{bin_count_prots}} predicted proteins.
 
 -------
 
 Processing
 ----------
-* This report (and all the analysis) was generated using the GEFES project at: <http://xapple.github.io/gefes/>
+* This report (and all the analysis) was generated using the GEFES project at:
+
+    <http://xapple.github.io/gefes/>
 
 * Version `{{project_version}}` of the pipeline was used.
 
@@ -26,8 +28,30 @@ Processing
 {{/git}}
 -------
 
+{{#assignment}}
+Assignment
+----------
+This bin was assigned at the lowest level to: {{lowest_taxon}}
+
+-------
+{{/assignment}}
+
+{{#visualization}}
+Visualization
+-------------
+To view all the contigs within this bin, we can plot the GC fraction against the sum of average coverage (in each sample) for each contig.
+
+{{gc_x_totcov}}
+
+-------
+{{/visualization}}
+
+{{#annotation}}
 Annotation
 ----------
 Taking the {{sample_count_contigs}} contigs generated in the previous mono-assembly step, we will attempt annotation using the "{{annotation_version}}" software. This procedure predicts the presence of {{sample_count_proteins}} proteins. When possible, each protein is assigned a function. The most common functions are shown in the table below:
 
 {{sample_functions_table}}
+
+-------
+{{/annotation}}

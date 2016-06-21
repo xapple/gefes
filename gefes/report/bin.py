@@ -2,21 +2,19 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket
-from collections import Counter, OrderedDict
+import os, socket, shutil, inspect
 
 # Internal modules #
 import gefes
+from gefes.report import ReportTemplate
 
 # First party modules #
 from plumbing.autopaths import DirectoryPath, FilePath
-from plumbing.common import split_thousands, pretty_now
-from plumbing.cache import property_pickled
-from pymarktex import Document, Template
-from pymarktex.figures import ScaledFigure, DualFigure
+from plumbing.cache     import property_cached
+from pymarktex          import Document
+from pymarktex.figures  import ScaledFigure
 
 # Third party modules #
-from tabulate import tabulate
 
 # Constants #
 ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
@@ -31,6 +29,8 @@ class BinReport(Document):
     def __init__(self, bin):
         # The parent #
         self.bin, self.parent = bin, bin
+        self.assembly  = self.bin.assembly
+        self.aggregate = self.assembly.samples[0].project
         # The output #
         self.base_dir    = self.bin.p.report_dir
         self.output_path = self.bin.p.report_pdf
@@ -46,9 +46,18 @@ class BinReport(Document):
         self.make_body()
         self.make_latex()
         self.make_pdf()
+        # Copy to reports directory #
+        shutil.copy(self.output_path, self.copy_base)
+        # Return #
+        return self.output_path
+
+    @property_cached
+    def copy_base(self):
+        path = gefes.reports_dir + self.aggregate.name + '/bins/' + self.bin.name + '.pdf'
+        return FilePath(path)
 
 ###############################################################################
-class BinTemplate(Template):
+class BinTemplate(ReportTemplate):
     """All the parameters to be rendered in the markdown template"""
     delimiters = (u'{{', u'}}')
 
@@ -56,21 +65,38 @@ class BinTemplate(Template):
         # Attributes #
         self.report, self.parent = report, report
         self.bin        = self.parent.bin
-        self.project    = self.sample.project
+        self.assembly   = self.parent.assembly
+        self.project    = self.parent.aggregate
         self.cache_dir  = self.parent.cache_dir
 
     # General information #
-    def bin_short_name(self):         return self.sample.name
-    def bin_long_name(self):          return self.sample.long_name
-    def assembly_short_name(self):    return self.project.name
-    def assembly_long_name(self):     return self.project.long_name
-    def assembly_other_samples(self): return len(self.project) - 1
+    def bin_name(self):               return self.bin.name
+    def bin_num(self):                return self.bin.num
+    def binner_version(self):         return self.bin.binner.long_name
+    def assembly_name(self):          return self.assembly.short_description
+    def project_name(self):           return self.project.long_name
+    def binner_other_bins(self):      return len(self.bin.binner.results.bins) - 1
+    def bin_count_contigs(self):      return len(self.bin.contigs)
+    def bin_count_prots(self):        return len(self.bin.faa)
+    def good_bin_sentence(self):
+        sentence = "It is %spart of the ``good bin'' group"
+        return sentence % "" if self.bin.good else sentence % "not "
 
     # Process info #
-    def project_url(self):       return gefes.url
-    def project_version(self):   return gefes.__version__
-    def git_hash(self):          return gefes.git_repo.hash
-    def git_tag(self):           return gefes.git_repo.tag
-    def git_branch(self):        return gefes.git_repo.branch
-    def now(self):               return pretty_now()
-    def results_directory(self): return ssh_header + self.sample.base_dir
+    def results_directory(self): return ssh_header + self.bin.base_dir
+
+    # Assignment #
+    def assignment(self):
+        return {'lowest_taxon': str(self.bin.assignment.lowest_taxon)} if self.bin.assignment else False
+
+    # Visualization #
+    def visualization(self):
+        params = ('gc_x_totcov',)
+        return {p:getattr(self, p) for p in params}
+    def gc_x_totcov(self):
+        caption = "Comparison of contig GC fraction against sum of average coverages"
+        graph = self.bin.graphs.gc_x_totcov(rerun=True)
+        return str(ScaledFigure(graph.path, caption, inspect.stack()[0][3]))
+
+    # Annotation #
+    def annotation(self): return False

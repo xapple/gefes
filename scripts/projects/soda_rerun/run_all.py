@@ -182,3 +182,4 @@ for s in tqdm(samples):
     s.report.web_export
 proj.merged.report.generate()
 proj.merged.report.web_export()
+with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)

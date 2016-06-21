@@ -3,14 +3,14 @@ import sys
 from collections import defaultdict
 
 # Internal modules #
-from gefes.binning import graphs
-from gefes.binning.bin import Bin
-from gefes.annotation.checkm import make_checkm_graphs, CheckmGraphCCH
+from gefes.binning             import binner_graphs as graphs
+from gefes.binning.bin         import Bin
+from gefes.annotation.checkm   import make_checkm_graphs, CheckmGraphCCH
 from gefes.taxonomy.phylophlan import Phylophlan
 
 # First party modules #
-from plumbing.autopaths import AutoPaths
-from plumbing.cache import property_cached
+from plumbing.autopaths  import AutoPaths
+from plumbing.cache      import property_cached
 from plumbing.csv_tables import TSVTable
 
 # Third party modules #
@@ -145,6 +145,9 @@ class ConcoctResults(object):
 
     @property_cached
     def graphs(self):
+        """Sorry for the black magic. The result is an object whose attributes
+        are all the graphs found in binner_graphs.py initialized with this instance as
+        only argument."""
         class Graphs(object): pass
         result = Graphs()
         for graph in graphs.__all__:

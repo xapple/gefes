@@ -102,11 +102,6 @@ class Contig(object):
         return Phylosift(self, self.p.taxonomy_dir)
 
     #-------------------------------------------------------------------------#
-    @property
-    def gc_content(self):
-        pass
-
-    #-------------------------------------------------------------------------#
     def get_nuc_freq(self, windowsize=4):
         """Returns frequency of nucleotides in this contig with length windowsize"""
         pass

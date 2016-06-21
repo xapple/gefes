@@ -7,7 +7,9 @@ from __future__ import division
 from gefes.annotation.cogs     import SingleCOGs
 from gefes.annotation.checkm   import Checkm
 from gefes.annotation.hmmer    import HmmQuery
+from gefes.report.bin          import BinReport
 from gefes.running.bin_runner  import BinRunner
+from gefes.binning             import bin_graphs as graphs
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -27,6 +29,8 @@ class Bin(object):
     /proteins.faa
     /annotation/
     /evaluation/
+    /graphs/
+    /report/report.pdf
     /pfam/hits.hmmout
     /tigrfam/hits.hmmout
     """
@@ -74,6 +78,11 @@ class Bin(object):
         return fasta
 
     @property_cached
+    def good(self):
+        """Is this bin part of the <good bins> ?"""
+        return self in self.binner.results.good_bins
+
+    @property_cached
     def evaluation(self):
         """The results from evaluating the bin completeness and other metrics."""
         return Checkm(self, self.p.evaluation_dir)
@@ -104,7 +113,7 @@ class Bin(object):
     @property_cached
     def assignment(self):
         """The imputed assignment by Phylophlan."""
-        return self.binner.results.taxonomy.results.assignments['bin_' + self.name]
+        return self.binner.results.taxonomy.results.assignments.get('bin_' + self.name)
 
     @property_cached
     def average_coverage(self):
@@ -121,3 +130,19 @@ class Bin(object):
         """The results from finding single copy COGs in the bin."""
         pass
         return SingleCOGs(self, self.p.annotation_dir)
+
+    @property_cached
+    def graphs(self):
+        """Sorry for the black magic. The result is an object whose attributes
+        are all the graphs found in bin_graphs.py initialized with this instance as
+        only argument."""
+        class Graphs(object): pass
+        result = Graphs()
+        for graph in graphs.__all__:
+            cls = getattr(graphs, graph)
+            setattr(result, cls.short_name, cls(self))
+        return result
+
+    @property_cached
+    def report(self):
+        return BinReport(self)
