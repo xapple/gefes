@@ -164,6 +164,9 @@ for c in tqdm(proj.merged.results.contigs): c.annotation.run(cpus=4)
 with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 1h00
 with Timer(): proj.merged.results.hit_profile.run()                      # 0h15
 
+################################ Bin summary ##################################
+with Timer(): proj.merged.results.bins_summary.run()                     # 0h15
+
 ################################## Plots ######################################
 for s in tqdm(samples):
     print "Plots for sample '%s'" % s.name

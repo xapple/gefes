@@ -6,6 +6,7 @@ from gefes.assemble.contig import Contig
 from gefes.binning.concoct import Concoct
 from gefes.outputs.hit_profile       import HitProfile
 from gefes.outputs.trait_annotations import TraitAnnotations
+from gefes.outputs.bins_summary      import BinsSummary
 
 # First party modules #
 from fasta import FASTA
@@ -61,6 +62,7 @@ class AssemblyResults(object):
         frame = pandas.DataFrame({s.name: get_counts(s) for s in self.parent.samples})
         return frame
 
+    #----------------------------------- Outputs -----------------------------#
     @property_cached
     def hit_profile(self):
         """Gather all the information to make a profile of the hits from a search."""
@@ -70,3 +72,8 @@ class AssemblyResults(object):
     def trait_annotations(self):
         """Special zooming into a particular pathway."""
         return TraitAnnotations(self.parent, self.p.traits_dir)
+
+    @property_cached
+    def bins_summary(self):
+        """Special summary of bin properties."""
+        return BinsSummary(self.parent, self.p.bins_summary_dir)

@@ -18,6 +18,7 @@ from plumbing.tmpstuff  import new_temp_path
 from fasta import FASTA
 
 # Third party modules #
+from Bio.SeqUtils import GC
 
 ###############################################################################
 class Bin(object):
@@ -124,6 +125,11 @@ class Bin(object):
         frame = frame.apply(lambda r: r*contig_name_to_length(r), axis=1)
         nucleotides = frame.sum().sum()
         return nucleotides / self.assembly.results.total_bp
+
+    @property_cached
+    def average_gc(self):
+        """The average GC faction of this bin across all contigs."""
+        return GC(''.join(str(c.record.seq) for c in b.contigs))
 
     @property_cached
     def single_cogs(self):
