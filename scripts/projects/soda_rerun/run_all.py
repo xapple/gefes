@@ -165,7 +165,7 @@ with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 1h00
 with Timer(): proj.merged.results.hit_profile.run()                      # 0h15
 
 ################################ Bin summary ##################################
-with Timer(): proj.merged.results.bins_summary.run()                     # 0h15
+with Timer(): proj.merged.results.bins_summary.run()                     # 0h00
 
 ################################## Plots ######################################
 for s in tqdm(samples):

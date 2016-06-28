@@ -129,7 +129,7 @@ class Bin(object):
     @property_cached
     def average_gc(self):
         """The average GC faction of this bin across all contigs."""
-        return GC(''.join(str(c.record.seq) for c in b.contigs))
+        return GC(''.join(str(c.record.seq) for c in self.contigs))
 
     @property_cached
     def single_cogs(self):

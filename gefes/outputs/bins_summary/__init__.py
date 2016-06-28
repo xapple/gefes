@@ -41,9 +41,13 @@ class BinsSummary(object):
 
     def run(self, verbose=True):
         # Make the TSVs #
-        self.bins_to_gc.to_csv(self.p.bins_to_gc.path, sep='\t', float_format='%.5g')
+        self.bins_to_gc.to_csv(self.p.bins_to_gc.path,
+                               sep          = '\t',
+                               index_label  = "Bin name",
+                               header       = ("GC percentage",),
+                               float_format = '%.5g')
         # Return #
-        return self.p.traits_x_bins
+        return self.p.bins_to_gc
 
     @property_cached
     def bins_to_gc(self):

@@ -64,8 +64,8 @@ class HitProfile(object):
     9. A hand-made matrix of interesting PFAMS, description, type, pathway
 
     `filtered_bin_x_pfams`
-    10. Take only PFAMS that have been mesured and are present in the traits list.
-        Add a second index so we see what is the descirption of the metabolism of the PFAM.
+    10. Take only PFAMS that have been measured and are present in the traits list.
+        Add a second index so we see what is the description of the metabolism of the PFAM.
     -> Final outputted matrix for per bin metabolism.
     """
 
