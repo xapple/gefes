@@ -1,0 +1,95 @@
+{
+
+"contacts": {
+    "contact_one": {
+        "function": {{contact_one_function}},
+        "name":     {{contact_one_name}},
+        "email":    {{contact_one_email}}
+    }
+    {{#second_contact}}
+    ,
+    "contact_two": {
+        "function": {{contact_two_function}},
+        "name":     {{contact_two_name}},
+        "email":    {{contact_two_email}}
+    }
+    {{/second_contact}}
+},
+
+"project_short_name":   {{project_short_name}},
+"sample_short_name":    {{sample_short_name}},
+"sample_num":           {{sample_num}},
+"used":                 {{used}},
+
+"fwd_filename":         {{fwd_filename}},
+"rev_filename":         {{rev_filename}},
+
+{{#custom_barcode}}"custom_barcode":       {{custom_barcode}},{{/custom_barcode}}
+{{#multiplexed_in}}"multiplexed_in":       {{multiplexed_in}},{{/multiplexed_in}}
+{{#pool_barcode}}"pool_barcode":         {{pool_barcode}},{{/pool_barcode}}
+
+{{#header_barcode}}"header_barcode":               {{header_barcode}},{{/header_barcode}}
+{{#header_rev_comp}}"header_rev_comp":               {{header_rev_comp}},{{/header_rev_comp}}
+{{#multiplex_group}}"multiplex_group":               {{multiplex_group}},{{/multiplex_group}}
+
+{{#organization}}"organization":         {{organization}},{{/organization}}
+{{#prefix}}"prefix":               {{prefix}},{{/prefix}}
+{{#directory}}"directory":            {{directory}},{{/directory}}
+{{#suffix}}"suffix":               {{suffix}},{{/suffix}}
+
+{{#project_long_name}}"project_long_name":    {{project_long_name}},{{/project_long_name}}
+{{#sample_long_name}}"sample_long_name":     {{sample_long_name}},{{/sample_long_name}}
+
+{{#fwd_read_count}}"fwd_read_count":       {{fwd_read_count}},{{/fwd_read_count}}
+{{#rev_read_count}}"rev_read_count":       {{rev_read_count}},{{/rev_read_count}}
+{{#fwd_md5}}"fwd_md5":              {{fwd_md5}},{{/fwd_md5}}
+{{#rev_md5}}"rev_md5":              {{rev_md5}},{{/rev_md5}}
+
+{{#header_barcode}}"header_barcode":          {{header_barcode}},{{/header_barcode}}
+{{#header_bc_revc}}"header_bc_revc":          {{header_bc_revc}},{{/header_bc_revc}}
+
+{{#forward_num}}"forward_num":          {{forward_num}},{{/forward_num}}
+{{#forward_mid}}"forward_mid":          {{forward_mid}},{{/forward_mid}}
+{{#reverse_num}}"reverse_num":          {{reverse_num}},{{/reverse_num}}
+{{#reverse_mid}}"reverse_mid":          {{reverse_mid}},{{/reverse_mid}}
+{{#barcode_num}}"barcode_num":          {{barcode_num}},{{/barcode_num}}
+
+{{#primers_name}}
+"primers": {
+        "name":    {{primers_name}},
+        "sense":   "5' to 3'",
+        "forward": {"name": {{fwd_primer_name}}, "sequence": {{fwd_primer_seq}}},
+        "reverse": {"name": {{rev_primer_name}}, "sequence": {{rev_primer_seq}}}
+},
+{{/primers_name}}
+
+{{#dna_after}}"dna_after":     [{{dna_after}}, "ng/µl"],{{/dna_after}}
+
+{{#library_strategy}}"library_strategy":     {{library_strategy}},{{/library_strategy}}
+{{#library_source}}"library_source":       {{library_source}},{{/library_source}}
+{{#library_selection}}"library_selection":    {{library_selection}},{{/library_selection}}
+{{#library_layout}}"library_layout":       {{library_layout}},{{/library_layout}}
+{{#platform}}"platform":             {{platform}},{{/platform}}
+{{#instrument_model}}"instrument_model":     {{instrument_model}},{{/instrument_model}}
+{{#instrument_software}}"instrument_software":  {{instrument_software}},{{/instrument_software}}
+{{#forward_read_length}}"forward_read_length":  {{forward_read_length}},{{/forward_read_length}}
+{{#reverse_read_length}}"reverse_read_length":  {{reverse_read_length}},{{/reverse_read_length}}
+
+{{#organism}}"organism":      {{organism}},{{/organism}}
+{{#env_biome}}"env_biome":     {{env_biome}},{{/env_biome}}
+{{#env_feature}}"env_feature":   {{env_feature}},{{/env_feature}}
+{{#env_material}}"env_material":  {{env_material}},{{/env_material}}
+
+{{#date}}"date":         {{date}},{{/date}}
+{{#latitude}}"latitude":     [{{latitude}}, "N"],{{/latitude}}
+{{#longitude}}"longitude":    [{{longitude}}, "E"],{{/longitude}}
+{{#country}}"country":      {{country}},{{/country}}
+{{#location}}"location":     {{location}},{{/location}}
+
+{{#design_description}}"design_description": {{design_description}},{{/design_description}}
+
+{{#bioproject}}"bioproject":   {{bioproject}},{{/bioproject}}
+{{#biosample}}"biosample":    {{biosample}}{{/biosample}}
+
+"sentinel":             "True"
+}

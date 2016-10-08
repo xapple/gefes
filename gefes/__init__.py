@@ -1,49 +1,40 @@
 b'This module needs Python 2.7.x'
 
-# Special variables #
-__version__ = '0.1.5'
-
 # Built-in modules #
-import os, sys, glob
+import os, sys
 
-# Get paths to module #
-self = sys.modules[__name__]
-module_dir = os.path.dirname(self.__file__)
-
-# The module is a git repository #
-from plumbing.git import GitRepo
-repos_dir = os.path.abspath(module_dir + '/../') + '/'
-git_repo = GitRepo(repos_dir, empty=True)
-
-# Dependencies #
-#from plumbing import dependencies
-#dependencies.check_setup_py(module_dir + 'setup.py')
+# Constants #
+url         = 'http://xapple.github.io/gefes/'
+repo_url    = 'http://github.com/xapple/gefes/'
+__version__ = '1.0.1'
+home        = os.environ.get('HOME', '~') + '/'
 
 # No need for an X display #
 import matplotlib
 matplotlib.use('Agg', warn=False)
 
-# Internal modules #
-from gefes.groups.projects import Project, Projects
+# Get paths to module #
+self       = sys.modules[__name__]
+module_dir = os.path.dirname(self.__file__)
 
-# Constants #
-url  = 'http://github.com/xapple/gefes/'
-home = os.environ.get('HOME', '~') + '/'
+# The module is maybe a git repository #
+from plumbing.git import GitRepo
+repos_dir = os.path.abspath(module_dir + '/../') + '/'
+git_repo  = GitRepo(repos_dir, empty=True)
 
-###############################################################################
 # Output directories #
-view_dir    = home + 'GEFES/views/'
+view_dir    = home     + 'GEFES/views/'
 project_dir = view_dir + 'projects/'
-reports_dir = home + 'GEFES/reports/'
+samples_dir = view_dir + 'samples/'
+reports_dir = home     + 'GEFES/reports/'
 
-# Load all projects by parsing the project json files #
-json_paths = glob.glob(repos_dir + 'json/*.json')
+# Internal modules #
+from gefes.groups.projects import Projects
 
-# Remove the defaults file #
-json_paths.remove(repos_dir + 'json/defaults.json')
+# The main objects, empty at first, call load() to populate them #
+samples    = []
+_projects  = []
+projects   = Projects(_projects)
 
-# Create the project objects #
-projects = [Project(j, project_dir) for j in json_paths]
-
-# Convenience object with indexing #
-projects = Projects(projects)
+# Expose functions #
+from gefes.load import load

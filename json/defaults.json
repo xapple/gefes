@@ -1,7 +1,0 @@
-{
-    "gefes_settings": {
-        "quality_checker": {
-            "object": {"source": "gefes.preprocess.sickle", "name": "Sickle"}
-        }
-    }
-}
