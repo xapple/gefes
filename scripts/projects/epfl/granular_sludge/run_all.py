@@ -35,3 +35,10 @@ for s in proj: print s.pair.rev.count
 for s in proj: print s.pair.fwd.md5
 for s in proj: print s.pair.rev.md5
 for s in proj: print len(s.pair.fwd.first)
+
+print("# Get special sample name #")
+from collections import OrderedDict
+d = open("/home/lucas/GEFES//raw/projects/epfl/granular_sludge/2/correspondances.csv").read()
+d = OrderedDict((l.split()[0][:-13] + '.fastq.gz', l.split()[1]) for l in d.split('\n') if l)
+for s in proj2: print s.short_name
+for s in proj2: print d[s.pair.fwd.filename]

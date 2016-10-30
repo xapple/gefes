@@ -47,8 +47,10 @@ class Sample(object):
     /report/report.pdf
     """
 
-    def __repr__(self): return '<%s object "%s">' % (self.__class__.__name__, self.name)
-    def __len__(self): return self.count
+    def __repr__(self):         return '<%s object "%s">' % (self.__class__.__name__, self.short_name)
+    def __str__(self):          return self.short_name
+    def __iter__(self):         return iter(self.children)
+    def __len__(self):          return self.pair.count
 
     def __init__(self, json_path, raw_files_must_exist):
         # Attributes #
