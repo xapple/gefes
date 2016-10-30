@@ -27,6 +27,7 @@ view_dir    = home     + 'GEFES/views/'
 project_dir = view_dir + 'projects/'
 samples_dir = view_dir + 'samples/'
 reports_dir = home     + 'GEFES/reports/'
+bundles_dir  = home     + 'SIFES/bundles/'
 
 # Internal modules #
 from gefes.groups.projects import Projects

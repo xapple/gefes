@@ -52,18 +52,9 @@
 {{#forward_mid}}"forward_mid":          {{forward_mid}},{{/forward_mid}}
 {{#reverse_num}}"reverse_num":          {{reverse_num}},{{/reverse_num}}
 {{#reverse_mid}}"reverse_mid":          {{reverse_mid}},{{/reverse_mid}}
-{{#barcode_num}}"barcode_num":          {{barcode_num}},{{/barcode_num}}
-
-{{#primers_name}}
-"primers": {
-        "name":    {{primers_name}},
-        "sense":   "5' to 3'",
-        "forward": {"name": {{fwd_primer_name}}, "sequence": {{fwd_primer_seq}}},
-        "reverse": {"name": {{rev_primer_name}}, "sequence": {{rev_primer_seq}}}
-},
-{{/primers_name}}
 
 {{#dna_after}}"dna_after":     [{{dna_after}}, "ng/µl"],{{/dna_after}}
+{{#phix_spiking}}"phix_spiking":   [{{phix_spiking}}, "ng/µl"],{{/phix_spiking}}
 
 {{#library_strategy}}"library_strategy":     {{library_strategy}},{{/library_strategy}}
 {{#library_source}}"library_source":       {{library_source}},{{/library_source}}

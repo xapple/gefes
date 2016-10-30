@@ -65,7 +65,7 @@ for i, row in df.iterrows():
     content['second_contact'] = second_contact
 
     # Figure out the path #
-    path = home + "repos/sifes/metadata/json/projects/%s/%s/%s.json"
+    path = home + "repos/gefes/metadata/json/projects/%s/%s/%s.json"
     path = path % (content['organization'].strip('"'),
                    content['project_short_name'].strip('"'),
                    content['sample_short_name'].strip('"'))
