@@ -20,8 +20,9 @@ class Lump(object):
 
     def __repr__(self): return '<%s object "%s" with %i children>' % \
                                (self.__class__.__name__, self.name, len(self))
-    def __iter__(self): return iter(self.children)
-    def __len__(self): return len(self.children)
+    def __iter__(self):            return iter(self.children)
+    def __len__(self):             return len(self.children)
+    def __contains__(self, item):  return item in self.children
 
     def __add__(self, other):
         return self.__class__(self.name + " and " + other.name, self.children + other.children)

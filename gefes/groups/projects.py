@@ -24,12 +24,12 @@ class Project(Aggregate):
     /info.json
     """
 
-    def __init__(self, name, samples):
+    def __init__(self, name, samples, *args, **kwargs):
         """Please specify the name of the project and the samples it must contain."""
         # Base directory #
         out_dir = gefes.project_dir + self.organization + '/'
         # Super #
-        super(self.__class__,self).__init__(name, samples, out_dir)
+        super(self.__class__,self).__init__(name, samples, out_dir, *args, **kwargs)
 
     @property
     def long_name(self): return self.first.project_long_name
