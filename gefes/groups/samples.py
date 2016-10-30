@@ -29,11 +29,11 @@ class Sample(object):
     It's a bunch of paired sequences all coming from the same particular
     IRL lab sample. Might or might not correspond to an Illumina MID."""
 
-    raw_files_must_exist = True
     default_cleaner = "window"
 
     all_paths = """
     /logs/
+    /info.json
     /clean/fwd.fastq
     /clean/rev.fastq
     /clean/singletons.fastq

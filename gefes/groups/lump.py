@@ -39,9 +39,8 @@ class Lump(object):
     def __init__(self, name, aggregates, base_dir=gefes.lumps_dir):
         # Attributes #
         self.name = name
-        # Copy the list #
-        list_copy = aggregates[:]
-        self.aggregates, self.children = list_copy, list_copy
+        # The list #
+        self.aggregates, self.children = aggregates, aggregates
         # Sort them #
         if all(hasattr(c, "num") for c in self.children): self.children.sort(key = lambda x: x.num)
         # Base directory #

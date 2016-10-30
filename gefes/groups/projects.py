@@ -27,7 +27,7 @@ class Project(Aggregate):
     def __init__(self, name, samples, *args, **kwargs):
         """Please specify the name of the project and the samples it must contain."""
         # Base directory #
-        out_dir = gefes.project_dir + self.organization + '/'
+        out_dir = gefes.project_dir + samples[0].info.get('organization', '') + '/'
         # Super #
         super(self.__class__,self).__init__(name, samples, out_dir, *args, **kwargs)
 
@@ -35,4 +35,4 @@ class Project(Aggregate):
     def long_name(self): return self.first.project_long_name
 
     @property
-    def organization(self): return self.firstinfo.get('organization', '')
+    def organization(self): return self.first.info.get('organization', '')

@@ -36,7 +36,7 @@ from gefes.groups.projects import Projects
 # The main objects, empty at first, call load() to populate them #
 samples    = []
 _projects  = []
-projects   = Projects(_projects)
+projects   = Projects(aggregates=_projects)
 
 # Expose functions #
 from gefes.load import load
