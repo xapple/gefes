@@ -31,8 +31,8 @@
 
 
 "organization":         "epfl",
-"prefix":               "~/SIFES/raw/projects/epfl/",
-"directory":            "granular_sludge_2/",
+"prefix":               "~/GEFES/raw/projects/epfl/",
+"directory":            "granular_sludge/2/",
 "suffix":               "group_08/",
 
 "project_long_name":    "Granular Sludge O2",
