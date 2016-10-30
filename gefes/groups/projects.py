@@ -1,22 +1,17 @@
 # Built-in modules #
-import re, os, glob
 
 # Internal modules #
+import gefes
 from gefes.groups.aggregates import Aggregate
-from gefes.groups.collection import Collection
-from gefes.groups.samples    import Sample
-from gefes.common            import join_paired_filepaths
-
-# First party modules #
-from plumbing.autopaths import FilePath, AutoPaths
-from plumbing.common import sort_string_by_pairs, natural_sort, load_json_path
+from gefes.groups.lump       import Lump
 
 # Third party modules #
 
 ###############################################################################
-class Projects(Collection):
+class Projects(Lump):
     """A collection of projects."""
-    pass
+    def __init__(self, name="all_projects", *args, **kwargs):
+        super(self.__class__,self).__init__(name, *args, **kwargs)
 
 ###############################################################################
 class Project(Aggregate):
@@ -27,52 +22,17 @@ class Project(Aggregate):
 
     all_paths = Aggregate.all_paths + """
     /info.json
-    /samples/
     """
 
-    def __repr__(self): return '<%s object "%s">' % \
-                               (self.__class__.__name__, self.name)
-
-    def __init__(self, json_path, project_dir):
-        # Parse the json file describing the project #
-        self.json_path = FilePath(json_path)
-        self.info = load_json_path(json_path)
-        # Required parameters #
-        self.num       = self.info['project_num']
-        self.name      = self.info['project_name']
-        self.long_name = self.info['project_long_name']
-        # Optional parameters #
-        self.abstract  = self.info.get('abstract')
-        self.run_name  = self.info.get('illumina_run_id')
-        self.account   = self.info.get('uppmax_project_id')
+    def __init__(self, name, samples):
+        """Please specify the name of the project and the samples it must contain."""
         # Base directory #
-        self.base_dir = project_dir + self.name + '/'
-        # Delayed init #
-        self.loaded = False
+        out_dir = gefes.project_dir + self.organization + '/'
+        # Super #
+        super(self.__class__,self).__init__(name, samples, out_dir)
 
-    def load(self):
-        """A delayed kind of __init__ that is not called right away to avoid
-        crowding the RAM of the python interpreter when you just import gefes"""
-        # Load #
-        self.loaded = True
-        # Automatic paths #
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Make an alias to the json #
-        if self.make_json_links: self.json_path.link_to(self.p.info_json, safe=True)
-        # Make all the samples object that this project possesses #
-        if self.info.get('auto_parse_samples'):
-            search_dir = self.info['samples_base_dir']
-            search_dir = os.path.expanduser(search_dir)
-            paths = glob.glob(search_dir + '*.fastq*')
-            if not paths: paths = glob.glob(search_dir + '*.fasta*')
-            if not paths: raise Exception("Found no FASTA or FASTQ path in %s" % search_dir)
-            if all([re.search("_R[12]_", p) for p in paths]): pairs = join_paired_filepaths(paths)
-            else:                                             pairs = sort_string_by_pairs(paths)
-            self.samples = [Sample(self, p[0], p[1], num=i) for i,p in enumerate(pairs)]
-            self.samples.sort(key=lambda x: natural_sort(x.name))
-        else:
-            self.samples = [Sample(self, info=info) for info in self.info['samples']]
-        # The samples of a project are it's children in a way #
-        self.children = self.samples
-        # Call the parent function #
-        return Aggregate.load(self)
+    @property
+    def long_name(self): return self.first.project_long_name
+
+    @property
+    def organization(self): return self.firstinfo.get('organization', '')

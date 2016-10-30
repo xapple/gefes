@@ -2,10 +2,10 @@
 from __future__ import division
 
 # Built-in modules #
+import warnings
 from collections import OrderedDict
 
 # Internal modules #
-import gefes
 from gefes.assemble.ray             import Ray
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
@@ -13,7 +13,8 @@ from gefes.merged.newbler           import Newbler
 from gefes.status.projects          import ProjectStatus
 
 # First party modules #
-from plumbing.autopaths import AutoPaths
+from plumbing.autopaths import AutoPaths, DirectoryPath
+from plumbing.cache     import property_cached
 
 ###############################################################################
 class Aggregate(object):
@@ -22,6 +23,7 @@ class Aggregate(object):
     and extent the load() method."""
 
     all_paths = """
+    /samples/
     /logs/
     /graphs/
     /assembly/
@@ -31,54 +33,80 @@ class Aggregate(object):
 
     def __repr__(self): return '<%s object "%s" with %i samples>' % \
                                (self.__class__.__name__, self.name, len(self))
-    def __iter__(self): return iter(self.samples)
-    def __len__(self): return len(self.samples)
+
+    def __str__(self):             return self.short_name
+    def __iter__(self):            return iter(self.children)
+    def __len__(self):             return len(self.children)
+    def __contains__(self, item):  return item in self.children
+
     def __getitem__(self, key):
-        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
-        return self.children[key]
+        if   isinstance(key, basestring):  return [c for c in self.children if str(c) == key][0]
+        elif isinstance(key, int):
+            if key < 0:                    return self.children[key]
+            if hasattr(self.first, 'num'): return [c for c in self.children if int(c.num) == key][0]
+            else:                          return self.children[key]
+        elif isinstance(key, slice):       return self.children[key]
+        else:                              raise TypeError('key')
 
-    def __init__(self, name, samples, base_dir=None):
+    @property
+    def first(self): return self.children[0]
+
+    def __init__(self, name, samples, out_dir):
         # Attributes #
-        self.name = name
-        self.samples, self.children = samples, samples
+        self.name       = name
+        self.short_name = name
+        self.samples    = samples
+        self.children   = samples
+        # Check names are unique #
+        names = [s.short_name for s in self.samples]
+        assert len(names) == len(set(names))
+        # Are the samples numbered #
+        have_numbers = all(s.info.get('sample_num') for s in samples)
+        if not have_numbers: warnings.warn("Not all samples of project '%s' were numbered." % self)
+        # Sort the samples #
+        if have_numbers: samples.sort(key=lambda s: int(s.info['sample_num']))
+        else:            samples.sort(key=lambda s: s.short_name)
         # Base directory #
-        if base_dir is None: self.base_dir = gefes.view_dir + 'aggregates/' + name + '/'
-        else: self.base_dir = base_dir
-        # Delayed init #
-        self.loaded = False
-
-    def load(self):
-        """A delayed kind of __init__ that is not called right away to avoid
-        crowding the RAM of the python interpreter when you just import gefes."""
-        # Load #
-        self.loaded = True
-        # Automatic paths #
+        self.base_dir = DirectoryPath(out_dir + self.name + '/')
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Assemble #
-        self.assembly = Ray(self.samples, self.p.assembly_dir)
-        # Assemble with different kmer sizes #
-        self.assembly_51 = Ray(self.samples, self.p.assembly_dir, kmer_size=51)
-        self.assembly_61 = Ray(self.samples, self.p.assembly_dir, kmer_size=61)
-        self.assembly_71 = self.assembly
-        self.assembly_81 = Ray(self.samples, self.p.assembly_dir, kmer_size=81)
-        # Also combine the different kmer sizes #
-        self.merged = Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
-        # Annotation #
-        #self.phylotyper = Phylotyper(self)
-        #self.annotation = Prokka(self)
-        # Runner #
-        self.runner = AggregateRunner(self)
-        # Report #
-        self.report = AggregateReport(self)
-        # Status #
-        self.status = ProjectStatus(self)
-        # For convenience #
-        return self
 
-    @property
-    def first(self): return self.samples[0]
+    #-------------------------------- Properties -----------------------------#
+    @property_cached
+    def assembly_51(self): return Ray(self.samples, self.p.assembly_dir, kmer_size=51)
+    @property_cached
+    def assembly_61(self): return Ray(self.samples, self.p.assembly_dir, kmer_size=61)
+    @property_cached
+    def assembly_71(self): return Ray(self.samples, self.p.assembly_dir, kmer_size=71)
+    @property_cached
+    def assembly_81(self): return Ray(self.samples, self.p.assembly_dir, kmer_size=81)
 
+    @property_cached
+    def merged(self):
+        """Map to the mono-assembly."""
+        return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
+
+    @property_cached
+    def runner(self):
+        """The runner object."""
+        return AggregateRunner(self)
+
+    @property_cached
+    def report(self):
+        """The PDF report."""
+        return AggregateReport(self)
+
+    @property_cached
+    def status(self):
+        """The status."""
+        return ProjectStatus(self)
+
+    #-------------------------------- Shortcuts -----------------------------#
     @property
+    def assembly(self):
+        """Convenience shortcut. By default the 71 kmer assembly."""
+        return self.assembly_71
+
+    @property_cached
     def assemblies(self):
         """A dictionary useful for trying different assemblies of different sizes.
         Keys are kmer-sizes and values are assembler objects"""

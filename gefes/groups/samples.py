@@ -1,11 +1,12 @@
 # Built-in modules #
-import os, importlib
-from collections import defaultdict, OrderedDict
+import os
+from collections import OrderedDict
 
 # Internal modules #
 import gefes
 from gefes.parsing.illumina      import IlluminaInfo
 from gefes.preprocess.sliding    import SlidingWindow
+from gefes.preprocess.sickle     import Sickle
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.map.bowtie            import Bowtie
@@ -19,9 +20,6 @@ from plumbing.cache     import property_cached
 from fasta              import PairedFASTA, PairedFASTQ
 from fasta.fastqc       import FastQC
 
-# Third party modules #
-from shell_command import shell_output
-
 # Constants #
 home = os.environ['HOME'] + '/'
 
@@ -32,6 +30,7 @@ class Sample(object):
     IRL lab sample. Might or might not correspond to an Illumina MID."""
 
     raw_files_must_exist = True
+    default_cleaner = "window"
 
     all_paths = """
     /logs/
@@ -113,11 +112,10 @@ class Sample(object):
     def quality_checker(self):
         """With what are we going to preprocess the sequences and clean them ?"""
         assert self.pair.format == 'fastq'
-        info = self.info['gefes_settings'].get('quality_checker')
-        if info is None: return SlidingWindow(self.p.clean_dir, self.pair, self.clean)
-        module = importlib.import_module(info['object']['source'])
-        obj    = getattr(module, info['object']['name'])
-        return obj(self.p.clean_dir, self.pair, self.clean)
+        choices = {'window':   (SlidingWindow, (self.p.clean_dir, self.pair, self.clean)),
+                   'sickle':   (Sickle,        (self.p.clean_dir, self.pair, self.clean))}
+        cls, params = choices.get(self.default_cleaner, choices['window'])
+        return cls(*params)
 
     @property_cached
     def mapper_51(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
@@ -144,11 +142,6 @@ class Sample(object):
     def kraken(self):
         """Assembly of this sample by itself."""
         return Kraken(self.clean, self.p.kraken_dir)
-
-    @property_cached
-    def assembly(self):
-        """Assembly of this sample by itself."""
-        return Ray([self], self.p.assembly_dir)
 
     @property_cached
     def assembly(self):

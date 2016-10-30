@@ -22,19 +22,29 @@ class Lump(object):
                                (self.__class__.__name__, self.name, len(self))
     def __iter__(self): return iter(self.children)
     def __len__(self): return len(self.children)
-    def __getitem__(self, key):
-        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
-        return self.children[key]
 
-    def __init__(self, name, aggregates, base_dir=None):
+    def __add__(self, other):
+        return self.__class__(self.name + " and " + other.name, self.children + other.children)
+
+    def __getitem__(self, key):
+        if   isinstance(key, basestring):  return [c for c in self.children if str(c) == key][0]
+        elif isinstance(key, int):
+            if key < 0:                    return self.children[key]
+            if hasattr(self.first, 'num'): return [c for c in self.children if int(c.num) == key][0]
+            else:                          return self.children[key]
+        elif isinstance(key, slice):       return self.children[key]
+        else:                              raise TypeError('key')
+
+    def __init__(self, name, aggregates, base_dir=gefes.lumps_dir):
         # Attributes #
         self.name = name
-        self.aggregates, self.children = aggregates, aggregates
+        # Copy the list #
+        list_copy = aggregates[:]
+        self.aggregates, self.children = list_copy, list_copy
+        # Sort them #
+        if all(hasattr(c, "num") for c in self.children): self.children.sort(key = lambda x: x.num)
         # Base directory #
-        if base_dir is None: self.base_dir = gefes.view_dir + 'lumps/' + name + '/'
-        else: self.base_dir = base_dir
-        # Automatic paths #
-        self.p = AutoPaths(self.base_dir, self.all_paths)
+        self.base_dir = base_dir
 
     @property
     def first(self): return self.children[0]
@@ -42,6 +52,9 @@ class Lump(object):
     @property
     def samples(self):
         return [s for a in self.aggregates for s in a]
+
+    @property_cached
+    def p(self): return AutoPaths(self.base_dir, self.all_paths)
 
     #-------------------------------------------------------------------------#
     def run_phylophlan(self, cpus=None):

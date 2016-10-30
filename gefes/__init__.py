@@ -26,8 +26,9 @@ git_repo  = GitRepo(repos_dir, empty=True)
 view_dir    = home     + 'GEFES/views/'
 project_dir = view_dir + 'projects/'
 samples_dir = view_dir + 'samples/'
+lumps_dir   = view_dir + 'lumps/'
 reports_dir = home     + 'GEFES/reports/'
-bundles_dir  = home     + 'SIFES/bundles/'
+bundles_dir = home     + 'GEFES/bundles/'
 
 # Internal modules #
 from gefes.groups.projects import Projects

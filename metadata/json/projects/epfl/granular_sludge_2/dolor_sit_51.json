@@ -1,0 +1,84 @@
+{
+
+"contacts": {
+    "contact_one": {
+        "function": "PhD",
+        "name":     "Adler Aline",
+        "email":    "aline.adler@epfl.ch"
+    }
+    ,
+    "contact_two": {
+        "function": "PI",
+        "name":     "Christof Holliger",
+        "email":    "christof.holliger@epfl.ch"
+    }
+},
+
+"project_short_name":   "granular_sludge_2",
+"sample_short_name":    "dolor_sit_51",
+"sample_num":           "99",
+"used":                 "yes",
+
+"fwd_filename":         "GCTACGCT_AGAGTAGA_s_4_1.fastq.gz",
+"rev_filename":         "GCTACGCT_AGAGTAGA_s_4_2.fastq.gz",
+
+
+
+
+
+
+
+
+
+"organization":         "epfl",
+"prefix":               "~/SIFES/raw/projects/epfl/",
+"directory":            "granular_sludge_2/",
+"suffix":               "group_06/",
+
+"project_long_name":    "Granular Sludge O2",
+"sample_long_name":     "Dolor sit 51",
+
+"fwd_read_count":       "0",
+"rev_read_count":       "0",
+
+
+
+
+
+
+"forward_num":          "0",
+"forward_mid":          "NNNNNNN",
+"reverse_num":          "0",
+"reverse_mid":          "NNNNNNN",
+
+
+
+
+"library_strategy":     "WGS",
+"library_source":       "METAGENOMIC",
+"library_selection":    "RANDOM",
+"library_layout":       "Paired",
+"platform":             "ILLUMINA",
+"instrument_model":     "Illumina HiSeq",
+"instrument_software":  "v0.0.0.0",
+"forward_read_length":  "100",
+"reverse_read_length":  "100",
+
+
+
+
+
+
+"date":         "2000-01-01 00:00:00",
+"latitude":     ["0", "N"],
+"longitude":    ["0", "E"],
+"country":      "Switzerland",
+
+
+
+
+
+
+
+"sentinel":             "True"
+}
