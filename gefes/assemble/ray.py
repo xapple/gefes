@@ -41,6 +41,21 @@ class Ray(Assembler):
     /report/report.pdf
     """
 
+    def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
+        # Base parameters #
+        self.samples       = samples
+        self.children      = samples
+        self.result_dir    = result_dir
+        self.kmer_size     = kmer_size
+        self.length_cutoff = length_cutoff
+        # Auto paths #
+        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Report #
+        self.report = AssemblyReport(self)
+        # Name #
+        self.name = self.short_name + '_' + str(self.kmer_size)
+
     def run(self):
         # Check samples #
         for s in self.samples:
@@ -129,7 +144,4 @@ class Ray(Assembler):
 
 ###############################################################################
 class RayResults(AssemblyResults):
-
-    def __init__(self, ray):
-        self.parent, self.ray = ray, ray
-        self.contigs_fasta = FASTA(self.ray.p.filtered)
+    pass

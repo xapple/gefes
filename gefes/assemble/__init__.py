@@ -28,21 +28,6 @@ class Assembler(object):
         if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
         return self.children[key]
 
-    def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
-        # Base parameters #
-        self.samples       = samples
-        self.children      = samples
-        self.result_dir    = result_dir
-        self.kmer_size     = kmer_size
-        self.length_cutoff = length_cutoff
-        # Auto paths #
-        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Report #
-        self.report = AssemblyReport(self)
-        # Name #
-        self.name = self.short_name + '_' + str(self.kmer_size)
-
 ###############################################################################
 class AssemblyResults(object):
     """Inherit from this."""

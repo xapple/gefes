@@ -55,3 +55,8 @@ for s in proj2: assert s.pair.rev.guess_phred_format() == 'Sanger'
 print("# Starting cleaning of samples #")
 with Timer(): prll_map(lambda s: s.quality_checker.run(), proj1)
 with Timer(): prll_map(lambda s: s.quality_checker.run(), proj2)
+
+################################ Co-assembly ################################
+print("# Co-assembly #")
+with Timer(): proj1.merged.run() # 40 minutes
+with Timer(): proj2.merged.run()

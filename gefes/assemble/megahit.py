@@ -31,10 +31,28 @@ class Megahit(Assembler):
     dependencies = []
 
     all_paths = """
-    /output/
+    /output/final.contigs.fa
+    /output/log
+    /output/opts.txt
+    /filtered.fasta
     /stdout.txt
     /stderr.txt
     """
+
+    def __init__(self, samples, result_dir, length_cutoff=1000):
+        # Base parameters #
+        self.samples       = samples
+        self.children      = samples
+        self.result_dir    = result_dir
+        self.length_cutoff = length_cutoff
+        # Auto paths #
+        self.base_dir = self.result_dir + self.short_name + '/'
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+
+    @property_cached
+    def report(self):
+        """The PDF report."""
+        return AssemblyReport(self)
 
     def run(self):
         # Check samples #
@@ -45,18 +63,19 @@ class Megahit(Assembler):
         self.out_dir = self.p.output_dir
         self.out_dir.remove()
         # Make the pairs of fastq #
-        self.paths  = ['-1 ', ','.join(s.clean.fwd.path  for s in self.samples)]
-        self.paths += ['-2 ', ','.join(s.clean.rev.path  for s in self.samples)]
-        self.paths += ['-r ', ','.join(s.singletons.path for s in self.samples)]
+        self.paths  = ['-1', ','.join(s.clean.fwd.path  for s in self.samples)]
+        self.paths += ['-2', ','.join(s.clean.rev.path  for s in self.samples)]
+        self.paths += ['-r', ','.join(s.singletons.path for s in self.samples)]
         # Executable #
         megahit = sh.Command(self.executable)
         # Check version #
         assert "v1.0.6.1" in megahit('--version')
         # Call it #
-        megahit('--out-dir',         self.out_dir,
-                '--presets',         'meta-large',
-                '--memory',          '0.7',
-                '--num-cpu-threads', 96,
+        megahit('--out-dir',           self.out_dir,
+                '--presets',          'meta-large',
+                '--memory',           '0.7',
+                '--num-cpu-threads',   96,
+                '--tmp-dir',          '/tmpfs/lucas/tmp/megahit/',
                 '--verbose',
                 *self.paths,
                 _out=self.p.stdout.path,
@@ -83,13 +102,10 @@ class Megahit(Assembler):
 
     @property_cached
     def results(self):
-        results = RayResults(self)
-        if not results: raise Exception("You can't access results from Ray before running the assembly.")
+        results = MegahitResults(self)
+        if not results: raise Exception("You can't access results from Megahit before running the assembly.")
         return results
 
 ###############################################################################
-class RayResults(AssemblyResults):
-
-    def __init__(self, ray):
-        self.parent, self.ray = ray, ray
-        self.contigs_fasta = FASTA(self.ray.p.filtered)
+class MegahitResults(AssemblyResults):
+    pass

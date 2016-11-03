@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 # Internal modules #
 from gefes.assemble.ray             import Ray
+from gefes.assemble.megahit         import Megahit
 from gefes.running.aggregate_runner import AggregateRunner
 from gefes.report.aggregate         import AggregateReport
 from gefes.merged.newbler           import Newbler
@@ -90,8 +91,9 @@ class Aggregate(object):
 
     @property_cached
     def merged(self):
-        """Map to the mono-assembly."""
-        return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
+        """All assemblies merged into a bigger one."""
+        return Megahit(self.samples, self.p.merged_dir)
+        #return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
 
     @property_cached
     def runner(self):

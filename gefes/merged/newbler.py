@@ -125,13 +125,6 @@ class Newbler(Merger):
 ###############################################################################
 class NewblerResults(AssemblyResults):
 
-    def __nonzero__(self): return bool(self.parent.p.filtered_contigs)
-
-    def __init__(self, newbler):
-        self.parent, self.newbler = newbler, newbler
-        self.p = self.parent.p
-        self.contigs_fasta = FASTA(self.newbler.p.filtered)
-
     @property_cached
     def mappings(self):
         """Map each of the samples used in the assembly back to this assembly."""
