@@ -1,0 +1,84 @@
+{
+
+"contacts": {
+    "contact_one": {
+        "function": "PhD",
+        "name":     "Adler Aline",
+        "email":    "aline.adler@epfl.ch"
+    }
+    ,
+    "contact_two": {
+        "function": "PI",
+        "name":     "Christof Holliger",
+        "email":    "christof.holliger@epfl.ch"
+    }
+},
+
+"project_short_name":   "granular_sludge_2",
+"sample_short_name":    "s26_o2",
+"sample_num":           "139",
+"used":                 "yes",
+
+"fwd_filename":         "TCCTGAGC_AGAGTAGA_s_4_1.fastq.gz",
+"rev_filename":         "TCCTGAGC_AGAGTAGA_s_4_2.fastq.gz",
+
+
+
+
+
+
+
+
+
+"organization":         "epfl",
+"prefix":               "~/GEFES/raw/projects/epfl/",
+"directory":            "granular_sludge/2/",
+"suffix":               "group_11/",
+
+"project_long_name":    "Granular Sludge O2",
+"sample_long_name":     "Sample 26 O2",
+
+"fwd_read_count":       "366407",
+"rev_read_count":       "366407",
+"fwd_md5":              "7fd4230abbb48cb845c1ab7e7ce72a8e",
+"rev_md5":              "4af6fe26894893db019e3c30c1399443",
+
+
+
+
+"forward_num":          "0",
+"forward_mid":          "NNNNNNN",
+"reverse_num":          "0",
+"reverse_mid":          "NNNNNNN",
+
+
+
+
+"library_strategy":     "WGS",
+"library_source":       "METAGENOMIC",
+"library_selection":    "RANDOM",
+"library_layout":       "Paired",
+"platform":             "ILLUMINA",
+"instrument_model":     "Illumina HiSeq",
+"instrument_software":  "v0.0.0.0",
+"forward_read_length":  "100",
+"reverse_read_length":  "100",
+
+
+
+
+
+
+"date":         "2000-01-01 00:00:00",
+"latitude":     ["0", "N"],
+"longitude":    ["0", "E"],
+"country":      "Switzerland",
+
+
+
+
+
+
+
+"sentinel":             "True"
+}
