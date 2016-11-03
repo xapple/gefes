@@ -36,9 +36,22 @@ for s in proj: print s.pair.fwd.md5
 for s in proj: print s.pair.rev.md5
 for s in proj: print len(s.pair.fwd.first)
 
-print("# Get special sample name #")
+print("# Get special sample name for proj2 #")
 from collections import OrderedDict
 d = open("/home/lucas/GEFES//raw/projects/epfl/granular_sludge/2/correspondances.csv").read()
 d = OrderedDict((l.split()[0][:-13] + '.fastq.gz', l.split()[1]) for l in d.split('\n') if l)
 for s in proj2: print s.short_name
 for s in proj2: print d[s.pair.fwd.filename]
+
+print("# Convert Old 1.3 PHRED format for proj2 #")
+with Timer(): prll_map(lambda s: s.pair.fwd.phred_13_to_18(), proj2)
+with Timer(): prll_map(lambda s: s.pair.rev.phred_13_to_18(), proj2)
+
+print("# Check PHRED formats #")
+for s in proj1: assert s.pair.fwd.guess_phred_format() == 'Sanger'
+for s in proj2: assert s.pair.rev.guess_phred_format() == 'Sanger'
+
+################################ Preprocessing ################################
+print("# Starting cleaning of samples #")
+with Timer(): prll_map(lambda s: s.quality_checker.run(), proj1)
+with Timer(): prll_map(lambda s: s.quality_checker.run(), proj2)

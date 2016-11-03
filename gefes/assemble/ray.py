@@ -5,7 +5,7 @@ from __future__ import division
 import os, socket
 
 # Internal modules #
-from gefes.assemble        import AssemblyResults
+from gefes.assemble        import Assembler, AssemblyResults
 from gefes.report.assembly import AssemblyReport
 
 # First party modules #
@@ -19,7 +19,7 @@ from fasta import FASTA
 import sh
 
 ###############################################################################
-class Ray(object):
+class Ray(Assembler):
     """Will run the co-assembly of several samples by calling the Ray assembler.
     Expects version 2.3.1
     We remove all the contigs below the length cutoff threshold."""
@@ -40,28 +40,6 @@ class Ray(object):
     /bins/
     /report/report.pdf
     """
-
-    def __nonzero__(self): return bool(self.p.filtered)
-    def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
-    def __len__(self):  return len(self.samples)
-    def __getitem__(self, key):
-        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
-        return self.children[key]
-
-    def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
-        # Base parameters #
-        self.samples       = samples
-        self.children      = samples
-        self.result_dir    = result_dir
-        self.kmer_size     = kmer_size
-        self.length_cutoff = length_cutoff
-        # Auto paths #
-        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
-        self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Report #
-        self.report = AssemblyReport(self)
-        # Name #
-        self.name = self.short_name + '_' + str(self.kmer_size)
 
     def run(self):
         # Check samples #

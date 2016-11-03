@@ -29,7 +29,7 @@ class Sample(object):
     It's a bunch of paired sequences all coming from the same particular
     IRL lab sample. Might or might not correspond to an Illumina MID."""
 
-    default_cleaner = "window"
+    default_cleaner = "sickle"
 
     all_paths = """
     /logs/
@@ -116,7 +116,7 @@ class Sample(object):
         assert self.pair.format == 'fastq'
         choices = {'window':   (SlidingWindow, (self.p.clean_dir, self.pair, self.clean)),
                    'sickle':   (Sickle,        (self.p.clean_dir, self.pair, self.clean))}
-        cls, params = choices.get(self.default_cleaner, choices['window'])
+        cls, params = choices.get(self.default_cleaner)
         return cls(*params)
 
     @property_cached

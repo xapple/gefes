@@ -7,13 +7,41 @@ from gefes.binning.concoct import Concoct
 from gefes.outputs.hit_profile       import HitProfile
 from gefes.outputs.trait_annotations import TraitAnnotations
 from gefes.outputs.bins_summary      import BinsSummary
+from gefes.report.assembly           import AssemblyReport
 
 # First party modules #
 from fasta import FASTA
 from plumbing.cache import property_cached
+from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 import pandas
+
+###############################################################################
+class Assembler(object):
+    """Inherit from this."""
+
+    def __nonzero__(self): return bool(self.p.filtered)
+    def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
+    def __len__(self):  return len(self.samples)
+    def __getitem__(self, key):
+        if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
+        return self.children[key]
+
+    def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
+        # Base parameters #
+        self.samples       = samples
+        self.children      = samples
+        self.result_dir    = result_dir
+        self.kmer_size     = kmer_size
+        self.length_cutoff = length_cutoff
+        # Auto paths #
+        self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
+        self.p = AutoPaths(self.base_dir, self.all_paths)
+        # Report #
+        self.report = AssemblyReport(self)
+        # Name #
+        self.name = self.short_name + '_' + str(self.kmer_size)
 
 ###############################################################################
 class AssemblyResults(object):

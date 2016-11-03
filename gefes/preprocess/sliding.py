@@ -20,7 +20,7 @@ class SlidingWindow(QualityChecker):
 
     window_size = 10 # Size of the window we will slide along the read
     threshold   = 20 # This is a PHRED score threshold
-    min_length  = 50 # Minimum number of remaining base pairs
+    min_length  = 71 # Minimum number of remaining base pairs
     discard_N   = True
 
     def run(self):

@@ -28,7 +28,7 @@ class Sickle(QualityChecker):
     dependencies = []
 
     threshold   = 20 # This is a PHRED score threshold
-    min_length  = 50 # Minimum number of remaining base pairs
+    min_length  = 71 # Minimum number of remaining base pairs
     discard_N   = True
 
     @property
