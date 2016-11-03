@@ -38,10 +38,10 @@
 "project_long_name":    "Granular Sludge 1",
 "sample_long_name":     "Sample 36",
 
-"fwd_read_count":       "0",
-"rev_read_count":       "0",
-
-
+"fwd_read_count":       "184179",
+"rev_read_count":       "184179",
+"fwd_md5":              "2794951e37653d9430023e3e742ad26c",
+"rev_md5":              "80ea249de73a1a017b0fcdb5227b0bbf",
 
 
 
@@ -59,7 +59,7 @@
 "library_selection":    "RANDOM",
 "library_layout":       "Paired",
 "platform":             "ILLUMINA",
-"instrument_model":     "Illumina HiSeq",
+"instrument_model":     "Illumina MiSeq",
 "instrument_software":  "v0.0.0.0",
 "forward_read_length":  "301",
 "reverse_read_length":  "301",
