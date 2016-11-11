@@ -40,7 +40,7 @@ class Bwa(Mapper):
     @property_cached
     def results(self):
         results = BwaResults(self)
-        if not results: raise Exception("You can't access results from Bowtie before running the mapping.")
+        if not results: raise Exception("You can't access results from Bwa before running the mapping.")
         return results
 
 ###############################################################################

@@ -22,7 +22,7 @@ class Assembler(object):
     """Inherit from this."""
 
     def __nonzero__(self): return bool(self.p.filtered)
-    def __repr__(self): return '<%s object kmer %i>' % (self.__class__.__name__, self.kmer_size)
+    def __repr__(self): return '<%s object kmer %s>' % (self.__class__.__name__, self.kmer_size)
     def __len__(self):  return len(self.samples)
     def __getitem__(self, key):
         if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]

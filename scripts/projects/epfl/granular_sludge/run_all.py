@@ -56,7 +56,13 @@ print("# Starting cleaning of samples #")
 with Timer(): prll_map(lambda s: s.quality_checker.run(), proj1)
 with Timer(): prll_map(lambda s: s.quality_checker.run(), proj2)
 
-################################ Co-assembly ################################
+################################ Co-assembly ##################################
 print("# Co-assembly #")
 with Timer(): proj1.merged.run() # 40 minutes
-with Timer(): proj2.merged.run()
+with Timer(): proj2.merged.run() # 1 hour 26 minutes
+
+################################ Co-mapping ###################################
+print("# Co-mapping #")
+with Timer(): prll_map(lambda s: s.mapper.run(cpus=4), proj1, cpus=16) # x minutes
+with Timer(): prll_map(lambda s: s.mapper.run(cpus=4), proj2, cpus=16) # x minutes
+for s in tqdm(proj): s.mapper.run(cpus=16) # x minutes

@@ -56,17 +56,15 @@ class Mapper(object):
 
     def __init__(self, sample, assembly, result_dir):
         # Save attributes #
-        self.sample = sample
-        self.assembly = assembly
+        self.sample     = sample
+        self.assembly   = assembly
         self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
 
     def pre_run(self, verbose=True):
-        # Convenience shortcuts #
-        self.contigs_fasta = self.assembly.results.contigs_fasta
-        # Check both type of indexes exist #
+        """Check both type of indexes exist"""
         if not os.path.exists(self.contigs_fasta + '.1.bt2'):
             if verbose: print "Making bowtie index"; sys.stdout.flush()
             self.contigs_fasta.index_bowtie()
@@ -75,8 +73,6 @@ class Mapper(object):
             self.contigs_fasta.index_samtools()
 
     def post_run(self, cpus=1, verbose=True):
-        # Convenience shortcuts #
-        self.contigs_fasta = self.assembly.results.contigs_fasta
         # Create bam file, then sort it and finally index the bamfile #
         if verbose: print "Launching samtools view..."; sys.stdout.flush()
         sh.samtools('view', '-bt', self.contigs_fasta + '.fai', self.p.map_sam, '-o', self.p.map_bam, '-@', cpus)
@@ -122,6 +118,12 @@ class Mapper(object):
                 'VALIDATION_STRINGENCY=LENIENT',
                 'MAX_FILE_HANDLES_FOR_READ_ENDS_MAP=1000',
                 'REMOVE_DUPLICATES=TRUE')
+
+    #-------------------------------- Shortcuts -----------------------------#
+    @property
+    def contigs_fasta(self):
+        """Convenience shortcut. The number contigs of the assembly."""
+        return self.assembly.results.contigs_fasta
 
 ###############################################################################
 class MapperResults(object):

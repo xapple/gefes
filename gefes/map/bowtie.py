@@ -18,7 +18,7 @@ import sh
 class Bowtie(Mapper):
     """Uses Bowtie2 to maps reads from a Sample object back to an Assembly object.
     Expects version 2.2.5.
-    By default if a read can map in several spots, from the manual:
+    By default, if a read can map in several spots, from the manual:
     'The best alignment found is reported (randomly selected from among best if tied)'
     """
 

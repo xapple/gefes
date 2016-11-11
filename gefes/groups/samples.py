@@ -122,11 +122,11 @@ class Sample(object):
     @property_cached
     def mapper_51(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
     @property_cached
-    def mapper_61(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
+    def mapper_61(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "61/")
     @property_cached
-    def mapper_71(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
+    def mapper_71(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "71/")
     @property_cached
-    def mapper_81(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
+    def mapper_81(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "81/")
     @property_cached
     def mapper_merged(self): return Bowtie(self, self.project.merged, self.p.project_dir + "merged/")
 
@@ -167,6 +167,11 @@ class Sample(object):
 
     #-------------------------------- Shortcuts -----------------------------#
     @property
+    def name(self):
+        """Convenience shortcut. By default the short name."""
+        return self.short_name
+
+    @property
     def count(self):
         """Convenience shortcut. The number of sequences of the raw pair."""
         return self.pair.count
@@ -184,5 +189,5 @@ class Sample(object):
 
     @property
     def mapper(self):
-        """Convenience shortcut. By default the 71 kmer assembly."""
-        return self.mapper_71
+        """Convenience shortcut. By default the merged assembly."""
+        return self.mapper_merged

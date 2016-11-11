@@ -39,6 +39,8 @@ class Megahit(Assembler):
     /stderr.txt
     """
 
+    kmer_size = 'variable'
+
     def __init__(self, samples, result_dir, length_cutoff=1000):
         # Base parameters #
         self.samples       = samples
