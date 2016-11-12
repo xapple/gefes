@@ -30,15 +30,13 @@ class Ray(Assembler):
     url        = 'https://github.com/sebhtml/ray'
     dependencies = []
 
-    all_paths = """
+    all_paths = Assembler.all_paths + """
     /output/Contigs.fasta
     /output/log.txt
     /stdout.txt
     /stderr.txt
     /filtered_contigs.fasta
     /cut_up_contigs.fasta
-    /bins/
-    /report/report.pdf
     """
 
     def __init__(self, samples, result_dir, kmer_size=71, length_cutoff=1000):
@@ -144,4 +142,10 @@ class Ray(Assembler):
 
 ###############################################################################
 class RayResults(AssemblyResults):
-    pass
+
+    @property_cached
+    def mappings(self):
+        """Map each of the samples used in the assembly back to this assembly.
+        TODO: This should be updated to use a directory in the assembly results directory
+        and to remove the attributes from the Sample objects."""
+        return OrderedDict([(s.name, getattr(s, "mapper_%i" % self.parent.kmer_size)) for s in self.parent.samples])

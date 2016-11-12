@@ -6,8 +6,7 @@ A script to run all the procedure on the granular sludge project.
 """
 
 # Built-in modules #
-import os
-import shutil
+import os, shutil
 
 # Internal modules #
 import gefes
@@ -61,8 +60,18 @@ print("# Co-assembly #")
 with Timer(): proj1.merged.run() # 40 minutes
 with Timer(): proj2.merged.run() # 1 hour 26 minutes
 
-################################ Co-mapping ###################################
+################################ Co-mappings ###################################
 print("# Co-mapping #")
 with Timer(): prll_map(lambda s: s.mapper.run(cpus=4), proj1, cpus=16) # x minutes
 with Timer(): prll_map(lambda s: s.mapper.run(cpus=4), proj2, cpus=16) # x minutes
-for s in tqdm(proj): s.mapper.run(cpus=16) # x minutes
+for s in tqdm(proj): s.mapper.run(cpus=16) # 3 hours
+
+################################# Binning #####################################
+with Timer(): proj1.merged.results.binner.run() # x minutes
+with Timer(): proj2.merged.results.binner.run() # x minutes
+
+
+
+################################ Mono-assemblies ###############################
+
+################################ Mono-mappings #################################

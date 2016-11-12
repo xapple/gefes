@@ -124,8 +124,4 @@ class Newbler(Merger):
 
 ###############################################################################
 class NewblerResults(AssemblyResults):
-
-    @property_cached
-    def mappings(self):
-        """Map each of the samples used in the assembly back to this assembly."""
-        return OrderedDict([(s.name, s.mapper_merged) for s in self.newbler.samples])
+    pass

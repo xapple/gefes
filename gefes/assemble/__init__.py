@@ -28,6 +28,11 @@ class Assembler(object):
         if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
         return self.children[key]
 
+    all_paths = """
+    /bins/
+    /report/report.pdf
+    """
+
 ###############################################################################
 class AssemblyResults(object):
     """Inherit from this."""
@@ -57,10 +62,8 @@ class AssemblyResults(object):
 
     @property_cached
     def mappings(self):
-        """Map each of the samples used in the assembly back to this assembly.
-        TODO: This should be updated to use a directory in the assembly results directory
-        and to remove the attributes from the Sample objects."""
-        return OrderedDict([(s.name, getattr(s, "mapper_%i" % self.parent.kmer_size)) for s in self.parent.samples])
+        """Map each of the samples used in the assembly back to this assembly."""
+        return OrderedDict([(s.name, s.mapper_merged) for s in self.parent.samples])
 
     @property_cached
     def binner(self):

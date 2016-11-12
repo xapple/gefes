@@ -9,7 +9,6 @@ from gefes.assemble        import Assembler, AssemblyResults
 from gefes.report.assembly import AssemblyReport
 
 # First party modules #
-from plumbing.common import flatter
 from plumbing.autopaths import AutoPaths
 from plumbing.cache import property_cached
 from plumbing.slurm import num_processors, current_server
@@ -30,7 +29,7 @@ class Megahit(Assembler):
     url        = 'https://github.com/voutcn/megahit'
     dependencies = []
 
-    all_paths = """
+    all_paths = Assembler.all_paths + """
     /output/final.contigs.fa
     /output/log
     /output/opts.txt
@@ -56,7 +55,9 @@ class Megahit(Assembler):
         """The PDF report."""
         return AssemblyReport(self)
 
-    def run(self):
+    def run(self, cpus=None):
+        # Variable threads #
+        if cpus is None: cpus = num_processors
         # Check samples #
         for s in self.samples:
             assert s.clean.exists
@@ -76,7 +77,7 @@ class Megahit(Assembler):
         megahit('--out-dir',           self.out_dir,
                 '--presets',          'meta-large',
                 '--memory',           '0.7',
-                '--num-cpu-threads',   96,
+                '--num-cpu-threads',   cpus,
                 '--tmp-dir',          '/tmpfs/lucas/tmp/megahit/',
                 '--verbose',
                 *self.paths,

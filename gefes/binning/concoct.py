@@ -21,11 +21,11 @@ from tqdm import tqdm
 class Concoct(object):
     """Use CONCOCT at https://github.com/BinPro/CONCOCT
     to bin contigs together.
-    Expects version 0.4.0.
+    Expects version 0.4.1.
     """
 
     short_name = 'concoct'
-    long_name  = 'concoct v0.4.0'
+    long_name  = 'concoct v0.4.1'
     executable = 'concoct'
     dependencies = []
 
@@ -43,8 +43,8 @@ class Concoct(object):
 
     def __init__(self, samples, assembly, result_dir):
         # Save attributes #
-        self.samples = samples
-        self.assembly = assembly
+        self.samples    = samples
+        self.assembly   = assembly
         self.result_dir = result_dir
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
@@ -68,23 +68,24 @@ class Concoct(object):
         return self.coverage_matrix_tsv.to_dataframe(index_col=0)
 
     def run(self):
-        # Check samples loaded #
-        for s in self.samples:
-            if not s.loaded: s.load()
+        # Executable #
+        concoct = sh.Command(self.executable)
+        # Check version #
+        assert "concoct 0.4.1" in concoct('-v').stderr
         # Check TSV is made #
         self.coverage_matrix_tsv
         # Run the pipeline #
         print "Launching CONCOCT..."; sys.stdout.flush()
-        sh.concoct('--coverage_file',    self.coverage_matrix_tsv,
-                   '--composition_file', self.assembly.results.contigs_fasta,
-                   '-b',                 self.p.output_dir)
+        concoct('--coverage_file',    self.coverage_matrix_tsv,
+                '--composition_file', self.assembly.results.contigs_fasta,
+                '-b',                 self.p.output_dir)
         # Remove the large and useless original data #
         self.p.original_data.remove()
 
     @property_cached
     def results(self):
         results = ConcoctResults(self)
-        if not results: raise Exception("You can't access results from ConcoctResults before running the binning.")
+        if not results: raise Exception("You can't access results from Concoct before running the binning.")
         return results
 
 ###############################################################################
@@ -99,7 +100,7 @@ class ConcoctResults(object):
 
     @property_cached
     def contig_id_to_bin_id(self):
-        """Parse the raw result of CONOCT and return a dictionary with
+        """Parse the raw result of CONCOCT and return a dictionary with
         contig names as keys and bin names as values."""
         return dict(line.strip('\n').split(',') for line in self.concoct.p.clustering)
 
