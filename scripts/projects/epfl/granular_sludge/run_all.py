@@ -67,11 +67,11 @@ with Timer(): prll_map(lambda s: s.mapper.run(cpus=4), proj2, cpus=16) # x minut
 for s in tqdm(proj): s.mapper.run(cpus=16) # 3 hours
 
 ################################# Binning #####################################
-with Timer(): proj1.merged.results.binner.run() # x minutes
-with Timer(): proj2.merged.results.binner.run() # x minutes
-
-
+with Timer(): proj1.merged.results.binner.run() # 3.5 hours
+with Timer(): proj2.merged.results.binner.run() # 11.5 hours
 
 ################################ Mono-assemblies ###############################
 
+
 ################################ Mono-mappings #################################
+
