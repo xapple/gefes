@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gefes version 0.1.5 &mdash; gefes 0.1.5 documentation</title>
+    <title>gefes version 1.0.2 &mdash; gefes 1.0.2 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.5',
+        VERSION:     '1.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -31,7 +31,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="gefes 0.1.5 documentation" href="#" />
+    <link rel="top" title="gefes 1.0.2 documentation" href="#" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -51,7 +51,7 @@
         </button>
         <a class="navbar-brand" href="#">
           gefes</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1.5</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0.2</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -78,10 +78,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">gefes version 0.1.5</a></li>
-<li><a class="reference internal" href="#warnings">Warnings:</a></li>
-<li><a class="reference internal" href="#context">Context:</a></li>
-<li><a class="reference internal" href="#overview">Overview:</a></li>
+<li><a class="reference internal" href="#"><code class="docutils literal"><span class="pre">gefes</span></code> version 1.0.2</a><ul>
+<li><a class="reference internal" href="#warnings">Warnings</a></li>
+<li><a class="reference internal" href="#context">Context</a></li>
+<li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#installing">Installing</a><ul>
 <li><a class="reference internal" href="#step-1-cloning-the-repository">Step 1: Cloning the repository</a></li>
 <li><a class="reference internal" href="#step-2a-modify-your-python-search-path">Step 2A: Modify your python search path</a></li>
@@ -96,6 +96,8 @@
 </li>
 <li><a class="reference internal" href="#flowchart">Flowchart</a></li>
 <li><a class="reference internal" href="#diagram">Diagram</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -135,8 +137,8 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="gefes-version-0-1-5">
-<h1>gefes version 0.1.5<a class="headerlink" href="#gefes-version-0-1-5" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gefes-version-1-0-2">
+<h1><code class="docutils literal"><span class="pre">gefes</span></code> version 1.0.2<a class="headerlink" href="#gefes-version-1-0-2" title="Permalink to this headline">¶</a></h1>
 <p>The acronym <code class="docutils literal"><span class="pre">gefes</span></code> stands for <strong>G</strong>​enome <strong>E</strong>​xtraction
 <strong>F</strong>​rom <strong>E</strong>​nvironmental <strong>S</strong>​equencing.</p>
 <p>This is yet another pipeline for assembling the short reads produced by
@@ -144,37 +146,24 @@ shotgun-metagenomic sequencing experiments in an attempt to recompose
 full microbial genomes. With this tool, we would like to reconstitute
 the functional potential of the important bacterial and archaeal players
 in aquatic environments.</p>
-<p>This source code is propriety of Lucas Sinclair, co-founder of
-Envonautics Ltd. (<a class="reference external" href="https://www.envonautics.com">https://www.envonautics.com</a>)</p>
-</div>
+<p>This source code is propriety of Lucas Sinclair <a class="reference external" href="mailto:lucas&#37;&#52;&#48;sinclair&#46;bio">lucas<span>&#64;</span>sinclair<span>&#46;</span>bio</a>, a
+bioinformatics consultant hireable at www.sinclair.bio</p>
 <div class="section" id="warnings">
-<h1>Warnings:<a class="headerlink" href="#warnings" title="Permalink to this headline">¶</a></h1>
+<h2>Warnings<a class="headerlink" href="#warnings" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li>First of all, this is still very much work in progress. We are not
-yet at a stage where full metabolic predictions can be made.</li>
-<li>Secondly, of course these kind of approaches are not entirely
-revolutionary. Other labs on the globe have been doing things like
-this for a two or three years. But the main reason we are replicating
-these efforts in a way is to acquire our own setup that we are able
-to control. Other labs do make their tools available, but if you
-manage to install them on your computer you end up with something
-that was tailored for their type of data and that you can&#8217;t change.
-Moreover, you don&#8217;t really understand how it works. With our own
-setup we have a flexibility that lets us try new ideas and implement
-them in the code very quickly.</li>
-<li>Thirdly, you also have to keep in mind that what we are measuring is
-a potential. It&#8217;s not because you see a particular gene in a
-population or strain that it is necessarily being actively
-translated, transcribed, folded and exported. Ideally, you should use
-the results from such tools like <code class="docutils literal"><span class="pre">gefes</span></code> to direct your laboratory
-assays which will truly confirm if a given process is taking place.</li>
-<li>Finally, the <code class="docutils literal"><span class="pre">gefes</span></code> project is not a biologist-oriented tool that
-supports all the possible use cases one could have with metagenomic
-sequence data out of the box. For instance, it does not have a
-graphical interface to operate, nor any bash/sh/csh commands. Indeed,
-as each sequencing experiment will have different goals and
-scientific questions associated to it, there cannot be a standard set
-of procedures to apply to the data. Instead, the <code class="docutils literal"><span class="pre">gefes</span></code> project a
+<li>You also have to keep in mind that what we are measuring is a
+potential. It&#8217;s not because you see a particular gene in a population
+or strain that it is necessarily being actively translated,
+transcribed, folded and exported. Ideally, you should use the results
+from such tools like <code class="docutils literal"><span class="pre">gefes</span></code> to direct your laboratory assays which
+will truly confirm if a given process is taking place.</li>
+<li>The <code class="docutils literal"><span class="pre">gefes</span></code> project is not a biologist-oriented tool that supports
+all the possible use cases one could have with metagenomic sequence
+data out of the box. For instance, it does not have a graphical
+interface to operate, nor any bash/sh/csh commands. Indeed, as each
+sequencing experiment will have different goals and scientific
+questions associated to it, there cannot be a standard set of
+procedures to apply to the data. Instead, the <code class="docutils literal"><span class="pre">gefes</span></code> project a
 flexible and modular collections of packages written in proper, clean
 and commented object-oriented python which enables the user to
 survey, modify and extend the code-base easily &#8211; provided he has a
@@ -185,8 +174,8 @@ infrastructure needed himself.</li>
 </ul>
 </div>
 <div class="section" id="context">
-<h1>Context:<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h1>
-<p>As you know almost none of the microbes living in natural environments
+<h2>Context<a class="headerlink" href="#context" title="Permalink to this headline">¶</a></h2>
+<p>As you know, almost none of the microbes living in natural environments
 can be isolated or cultured easily. So instead, we go and perform
 shotgun metagenomic sampling by taking a glass of water from a lake,
 operating a total DNA extraction and inserting the solution into a
@@ -194,9 +183,9 @@ high-throughput sequencer. As a result, we receive a file full of short
 DNA reads each coming (statistically) from a different microbe.</p>
 <p>It&#8217;s quite different from when you are able to isolate a bacterium and
 grow it such as E. Coli. In that case, your DNA reads are coming from
-random locations of the E. Coli chromosome, but they are all originating
-from a copy of the same genome. This makes it easy to pieces things
-together afterwards.</p>
+random locations of the E. Coli. chromosome, but they are all
+originating from a copy of the same genome. This makes it easy to pieces
+things together afterwards.</p>
 <p>What we have as starting data in our case is more messy. Every DNA read
 is potentially coming from a different species. Plus, the fragments are
 really short and only span a fraction of a typical microbial gene.</p>
@@ -214,7 +203,7 @@ distribute the computation on a network of computers (via the SLURM
 queuing system).</p>
 </div>
 <div class="section" id="overview">
-<h1>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 <p>Starting from the raw reads there are about eight distinct processing
 steps in <code class="docutils literal"><span class="pre">gefes</span></code>:</p>
 <ol class="arabic simple">
@@ -227,16 +216,25 @@ steps in <code class="docutils literal"><span class="pre">gefes</span></code>:</
 <li>Annotate</li>
 <li>Predict metabolism</li>
 </ol>
+<p>Unfortunately, no other detailed documentation has been written yet but
+the code is clean and commented. In addition, these two descriptive
+files might help you figure out what is going on:</p>
+<ul class="simple">
+<li><a class="reference external" href="/../master/documentation/flowchart.pdf?raw=true">Flowchart of data
+processing</a></li>
+<li><a class="reference external" href="/../master/documentation/diagram.pdf?raw=true">Tentative UML diagram of objects
+composition</a></li>
+</ul>
 </div>
 <div class="section" id="installing">
-<h1>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h1>
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
 <p>No automated installation has been developed for the <code class="docutils literal"><span class="pre">gefes</span></code> package
 yet. In the meantime, following this document and typing these commands
 on your bash prompt should get you started. It is designed so you don&#8217;t
 need super user privileges at any step. If you cannot get a functional
 installation set up, contact the authors.</p>
 <div class="section" id="step-1-cloning-the-repository">
-<h2>Step 1: Cloning the repository<a class="headerlink" href="#step-1-cloning-the-repository" title="Permalink to this headline">¶</a></h2>
+<h3>Step 1: Cloning the repository<a class="headerlink" href="#step-1-cloning-the-repository" title="Permalink to this headline">¶</a></h3>
 <p>Here you will download a copy of the code from github and place it in
 your home directory.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ cd ~
@@ -245,9 +243,10 @@ $ cd repos
 $ git clone git@github.com:xapple/gefes.git
 </pre></div>
 </div>
+<p>NB: the access to this repository is restricted.</p>
 </div>
 <div class="section" id="step-2a-modify-your-python-search-path">
-<h2>Step 2A: Modify your python search path<a class="headerlink" href="#step-2a-modify-your-python-search-path" title="Permalink to this headline">¶</a></h2>
+<h3>Step 2A: Modify your python search path<a class="headerlink" href="#step-2a-modify-your-python-search-path" title="Permalink to this headline">¶</a></h3>
 <p>Here you will edit your <code class="docutils literal"><span class="pre">.bashrc</span></code> or <code class="docutils literal"><span class="pre">.bash_profile</span></code> to add a
 reference to the module you just downloaded. When you type
 <code class="docutils literal"><span class="pre">import</span> <span class="pre">gefes</span></code> python will know where to look !</p>
@@ -257,7 +256,7 @@ export PYTHONPATH=&quot;$HOME/repos/gefes/&quot;:$PYTHONPATH
 </div>
 </div>
 <div class="section" id="step-2b-modify-your-binary-search-path">
-<h2>Step 2B: Modify your binary search path<a class="headerlink" href="#step-2b-modify-your-binary-search-path" title="Permalink to this headline">¶</a></h2>
+<h3>Step 2B: Modify your binary search path<a class="headerlink" href="#step-2b-modify-your-binary-search-path" title="Permalink to this headline">¶</a></h3>
 <p>There are some dependencies that are not too large and can be bundled as
 binaries with this module. To avoid the hassle of downloading and
 compiling these requirements, we have added a bunch of them in the
@@ -269,7 +268,7 @@ export PATH=&quot;$HOME/repos/gefes/bin/linux/mcl/:$PATH&quot;
 </div>
 </div>
 <div class="section" id="step-3-install-your-own-version-of-python">
-<h2>Step 3: Install your own version of python<a class="headerlink" href="#step-3-install-your-own-version-of-python" title="Permalink to this headline">¶</a></h2>
+<h3>Step 3: Install your own version of python<a class="headerlink" href="#step-3-install-your-own-version-of-python" title="Permalink to this headline">¶</a></h3>
 <p>Your system probably comes with a version of python installed. But the
 variations from system to system are too great to rely on any available
 setup. We strongly recommand to just install our own in the home
@@ -300,21 +299,30 @@ $ pyenv rehash
 </div>
 </div>
 <div class="section" id="step-4-install-all-required-python-packages">
-<h2>Step 4: Install all required python packages<a class="headerlink" href="#step-4-install-all-required-python-packages" title="Permalink to this headline">¶</a></h2>
+<h3>Step 4: Install all required python packages<a class="headerlink" href="#step-4-install-all-required-python-packages" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">gefes</span></code> uses many third party python libraries. You can get them by
 running these commands:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install matplotlib
-$ pip install pandas
-$ pip install biopython
-$ pip install sh
-$ pip install tqdm
-$ pip install decorator
-$ pip install shell_command
-$ pip install threadpool
-$ pip install scipy
-$ pip install pysam
-$ pip install concoct
-$ pip install tabulate
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install --user matplotlib
+$ pip install --user pandas
+$ pip install --user biopython
+$ pip install --user sh
+$ pip install --user tqdm
+$ pip install --user decorator
+$ pip install --user shell_command
+$ pip install --user threadpool
+$ pip install --user scipy
+$ pip install --user pysam
+$ pip install --user concoct
+$ pip install --user tabulate
+$ pip install --user regex
+$ pip install --user humanfriendly
+$ pip install --user ftputil
+$ pip install --user pystache
+$ pip install --user humanfriendly
+$ pip install --user humanfriendly
+$ pip install --user humanfriendly
+$ pip install --user humanfriendly
+$ pip install --user humanfriendly
 </pre></div>
 </div>
 <p>It also uses several first-party python libraries that we have developed
@@ -331,7 +339,7 @@ $ pip install pymarktex
 </div>
 </div>
 <div class="section" id="step-5-obtaining-extra-dependencies">
-<h2>Step 5: Obtaining extra dependencies<a class="headerlink" href="#step-5-obtaining-extra-dependencies" title="Permalink to this headline">¶</a></h2>
+<h3>Step 5: Obtaining extra dependencies<a class="headerlink" href="#step-5-obtaining-extra-dependencies" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">gefes</span></code> makes use of many third party programs which need to be
 installed and accessible from your <code class="docutils literal"><span class="pre">$PATH</span></code>. Depending on what parts of
 the pipeline you are planning to run, you might not need them all. You
@@ -352,6 +360,8 @@ version 1.10 providing <code class="docutils literal"><span class="pre">prokka</
 prodigal, barrnap, signalp and tbl2asn)</li>
 <li><a class="reference external" href="https://www.tug.org/texlive/">LaTeX</a> version <code class="docutils literal"><span class="pre">TeX</span> <span class="pre">Live</span> <span class="pre">2014</span></code>
 providing <code class="docutils literal"><span class="pre">xelatex</span></code>.</li>
+<li><a class="reference external" href="http://pandoc.org/">pandoc</a> version <code class="docutils literal"><span class="pre">1.17.0.3</span></code> providing
+<code class="docutils literal"><span class="pre">pandoc</span></code>.</li>
 </ul>
 <p>These can take some time to install and unfortunately we can&#8217;t package
 them with our project! Hopefully, some of them are already installed on
@@ -368,7 +378,7 @@ providing <code class="docutils literal"><span class="pre">concoct</span></code>
 </ul>
 </div>
 <div class="section" id="step-6-make-a-working-directory-with-the-raw-data-linked">
-<h2>Step 6: Make a working directory with the raw data linked<a class="headerlink" href="#step-6-make-a-working-directory-with-the-raw-data-linked" title="Permalink to this headline">¶</a></h2>
+<h3>Step 6: Make a working directory with the raw data linked<a class="headerlink" href="#step-6-make-a-working-directory-with-the-raw-data-linked" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">gefes</span></code> will generate results in a directory named <code class="docutils literal"><span class="pre">views</span></code> in a
 directory named <code class="docutils literal"><span class="pre">GEFES</span></code> in your home folder. You can change this by
 editing the code of course.</p>
@@ -380,14 +390,14 @@ $ mkdir views
 </div>
 </div>
 <div class="section" id="step-7-make-a-json-file-describing-your-project">
-<h2>Step 7: Make a JSON file describing your project<a class="headerlink" href="#step-7-make-a-json-file-describing-your-project" title="Permalink to this headline">¶</a></h2>
+<h3>Step 7: Make a JSON file describing your project<a class="headerlink" href="#step-7-make-a-json-file-describing-your-project" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">gefes</span></code> will create <code class="docutils literal"><span class="pre">Project</span></code> objects with associated <code class="docutils literal"><span class="pre">Sample</span></code>
 objects based on a user inputted JSON files. Look at the <code class="docutils literal"><span class="pre">json</span></code>
 directory at the root of the repository and make your own. You have to
 tell <code class="docutils literal"><span class="pre">gefes</span></code> where to look for your raw reads.</p>
 </div>
 <div class="section" id="step-8-troubleshooting">
-<h2>Step 8: Troubleshooting<a class="headerlink" href="#step-8-troubleshooting" title="Permalink to this headline">¶</a></h2>
+<h3>Step 8: Troubleshooting<a class="headerlink" href="#step-8-troubleshooting" title="Permalink to this headline">¶</a></h3>
 <p>You might run into difficulties at some of the steps above &#8211; if that is
 the case check this section for a solution.</p>
 <ul class="simple">
@@ -427,7 +437,7 @@ $ make -j16 MPI_IO=y MPICXX=mpicc MAXKMERLENGTH=91
 </div>
 </div>
 <div class="section" id="flowchart">
-<h1>Flowchart<a class="headerlink" href="#flowchart" title="Permalink to this headline">¶</a></h1>
+<h2>Flowchart<a class="headerlink" href="#flowchart" title="Permalink to this headline">¶</a></h2>
 <p>Below is drawn the flowchart describing the data processing along all
 the steps of GEFES:</p>
 <div class="figure" id="id1">
@@ -436,13 +446,14 @@ the steps of GEFES:</p>
 </div>
 </div>
 <div class="section" id="diagram">
-<h1>Diagram<a class="headerlink" href="#diagram" title="Permalink to this headline">¶</a></h1>
+<h2>Diagram<a class="headerlink" href="#diagram" title="Permalink to this headline">¶</a></h2>
 <p>Below is presented a tentative UML diagram detailing not the inheritance
 of the classes but the use of the composition design pattern between the
 objects created.</p>
 <div class="figure" id="id2">
 <img alt="Diagram" src="_images/diagram.png" />
 <p class="caption"><span class="caption-text">Diagram</span></p>
+</div>
 </div>
 </div>
 

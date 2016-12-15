@@ -1,26 +1,22 @@
-## gefes version 0.1.5
+# `gefes` version 1.0.2
 
 The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**​nvironmental **S**​equencing.
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-This source code is propriety of Lucas Sinclair, co-founder of Envonautics Ltd. (https://www.envonautics.com)
+This source code is propriety of Lucas Sinclair <lucas@sinclair.bio>, a bioinformatics consultant hireable at www.sinclair.bio
 
-## Warnings:
+## Warnings
 
-* First of all, this is still very much work in progress. We are not yet at a stage where full metabolic predictions can be made.
+* You also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like `gefes` to direct your laboratory assays which will truly confirm if a given process is taking place.
 
-* Secondly, of course these kind of approaches are not entirely revolutionary. Other labs on the globe have been doing things like this for a two or three years. But the main reason we are replicating these efforts in a way is to acquire our own setup that we are able to control. Other labs do make their tools available, but if you manage to install them on your computer you end up with something that was tailored for their type of data and that you can't change. Moreover, you don't really understand how it works. With our own setup we have a flexibility that lets us try new ideas and implement them in the code very quickly.
+* The `gefes` project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the `gefes` project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.
 
-* Thirdly, you also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like `gefes` to direct your laboratory assays which will truly confirm if a given process is taking place.
+## Context
 
-* Finally, the `gefes` project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the `gefes` project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.
+As you know, almost none of the microbes living in natural environments can be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
 
-## Context:
-
-As you know almost none of the microbes living in natural environments can be isolated or cultured easily. So instead, we go and perform shotgun metagenomic sampling by taking a glass of water from a lake, operating a total DNA extraction and inserting the solution into a high-throughput sequencer. As a result, we receive a file full of short DNA reads each coming (statistically) from a different microbe.
-
-It's quite different from when you are able to isolate a bacterium and grow it such as E. Coli. In that case, your DNA reads are coming from random locations of the E. Coli chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.
+It's quite different from when you are able to isolate a bacterium and grow it such as E. Coli. In that case, your DNA reads are coming from random locations of the E. Coli. chromosome, but they are all originating from a copy of the same genome. This makes it easy to pieces things together afterwards.
 
 What we have as starting data in our case is more messy. Every DNA read is potentially coming from a different species. Plus, the fragments are really short and only span a fraction of a typical microbial gene.
 
@@ -28,7 +24,7 @@ How do we put the reads together to make genomes ? How are we going to figure ou
 
 Many objects common to any analysis such as a "FASTQ file pair", a "Sample", a "Aggregate of Samples", a "Sequence quality checker", an "Assembly", a "Read mapper", a "Contig binner", etc. are provided. In addition you will find routines for sending these objects through well-known algorithms such as Sickle, Ray, Bowtie, etc. Lots of other functionality is also present such as a multitude of visualizations in `matplotlib` and other things such as the ability to automatically distribute the computation on a network of computers (via the SLURM queuing system).
 
-## Overview:
+## Overview
 
 Starting from the raw reads there are about eight distinct processing steps in `gefes`:
 
@@ -41,6 +37,11 @@ Starting from the raw reads there are about eight distinct processing steps in `
 7. Annotate
 8. Predict metabolism
 
+Unfortunately, no other detailed documentation has been written yet but the code is clean and commented. In addition, these two descriptive files might help you figure out what is going on:
+
+* [Flowchart of data processing](/../master/documentation/flowchart.pdf?raw=true "Flowchart")
+* [Tentative UML diagram of objects composition](/../master/documentation/diagram.pdf?raw=true "Diagram")
+
 ## Installing
 
 No automated installation has been developed for the `gefes` package yet. In the meantime, following this document and typing these commands on your bash prompt should get you started. It is designed so you don't need super user privileges at any step. If you cannot get a functional installation set up, contact the authors.
@@ -52,6 +53,8 @@ Here you will download a copy of the code from github and place it in your home 
     $ mkdir repos
     $ cd repos
     $ git clone git@github.com:xapple/gefes.git
+
+NB: the access to this repository is restricted.
 
 #### Step 2A: Modify your python search path
 Here you will edit your ``.bashrc`` or ``.bash_profile`` to add a reference to the module you just downloaded. When you type `import gefes` python will know where to look !
@@ -93,18 +96,27 @@ Relaunch your shell and type these commands to get the right version of python:
 #### Step 4: Install all required python packages
 `gefes` uses many third party python libraries. You can get them by running these commands:
 
-    $ pip install matplotlib
-    $ pip install pandas
-    $ pip install biopython
-    $ pip install sh
-    $ pip install tqdm
-    $ pip install decorator
-    $ pip install shell_command
-    $ pip install threadpool
-    $ pip install scipy
-    $ pip install pysam
-    $ pip install concoct
-    $ pip install tabulate
+    $ pip install --user matplotlib
+    $ pip install --user pandas
+    $ pip install --user biopython
+    $ pip install --user sh
+    $ pip install --user tqdm
+    $ pip install --user decorator
+    $ pip install --user shell_command
+    $ pip install --user threadpool
+    $ pip install --user scipy
+    $ pip install --user pysam
+    $ pip install --user concoct
+    $ pip install --user tabulate
+    $ pip install --user regex
+    $ pip install --user humanfriendly
+    $ pip install --user ftputil
+    $ pip install --user pystache
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
 
 It also uses several first-party python libraries that we have developed and use in several projects. You can get them by running these commands:
 
@@ -125,6 +137,7 @@ Don't forget to rehash the executable links at the end if you are using `pyenv` 
  * [samtools](http://samtools.sourceforge.net) version 0.1.19 providing ``samtools``
  * [prokka](http://www.vicbioinformatics.com/software.prokka.shtml) version 1.10 providing ``prokka`` (itself requires rnammer, aragorn, prodigal, barrnap, signalp and tbl2asn)
  * [LaTeX](https://www.tug.org/texlive/) version `TeX Live 2014` providing ``xelatex``.
+ * [pandoc](http://pandoc.org/) version `1.17.0.3` providing ``pandoc``.
 
 These can take some time to install and unfortunately we can't package them with our project! Hopefully, some of them are already installed on your server or can be accessed via a module system. Then, there are a few that are bundled within this repository or are obtained with `pip`:
 
