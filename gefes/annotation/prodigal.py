@@ -13,7 +13,7 @@ import sh
 ###############################################################################
 class Prodigal(object):
     """Will run the Prodigal software on one single contig.
-    Expects version  2.6.2
+    Expects version v2.6.2
     Good read at https://github.com/hyattpd/prodigal/wiki/Advice-by-Input-Type
     - Adds an illegal protein letter (a star) to the end of every sequence."""
 

@@ -6,9 +6,9 @@ from collections import OrderedDict
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
-from plumbing.cache import property_cached
-from plumbing.slurm import num_processors
-from plumbing.graphs import Graph
+from plumbing.cache     import property_cached
+from plumbing.slurm     import num_processors
+from plumbing.graphs    import Graph
 
 # Third party modules #
 import sh
@@ -17,11 +17,13 @@ from matplotlib import pyplot
 ###############################################################################
 class Checkm(object):
     """Use CheckM at to evaluate a bin of contigs.
-    Expects version v0.9.7.
+    Expects version v1.0.7.
+
+    CheckM provides a set of tools for assessing the quality of genomes recovered from isolates, single cells, or metagenomes. It provides robust estimates of genome completeness and contamination by using collocated sets of genes that are ubiquitous and single-copy within a phylogenetic lineage
     """
 
     short_name = 'checkm'
-    long_name  = 'CheckM v0.9.7'
+    long_name  = 'CheckM v1.0.7'
     executable = 'checkm'
     url        = 'https://github.com/Ecogenomics/CheckM'
     dependencies = ['hmmer', 'prodigal', 'pplacer']
@@ -45,18 +47,24 @@ class Checkm(object):
     def run(self, cpus=None):
         # Variable threads #
         if cpus is None: cpus = num_processors
+        # Executable #
+        checkm = sh.Command(self.executable)
+        # Check version #
+        assert "CheckM v1.0.7" in checkm('-h')
         # Link the bin's fasta file #
         self.bin.fasta.link_to(self.p.fasta)
+        # The output directory has to be empty or the program stops #
+        self.p.output_dir.remove()
         # Run the pipeline #
         print "Launching CheckM on bin '%s'..." % self.bin.name; sys.stdout.flush()
-        sh.checkm('lineage_wf',
-                  '-x', 'fasta',
-                  '-t', cpus,
-                  self.result_dir,
-                  self.p.output_dir,
-                  #'--tab_table', # See https://github.com/Ecogenomics/CheckM/issues/29
-                  _out=self.p.stdout.path,
-                  _err=self.p.stderr.path)
+        checkm('lineage_wf',
+               '-x', 'fasta',
+               '-t', cpus,
+               self.result_dir,
+               self.p.output_dir,
+               #'--tab_table', # See https://github.com/Ecogenomics/CheckM/issues/29
+               _out=self.p.stdout.path,
+               _err=self.p.stderr.path)
         # Check that it worked #
         assert 'unrecoverable error' not in self.p.stdout.contents
 

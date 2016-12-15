@@ -1,6 +1,5 @@
 # Built-in modules #
 import sys, os
-from collections import OrderedDict
 
 # Internal modules #
 from gefes.merged import Merger

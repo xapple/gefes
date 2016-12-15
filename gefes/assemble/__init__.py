@@ -7,12 +7,10 @@ from gefes.binning.concoct import Concoct
 from gefes.outputs.hit_profile       import HitProfile
 from gefes.outputs.trait_annotations import TraitAnnotations
 from gefes.outputs.bins_summary      import BinsSummary
-from gefes.report.assembly           import AssemblyReport
 
 # First party modules #
 from fasta import FASTA
 from plumbing.cache import property_cached
-from plumbing.autopaths import AutoPaths
 
 # Third party modules #
 import pandas

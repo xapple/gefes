@@ -49,6 +49,8 @@ class Kraken(object):
     def run(self, keep_raw=False, cpus=None):
         # Variable threads #
         if cpus is None: cpus = num_processors
+        # Check version #
+        assert "0.10.5-beta" in sh.kraken('--version')
         # Run the main classification #
         sh.kraken('--preload',
                   '--threads', str(cpus),

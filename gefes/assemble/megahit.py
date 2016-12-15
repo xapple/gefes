@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket
+import os, warnings
 
 # Internal modules #
 from gefes.assemble        import Assembler, AssemblyResults
@@ -91,9 +91,11 @@ class Megahit(Assembler):
         # Filter short contigs #
         filtered = FASTA(self.p.filtered)
         contigs.extract_length(new_path=filtered, lower_bound=self.length_cutoff)
+        message = "After filtering, there were no contigs left in sample '%s'" % self
+        if not filtered: warnings.warn(message)
         # Make indexes (used later) #
-        if not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
-        if not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
+        if filtered and not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
+        if filtered and not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
 
     @property
     def short_description(self):

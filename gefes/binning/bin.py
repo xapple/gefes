@@ -91,7 +91,8 @@ class Bin(object):
     @property_cached
     def faa(self):
         """A fasta file containing only the predicted proteins
-        from all contigs in this bin (through prodigal)."""
+        from all contigs in this bin. Don't access before running
+        Prodigal."""
         faa = FASTA(self.p.faa)
         if not faa.exists:
             temp = FASTA(new_temp_path())

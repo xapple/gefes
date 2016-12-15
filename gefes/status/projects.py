@@ -21,7 +21,7 @@ class ProjectStatus(object):
         self.samples = project.samples
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
-             'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings',
+             'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings', 'merged_mapping',
              'binning', 'merged_binning', 'check_m', 'phylophlan', 'pfams',
              'tigrfams']
 
@@ -40,21 +40,22 @@ class ProjectStatus(object):
 
     def status(self, details=False):
         """Full message to be printed on the terminal."""
-        # Update terminal length #
+        # Get and update the terminal length #
         self.rows, self.columns = map(int,os.popen('stty size', 'r').read().split())
         # The header #
         message = unicode('\n' + self.header + '\n')
-        # Useful later #
-        green_block   = Color.grn + u"███" + Color.end
-        red_block     = Color.red + u"███" + Color.end
+        # The green or red rectangle to print #
+        black_block   = u"███"
+        green_block   = Color.grn + black_block + Color.end
+        red_block     = Color.red + black_block + Color.end
         bool_to_block = lambda b: green_block if b else red_block
         # Do it #
         for step in self.steps:
             title, detail, outcome = getattr(self, step)
             if details: message += Color.b_blu
-            message += title.ljust(self.columns-3) + bool_to_block(outcome) + '\n'
+            message += bool_to_block(outcome) + ' ' + title + '\n'
             if details:
-                for n,o in detail: message += n.ljust(self.columns-3) + bool_to_block(o) + '\n'
+                for n,o in detail: message += bool_to_block(o) + ' ' + n + '\n'
                 message += '-' * self.columns + '\n'
         return message
 
@@ -150,6 +151,15 @@ class ProjectStatus(object):
         return title, detail, outcome
 
     @property
+    def merged_mapping(self):
+        title    = "The mappings of each sample to the merged assembly"
+        func     = lambda s: bool(s.mapper_merged.p.coverage)
+        items    = self.samples
+        outcome  = all(func(s) for s in items)
+        detail   = ((str(s), func(s)) for s in items)
+        return title, detail, outcome
+
+    @property
     def binning(self):
         title    = "The binning of all the contigs in each assembly"
         func     = lambda a: bool(a) and bool(a.results.binner.p.clustering)
@@ -201,7 +211,7 @@ class ProjectStatus(object):
     @property
     def pfams(self):
         title = "The hmmsearch of all predicted proteins against all of pfam."
-        func  = lambda b: bool(b.pfams)
+        func  = lambda b: all(c.proteins for c in b) and bool(b.pfams)
         if self.proj.merged and self.proj.merged.results.binner:
             items = self.proj.merged.results.binner.results.bins
         else: items = []
@@ -212,7 +222,7 @@ class ProjectStatus(object):
     @property
     def tigrfams(self):
         title = "The hmmsearch of all predicted proteins against all of tigrfam."
-        func  = lambda b: bool(b.tigrfams)
+        func  = lambda b: all(c.proteins for c in b) and bool(b.tigrfams)
         if self.proj.merged and self.proj.merged.results.binner:
             items = self.proj.merged.results.binner.results.bins
         else: items = []

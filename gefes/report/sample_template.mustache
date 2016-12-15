@@ -67,7 +67,7 @@ Next, we filter the sequences based on the following rules:
 
 * If the resulting trimmed read is shorter than {{length_threshold}} base pairs or contains any undetermined "N" bases, we keep discard it.
 
-* In the event that one of the reads in a pair gets discarded while the other one does not, we place the resulting singleton in a separate "singles" FASTQ file.
+* In the event that one of the reads in a pair gets discarded while the other one does not, we place the resulting singleton in a separate "singletons" FASTQ file.
 
 This leaves us with {{remaining_percent}} of the original sequences organized in {{remaining_pairs}} pairs and {{remaining_singles}} singletons.
 

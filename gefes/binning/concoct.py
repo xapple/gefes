@@ -157,7 +157,7 @@ class ConcoctResults(object):
         return result
 
     def run_all_bin_eval(self):
-        """Run the evaluation procedure on all bins"""
+        """Run the evaluation procedure on all bins."""
         for b in tqdm(self.bins): b.evaluation.run()
 
     #-------------------------------------------------------------------------#

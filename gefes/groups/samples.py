@@ -9,6 +9,7 @@ from gefes.preprocess.sliding    import SlidingWindow
 from gefes.preprocess.sickle     import Sickle
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
+from gefes.assemble.megahit      import Megahit
 from gefes.map.bowtie            import Bowtie
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
@@ -147,7 +148,8 @@ class Sample(object):
 
     @property_cached
     def assembly(self):
-        """Assembly of this sample by itself."""
+        """Assembly of this sample by itself (mono-assembly)."""
+        return Megahit([self], self.p.assembly_dir)
         return Ray([self], self.p.assembly_dir)
 
     @property_cached

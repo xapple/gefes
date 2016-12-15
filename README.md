@@ -4,17 +4,13 @@ The acronym `gefes` stands for **G**​enome **E**​xtraction **F**​rom **E**
 
 This is yet another pipeline for assembling the short reads produced by shotgun-metagenomic sequencing experiments in an attempt to recompose full microbial genomes. With this tool, we would like to reconstitute the functional potential of the important bacterial and archaeal players in aquatic environments.
 
-This source code is propriety of Lucas Sinclair <lucas@envonautics.com>, co-founder of Envonautics Ltd. (https://www.envonautics.com)
+This source code is propriety of Lucas Sinclair <lucas@sinclair.bio>, a bioinformatics consultant hireable at www.sinclair.bio
 
 ## Warnings
 
-* First of all, this is still very much work in progress. We are not yet at a stage where full metabolic predictions can be made.
+* You also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like `gefes` to direct your laboratory assays which will truly confirm if a given process is taking place.
 
-* Secondly, of course these kind of approaches are not entirely revolutionary. Other labs on the globe have been doing things like this for a two or three years. But the main reason we are replicating these efforts in a way is to acquire our own setup that we are able to control. Other labs do make their tools available, but if you manage to install them on your computer you end up with something that was tailored for their type of data and that you can't change. Moreover, you don't really understand how it works. With our own setup we have a flexibility that lets us try new ideas and implement them in the code very quickly.
-
-* Thirdly, you also have to keep in mind that what we are measuring is a potential. It's not because you see a particular gene in a population or strain that it is necessarily being actively translated, transcribed, folded and exported. Ideally, you should use the results from such tools like `gefes` to direct your laboratory assays which will truly confirm if a given process is taking place.
-
-* Finally, the `gefes` project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the `gefes` project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.
+* The `gefes` project is not a biologist-oriented tool that supports all the possible use cases one could have with metagenomic sequence data out of the box. For instance, it does not have a graphical interface to operate, nor any bash/sh/csh commands. Indeed, as each sequencing experiment will have different goals and scientific questions associated to it, there cannot be a standard set of procedures to apply to the data. Instead, the `gefes` project a flexible and modular collections of packages written in proper, clean and commented object-oriented python which enables the user to survey, modify and extend the code-base easily -- provided he has a sufficient knowledge in programming. It is a basis upon which the scientist can set up the processing and analysis that he sees fit for his own data sparing him from having to develop lots of the infrastructure needed himself.
 
 ## Context
 
@@ -100,18 +96,27 @@ Relaunch your shell and type these commands to get the right version of python:
 #### Step 4: Install all required python packages
 `gefes` uses many third party python libraries. You can get them by running these commands:
 
-    $ pip install matplotlib
-    $ pip install pandas
-    $ pip install biopython
-    $ pip install sh
-    $ pip install tqdm
-    $ pip install decorator
-    $ pip install shell_command
-    $ pip install threadpool
-    $ pip install scipy
-    $ pip install pysam
-    $ pip install concoct
-    $ pip install tabulate
+    $ pip install --user matplotlib
+    $ pip install --user pandas
+    $ pip install --user biopython
+    $ pip install --user sh
+    $ pip install --user tqdm
+    $ pip install --user decorator
+    $ pip install --user shell_command
+    $ pip install --user threadpool
+    $ pip install --user scipy
+    $ pip install --user pysam
+    $ pip install --user concoct
+    $ pip install --user tabulate
+    $ pip install --user regex
+    $ pip install --user humanfriendly
+    $ pip install --user ftputil
+    $ pip install --user pystache
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
+    $ pip install --user humanfriendly
 
 It also uses several first-party python libraries that we have developed and use in several projects. You can get them by running these commands:
 

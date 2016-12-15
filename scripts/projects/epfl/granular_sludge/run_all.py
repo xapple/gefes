@@ -50,6 +50,12 @@ print("# Check PHRED formats #")
 for s in proj1: assert s.pair.fwd.guess_phred_format() == 'Sanger'
 for s in proj2: assert s.pair.rev.guess_phred_format() == 'Sanger'
 
+###############################################################################
+################################ Print status #################################
+###############################################################################
+proj1.status.print_long()
+proj2.status.print_short()
+
 ################################ Preprocessing ################################
 print("# Starting cleaning of samples #")
 with Timer(): prll_map(lambda s: s.quality_checker.run(), proj1)
@@ -70,8 +76,37 @@ for s in tqdm(proj): s.mapper.run(cpus=16) # 3 hours
 with Timer(): proj1.merged.results.binner.run() # 3.5 hours
 with Timer(): proj2.merged.results.binner.run() # 11.5 hours
 
-################################ Mono-assemblies ###############################
+################################## FASTQC #####################################
+for s in tqdm(proj): # 1.5 hours
+    print "\n FastQC on sample '%s'" % s.name
+    s.pair.fwd.fastqc.run(cpus=4)
+    s.pair.rev.fastqc.run(cpus=4)
+    s.clean.fwd.fastqc.run(cpus=4)
+    s.clean.rev.fastqc.run(cpus=4)
 
+################################## Kraken #####################################
+for s in tqdm(proj): # Skipped
+    print "\n Kraken on sample '%s'" % s.name
+    s.kraken.run(cpus=4)
+
+################################ Mono-assemblies ###############################
+for s in tqdm(proj): # xx hours   (NOTE: sample s27 empty)
+    print "\n Mono assembly on sample '%s'" % s.name
+    s.assembly.run(cpus=32)
 
 ################################ Mono-mappings #################################
+for s in tqdm(proj): # xx hours
+    print "\n Mono mapping on sample '%s'" % s.name
+    s.mono_mapper.run(cpus=32)
 
+###############################################################################
+################################## Analysis ###################################
+###############################################################################
+
+################################ CheckM #################################
+for b in tqdm(proj1.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
+for b in tqdm(proj2.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
+
+################################## Prodigal ###################################
+for c in tqdm(proj1.merged.results.contigs): c.proteins.run()
+for c in tqdm(proj2.merged.results.contigs): c.proteins.run()
