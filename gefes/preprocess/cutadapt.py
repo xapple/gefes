@@ -4,7 +4,7 @@ from __future__ import division
 # Built-in modules #
 
 # Internal modules #
-from plumbing.common import flatten
+from plumbing.common import flatter
 
 # Third party modules #
 import sh
@@ -71,7 +71,7 @@ class Cutadapt(object):
 
     @property
     def adapter_params(self):
-        return flatten([('-b', '%s=%s' % (k,v)) for k,v in illumina_adapters.items()])
+        return flatter([('-b', '%s=%s' % (k,v)) for k,v in illumina_adapters.items()])
 
     def run(self):
         sh.cutadapt(self.adapter_params + ['-O', 15, '-n', 2, '-o', self.p.cut_fwd, self.pool.fwd], _out=self.p.report_fwd)

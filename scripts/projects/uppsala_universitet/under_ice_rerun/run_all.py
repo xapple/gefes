@@ -212,3 +212,10 @@ for p in tqdm(projects):
     print "Plots for project '%s'" % p.name
     for a in p.assemblies.values(): a.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
     p.merged.results.contigs_fasta.graphs.length_dist.plot(x_log=True, y_log=True)
+
+################################## Report #####################################
+for s in tqdm(samples):
+    print "Report on sample '%s'" % s.name
+    s.report.generate()
+proj.merged.report.generate()
+#with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)

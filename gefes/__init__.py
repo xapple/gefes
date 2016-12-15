@@ -6,7 +6,7 @@ import os, sys
 # Constants #
 url         = 'http://xapple.github.io/gefes/'
 repo_url    = 'http://github.com/xapple/gefes/'
-__version__ = '1.0.1'
+__version__ = '1.0.2'
 home        = os.environ.get('HOME', '~') + '/'
 
 # No need for an X display #

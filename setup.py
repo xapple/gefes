@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
       name             = 'gefes',
-      version          = '0.1.5',
+      version          = '1.0.2',
       description      = 'Genome Extraction From Environmental Sequencing',
       long_description = open('README.md').read(),
       license          = 'Proprietary software, all rights reserved.',

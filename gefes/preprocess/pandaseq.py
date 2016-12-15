@@ -3,7 +3,7 @@ import re
 
 # Internal modules #
 from plumbing.cache import property_cached
-from plumbing.common import flatten, tail
+from plumbing.common import flatter, tail
 
 # Third party modules #
 from shell_command import shell_call
@@ -44,7 +44,7 @@ class PandaseqResults(object):
         if "pandaseq: error" in result['raw']: raise Exception("Pandaseq did not run properly")
         result['distrib'] = re.findall('STAT\tOVERLAPS\t(.+)$', result['raw'], re.M)
         result['distrib'] = map(int, result['distrib'][0].split())
-        result['lengths'] = flatten([[i+1]*v for i,v in enumerate(result['distrib'])])
+        result['lengths'] = flatter([[i+1]*v for i,v in enumerate(result['distrib'])])
         result['noalign'] = int(re.findall('STAT\tNOALGN\t(.+)$', result['raw'], re.M)[0])
         result['lowqual'] = int(re.findall('STAT\tLOWQ\t(.+)$', result['raw'], re.M)[0])
         result['loss'] = 100 * sum(result['distrib'][100:]) / sum(result['distrib'])

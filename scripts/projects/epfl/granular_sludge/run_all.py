@@ -103,10 +103,25 @@ for s in tqdm(proj): # xx hours
 ################################## Analysis ###################################
 ###############################################################################
 
-################################ CheckM #################################
+################################## CheckM #####################################
 for b in tqdm(proj1.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
 for b in tqdm(proj2.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
 
-################################## Prodigal ###################################
+################################ Prodigal #####################################
 for c in tqdm(proj1.merged.results.contigs): c.proteins.run()
 for c in tqdm(proj2.merged.results.contigs): c.proteins.run()
+
+###############################################################################
+################################## Reports ####################################
+###############################################################################
+################################## Samples ####################################
+for s in tqdm(proj):
+    print "Report on sample '%s'" % s.name
+    s.report.generate()
+
+################################## Projects ###################################
+proj1.merged.report.generate()
+proj2.merged.report.generate()
+
+#################################### Bins #####################################
+with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)
