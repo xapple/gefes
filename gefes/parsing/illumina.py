@@ -16,7 +16,7 @@ class IlluminaInfo(object):
         # Base #
         self.sample = sample
         # Find the file #
-        self.report = FilePath(self.sample.info.get("samples_base_dir") + "report.xml")
+        self.report = FilePath(self.sample.raw_base_dir + "report.xml")
 
     @property
     def exists(self): return self.report.exists

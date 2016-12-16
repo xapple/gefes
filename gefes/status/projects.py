@@ -22,13 +22,15 @@ class ProjectStatus(object):
 
     steps = ['raw', 'first_qc', 'cleaned', 'second_qc', 'initial_taxa', 'mono_assembly',
              'co_assembly', 'mono_mapping', 'merged_assembly', 'mappings', 'merged_mapping',
-             'binning', 'merged_binning', 'check_m', 'phylophlan', 'pfams',
+             'binning', 'merged_binning', 'check_m', 'prodigal', 'phylophlan', 'pfams',
              'tigrfams']
 
     steps_disabled = ['prodigal']
 
-    def print_long(self):  print self.status(details=True)
-    def print_short(self): print self.status(details=False)
+    def print_long(self):
+        for line in self.status(details=True):  print line,
+    def print_short(self):
+        for line in self.status(details=False): print line,
 
     @property
     def header(self):
@@ -43,7 +45,7 @@ class ProjectStatus(object):
         # Get and update the terminal length #
         self.rows, self.columns = map(int,os.popen('stty size', 'r').read().split())
         # The header #
-        message = unicode('\n' + self.header + '\n')
+        yield unicode('\n' + self.header + '\n')
         # The green or red rectangle to print #
         black_block   = u"███"
         green_block   = Color.grn + black_block + Color.end
@@ -52,12 +54,10 @@ class ProjectStatus(object):
         # Do it #
         for step in self.steps:
             title, detail, outcome = getattr(self, step)
-            if details: message += Color.b_blu
-            message += bool_to_block(outcome) + ' ' + title + '\n'
+            yield bool_to_block(outcome)*2 + ' ' + title + '\n'
             if details:
-                for n,o in detail: message += bool_to_block(o) + ' ' + n + '\n'
-                message += '-' * self.columns + '\n'
-        return message
+                for n,o in detail: yield bool_to_block(o) + ' ' + n + '\n'
+                yield '-' * self.columns + '\n'
 
     #---------------------------------- Steps --------------------------------#
     @property
@@ -194,7 +194,7 @@ class ProjectStatus(object):
         func    = lambda c: bool(c.proteins)
         items   = self.proj.merged.results.contigs if self.proj.merged else []
         outcome = all(func(s) for s in items) if items else False
-        detail  = "Detail disabled for contigs"
+        detail  = [("Detail disabled for contigs", True)]
         return title, detail, outcome
 
     @property
@@ -211,7 +211,7 @@ class ProjectStatus(object):
     @property
     def pfams(self):
         title = "The hmmsearch of all predicted proteins against all of pfam."
-        func  = lambda b: all(c.proteins for c in b) and bool(b.pfams)
+        func  = lambda b: bool(b.pfams)
         if self.proj.merged and self.proj.merged.results.binner:
             items = self.proj.merged.results.binner.results.bins
         else: items = []
@@ -222,7 +222,7 @@ class ProjectStatus(object):
     @property
     def tigrfams(self):
         title = "The hmmsearch of all predicted proteins against all of tigrfam."
-        func  = lambda b: all(c.proteins for c in b) and bool(b.tigrfams)
+        func  = lambda b: bool(b.tigrfams)
         if self.proj.merged and self.proj.merged.results.binner:
             items = self.proj.merged.results.binner.results.bins
         else: items = []

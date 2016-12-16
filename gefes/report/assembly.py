@@ -50,15 +50,9 @@ class AssemblyReport(Document):
         self.make_latex()
         self.make_pdf()
         # Copy to reports directory #
-        shutil.copy(self.output_path, self.copy_base)
+        #shutil.copy(self.output_path, self.copy_base)
         # Return #
         return self.output_path
-
-    copy_base = property(lambda self: gefes.reports_dir + self.aggregate.name + '/' + self.assembly.name + '.pdf')
-    uppmax_proj  = property(lambda self: self.assembly.samples[0].info.get('uppmax_project_id', 'b2014083'))
-    export_base  = property(lambda self: 'GEFES/' + self.assembly.samples[0].project.name + '/' + self.assembly.short_name + '.pdf')
-    web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))
-    url          = property(lambda self: "https://export.uppmax.uu.se/" + self.uppmax_proj +'/' +self.export_base)
 
 ###############################################################################
 class AssemblyTemplate(ReportTemplate):
@@ -185,7 +179,7 @@ class AssemblyTemplate(ReportTemplate):
 
     # Visualization #
     def visualization(self):
-        if not self.assembly.results.binner: return False
+        if not self.assembly.results.binner.results.bins[-1].pfams: return False
         params = ('bin_genes_x_pfams', 'bin_bps_x_genes')
         return {p:getattr(self, p) for p in params}
     def bin_genes_x_pfams(self):

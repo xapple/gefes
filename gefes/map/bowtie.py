@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import sys
+import sys, warnings
 
 # Internal modules #
 from gefes.map import Mapper, MapperResults
@@ -29,6 +29,11 @@ class Bowtie(Mapper):
     dependencies = []
 
     def run(self, verbose=True, cpus=None):
+        # Check the sample is not empty #
+        if not self.assembly:
+            message = "Skipping mapping of sample '%s' because there are no contigs."
+            warnings.warn(message % self.sample)
+            return
         # Check both type of indexes exist #
         self.pre_run()
         # Variable threads #

@@ -122,7 +122,7 @@ class Mapper(object):
     #-------------------------------- Shortcuts -----------------------------#
     @property
     def contigs_fasta(self):
-        """Convenience shortcut. The number contigs of the assembly."""
+        """Convenience shortcut. The filtered contigs of the assembly."""
         return self.assembly.results.contigs_fasta
 
 ###############################################################################

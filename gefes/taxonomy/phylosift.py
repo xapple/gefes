@@ -13,6 +13,12 @@ import sh
 class Phylosift(object):
     """Use Phylosift at https://github.com/gjospin/PhyloSift
     to conduct phylogenetic analysis.
+
+    Using a reference database of protein and RNA sequences, PhyloSift can scan
+    new sequences against that database for homologs and identify the
+    phylogenetic relationship of the new sequence to the database
+    sequences. During this procedure, high quality alignments of codon and
+    amino acid sequence are generated.
     """
 
     short_name = 'phylosift'

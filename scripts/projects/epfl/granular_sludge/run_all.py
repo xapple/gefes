@@ -102,7 +102,6 @@ for s in tqdm(proj): # xx hours
 ###############################################################################
 ################################## Analysis ###################################
 ###############################################################################
-
 ################################## CheckM #####################################
 for b in tqdm(proj1.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
 for b in tqdm(proj2.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
@@ -110,6 +109,29 @@ for b in tqdm(proj2.merged.results.binner.results.bins): b.evaluation.run(cpus=3
 ################################ Prodigal #####################################
 for c in tqdm(proj1.merged.results.contigs): c.proteins.run()
 for c in tqdm(proj2.merged.results.contigs): c.proteins.run()
+for b in tqdm(proj1.merged.results.binner.results.bins): b.faa
+for b in tqdm(proj2.merged.results.binner.results.bins): b.faa
+
+################################ Phylophlan ###################################
+proj1.merged.results.binner.results.taxonomy.run(cpus=32)
+proj2.merged.results.binner.results.taxonomy.run(cpus=32)
+
+################################ Pfam #########################################
+bins = proj1.merged.results.binner.results.bins
+with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h12
+bins = proj2.merged.results.binner.results.bins
+with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h22
+
+################################ Tigrfam ####################################
+
+################################ Profile #########################################
+with Timer(): proj1.merged.results.hit_profile.run()
+with Timer(): proj2.merged.results.hit_profile.run()
+
+################################ Phylosift ####################################
+#contigs = proj1.merged.results.contigs + proj2.merged.results.contigs
+#for c in proj1.merged.results.contigs: c.taxonomy.run()
+#for c in proj2.merged.results.contigs: c.taxonomy.run()
 
 ###############################################################################
 ################################## Reports ####################################

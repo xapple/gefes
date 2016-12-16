@@ -48,15 +48,9 @@ class SampleReport(Document):
         self.make_latex()
         self.make_pdf()
         # Copy to reports directory #
-        shutil.copy(self.output_path, self.copy_base)
+        #shutil.copy(self.output_path, self.copy_base)
         # Return #
         return self.output_path
-
-    copy_base    = property(lambda self: gefes.reports_dir + self.sample.project.name + '/' + self.sample.name + '.pdf')
-    uppmax_proj  = property(lambda self: self.sample.info.get('uppmax_project_id', 'b2014083'))
-    export_base  = property(lambda self: 'GEFES/' + self.sample.project.name + '/' + self.sample.name + '.pdf')
-    web_location = property(lambda self: FilePath(home + 'proj/' + self.uppmax_proj + '/webexport/' + self.export_base))
-    url          = property(lambda self: "https://export.uppmax.uu.se/" + self.uppmax_proj + '/' + self.export_base)
 
 ###############################################################################
 class SampleTemplate(ReportTemplate):
@@ -78,7 +72,7 @@ class SampleTemplate(ReportTemplate):
     def project_other_samples(self): return len(self.project) - 1
 
     def json_url(self):
-        json_location = os.path.relpath(self.project.json_path, start=gefes.git_repo)
+        json_location = os.path.relpath(self.sample.json_path, start=gefes.git_repo)
         return gefes.url + "tree/master/" + json_location
     def information(self):
         info = self.sample.info.copy()
@@ -228,7 +222,7 @@ class SampleTemplate(ReportTemplate):
         return str(ScaledFigure(graph.path, caption, label))
 
     # Co Assembly #
-    def count_contigs(self):    return split_thousands(self.sample.project.assembly.results.contigs_fasta.count)
+    def count_contigs(self):    return split_thousands(self.sample.project.merged.results.contigs_fasta.count)
 
     # Merged-Mapping #
     def merged_version(self):   return self.sample.project.merged.long_name

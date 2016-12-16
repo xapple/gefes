@@ -27,7 +27,7 @@ class Phylophlan(object):
     - Strangely changes behavior if no TTY is attached to its STDIN -.-
     - AttributeError in some cases when too few proteins inputted ?
     - You'd better create a directory named 'output' or it will crash (OSError)
-    - All protein IDs have to be unique. Doens't check, instead cryptic error.
+    - All protein IDs have to be unique. Doesn't check, instead cryptic error.
     - You have to remove the contents of the output directory before rerunning the tool.
     - The "low_conf" file has an underscore but not "medium-conf" and "high-conf".
     - Outputs windows line ends mixed with unix line ends on STDOUT.
@@ -112,15 +112,13 @@ class Phylophlan(object):
         os.chdir(self.base_dir)
         # Call the executable #
         command = sh.Command("phylophlan.py")
-        command('-i', # Integrates into the existing tree of life
-                '-t', # Predicts taxonomy
-                '--nproc', cpus,
-                self.proj_code, # Name of the input directory
-                _tty_in = True, # Without, it changes behavior
+        command('-i',             # Integrates into the existing tree of life
+                '-t',             # Predicts taxonomy
+                '--nproc', cpus,  # Number of threads
+                self.proj_code,   # Name of the input directory
+                _tty_in = True,   # Without, it changes behavior
                 _out = self.p.stderr.path,
                 _err = self.p.stdout.path)
-        # Make tree pruned tree #
-        self.results.pruned_tree.save(outfile=self.p.pruned_tree)
         # Restore #
         os.chdir(current_dir)
 
@@ -141,10 +139,10 @@ class PhylophlanResults(object):
     /output/proj/proj.tree.int.nwk"""
 
     def __nonzero__(self):
-        path = self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt'
-        return FilePath(path).exists
+        return bool(self.files)
 
     def __init__(self, phylophlan):
+        # Attributes #
         self.phylophlan = phylophlan
         self.binner     = phylophlan.parent
         self.base_dir   = self.phylophlan.base_dir
@@ -153,17 +151,17 @@ class PhylophlanResults(object):
         # The results directory #
         self.results_dir = DirectoryPath(self.base_dir + 'output/' + self.proj_code + '/')
 
-    #@property_cached
-    #def files(self):
-    #    files = [self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt',
-    #             self.base_dir + 'output/' + self.proj_code + '/imputed_conf_high-conf.txt',
-    #             self.base_dir + 'output/' + self.proj_code + '/imputed_conf_medium-conf.txt',
-    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_high-conf.txt',
-    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_medium-conf.txt',
-    #             self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_low-conf.txt']
-    #    files = map(FilePath, files)
-    #    files = [f for f in files if f.exists]
-    #    return files
+    @property_cached
+    def files(self):
+        files = [self.base_dir + 'output/' + self.proj_code + '/imputed_conf_low_conf.txt',
+                 self.base_dir + 'output/' + self.proj_code + '/imputed_conf_high-conf.txt',
+                 self.base_dir + 'output/' + self.proj_code + '/imputed_conf_medium-conf.txt',
+                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_high-conf.txt',
+                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_medium-conf.txt',
+                 self.base_dir + 'output/' + self.proj_code + '/incomplete_conf_low-conf.txt']
+        files = map(FilePath, files)
+        files = [f for f in files if f.exists]
+        return files
 
     @property_cached
     def assignments(self):

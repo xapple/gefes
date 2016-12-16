@@ -81,6 +81,8 @@ class Sample(object):
         prefix    = self.info.get('prefix',    '')
         directory = self.info.get('directory', '')
         suffix    = self.info.get('suffix',    '')
+        # Base directory for raw files #
+        self.raw_base_dir = DirectoryPath(prefix + directory)
         # Get the file paths #
         self.fwd_path = FilePath(prefix + directory + suffix + self.info['fwd_filename'])
         self.rev_path = FilePath(prefix + directory + suffix + self.info['rev_filename'])

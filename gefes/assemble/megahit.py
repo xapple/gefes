@@ -99,11 +99,11 @@ class Megahit(Assembler):
 
     @property
     def short_description(self):
-        return "Megahit with kmer %i " % self.kmer_size
+        return "Megahit with kmer %s" % self.kmer_size
 
     @property
     def description(self):
-        return "Megahit with kmer %i and %i bp cutoff" % (self.kmer_size, self.length_cutoff)
+        return "Megahit with kmer %s and %s bp cutoff" % (self.kmer_size, self.length_cutoff)
 
     @property_cached
     def results(self):

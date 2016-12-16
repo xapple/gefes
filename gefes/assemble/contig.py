@@ -79,10 +79,10 @@ class Contig(object):
         bid_to_bin = self.assembly.results.binner.results.bin_id_to_bin
         return bid_to_bin[cid_to_bid[self.name]]
 
-    @property_cached
-    def pfams(self):
-        """Use the faa file with the pfams database and hmmsearch."""
-        return HmmQuery(self.proteins.results.faa, 'pfam', out_path=self.p.hmmout)
+    #@property_cached
+    #def pfams(self):
+    #    """Use the faa file with the pfams database and hmmsearch."""
+    #    return HmmQuery(self.proteins.results.faa, 'pfam', out_path=self.p.hmmout)
 
     @property_cached
     def annotation(self):

@@ -29,6 +29,9 @@ class Assembler(object):
     all_paths = """
     /bins/
     /report/report.pdf
+    /hit_profile/
+    /traits/
+    /bins_summary/
     """
 
 ###############################################################################
