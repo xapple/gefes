@@ -6,7 +6,6 @@ import os, socket
 
 # Internal modules #
 from gefes.assemble        import Assembler, AssemblyResults
-from gefes.report.assembly import AssemblyReport
 
 # First party modules #
 from plumbing.common import flatter
@@ -49,8 +48,6 @@ class Ray(Assembler):
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/' + str(self.kmer_size) + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-        # Report #
-        self.report = AssemblyReport(self)
         # Name #
         self.name = self.short_name + '_' + str(self.kmer_size)
 

@@ -5,8 +5,7 @@ from __future__ import division
 import os, warnings
 
 # Internal modules #
-from gefes.assemble        import Assembler, AssemblyResults
-from gefes.report.assembly import AssemblyReport
+from gefes.assemble import Assembler, AssemblyResults
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -49,11 +48,6 @@ class Megahit(Assembler):
         # Auto paths #
         self.base_dir = self.result_dir + self.short_name + '/'
         self.p = AutoPaths(self.base_dir, self.all_paths)
-
-    @property_cached
-    def report(self):
-        """The PDF report."""
-        return AssemblyReport(self)
 
     def run(self, cpus=None):
         # Variable threads #

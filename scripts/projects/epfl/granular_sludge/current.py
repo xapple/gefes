@@ -25,4 +25,5 @@ proj = proj1 + proj2
 ################################### Stuff #####################################
 ###############################################################################
 #print proj1.merged.report.generate()
-print proj.first.report.generate()
+#print proj.first.report.generate()
+proj1.merged.results.hit_profile.run()

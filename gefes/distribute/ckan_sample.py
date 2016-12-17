@@ -9,10 +9,6 @@ import ckanapi
 
 ###############################################################################
 class CkanSample(object):
-    """Takes care of adding samples to a distant CKAN server."""
-
-    server_address = "http://anaerobes.science"
-
-    def __init__(self, sample):
-        # Save attributes #
-        self.sample = sample
+    """Takes care of adding samples to a distant CKAN server.
+    The code for this object is in the SIFES project."""
+    pass

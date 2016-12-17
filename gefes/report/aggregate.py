@@ -74,7 +74,7 @@ class AggregateTemplate(ReportTemplate):
             ('Co mapped',     lambda s: "%.3f%%" % (s.mapper.results.fraction_mapped * 100)),
         ))
         # The table #
-        table = [[i+1] + [f(self.aggregate[i]) for f in info.values()] for i in range(len(self.aggregate))]
+        table = [[i+1] + [f(s) for f in info.values()] for i,s in enumerate(self.aggregate)]
         # Make it as text #
         table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
         # Add caption #

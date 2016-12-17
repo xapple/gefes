@@ -89,12 +89,12 @@ for s in tqdm(proj): # Skipped
     print "\n Kraken on sample '%s'" % s.name
     s.kraken.run(cpus=4)
 
-################################ Mono-assemblies ###############################
+################################ Mono-assemblies ##############################
 for s in tqdm(proj): # xx hours   (NOTE: sample s27 empty)
     print "\n Mono assembly on sample '%s'" % s.name
     s.assembly.run(cpus=32)
 
-################################ Mono-mappings #################################
+################################ Mono-mappings ################################
 for s in tqdm(proj): # xx hours
     print "\n Mono mapping on sample '%s'" % s.name
     s.mono_mapper.run(cpus=32)
@@ -122,11 +122,12 @@ with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h12
 bins = proj2.merged.results.binner.results.bins
 with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h22
 
-################################ Tigrfam ####################################
+################################ Tigrfam ######################################
 
-################################ Profile #########################################
+################################ Profile ######################################
 with Timer(): proj1.merged.results.hit_profile.run()
 with Timer(): proj2.merged.results.hit_profile.run()
+# KeyError: "None of [Index([u'k87'], dtype='object')] are in the [index]"
 
 ################################ Phylosift ####################################
 #contigs = proj1.merged.results.contigs + proj2.merged.results.contigs
@@ -136,14 +137,36 @@ with Timer(): proj2.merged.results.hit_profile.run()
 ###############################################################################
 ################################## Reports ####################################
 ###############################################################################
+################################## Projects ###################################
+proj1.report.generate()
+proj2.report.generate()
+
 ################################## Samples ####################################
-for s in tqdm(proj):
+for s in tqdm(proj): # 1h43
     print "Report on sample '%s'" % s.name
     s.report.generate()
 
-################################## Projects ###################################
-proj1.merged.report.generate()
-proj2.merged.report.generate()
+################################# Assemblies ##################################
+proj1.merged.results.report.generate()
+proj2.merged.results.report.generate()
 
 #################################### Bins #####################################
 with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)
+
+###############################################################################
+################################## Delivery ###################################
+###############################################################################
+################################## Bundle #####################################
+from gefes.distribute.bundle import Bundle
+bundle = Bundle("granular_sludge", proj1.samples + proj2.samples)
+with Timer(): bundle.run()
+
+################################ Extra files ##################################
+path = gefes.home + "deploy/gefes/metadata/excel/projects/epfl/granular_sludge/metadata.xlsx"
+shutil.copy(path, bundle.p.samples_xlsx)
+
+################################## Upload #####################################
+from gefes.distribute.dropbox import DropBoxSync
+dbx_sync = DropBoxSync(bundle.base_dir, '/Granular sludge delivery')
+with Timer(): dbx_sync.run()
+print("Total delivery: %s" % bundle.base_dir.size)

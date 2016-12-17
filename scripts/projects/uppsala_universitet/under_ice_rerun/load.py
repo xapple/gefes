@@ -7,7 +7,7 @@ ipython -i ~/repos/gefes/scripts/projects/under_ice_rerun/load.py
 """
 
 # Built-in modules #
-import os
+import os, shutil
 
 # Internal modules #
 import gefes

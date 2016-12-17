@@ -2,11 +2,12 @@
 from collections import OrderedDict
 
 # Internal modules #
-from gefes.assemble.contig import Contig
-from gefes.binning.concoct import Concoct
+from gefes.assemble.contig           import Contig
+from gefes.binning.concoct           import Concoct
 from gefes.outputs.hit_profile       import HitProfile
 from gefes.outputs.trait_annotations import TraitAnnotations
 from gefes.outputs.bins_summary      import BinsSummary
+from gefes.report.assembly           import AssemblyReport
 
 # First party modules #
 from fasta import FASTA
@@ -94,3 +95,9 @@ class AssemblyResults(object):
     def bins_summary(self):
         """Special summary of bin properties."""
         return BinsSummary(self.parent, self.p.bins_summary_dir)
+
+    #----------------------------------- Report -----------------------------#
+    @property_cached
+    def report(self):
+        """The PDF report."""
+        return AssemblyReport(self.parent)
