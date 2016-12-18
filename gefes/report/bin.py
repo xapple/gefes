@@ -17,7 +17,6 @@ from pymarktex.figures  import ScaledFigure
 # Third party modules #
 
 # Constants #
-ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
@@ -83,7 +82,9 @@ class BinTemplate(ReportTemplate):
         return sentence % "" if self.bin.good else sentence % "not "
 
     # Process info #
-    def results_directory(self): return ssh_header + self.bin.base_dir
+    def results_directory(self):
+        return "ssh://cluster.sinclair.bio" + self.bin.base_dir
+        return gefes.ssh_header + self.bin.base_dir
 
     # Assignment #
     def assignment(self):

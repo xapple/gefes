@@ -6,6 +6,7 @@ A script to load the basic objects for the granular sludge project.
 """
 
 # Built-in modules #
+import shutil
 
 # First party modules #
 from plumbing.processes import prll_map

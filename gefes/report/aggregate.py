@@ -6,6 +6,7 @@ import os, socket
 from collections import OrderedDict
 
 # Internal modules #
+import gefes
 from gefes.report import ReportTemplate
 
 # First party modules #
@@ -19,7 +20,6 @@ from pymarktex.figures import ScaledFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 ###############################################################################
 class AggregateReport(Document):
@@ -70,7 +70,8 @@ class AggregateTemplate(ReportTemplate):
             ('Details',       lambda s: s.long_name),
             ('Reads lost',    lambda s: "%.1f%%" % (100 - ((len(s.clean)/len(s.pair)) * 100))),
             ('Reads left',    lambda s: split_thousands(len(s.clean))),
-            ('Mono mapped',   lambda s: "%.3f%%" % (s.mono_mapper.results.fraction_mapped * 100)),
+            ('Mono mapped',   lambda s: "%.3f%%" % (s.mono_mapper.results.fraction_mapped * 100) \
+                                        if s.mono_mapper else "*none*"),
             ('Co mapped',     lambda s: "%.3f%%" % (s.mapper.results.fraction_mapped * 100)),
         ))
         # The table #
@@ -79,6 +80,3 @@ class AggregateTemplate(ReportTemplate):
         table = tabulate(table, headers=info.keys(), numalign="right", tablefmt="pipe")
         # Add caption #
         return table + "\n\n   : Summary information for all samples."
-
-    # Process info #
-    def results_directory(self): return ssh_header + self.aggregate.base_dir

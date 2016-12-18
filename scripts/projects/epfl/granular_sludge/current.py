@@ -26,4 +26,9 @@ proj = proj1 + proj2
 ###############################################################################
 #print proj1.merged.report.generate()
 #print proj.first.report.generate()
-proj1.merged.results.hit_profile.run()
+#proj1.merged.results.hit_profile.run()
+
+#################################### Report #####################################
+proj.first.report.generate()
+path = "Dropbox/Granular sludge delivery/projects/granular_sludge_1/reports/samples/s01.pdf"
+proj.first.report.output_path.copy(gefes.home + path)

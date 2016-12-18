@@ -20,7 +20,6 @@ from pymarktex.figures import ScaledFigure, DualFigure
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
@@ -73,7 +72,7 @@ class SampleTemplate(ReportTemplate):
 
     def json_url(self):
         json_location = os.path.relpath(self.sample.json_path, start=gefes.git_repo)
-        return gefes.url + "tree/master/" + json_location
+        return gefes.repo_url + "tree/master/" + json_location
     def information(self):
         info = self.sample.info.copy()
         info.pop("contacts")
@@ -82,7 +81,9 @@ class SampleTemplate(ReportTemplate):
         return info
 
     # Process info #
-    def results_directory(self): return ssh_header + self.sample.base_dir
+    def results_directory(self):
+        return "ssh://cluster.sinclair.bio" + self.sample.base_dir
+        return gefes.ssh_header + self.sample.base_dir
 
     # Raw data #
     def fwd_size(self):        return             str(self.sample.pair.fwd.size)

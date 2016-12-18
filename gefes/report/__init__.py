@@ -24,3 +24,8 @@ class ReportTemplate(Template):
         return {'git_hash'  : gefes.git_repo.hash,
                 'git_tag'   : gefes.git_repo.tag,
                 'git_branch': gefes.git_repo.branch}
+
+    # Process info #
+    def results_directory(self):
+        return "ssh://cluster.sinclair.bio" + self.aggregate.base_dir
+        return gefes.ssh_header + self.aggregate.base_dir

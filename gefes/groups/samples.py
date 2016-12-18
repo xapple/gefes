@@ -94,10 +94,10 @@ class Sample(object):
             self.fwd_path.must_exist()
             self.rev_path.must_exist()
         # For speed let's update the sequence count cache if available #
-        if self.info.get('forward_read_count') is not None:
-            self.pair.fwd.count = self.info['forward_read_count']
-        if self.info.get('reverse_read_count') is not None:
-            self.pair.rev.count = self.info['reverse_read_count']
+        fwd_read_count = self.info.get('fwd_read_count')
+        if fwd_read_count is not None: self.pair.fwd.count = int(fwd_read_count)
+        rev_read_count = self.info.get('rev_read_count')
+        if rev_read_count is not None: self.pair.rev.count = int(rev_read_count)
         # Change location of first FastQC, we don't want to modify the INBOX #
         if self.pair.format == 'fastq':
             self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)

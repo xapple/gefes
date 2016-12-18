@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 """
-A script to load the main objects for  the under_ice rerun project.
+A script to load the main objects for the under_ice rerun project.
 
 ipython -i ~/repos/gefes/scripts/projects/under_ice_rerun/load.py
 """

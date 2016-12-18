@@ -21,7 +21,6 @@ import pandas
 from tabulate import tabulate
 
 # Constants #
-ssh_header = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
@@ -77,9 +76,6 @@ class AssemblyTemplate(ReportTemplate):
     # General information #
     def aggregate_short_name(self): return self.aggregate.name
     def aggregate_long_name(self):  return self.aggregate.long_name
-
-    # Process info #
-    def results_directory(self): return ssh_header + self.aggregate.base_dir
 
     # Contigs #
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)

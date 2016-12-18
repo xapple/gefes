@@ -1,13 +1,14 @@
 b'This module needs Python 2.7.x'
 
 # Built-in modules #
-import os, sys
+import os, sys, socket
 
 # Constants #
 url         = 'http://xapple.github.io/gefes/'
 repo_url    = 'http://github.com/xapple/gefes/'
 __version__ = '1.0.2'
 home        = os.environ.get('HOME', '~') + '/'
+ssh_header  = "ssh://" + os.environ.get("FILESYSTEM_HOSTNAME", socket.getfqdn())
 
 # No need for an X display #
 import matplotlib
