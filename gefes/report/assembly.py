@@ -78,6 +78,7 @@ class AssemblyTemplate(ReportTemplate):
     def aggregate_long_name(self):  return self.aggregate.long_name
 
     # Contigs #
+    def count_total_reads(self): return split_thousands(sum(s.clean.count for s in self.assembly))
     def count_contigs(self): return split_thousands(self.assembly.results.contigs_fasta.count)
     def contigs_len_hist(self):
         caption = "Assembly length distribution"

@@ -23,7 +23,7 @@ class Bowtie(Mapper):
     """
 
     short_name = 'bowtie'
-    long_name  = 'Bowtie2 2.2.5'
+    long_name  = 'Bowtie2 v2.2.5'
     executable = 'bowtie2'
     url        = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
     dependencies = []

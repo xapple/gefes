@@ -23,7 +23,7 @@ class Megahit(Assembler):
     We remove all the contigs below the length cutoff threshold."""
 
     short_name = 'megahit'
-    long_name  = 'MEGAHIT assembler 1.0.6.1'
+    long_name  = 'MEGAHIT assembler v1.0.6.1'
     executable = 'megahit'
     url        = 'https://github.com/voutcn/megahit'
     dependencies = []

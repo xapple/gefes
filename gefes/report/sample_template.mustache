@@ -111,19 +111,19 @@ The full breakdown is available in the file:
 
 Mono Assembly
 -------------
-Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by itself. For this we use the "{{sample_assembler_version}}" software with a kmer size of {{sample_kmer_size}} and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
+Most often, at this point the next step in the pipeline is to combine several samples together in an "aggregate" object and co-assemble them. The result of this operation is available in the report of the corresponding aggregate. But before that, we can try to simply run this sample into the assembler all by itself. For this we use the "{{sample_assembler_version}}" software with a kmer size of "{{sample_kmer_size}}" and a contig length cutoff of {{sample_contig_cutoff}} base pairs.
 
 This results in the production of {{sample_count_contigs}} contigs, of which the length distribution can be seen in figure \ref{sample_contigs_len_hist}:
 
 {{sample_contigs_len_hist}}
 
-The total amount of base pairs generated is {{sample_contigs_total_bp}}.
+The total amount of base pairs contained in all contigs is {{sample_contigs_total_bp}}.
 
 -------
 
 Mono Mapping
 ------------
-Now we will attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the predicted PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} of the reads map back to the contigs generated in the mono-assembly and {{sample_didnt_map}} have no match.
+We will now attempt to map every (cleaned) read (excluding singletons) of this sample back to the contigs that were generated in the previous mono-assembly step using the "{{sample_mapper_version}}" software. We will remove the predicted PCR duplicates, leaving us with {{sample_map_filter_count}} reads to map. Exactly {{sample_did_map}} of the reads map back to the contigs generated in the mono-assembly and {{sample_didnt_map}} have no match.
 
 For every of the {{sample_count_contigs}} contigs, we can now compute a mean coverage, as well as the covered fraction. The distribution of these two variables can be seen in figure \ref{sample_mean_coverage} and \ref{samples_percent_covered}:
 

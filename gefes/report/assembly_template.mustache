@@ -3,7 +3,7 @@ Assembly "{{assembly_title}}"
 
 General Information
 -------------------
-This assembly uses the software "{{assembler_version}}" and uses a kmer size of {{kmer_size}} as well as a contig length cutoff of {{contig_cutoff}} base pairs. There are {{count_samples}} samples in this assembly, which are part of the project code `{{aggregate_short_name}}` ("{{aggregate_long_name}}").
+This assembly uses the software "{{assembler_version}}" and uses a kmer size of "{{kmer_size}}" as well as a contig length cutoff of {{contig_cutoff}} base pairs. There are {{count_samples}} samples in this assembly, which are part of the project code `{{aggregate_short_name}}` ("{{aggregate_long_name}}").
 
 -------
 
@@ -30,11 +30,11 @@ Processing
 
 Contigs
 -------
-The first step is to take all reads from all samples and input them into the assembly algorithm. This results in the production of {{count_contigs}} contigs, of which the length distribution can be seen in figure \ref{contigs_len_hist}:
+The first step is to take all reads from all samples (totaling {{count_total_reads}}) and input them into the assembly algorithm. This results in the production of {{count_contigs}} contigs, of which the length distribution can be seen in figure \ref{contigs_len_hist}:
 
 {{contigs_len_hist}}
 
-The total amount of base pairs generated is {{contigs_total_bp}}.
+The total amount of base pairs contained in all contigs is {{contigs_total_bp}}.
 
 Mapping
 -------
