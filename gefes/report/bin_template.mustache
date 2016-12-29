@@ -3,7 +3,7 @@ Bin "{{bin_name}}"
 
 General Information
 -------------------
-This bin has number "{{bin_num}}". It is part of the binning results from "{{binner_version}}" in the assembly "{{assembly_name}}" in the project "{{project_name}}" along with {{binner_other_bins}} other bins. It is made up of {{bin_count_contigs}} different contigs. {{good_bin_sentence}}. It contains {{bin_count_prots}} predicted proteins.
+This bin has number "{{bin_num}}". It is part of the binning results from "{{binner_version}}" in the assembly "{{assembly_name}}" in the project "{{project_name}}" along with {{binner_other_bins}} other bins.
 
 -------
 
@@ -28,13 +28,30 @@ Processing
 {{/git}}
 -------
 
-{{#assignment}}
-Assignment
+{{#details}}
+Details
 ----------
-This bin was assigned at the lowest level to: {{lowest_taxon}}
+
+* {{good_bin_sentence}}
+
+* This bin is made up of {{bin_count_contigs}} different contigs.
+
+* It contains {{bin_count_prots}} predicted proteins.
+
+* It contains {{bin_count_nucl}} total nucleotides.
+
+* It has an average GC content of {{average_gc}}.
+
+* This bin was assigned at the lowest level to: {{lowest_taxon}}
+
+* This bin has a completeness metric of: {{completeness}}
+
+* This bin has a contamination metric of: {{contamination}}
+
+* This bin has a heterogeneity metric of: {{heterogeneity}}
 
 -------
-{{/assignment}}
+{{/details}}
 
 {{#visualization}}
 Visualization

@@ -20,8 +20,9 @@ current_dir = os.path.dirname(os.path.abspath(filename)) + '/'
 
 ###############################################################################
 class HitProfile(object):
-    """The idea is to build a profile form protein matches (such as Pfam or Tigrfam) that shows the
-    different metabolic processes occurring a long a profile of samples (time series or geospatial series)
+    """The idea is to build a profile from protein matches (such as Pfam or Tigrfam) that shows the
+    different metabolic processes occurring along a profile of samples.
+    The samples can be either a time series or geospatial series.
 
     #---------------------#
     1. Input: contigs_filtered.fasta, BAM files, and pfam/hits.hmmout file.
@@ -100,7 +101,7 @@ class HitProfile(object):
 
     @property_cached
     def contigs_x_pfams(self):
-        """The results from the HMM searches for all contigs of this merged assembly"""
+        """The results from the HMM searches for all contigs of this merged assembly."""
         # Parse #
         hmm = pandas.concat(b.pfams.hits for b in self.binner.results.bins if b)
         # Take only the top hit for each protein #
@@ -111,7 +112,8 @@ class HitProfile(object):
         # Build new dataframe #
         result = defaultdict(lambda: defaultdict(int))
         for index, row in hmm.iterrows():
-            contig = row['target_name'].split('_')[0]
+            # Remove the last number indicating proteins on the same contig #
+            contig = '_'.join(row['target_name'].split('_')[:-1])
             pfam   = row['query_accession'].split('.')[0]
             result[contig][pfam] += 1
         # Fill the holes #

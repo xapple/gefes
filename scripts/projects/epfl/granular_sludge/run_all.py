@@ -17,6 +17,7 @@ from plumbing.timer     import Timer
 from plumbing.autopaths import FilePath
 
 # Third party modules #
+import sh
 from tqdm import tqdm
 
 #################################### Load #####################################
@@ -127,7 +128,6 @@ with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h22
 ################################ Profile ######################################
 with Timer(): proj1.merged.results.hit_profile.run()
 with Timer(): proj2.merged.results.hit_profile.run()
-# KeyError: "None of [Index([u'k87'], dtype='object')] are in the [index]"
 
 ################################ Phylosift ####################################
 #contigs = proj1.merged.results.contigs + proj2.merged.results.contigs
@@ -151,6 +151,7 @@ proj1.merged.results.report.generate()
 proj2.merged.results.report.generate()
 
 #################################### Bins #####################################
+bins = proj1.merged.results.binner.results.bins + proj2.merged.results.binner.results.bins
 with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)
 
 ###############################################################################
@@ -167,6 +168,7 @@ shutil.copy(path, bundle.p.samples_xlsx)
 
 ################################## Upload #####################################
 from gefes.distribute.dropbox import DropBoxSync
+assert "already running" in sh.Command("dropbox.py")("start")
 dbx_sync = DropBoxSync(bundle.base_dir, '/Granular sludge delivery')
 with Timer(): dbx_sync.run()
 print("Total delivery: %s" % bundle.base_dir.size)

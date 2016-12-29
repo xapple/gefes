@@ -48,6 +48,14 @@ class Bundle(Aggregate):
             ably_rprts_dir = DirectoryPath(reports_dir + 'assemblies')
             ably_rprts_dir.create(safe=True)
             p.merged.results.report.output_path.copy(ably_rprts_dir + p.merged.short_name + '.pdf')
+            # Reports for bins #
+            bin_rprts_dir = DirectoryPath(reports_dir + 'bins')
+            bin_rprts_dir.create(safe=True)
+            for b in p.merged.results.binner.results.bins:
+                if not b.good: continue
+                b.report.output_path.copy(bin_rprts_dir + b.name + '.pdf')
+            # Extras #
+            p.merged.results.hit_profile.p.norm_samples_x_pfams.copy(proj_dir)
             # Data files #
             pass
 

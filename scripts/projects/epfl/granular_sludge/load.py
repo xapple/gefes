@@ -15,6 +15,9 @@ from plumbing.timer import Timer
 # Internal modules #
 import gefes
 
+# Third party modules #
+import sh
+
 #################################### Load #####################################
 # Load two projects #
 proj1 = gefes.load("~/deploy/gefes/metadata/json/projects/epfl/granular_sludge_1/")

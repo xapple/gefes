@@ -2,19 +2,16 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket
 from collections import OrderedDict
 
 # Internal modules #
-import gefes
 from gefes.report import ReportTemplate
 
 # First party modules #
 from plumbing.autopaths import DirectoryPath
-from plumbing.common import split_thousands, pretty_now
+from plumbing.common import split_thousands
 from plumbing.cache import property_pickled
 from pymarktex import Document
-from pymarktex.figures import ScaledFigure
 
 # Third party modules #
 from tabulate import tabulate

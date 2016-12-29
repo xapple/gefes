@@ -21,7 +21,7 @@ current_dir = os.path.dirname(os.path.abspath(filename)) + '/'
 ###############################################################################
 class TraitAnnotations(object):
     """Let's search for a specific family of proteins in the all the FAA files
-    of all the good bins"""
+    of all the good bins."""
 
     short_name = "trait_annotations"
     e_value    = 1e-3

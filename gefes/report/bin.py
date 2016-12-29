@@ -2,15 +2,15 @@
 from __future__ import division
 
 # Built-in modules #
-import os, socket, shutil, inspect
+import os, inspect, shutil
 
 # Internal modules #
 import gefes
 from gefes.report import ReportTemplate
 
 # First party modules #
+from plumbing.common    import split_thousands
 from plumbing.autopaths import DirectoryPath, FilePath
-from plumbing.cache     import property_cached
 from pymarktex          import Document
 from pymarktex.figures  import ScaledFigure
 
@@ -46,14 +46,9 @@ class BinReport(Document):
         self.make_latex()
         self.make_pdf()
         # Copy to reports directory #
-        shutil.copy(self.output_path, self.copy_base)
+        #shutil.copy(self.output_path, self.copy_base)
         # Return #
         return self.output_path
-
-    @property_cached
-    def copy_base(self):
-        path = gefes.reports_dir + self.aggregate.name + '/bins/' + self.bin.name + '.pdf'
-        return FilePath(path)
 
 ###############################################################################
 class BinTemplate(ReportTemplate):
@@ -75,20 +70,32 @@ class BinTemplate(ReportTemplate):
     def assembly_name(self):          return self.assembly.short_description
     def project_name(self):           return self.project.long_name
     def binner_other_bins(self):      return len(self.bin.binner.results.bins) - 1
-    def bin_count_contigs(self):      return len(self.bin.contigs)
-    def bin_count_prots(self):        return len(self.bin.faa)
-    def good_bin_sentence(self):
-        sentence = "It is %spart of the ``good bin'' group"
-        return sentence % "" if self.bin.good else sentence % "not "
 
     # Process info #
     def results_directory(self):
         return "ssh://cluster.sinclair.bio" + self.bin.base_dir
         return gefes.ssh_header + self.bin.base_dir
 
-    # Assignment #
-    def assignment(self):
-        return {'lowest_taxon': str(self.bin.assignment.lowest_taxon)} if self.bin.assignment else False
+    # Details #
+    def details(self):
+        if not self.bin.assignment: return False
+        params = ('bin_count_contigs', 'bin_count_prots', 'bin_count_nucl',
+                  'good_bin_sentence', 'average_gc', 'lowest_taxon',
+                  'completeness', 'contamination', 'heterogeneity')
+        return {p:getattr(self, p) for p in params}
+
+    def bin_count_contigs(self):      return len(self.bin.contigs)
+    def bin_count_prots(self):        return split_thousands(len(self.bin.faa))
+    def bin_count_nucl(self):         return split_thousands(self.bin.total_bp)
+    def good_bin_sentence(self):
+        sentence = "This bin is %spart of the ``good bin'' group."
+        return sentence % "" if self.bin.good else sentence % "not "
+    def average_gc(self):     return "%.2f%%" % (self.bin.average_gc * 100)
+    def lowest_taxon(self):
+        return str(self.bin.assignment.lowest_taxon) if self.bin.assignment else "<*Not computed yet*>"
+    def completeness(self):   return "%.2f%%" % self.bin.evaluation.results.statistics['completeness']
+    def contamination(self):  return "%.2f%%" % self.bin.evaluation.results.statistics['contamination']
+    def heterogeneity(self):  return "%.2f%%" % self.bin.evaluation.results.statistics['heterogeneity']
 
     # Visualization #
     def visualization(self):

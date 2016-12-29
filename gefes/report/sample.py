@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json, socket, shutil
+import os, json, shutil
 from collections import Counter, OrderedDict
 
 # Internal modules #
@@ -10,7 +10,7 @@ import gefes
 from gefes.report import ReportTemplate
 
 # First party modules #
-from plumbing.autopaths import DirectoryPath, FilePath
+from plumbing.autopaths import DirectoryPath
 from plumbing.common import split_thousands
 from plumbing.cache import property_pickled
 from pymarktex import Document

@@ -10,8 +10,8 @@ import gefes
 from gefes.report import ReportTemplate
 
 # First party modules #
-from plumbing.autopaths import DirectoryPath, FilePath
-from plumbing.common    import split_thousands, pretty_now
+from plumbing.autopaths import DirectoryPath
+from plumbing.common    import split_thousands
 from plumbing.cache     import property_pickled
 from pymarktex          import Document
 from pymarktex.figures  import ScaledFigure
@@ -156,6 +156,7 @@ class AssemblyTemplate(ReportTemplate):
                             ('Conta.',     lambda b: b.evaluation.results.statistics['contamination']),
                             ('Heter.',     lambda b: b.evaluation.results.statistics['heterogeneity']),
                             ('Prots.',     lambda b: len(b.faa)),
+                            ('Conts.',     lambda b: len(b)),
                             ('Avg. cov.',  lambda b: "%.2f" % b.average_coverage),
                             ('Assignment', lambda b: str(b.assignment.lowest_taxon))))
         good_bins = self.assembly.results.binner.results.good_bins
@@ -173,6 +174,12 @@ class AssemblyTemplate(ReportTemplate):
         return "%.3f%%" % (100.0 * (float(mapped_reads) / float(total_reads)))
     def good_bins_count_contigs(self):
         return split_thousands(sum(map(len, self.assembly.results.binner.results.good_bins)))
+
+    # Metabolism #
+    def metabolism(self):
+        if not True: return False
+        params = ('lorem', 'ipsum')
+        return {p:getattr(self, p) for p in params}
 
     # Visualization #
     def visualization(self):

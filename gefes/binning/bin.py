@@ -133,6 +133,11 @@ class Bin(object):
         return GC(''.join(str(c.record.seq) for c in self.contigs))
 
     @property_cached
+    def total_bp(self):
+        """The total amount of base pairs contained in this bin."""
+        return sum(self.fasta.lengths)
+
+    @property_cached
     def single_cogs(self):
         """The results from finding single copy COGs in the bin."""
         pass

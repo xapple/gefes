@@ -90,11 +90,11 @@ class CheckmResults(object):
         more than one space is necessary to split.
         See https://github.com/Ecogenomics/CheckM/issues/29"""
         columns = OrderedDict((
-            ("bin_id",      str),
-            ("lineage",     str),
-            ("genomes",     int),
-            ("markers",     int),
-            ("marker_sets", int),
+            ("bin_id",        str),
+            ("lineage",       str),
+            ("genomes",       int),
+            ("markers",       int),
+            ("marker_sets",   int),
             ("0", int), ("1", int), ("2", int), ("3", int), ("4", int), ("5+", int),
             ("completeness",  float),
             ("contamination", float),
