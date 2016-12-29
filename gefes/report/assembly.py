@@ -177,7 +177,7 @@ class AssemblyTemplate(ReportTemplate):
 
     # Metabolism #
     def metabolism(self):
-        if not True: return False
+        if True: return False
         params = ('lorem', 'ipsum')
         return {p:getattr(self, p) for p in params}
 

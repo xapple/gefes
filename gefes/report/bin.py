@@ -90,7 +90,7 @@ class BinTemplate(ReportTemplate):
     def good_bin_sentence(self):
         sentence = "This bin is %spart of the ``good bin'' group."
         return sentence % "" if self.bin.good else sentence % "not "
-    def average_gc(self):     return "%.2f%%" % (self.bin.average_gc * 100)
+    def average_gc(self):     return "%.2f%%" % self.bin.average_gc
     def lowest_taxon(self):
         return str(self.bin.assignment.lowest_taxon) if self.bin.assignment else "<*Not computed yet*>"
     def completeness(self):   return "%.2f%%" % self.bin.evaluation.results.statistics['completeness']

@@ -145,6 +145,7 @@ proj2.report.generate()
 for s in tqdm(proj): # 1h43
     print "Report on sample '%s'" % s.name
     s.report.generate()
+with Timer(): prll_map(lambda s: s.report.generate(), proj, 32) # 1h43
 
 ################################# Assemblies ##################################
 proj1.merged.results.report.generate()
