@@ -169,7 +169,7 @@ bundle = Bundle("granular_sludge", proj1.samples + proj2.samples)
 with Timer(): bundle.run()
 
 ################################ Extra files ##################################
-path = gefes.home + "deploy/gefes/metadata/excel/projects/epfl/granular_sludge/metadata.xlsx"
+path = FilePath(gefes.home + "deploy/gefes/metadata/excel/projects/epfl/granular_sludge/metadata.xlsx")
 shutil.copy(path, bundle.p.samples_xlsx)
 
 ################################## Upload #####################################

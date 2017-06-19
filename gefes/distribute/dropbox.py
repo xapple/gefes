@@ -23,7 +23,7 @@ class DropBoxRclone(object):
 
     @property
     def command(self):
-        return 'sync', "'" + self.input_dir + "'", "'" + 'prod:' + self.output_dir + "'"
+        return 'sync', '--copy-links', "'" + self.input_dir + "'", "'" + 'prod:' + self.output_dir + "'"
 
     def run(self):
         """Just rclone it"""
@@ -36,7 +36,7 @@ class DropBoxSync(object):
         $ dropbox.py start
     """
 
-    dbx_mount_point = gefes.home + "Dropbox/"
+    dbx_mount_point = home + "Dropbox/"
 
     def __init__(self, input_dir, output_dir):
         self.input_dir  = input_dir
