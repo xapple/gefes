@@ -34,4 +34,9 @@ proj = proj1 + proj2
 #proj.first.report.output_path.copy(gefes.home + path)
 
 #################################### Profile #####################################
-proj1.merged.results.hit_profile.run()
+#proj1.merged.results.hit_profile.run()
+
+#################################### Bundle #####################################
+from gefes.distribute.bundle import Bundle
+bundle = Bundle("granular_sludge", proj1.samples + proj2.samples)
+with Timer(): bundle.run()

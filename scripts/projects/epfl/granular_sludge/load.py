@@ -24,7 +24,3 @@ proj1 = gefes.load("~/deploy/gefes/metadata/json/projects/epfl/granular_sludge_1
 proj2 = gefes.load("~/deploy/gefes/metadata/json/projects/epfl/granular_sludge_2/")
 projects = (proj1, proj2)
 proj = proj1 + proj2
-
-# Parameters #
-#for s in proj1: s.default_cleaner = 'window'
-#for s in proj2: s.default_cleaner = 'window'

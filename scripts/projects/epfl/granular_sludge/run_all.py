@@ -51,6 +51,7 @@ print("# Check PHRED formats #")
 for s in proj1: assert s.pair.fwd.guess_phred_format() == 'Sanger'
 for s in proj2: assert s.pair.rev.guess_phred_format() == 'Sanger'
 
+
 ###############################################################################
 ################################ Print status #################################
 ###############################################################################
@@ -100,9 +101,11 @@ for s in tqdm(proj): # xx hours
     print "\n Mono mapping on sample '%s'" % s.name
     s.mono_mapper.run(cpus=32)
 
+
 ###############################################################################
 ################################## Analysis ###################################
 ###############################################################################
+
 ################################## CheckM #####################################
 for b in tqdm(proj1.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
 for b in tqdm(proj2.merged.results.binner.results.bins): b.evaluation.run(cpus=32)
@@ -123,8 +126,6 @@ with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h12
 bins = proj2.merged.results.binner.results.bins
 with Timer(): prll_map(lambda b: b.pfams.run(cpus=1), bins, 45)          # 0h22
 
-################################ Tigrfam ######################################
-
 ################################ Profile ######################################
 with Timer(): proj1.merged.results.hit_profile.run()
 with Timer(): proj2.merged.results.hit_profile.run()
@@ -134,9 +135,11 @@ with Timer(): proj2.merged.results.hit_profile.run()
 #for c in proj1.merged.results.contigs: c.taxonomy.run()
 #for c in proj2.merged.results.contigs: c.taxonomy.run()
 
+
 ###############################################################################
 ################################## Reports ####################################
 ###############################################################################
+
 ################################## Projects ###################################
 proj1.report.generate()
 proj2.report.generate()
@@ -155,9 +158,11 @@ proj2.merged.results.report.generate()
 bins = proj1.merged.results.binner.results.bins + proj2.merged.results.binner.results.bins
 with Timer(): prll_map(lambda b: b.report.generate(), bins, 32)
 
+
 ###############################################################################
 ################################## Delivery ###################################
 ###############################################################################
+
 ################################## Bundle #####################################
 from gefes.distribute.bundle import Bundle
 bundle = Bundle("granular_sludge", proj1.samples + proj2.samples)
@@ -168,8 +173,7 @@ path = gefes.home + "deploy/gefes/metadata/excel/projects/epfl/granular_sludge/m
 shutil.copy(path, bundle.p.samples_xlsx)
 
 ################################## Upload #####################################
-from gefes.distribute.dropbox import DropBoxSync
-assert "already running" in sh.Command("dropbox.py")("start")
-dbx_sync = DropBoxSync(bundle.base_dir, '/Granular sludge delivery')
+from gefes.distribute.dropbox import DropBoxRclone
+dbx_sync = DropBoxRclone(bundle.base_dir, '/Granular sludge delivery')
 with Timer(): dbx_sync.run()
 print("Total delivery: %s" % bundle.base_dir.size)

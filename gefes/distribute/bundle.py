@@ -38,26 +38,56 @@ class Bundle(Aggregate):
             # Reports directory #
             reports_dir = DirectoryPath(proj_dir + 'reports')
             reports_dir.create(safe=True)
-            # Reports for project #
-            p.report.output_path.copy(reports_dir + 'project_report.pdf')
             # Reports for samples #
             smpl_rprts_dir = DirectoryPath(reports_dir + 'samples')
             smpl_rprts_dir.create(safe=True)
-            for s in p: s.report.output_path.copy(smpl_rprts_dir + s.short_name + '.pdf')
+            for s in p: s.report.output_path.link_to(smpl_rprts_dir + s.short_name + '.pdf')
             # Reports for assemblies #
             ably_rprts_dir = DirectoryPath(reports_dir + 'assemblies')
             ably_rprts_dir.create(safe=True)
-            p.merged.results.report.output_path.copy(ably_rprts_dir + p.merged.short_name + '.pdf')
+            p.merged.results.report.output_path.link_to(ably_rprts_dir + p.merged.short_name + '.pdf')
             # Reports for bins #
             bin_rprts_dir = DirectoryPath(reports_dir + 'bins')
             bin_rprts_dir.create(safe=True)
             for b in p.merged.results.binner.results.bins:
                 if not b.good: continue
-                b.report.output_path.copy(bin_rprts_dir + b.name + '.pdf')
+                b.report.output_path.link_to(bin_rprts_dir + b.name + '.pdf')
             # Extras #
-            p.merged.results.hit_profile.p.norm_samples_x_pfams.copy(proj_dir)
+            extras_dir = DirectoryPath(proj_dir + 'extras')
+            extras_dir.create(safe=True)
+            # PFAM table #
+            p.merged.results.hit_profile.p.norm_samples_x_pfams.link_to(extras_dir)
+            # Coverage table #
+            p.merged.results.binner.coverage_matrix_tsv.link_to(extras_dir)
+            # Reports for project (not super useful) #
+            p.report.output_path.link_to(extras_dir + 'project_report.pdf')
             # Data files #
-            pass
+            data_dir = DirectoryPath(proj_dir + 'data')
+            data_dir.create(safe=True)
+            # Contigs #
+            contigs_dir = DirectoryPath(data_dir + 'contigs')
+            contigs_dir.create(safe=True)
+            # Contig fasta #
+            p.merged.results.contigs_fasta.link_to(contigs_dir + 'all_contigs.fasta')
+            # TSV which contigs goes in which bins #
+            lines = (k + '\t' + v + '\n' for k,v in p.merged.results.binner.results.contig_id_to_bin_id.items())
+            (contigs_dir + 'contig_id_to_bin_id.tsv').writelines(lines)
+            lines = (k + '\t' + ','.join(v) + '\n' for k,v in p.merged.results.binner.results.bin_id_to_contig_ids.items())
+            (contigs_dir + 'bin_id_to_contig_ids.tsv').writelines(lines)
+            # Bins #
+            bins_data_dir = DirectoryPath(data_dir + 'bins')
+            bins_data_dir.create(safe=True)
+            for b in p.merged.results.binner.results.bins:
+                if not b.good: continue
+                current_dir = DirectoryPath(bins_data_dir + b.name)
+                current_dir.create(safe=True)
+                b.fasta.link_to(current_dir + 'contigs.fasta')
+            # Bowtie output #
+            mapping_dir = DirectoryPath(data_dir + 'mapping')
+            mapping_dir.create(safe=True)
+            for s in p:
+                s.mapper_merged.results.p.map_smds_bam.link_to(mapping_dir + s.name + '.bam')
+                s.mapper_merged.results.p.map_smds_bai.link_to(mapping_dir + s.name + '.bai')
 
     @property_cached
     def results(self):
