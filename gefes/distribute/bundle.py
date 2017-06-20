@@ -87,7 +87,7 @@ class Bundle(Aggregate):
             mapping_dir.create(safe=True)
             for s in p:
                 s.mapper_merged.results.p.map_smds_bam.link_to(mapping_dir + s.name + '.bam')
-                s.mapper_merged.results.p.map_smds_bai.link_to(mapping_dir + s.name + '.bai')
+                (s.mapper_merged.results.p.map_smds_bam + '.bai').link_to(mapping_dir + s.name + '.bam.bai')
 
     @property_cached
     def results(self):
