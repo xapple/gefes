@@ -26,12 +26,11 @@ user = os.environ.get('USER')
 
 #################################### Load #####################################
 # Three projects #
-bt = gefes.projects['under_ice_rerun_bt'].load()
-lb = gefes.projects['under_ice_rerun_lb'].load()
-kt = gefes.projects['under_ice_rerun_kt'].load()
-for s in bt.samples: s.load()
-for s in lb.samples: s.load()
-for s in kt.samples: s.load()
+bt = gefes.load("~/deploy/gefes/metadata/json/projects/uppsala_universitet/bt/")
+lb = gefes.load("~/deploy/gefes/metadata/json/projects/uppsala_universitet/lb/")
+kt = gefes.load("~/deploy/gefes/metadata/json/projects/uppsala_universitet/kt/")
+
+# Samples combined #
 samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
