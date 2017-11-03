@@ -1,0 +1,84 @@
+{
+
+"contacts": {
+    "contact_one": {
+        "function": "consultant",
+        "name":     "Lucas Sinclair",
+        "email":    "lucas@sinclair.bio"
+    }
+    ,
+    "contact_two": {
+        "function": "consultant",
+        "name":     "Alexander Eiler",
+        "email":    "alexander.eiler@icloud.com"
+    }
+},
+
+"project_short_name":   "kt",
+"sample_short_name":    "kt7",
+"sample_num":           "7",
+"used":                 "yes",
+
+"fwd_filename":         "fwd.fastq.gz",
+"rev_filename":         "rev.fastq.gz",
+
+
+
+
+
+
+
+
+
+"organization":         "uppsala_universitet",
+"prefix":               "~/GEFES/raw/projects/uppsala_universitet/",
+"directory":            "under_ice_rerun/",
+"suffix":               "Sample_KT7/",
+
+"project_long_name":    "Rerun of under ice depth profile of lake BT",
+"sample_long_name":     "KT7",
+
+"fwd_read_count":       "21665592",
+"rev_read_count":       "21665592",
+"fwd_md5":              "f471246e7f946d08bd763fa512f56cd0",
+"rev_md5":              "f53576a0f5f399716c5c8514371b0d59",
+
+
+
+
+"forward_num":          "N505",
+"forward_mid":          "GTAAGGAG",
+"reverse_num":          "N708",
+"reverse_mid":          "CAGAGAGG",
+
+"dna_after":     ["4.05984703839", "ng/µl"],
+
+
+"library_strategy":     "WGS",
+"library_source":       "METAGENOMIC",
+"library_selection":    "RANDOM",
+"library_layout":       "Paired",
+"platform":             "ILLUMINA",
+"instrument_model":     "Illumina HiSeq",
+"instrument_software":  "v2.2.58",
+"forward_read_length":  "124",
+"reverse_read_length":  "124",
+
+"organism":      "aquatic metagenome",
+"env_biome":     "freshwater lake",
+"env_feature":   "lake water",
+"env_material":  "water",
+
+"date":         "2014-03-20 00:00:00",
+"latitude":     ["63.349357", "N"],
+"longitude":    ["14.45878", "E"],
+"country":      "Sweden",
+"location":     "Lake near Krokom",
+
+"design_description": "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+
+"bioproject":   "PRJNAXXXXXX",
+"biosample":    "PRJNAXXXXXX",
+
+"sentinel":             "True"
+}
