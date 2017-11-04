@@ -72,7 +72,7 @@ class Lump(object):
         # Patch the names #
         for proj in self.aggregates:
             for b in proj.merged.results.binner.results.good_bins:
-                b.name = proj.name[-2:] + '_' + b.name
+                b.long_name = proj.name[-2:] + '_' + b.name
         # Return #
         return [b for proj in self.aggregates for b in proj.merged.results.binner.results.good_bins]
 

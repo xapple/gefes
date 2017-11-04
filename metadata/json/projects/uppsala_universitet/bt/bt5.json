@@ -59,7 +59,7 @@
 "library_selection":    "RANDOM",
 "library_layout":       "Paired",
 "platform":             "ILLUMINA",
-"instrument_model":     "Illumina HiSeq",
+"instrument_model":     "Illumina HiSeq 1000",
 "instrument_software":  "v2.2.58",
 "forward_read_length":  "124",
 "reverse_read_length":  "124",
@@ -75,7 +75,7 @@
 "country":      "Sweden",
 "location":     "Lake near Skalstugan",
 
-"design_description": "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
+"design_description": "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 um sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
 
 "bioproject":   "PRJNA417044",
 "biosample":    "SAMN07975454",

@@ -12,7 +12,7 @@ setup(
       classifiers      = ['Topic :: Scientific/Engineering :: Bio-Informatics'],
       requires         = ['plumbing', 'fasta', 'pymarktex', 'seqsearch', 'sh', 'tqdm',
                           'biopython', 'decorator', 'threadpool', 'scipy', 'matplotlib',
-                          'pandas', 'tabulate'],
+                          'pandas', 'tabulate', 'ftputil'],
       packages         = ['gefes',
                           'gefes.annotation',
                           'gefes.assemble',

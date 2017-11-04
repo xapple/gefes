@@ -22,4 +22,4 @@ lump = Lump("ice_lump", projects)
 
 ###############################################################################
 lump.sra.write_sra_tsv()
-print "Done"
+print lump.sra.p.sra
