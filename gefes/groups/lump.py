@@ -5,6 +5,7 @@
 # Internal modules #
 import gefes
 from gefes.taxonomy.phylophlan import Phylophlan
+from gefes.submission.sra      import LumpSRA
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -16,6 +17,7 @@ class Lump(object):
 
     all_paths = """
     /taxonomy/
+    /sra/
     """
 
     def __repr__(self): return '<%s object "%s" with %i children>' % \
@@ -77,3 +79,10 @@ class Lump(object):
     @property_cached
     def results(self):
         return type('FakeResults', (object,), {'good_bins': self.good_bins})
+
+    #-------------------------------------------------------------------------#
+    @property_cached
+    def sra(self):
+        """Use this object to automate the submission of MAGs to the SRA."""
+        return LumpSRA(self)
+

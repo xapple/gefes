@@ -6,6 +6,7 @@ A script to run small snippets of code on the under ice rerun project.
 
 # Modules #
 import gefes, shutil
+from gefes.groups.lump import Lump
 
 # Three projects #
 bt = gefes.load("~/deploy/gefes/metadata/json/projects/uppsala_universitet/bt/")
@@ -16,5 +17,9 @@ kt = gefes.load("~/deploy/gefes/metadata/json/projects/uppsala_universitet/kt/")
 samples = tuple(bt.samples + lb.samples + kt.samples)
 projects = (bt, lb, kt)
 
+# Special lump #
+lump = Lump("ice_lump", projects)
+
 ###############################################################################
-print "Hello world"
+lump.sra.write_sra_tsv()
+print "Done"

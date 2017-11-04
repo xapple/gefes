@@ -10,6 +10,7 @@ from gefes.annotation.hmmer    import HmmQuery
 from gefes.report.bin          import BinReport
 from gefes.running.bin_runner  import BinRunner
 from gefes.binning             import bin_graphs as graphs
+from gefes.submission.sra      import BinSRA
 
 # First party modules #
 from plumbing.autopaths import AutoPaths
@@ -158,3 +159,8 @@ class Bin(object):
     @property_cached
     def report(self):
         return BinReport(self)
+
+    @property_cached
+    def sra(self):
+        """An object to help generating the spreadsheets for SRA submission."""
+        return BinSRA(self)

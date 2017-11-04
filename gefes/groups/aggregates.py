@@ -92,8 +92,8 @@ class Aggregate(object):
     @property_cached
     def merged(self):
         """All assemblies merged into a bigger one."""
-        return Megahit(self.samples, self.p.merged_dir)
-        #return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
+        #return Megahit(self.samples, self.p.merged_dir)
+        return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
 
     @property_cached
     def runner(self):

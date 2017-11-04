@@ -77,8 +77,8 @@
 
 "design_description": "Water was sampled from under the lake's ice cover using Limnos sampler. Water was prefiltered using a 50 µm sieve and freeze dried. DNA was extracted from dried material using PowerSoil DNA extraction kit.",
 
-"bioproject":   "PRJNAXXXXXX",
-"biosample":    "PRJNAXXXXXX",
+"bioproject":   "PRJNA417044",
+"biosample":    "SAMN07975454",
 
 "sentinel":             "True"
 }
