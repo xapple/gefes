@@ -21,5 +21,6 @@ projects = (bt, lb, kt)
 lump = Lump("ice_lump", projects)
 
 ###############################################################################
+lump.sra.write_bio_tsv()
 lump.sra.write_sra_tsv()
 print lump.sra.p.sra

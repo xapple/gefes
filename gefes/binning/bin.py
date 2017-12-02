@@ -24,7 +24,8 @@ from Bio.SeqUtils import GC
 ###############################################################################
 class Bin(object):
     """A Bin is a collection of Contigs that were identified as potentially
-    coming from the same population/species/strain of organisms."""
+    coming from the same population/species/strain of organisms.
+    The long_name property is patched by the Lump object."""
 
     all_paths = """
     /contigs.fasta

@@ -30,6 +30,34 @@ ftp_login     = "sra"
 ftp_password  = Password("SRA FTP password for user '%s':" % ftp_login)
 
 # Lists #
+header_bio = [
+    '*sample_name',
+    'description',
+    'bioproject_id',
+    'sample_title',
+    '*organism',
+    'host',
+    'isolation_source',
+    '*collection_date',
+    '*env_biome',
+    '*env_feature',
+    '*env_material',
+    '*geo_loc_name',
+    '*lat_lon',
+    'bin_number',
+]
+
+default_bio = {
+    'bioproject_id'   : "PRJNA417934",
+    'organism'        : "aquatic metagenome",
+    'host'            : "not applicable",
+    'isolation_source': "water",
+    'depth'           : "surface",
+    'env_biome'       : "lake",  # See https://trace.ddbj.nig.ac.jp/faq/biome-feature-material_e.html
+    'env_feature'     : "lake",
+    'env_material'    : "water",
+}
+
 header_sra =  [
     'bioproject_accession',
     'biosample_accession',
@@ -101,6 +129,44 @@ class BinSRA(object):
         self.ftp.close()
 
     @property
+    def biosample_line(self):
+        """Will generate the corresponding BioSample entry (first TSV).
+        Example usage:
+            make_tsv.write_bio_tsv()
+        You can add `from plumbing.common import gps_deg_to_float`
+        """
+        # sample_name #
+        line = [self.b.long_name]
+        # description #
+        line += [self.b.project_long_name + ' bin number ' + self.b.num]
+        # bioproject_id #
+        line += [default_bio['bioproject_id']]
+        # sample_title #
+        line += ["Lake '%s' bin %s" % (self.b.long_name[-2:], self.b.num)]
+        # organism #
+        line += [default_bio["organism"]]
+        # host #
+        line += [default_bio["host"]]
+        # isolation_source #
+        line += [default_bio["isolation_source"]]
+        # collection_date #
+        line += [self.first_sample.info['date'].split(' ')[0]]
+        # env_biome, env_feature, env_material #
+        line += [default_bio["env_biome"]]
+        line += [default_bio["env_feature"]]
+        line += [default_bio["env_material"]]
+        # geo_loc_name
+        line += ["%s: %s" % (self.s.info['country'], ascii(self.s.info['location']))]
+        # lat_lon
+        coords = (float(self.first_sample.info['latitude'][0]),  # Latitude
+                  float(self.first_sample.info['longitude'][0])) # Longitude
+        line += ['{:7.6f} N {:7.6f} E'.format(*coords)]
+        # bin_num
+        line += [self.b.num]
+        # Return #
+        return line
+
+    @property
     def sra_line(self):
         """Will generate the corresponding entry for SRA submission (second TSV).
         Example usage:
@@ -140,6 +206,7 @@ class LumpSRA(object):
     for the submission of metagenome assembled genomes."""
 
     all_paths = """
+    /bio_submission.tsv
     /sra_submission.tsv
     """
 
@@ -150,6 +217,19 @@ class LumpSRA(object):
         # Auto paths #
         self.base_dir = self.lump.p.sra_dir
         self.p        = AutoPaths(self.base_dir, self.all_paths)
+
+    def write_bio_tsv(self, path=None):
+        """Will write the TSV required by the NCBI for the creation of 'BioSample' objects
+        (first TSV)."""
+        # Content #
+        header  = '\t'.join(header_bio) + '\n'
+        content = '\n'.join('\t'.join(map(str, b.sra.sra_line)) for b in self.lump.good_bins)
+        # Write it #
+        if path is None: path = self.p.bio
+        with codecs.open(path, 'w', encoding='utf-8') as handle:
+            handle.write(header+content)
+        # Message #
+        print "Wrote TSV at '%s'" % path
 
     def write_sra_tsv(self, path=None):
         """Will write the appropriate TSV for the SRA submission in the cluster directory
