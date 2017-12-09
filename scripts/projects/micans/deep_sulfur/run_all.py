@@ -3,6 +3,11 @@
 
 """
 A script to run all the procedure on the granular sludge project.
+
+To create the JSON files from the Excel file:
+
+$
+
 """
 
 # Built-in modules #
@@ -21,11 +26,7 @@ import sh
 from tqdm import tqdm
 
 #################################### Load #####################################
-# Load two projects #
-proj1 = gefes.load("~/deploy/gefes/metadata/json/projects/epfl/granular_sludge_1/")
-proj2 = gefes.load("~/deploy/gefes/metadata/json/projects/epfl/granular_sludge_2/")
-projects = (proj1, proj2)
-proj = proj1 + proj2
+# Load project #
 
 ###############################################################################
 print("# Get information for excel file #")
