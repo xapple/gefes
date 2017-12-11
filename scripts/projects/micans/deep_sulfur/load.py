@@ -10,13 +10,18 @@ import shutil
 
 # First party modules #
 from plumbing.processes import prll_map
-from plumbing.timer import Timer
+from plumbing.timer     import Timer
+from plumbing.autopaths import FilePath
 
 # Internal modules #
 import gefes
 
 # Third party modules #
 import sh
+
+# Home #
+import os
+home = os.environ.get('HOME', '~') + '/'
 
 ###############################################################################
 # Parameters #
