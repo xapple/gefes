@@ -4,10 +4,7 @@
 """
 A script to run all the procedure on the granular sludge project.
 
-To create the JSON files from the Excel file:
-
-$
-
+First create the JSON files from the Excel file.
 """
 
 # Built-in modules #

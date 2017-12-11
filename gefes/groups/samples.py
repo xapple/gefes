@@ -7,6 +7,7 @@ import gefes
 from gefes.parsing.illumina      import IlluminaInfo
 from gefes.preprocess.sliding    import SlidingWindow
 from gefes.preprocess.sickle     import Sickle
+from gefes.preprocess.dummy      import DummyCleaner
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.assemble.megahit      import Megahit
@@ -103,9 +104,11 @@ class Sample(object):
             self.pair.fwd.fastqc = FastQC(self.pair.fwd, self.p.fastqc_fwd_dir)
             self.pair.rev.fastqc = FastQC(self.pair.rev, self.p.fastqc_rev_dir)
         # Cleaned pairs: if it's a FASTA we can't clean it #
-        if self.pair.format == 'fasta': self.clean = self.pair
+        if self.pair.format == 'fasta':
+            self.clean = self.pair
         # Cleaned pairs: if it's a FASTQ #
-        if self.pair.format == 'fastq': self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
+        if self.pair.format == 'fastq':
+            self.clean = PairedFASTQ(self.p.fwd_clean, self.p.rev_clean)
 
     #-------------------------------- Properties -----------------------------#
     @property_cached
@@ -118,7 +121,8 @@ class Sample(object):
         """With what are we going to preprocess the sequences and clean them ?"""
         assert self.pair.format == 'fastq'
         choices = {'window':   (SlidingWindow, (self.p.clean_dir, self.pair, self.clean)),
-                   'sickle':   (Sickle,        (self.p.clean_dir, self.pair, self.clean))}
+                   'sickle':   (Sickle,        (self.p.clean_dir, self.pair, self.clean)),
+                   'dummy':    (DummyCleaner,  (self.p.clean_dir, self.pair, self.clean))}
         cls, params = choices.get(self.default_cleaner)
         return cls(*params)
 

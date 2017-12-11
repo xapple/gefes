@@ -18,6 +18,10 @@ import gefes
 # Third party modules #
 import sh
 
+###############################################################################
+# Parameters #
+gefes.groups.samples.Sample.default_cleaner = "dummy"
+
 #################################### Load #####################################
 # Load two projects #
-proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/deep_sulfur/")
+proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/deep_sulfur/", raw_files_must_exist=False)
