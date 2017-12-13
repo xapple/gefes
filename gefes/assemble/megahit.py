@@ -39,6 +39,8 @@ class Megahit(Assembler):
 
     kmer_size = 'variable'
 
+    def __repr__(self): return '<%s object kmer %s>' % (self.__class__.__name__, self.kmer_size)
+
     def __init__(self, samples, result_dir, length_cutoff=1000):
         # Base parameters #
         self.samples       = samples

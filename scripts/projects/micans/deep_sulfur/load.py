@@ -26,6 +26,7 @@ home = os.environ.get('HOME', '~') + '/'
 ###############################################################################
 # Parameters #
 gefes.groups.samples.Sample.default_cleaner = "dummy"
+gefes.groups.aggregates.Aggregate.default_assembler = "dummy"
 
 #################################### Load #####################################
 # Load two projects #
