@@ -31,7 +31,11 @@ class DummyAssembler(Assembler):
     /spades.log
     """
 
-    kmer_size = 'variable'
+    kmer_size     = 'variable'
+    length_cutoff = 2500
+
+    def __repr__(self): return '<%s object on samples "%s">' % \
+        (self.__class__.__name__, ','.join(map(lambda s: s.short_name, self.samples)))
 
     def __init__(self, samples, result_dir, length_cutoff=1000):
         # Base parameters #
@@ -59,8 +63,7 @@ class DummyAssembler(Assembler):
         filtered = FASTA(self.p.filtered)
         contigs.extract_length(new_path=filtered, lower_bound=self.length_cutoff)
         # Make indexes (used later) #
-        if filtered and not os.path.exists(filtered + '.1.bt2'): filtered.index_bowtie()
-        if filtered and not os.path.exists(filtered + '.fai'):   filtered.index_samtools()
+        if filtered and not os.path.exists(filtered + '.fai'): filtered.index_samtools()
 
     @property_cached
     def results(self):

@@ -49,7 +49,7 @@ class Mapper(object):
     /stderr.txt
     """
 
-    def __repr__(self): return '<%s object of %s on %s>' % \
+    def __repr__(self): return '<%s object on %s to %s>' % \
                         (self.__class__.__name__, self.sample, self.assembly)
 
     def __nonzero__(self): return bool(self.p.coverage)
@@ -65,9 +65,11 @@ class Mapper(object):
 
     def pre_run(self, verbose=True):
         """Check both type of indexes exist"""
+        # BT2 Index #
         if not os.path.exists(self.contigs_fasta + '.1.bt2'):
             if verbose: print "Making bowtie index"; sys.stdout.flush()
             self.contigs_fasta.index_bowtie()
+        # FAI Index #
         if not os.path.exists(self.contigs_fasta + '.fai'):
             if verbose: print "Making samtools index"; sys.stdout.flush()
             self.contigs_fasta.index_samtools()

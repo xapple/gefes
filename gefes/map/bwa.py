@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import sys
+import os, sys
 
 # Internal modules #
 from gefes.map import Mapper, MapperResults
@@ -33,8 +33,11 @@ class Bwa(Mapper):
                    self.sample.clean.fwd,
                    self.sample.clean.rev,
                    '-t', num_processors]
+        # Messages #
+        if verbose: print "Launching BWA on sample '%s'..." % self.sample.name
+        if verbose: print "Mapping against assembly '%s'." % self.assembly
+        sys.stdout.flush()
         # Do the mapping #
-        if verbose: print "Launching BWA on sample '%s'..." % self.sample.name ; sys.stdout.flush()
         shell_output('bwa' + ' '.join(options) + " > " + self.p.map_sam)
 
     @property_cached

@@ -32,4 +32,4 @@ gefes.groups.samples.Sample.default_mapper          = "bbmap"
 
 #################################### Load #####################################
 # Load project #
-proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/deep_sulfur/", raw_files_must_exist=False)
+proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/test_sulfur/", raw_files_must_exist=False)
