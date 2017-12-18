@@ -27,9 +27,10 @@ from tqdm import tqdm
 gefes.groups.samples.Sample.default_cleaner         = "dummy"
 gefes.groups.samples.Sample.default_assembler       = "dummy"
 gefes.groups.aggregates.Aggregate.default_assembler = "dummy"
+gefes.groups.samples.Sample.default_mapper          = "bbmap"
 
 # Load project #
-proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/deep_sulfur/",
+proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/test_sulfur/",
                   raw_files_must_exist=False)
 
 

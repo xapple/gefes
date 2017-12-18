@@ -27,6 +27,7 @@ from tqdm import tqdm
 gefes.groups.samples.Sample.default_cleaner         = "dummy"
 gefes.groups.samples.Sample.default_assembler       = "dummy"
 gefes.groups.aggregates.Aggregate.default_assembler = "dummy"
+gefes.groups.samples.Sample.default_mapper          = "bbmap"
 
 # Load project #
 proj = gefes.load("~/deploy/gefes/metadata/json/projects/micans/deep_sulfur/",
@@ -57,9 +58,9 @@ with Timer(): proj[2].mapper_merged.run(cpus=32)
 with Timer(): proj[3].mapper_merged.run(cpus=32)
 
 ################################ Mono-mappings ################################
-proj[1].mono_mapper.run(cpus=16)                                         # xhxx
-proj[2].mono_mapper.run(cpus=16)
-proj[3].mono_mapper.run(cpus=16)
+with Timer(): proj[1].mono_mapper.run(cpus=8)                            # xhxx
+with Timer(): proj[2].mono_mapper.run(cpus=8)
+with Timer(): proj[3].mono_mapper.run(cpus=8)
 
 ################################# Binning #####################################
 with Timer(): proj.merged.results.binner.run()                           # xhxx
