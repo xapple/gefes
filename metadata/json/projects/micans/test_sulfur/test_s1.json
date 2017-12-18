@@ -1,0 +1,84 @@
+{
+
+"contacts": {
+    "contact_one": {
+        "function": "consultant",
+        "name":     "Lucas Sinclair",
+        "email":    "lucas@sinclair.bio"
+    }
+    ,
+    "contact_two": {
+        "function": "senior forskningsledare",
+        "name":     "Karsten Pedersen",
+        "email":    "kap@micans.se"
+    }
+},
+
+"project_short_name":   "test_sulfur",
+"sample_short_name":    "test_s1",
+"sample_num":           "1",
+"used":                 "yes",
+
+"fwd_filename":         "fwd.fastq.gz",
+"rev_filename":         "rev.fastq.gz",
+
+
+
+
+
+
+
+
+
+"organization":         "micans",
+"prefix":               "~/GEFES/raw/projects/micans/",
+"directory":            "test_sulfur/",
+"suffix":               "s1/",
+
+"project_long_name":    "Sulphate and Methane in the Deep Biosphere",
+"sample_long_name":     "ONKPVA06",
+
+"fwd_read_count":       "100",
+"rev_read_count":       "100",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"library_strategy":     "WGS",
+"library_source":       "METAGENOMIC",
+"library_selection":    "RANDOM",
+"library_layout":       "Paired",
+
+
+
+"forward_read_length":  "151",
+"reverse_read_length":  "151",
+
+"organism":      "aquatic metagenome",
+"env_biome":     "freshwater lake",
+"env_feature":   "lake water",
+"env_material":  "water",
+
+
+
+
+
+
+
+
+
+
+
+
+"sentinel":             "True"
+}
