@@ -11,7 +11,10 @@ from gefes.preprocess.dummy      import DummyCleaner
 from gefes.taxonomy.kraken       import Kraken
 from gefes.assemble.ray          import Ray
 from gefes.assemble.megahit      import Megahit
+from gefes.assemble.dummy        import DummyAssembler
 from gefes.map.bowtie            import Bowtie
+from gefes.map.bbmap             import BBMap
+from gefes.map.bwa               import Bwa
 from gefes.report.sample         import SampleReport
 from gefes.running.sample_runner import SampleRunner
 
@@ -31,7 +34,9 @@ class Sample(object):
     It's a bunch of paired sequences all coming from the same particular
     IRL lab sample. Might or might not correspond to an Illumina MID."""
 
-    default_cleaner = "sickle"
+    default_cleaner   = "sickle"
+    default_assembler = "megahit"
+    default_mapper    = "bbmap"
 
     all_paths = """
     /logs/
@@ -129,13 +134,19 @@ class Sample(object):
     @property_cached
     def mapper_51(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "51/")
     @property_cached
-    def mapper_61(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "61/")
+    def mapper_61(self): return Bowtie(self, self.project.assembly_61, self.p.project_dir + "61/")
     @property_cached
-    def mapper_71(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "71/")
+    def mapper_71(self): return Bowtie(self, self.project.assembly_71, self.p.project_dir + "71/")
     @property_cached
-    def mapper_81(self): return Bowtie(self, self.project.assembly_51, self.p.project_dir + "81/")
+    def mapper_81(self): return Bowtie(self, self.project.assembly_81, self.p.project_dir + "81/")
+
     @property_cached
-    def mapper_merged(self): return Bowtie(self, self.project.merged, self.p.project_dir + "merged/")
+    def mapper_merged(self):
+        choices = {'bowtie': (Bowtie,  (self, self.project.merged, self.p.project_dir + "merged/")),
+                   'bbmap':  (BBMap,   (self, self.project.merged, self.p.project_dir + "merged/")),
+                   'bwa':    (Bwa,     (self, self.project.merged, self.p.project_dir + "merged/")),}
+        cls, params = choices.get(self.default_mapper)
+        return cls(*params)
 
     @property_cached
     def mappers(self):
@@ -155,13 +166,20 @@ class Sample(object):
     @property_cached
     def assembly(self):
         """Assembly of this sample by itself (mono-assembly)."""
-        return Megahit([self], self.p.assembly_dir)
-        return Ray([self], self.p.assembly_dir)
+        choices = {'megahit': (Megahit,        ([self], self.p.assembly_dir)),
+                   'ray':     (Ray,            ([self], self.p.assembly_dir)),
+                   'dummy':   (DummyAssembler, ([self], self.p.assembly_dir))}
+        cls, params = choices.get(self.default_assembler)
+        return cls(*params)
 
     @property_cached
     def mono_mapper(self):
         """Map to the mono-assembly."""
-        return Bowtie(self, self.assembly, self.p.mapping_mono_dir)
+        choices = {'bowtie': (Bowtie,  (self, self.assembly, self.p.mapping_mono_dir)),
+                   'bbmap':  (BBMap,   (self, self.assembly, self.p.mapping_mono_dir)),
+                   'bwa':    (Bwa,     (self, self.assembly, self.p.mapping_mono_dir)),}
+        cls, params = choices.get(self.default_mapper)
+        return cls(*params)
 
     @property_cached
     def runner(self):

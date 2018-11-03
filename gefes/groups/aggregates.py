@@ -24,6 +24,8 @@ class Aggregate(object):
     Typically, a `Project` object will inherit from this
     and extent the load() method."""
 
+    default_assembler = "megahit"
+
     all_paths = """
     /samples/
     /logs/
@@ -56,7 +58,11 @@ class Aggregate(object):
         else:                              raise TypeError('key')
 
     @property
-    def first(self): return self.children[0]
+    def first(self):  return self.children[0]
+    @property
+    def second(self): return self.children[1]
+    @property
+    def third(self):  return self.children[2]
 
     def __init__(self, name, samples, out_dir, sort=True):
         # Attributes #
@@ -93,9 +99,11 @@ class Aggregate(object):
     @property_cached
     def merged(self):
         """All assemblies merged into a bigger one."""
-        #return Megahit(self.samples, self.p.merged_dir)
-        #return Newbler(self.samples, self.assemblies.values(), self.p.merged_dir)
-        return DummyAssembler(self.samples, self.p.merged_dir)
+        choices = {'megahit': (Megahit,        (self.samples, self.p.merged_dir)),
+                   'newbler': (Newbler,        (self.samples, self.assemblies.values(), self.p.merged_dir)),
+                   'dummy':   (DummyAssembler, (self.samples, self.p.merged_dir))}
+        cls, params = choices.get(self.default_assembler)
+        return cls(*params)
 
     @property_cached
     def runner(self):

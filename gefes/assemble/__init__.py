@@ -21,8 +21,7 @@ class Assembler(object):
     """Inherit from this."""
 
     def __nonzero__(self): return bool(self.p.filtered)
-    def __repr__(self): return '<%s object kmer %s>' % (self.__class__.__name__, self.kmer_size)
-    def __len__(self):  return len(self.samples)
+    def __len__(self):     return len(self.samples)
     def __getitem__(self, key):
         if isinstance(key, basestring): return [c for c in self.children if c.name == key][0]
         return self.children[key]
@@ -49,7 +48,7 @@ class AssemblyResults(object):
     @property_cached
     def contigs(self):
         """All the contigs produced returned as a list of our Contig custom objects.
-        TODO: contig numbers and ids have an often of 1"""
+        TODO: contig numbers and ids have an offset of 1"""
         return [Contig(self.parent, record, num=i) for i,record in enumerate(self.contigs_fasta)]
 
     @property_cached

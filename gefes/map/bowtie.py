@@ -17,15 +17,15 @@ import sh
 ###############################################################################
 class Bowtie(Mapper):
     """Uses Bowtie2 to maps reads from a Sample object back to an Assembly object.
-    Expects version 2.2.5.
     By default, if a read can map in several spots, from the manual:
     'The best alignment found is reported (randomly selected from among best if tied)'
+    If you get a ErrorReturnCode_139 it means the program did a segmentation fault.
     """
 
     short_name = 'bowtie'
-    long_name  = 'Bowtie2 v2.2.5'
+    long_name  = 'Bowtie2 v2.3.3.1'
     executable = 'bowtie2'
-    url        = 'http://bowtie-bio.sourceforge.net/bowtie2/index.shtml'
+    url        = 'https://github.com/BenLangmead/bowtie2'
     dependencies = []
 
     def run(self, verbose=True, cpus=None):
