@@ -112,11 +112,6 @@ Relaunch your shell and type these commands to get the right version of python:
     $ pip install --user humanfriendly
     $ pip install --user ftputil
     $ pip install --user pystache
-    $ pip install --user humanfriendly
-    $ pip install --user humanfriendly
-    $ pip install --user humanfriendly
-    $ pip install --user humanfriendly
-    $ pip install --user humanfriendly
 
 It also uses several first-party python libraries that we have developed and use in several projects. You can get them by running these commands:
 
