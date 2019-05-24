@@ -2,7 +2,7 @@
 from __future__ import division
 
 # Built-in modules #
-import os, json, shutil
+import os, json
 from collections import Counter, OrderedDict
 
 # Internal modules #
