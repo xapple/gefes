@@ -5,6 +5,7 @@ setup(
       version          = '1.0.2',
       description      = 'Genome Extraction From Environmental Sequencing',
       long_description = open('README.md').read(),
+      long_description_content_type = 'text/markdown',
       license          = 'Proprietary software, all rights reserved.',
       url              = 'http://github.com/xapple/gefes/',
       author           = 'Lucas Sinclair',
