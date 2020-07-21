@@ -15,8 +15,14 @@ from plumbing.cache import property_cached
 
 ###############################################################################
 class SlidingWindow(QualityChecker):
-    """Takes care of checking the PHRED score of the raw reads
-    and will discard or trim bad ones."""
+    """
+    Takes care of checking the PHRED score of the raw reads
+    and will discard or trim bad ones.
+
+    Other interesting approach here:
+
+    https://github.com/novigit/broCode/blob/master/pbamp/PacBioTrimmer.py#L29
+    """
 
     window_size = 10 # Size of the window we will slide along the read
     threshold   = 20 # This is a PHRED score threshold
@@ -44,7 +50,7 @@ class SlidingWindow(QualityChecker):
         # First we remove base pairs strictly below the threshold on both sides #
         phred = read.letter_annotations["phred_quality"]
         above_yes_no = [True if x > self.threshold else False for x in phred]
-        if not True in above_yes_no: return None
+        if True not in above_yes_no: return None
         new_start = above_yes_no.index(True)
         new_end = list(reversed(above_yes_no)).index(True)
         if new_end == 0: read = read[new_start:]
@@ -79,7 +85,8 @@ class SlidingWindow(QualityChecker):
     @property_cached
     def results(self):
         results = SlidingWindowResults(self, self.source, self.dest, self.singletons)
-        if not results: raise Exception("You can't access results from the quality check before running the algorithm.")
+        if not results:
+            raise Exception("You can't access results from the quality check before running the algorithm.")
         return results
 
 ###############################################################################
@@ -87,8 +94,10 @@ class SlidingWindowResults(QualityResults): pass
 
 ###############################################################################
 class Stretch(object):
-    """An interval within a DNA sequence. Here, a continuous stretch where
-    every base is above a given threshold"""
+    """
+    An interval within a DNA sequence. Here, a continuous stretch where
+    every base is above a given threshold.
+    """
 
     def __repr__(self): return "%s from %i to %i" % (self.above, self.start, self.end)
     def __len__(self): return len(self.scores)
